@@ -29,8 +29,8 @@ def fixed2csv(f, schema):
     """
     Convert a fixed-width file to csv using a CSV-formatted schema description.
 
-    A schema CSV is expected to start with the header row "column,start,length".
-    Each row, therefore, is a column name, the starting index of the column (an integer), and the length of the column (also an integer).
+    A schema CSV must start with the header row "column,start,length".
+    Each subsequent row, therefore, is a column name, the starting index of the column (an integer), and the length of the column (also an integer).
     """
     NAME = 0
     START = 1
@@ -54,22 +54,22 @@ def fixed2csv(f, schema):
     data = []
     data.append([c[NAME] for c in columns]) # Header
 
-    for row in f:
+    def process_fixed_width_row(row):
         output_row = []
 
         for c in columns:
             datum = row[c[START]:c[START] + c[LENGTH]].strip()
             output_row.append(datum)
 
-        data.append(output_row)
+        return output_row
+
+    data.extend(map(process_fixed_width_row, f))
 
     o = StringIO()
     writer = csv.writer(o, lineterminator='\n')
     writer.writerows(data)
     output = o.getvalue()
     o.close()
-
-    print output
 
     return output
 
