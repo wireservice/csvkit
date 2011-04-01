@@ -28,26 +28,37 @@ def guess_format(filename):
 def fixed2csv(f, schema):
     """
     Convert a fixed-width file to csv using a CSV-formatted schema description.
+
+    A schema CSV is expected to start with the header row "column,start,length".
+    Each row, therefore, is a column name, the starting index of the column (an integer), and the length of the column (also an integer).
     """
-    COLUMN_NAME = 0
-    COLUMN_START = 1
-    COLUMN_LENGTH = 2
+    NAME = 0
+    START = 1
+    LENGTH = 2
 
     columns = []
 
     schema_reader = csv.reader(schema)
 
+    header = schema_reader.next()
+
+    if header != ['column', 'start', 'length']:
+        raise ValueError('schema CSV must begin with a "column,start,length" header row.')
+
     for row in schema_reader:
-        columns.append((row[COLUMN_NAME], int(row[COLUMN_START]), int(row[COLUMN_LENGTH])))
+        if row == 'column,start,length':
+            continue
+
+        columns.append((row[NAME], int(row[START]), int(row[LENGTH])))
 
     data = []
-    data.append([c[COLUMN_NAME] for c in columns]) # Header
+    data.append([c[NAME] for c in columns]) # Header
 
     for row in f:
         output_row = []
 
         for c in columns:
-            datum = row[c[COLUMN_START]:c[COLUMN_START] + c[COLUMN_LENGTH]].strip()
+            datum = row[c[START]:c[START] + c[LENGTH]].strip()
             output_row.append(datum)
 
         data.append(output_row)
