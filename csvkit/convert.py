@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-import collections
 import csv
 from cStringIO import StringIO
+
+from csvkit import typeinference
 
 SUPPORTED_FORMATS = ['fixed', 'xls', 'xlsx']
 
@@ -36,8 +37,7 @@ def fixed2csv(f, schema):
     START = 1
     LENGTH = 2
 
-    columns = []
-
+    schema_columns = []
     schema_reader = csv.reader(schema)
 
     header = schema_reader.next()
@@ -49,21 +49,24 @@ def fixed2csv(f, schema):
         if row == 'column,start,length':
             continue
 
-        columns.append((row[NAME], int(row[START]), int(row[LENGTH])))
+        schema_columns.append((row[NAME], int(row[START]), int(row[LENGTH])))
 
-    data = []
-    data.append([c[NAME] for c in columns]) # Header
+    # Data is processed first into columns (rather than rows) for easier type inference
+    data_columns = [[] for c in schema_columns]
 
-    def process_fixed_width_row(row):
-        output_row = []
+    for row in f:
+        for i, c in enumerate(schema_columns):
+            data_columns[i].append(row[c[START]:c[START] + c[LENGTH]].strip())
 
-        for c in columns:
-            datum = row[c[START]:c[START] + c[LENGTH]].strip()
-            output_row.append(datum)
+    # Use type-inference to normalize columns
+    for column in data_columns:
+        column = typeinference.infer_simple_type(column)
 
-        return output_row
+    # Convert columns to rows
+    data = zip(*data_columns)
 
-    data.extend(map(process_fixed_width_row, f))
+    # Insert header row
+    data.insert(0, [c[NAME] for c in schema_columns])
 
     o = StringIO()
     writer = csv.writer(o, lineterminator='\n')
