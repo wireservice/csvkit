@@ -35,3 +35,11 @@ class TestFixed(unittest.TestCase):
         
         with open('examples/testfixed_converted.csv', 'r') as f:
             self.assertEquals(f.read(), output)
+
+class TestXLS(unittest.TestCase):
+    def test_xls(self):
+        with open('examples/test.xls', 'r') as f:
+            output = convert.xls2csv(f)
+        
+        with open('examples/testxls_converted.csv', 'r') as f:
+            self.assertEquals(f.read(), output)

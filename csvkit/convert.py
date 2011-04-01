@@ -3,6 +3,8 @@
 import csv
 from cStringIO import StringIO
 
+import xlrd
+
 from csvkit import typeinference
 
 SUPPORTED_FORMATS = ['fixed', 'xls', 'xlsx']
@@ -80,7 +82,21 @@ def xls2csv(f):
     """
     Convert an Excel .xls file to csv.
     """
-    raise NotImplementedError()
+
+    book = xlrd.open_workbook(file_contents=f.read())
+    sheet = book.sheet_by_index(0)
+
+    data_columns = [sheet.col_values(i) for i in range(sheet.ncols)]
+
+    data = zip(*data_columns)
+
+    o = StringIO()
+    writer = csv.writer(o, lineterminator='\n')
+    writer.writerows(data)
+    output = o.getvalue()
+    o.close()
+
+    return output
 
 def xlsx2csv(f):
     """
