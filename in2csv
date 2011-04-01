@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+import sys
+
+import argparse
+
+from csvkit import convert
+
+def main():
+    """
+    Command line-utility that convert tabular data formats into CSV.
+    """
+    parser = argparse.ArgumentParser(description='Convert common, but less awesome, tabular data formats to CSV.')
+    parser.add_argument('file', metavar="FILE",
+                        help='The file to convert.')
+    parser.add_argument('-f', '--format', dest='format',
+                        help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(convert.SUPPORTED_FORMATS)))
+    parser.add_argument('-s', '--schema', dest='schema',
+                        help='Specifies a CSV-format schema file for converting fixed-width files.  See documentation for details.')
+
+    args = parser.parse_args()
+
+    if args.format:
+        format = args.format
+
+        if format not in convert.SUPPORTED_FORMATS:
+            print '"%s" is not a supported format' % args.format
+            sys.exit()
+    else:
+        format = convert.guess_format(args.file)
+
+        if not format:
+            print 'Unable to automatically determine the format of the input file. Try specifying a format with --format.'
+            sys.exit()
+
+    with open(args.file, 'rU') as f:
+        output = convert.convert(f, format, args.schema)
+
+    print output
+
+if __name__ == "__main__":
+    main()

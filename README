@@ -1,0 +1,5 @@
+csvkit
+
+A library of utilities for working with CSV, the kind of tabular file formats.
+
+There is not much to see here yet, but if you would make use of it, you may do so under the MIT license.
