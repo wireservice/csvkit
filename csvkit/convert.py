@@ -97,15 +97,20 @@ def xls2csv(f):
 
         types_set = set(types)
         types_set.discard(xlrd.biffh.XL_CELL_EMPTY)
-        types_set.discard(xlrd.biffh.XL_CELL_BLANK)
 
         if len(types_set) > 1:
             raise ValueError('Column %i ("%s") of xls file contains mixed data types. This is not supported' % (i, column_name))
 
-        column_type = types_set.pop()
+        try:
+            column_type = types_set.pop()
+        except KeyError:
+            column_type = xlrd.biffh.XL_CELL_EMPTY
+
         normal_values = []
 
-        if column_type == xlrd.biffh.XL_CELL_TEXT:
+        if column_type == xlrd.biffh.XL_CELL_EMPTY:
+            normal_values = [None] * len(values)
+        elif column_type == xlrd.biffh.XL_CELL_TEXT:
             normal_values = [v if v else None for v in values]
         elif column_type == xlrd.biffh.XL_CELL_NUMBER:
             # Test if all values are whole numbers, if so coerce floats it ints
@@ -151,6 +156,7 @@ def xls2csv(f):
                     normal_types_set.add('datetime')
 
             if len(normal_types_set) == 1:
+                # No special handling if column contains only one type
                 pass 
             elif normal_types_set == set(['datetime', 'date']):
                 # If a mix of dates and datetimes, up-convert dates to datetimes
@@ -158,8 +164,10 @@ def xls2csv(f):
                     if v.__class__ == datetime.date:
                         normal_values[i] = datetime.datetime.combine(v, datetime.time())
             elif normal_types_set == set(['datetime', 'time']):
+                # Datetimes and times don't mix
                 raise ValueError('Column %i ("%s") of xls file contains a mixes of times and datetimes.' % (i, column_name))
             elif normal_types_set == set(['date', 'time']):
+                # Dates and times don't mix
                 raise ValueError('Column %i ("%s") of xls file contains a mix of dates and times.' % (i, column_name))
 
             # Natural serialization of dates and times by csv.writer is insufficent so they get converted back to strings as part of processing.
