@@ -1,5 +1,21 @@
 csvkit
+======
 
-A library of utilities for working with CSV, the king of tabular file formats.
+A library of utilities for working with CSV, the king of tabular file formats.  Inspired by pdftk.
 
-There is not much to see here yet, but if you would make use of it, you may do so under the MIT license.
+THIS CODE IS VERY ALPHA.
+
+Projected list of utilities:
+
+in2csv - converts fixed-width, xls, xlsx, odf, and dbf files into csv (like ogr2ogr)
+csvcut - extends Joe Germuska and Aaron Bycoffe's CSV splicing/munging tool
+csv2sql - generates a sql create table statement for a CSV using type inference (in particular for use with the COPY command in postgres)
+csv2django - generates a django ORM model for a CSV using type inference
+csvtest - validates that a CSV does not contain mixed datatypes and other anomalies
+csvsummary - generates summary statistics for columns in a CSV (like R's summary() function)
+
+All tools will write to STDOUT and therefore support piping, such as:
+
+in2csv data.xls | csvcut -f 0,2 | csvsql
+
+License: MIT
