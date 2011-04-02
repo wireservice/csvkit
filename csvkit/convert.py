@@ -127,19 +127,22 @@ def xls2csv(f):
 
             for v in values:
                 # Convert blanks to None
-                if not v:
+                if v == '':
                     normal_values.append(None)
                     continue
 
                 v_tuple = xlrd.xldate_as_tuple(v, book.datemode)
 
-                if v_tuple[3:] == (0, 0, 0):
+                if v_tuple == (0, 0, 0, 0, 0, 0):
+                    # Midnight 
+                    normal_values.append(datetime.time(*v_tuple[3:]))
+                    normal_types_set.add('time')
+                elif v_tuple[3:] == (0, 0, 0):
                     # Date only
                     normal_values.append(datetime.date(*v_tuple[:3]))
                     normal_types_set.add('date')
                 elif v_tuple[:3] == (0, 0, 0):
                     # Time only
-                    print v_tuple
                     normal_values.append(datetime.time(*v_tuple[3:]))
                     normal_types_set.add('time')
                 else:
@@ -160,7 +163,7 @@ def xls2csv(f):
                 raise ValueError('Column %i ("%s") of xls file contains a mix of dates and times.' % (i, column_name))
 
             # Natural serialization of dates and times by csv.writer is insufficent so they get converted back to strings as part of processing.
-            normal_values = [v.isoformat() if v else None for v in normal_values] 
+            normal_values = [v.isoformat() if v != None else None for v in normal_values] 
         elif column_type == xlrd.biffh.XL_CELL_BOOLEAN:
             normal_values = [bool(v) if v != '' else None for v in values] 
         else:
