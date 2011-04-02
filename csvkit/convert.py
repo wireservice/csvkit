@@ -139,6 +139,7 @@ def xls2csv(f):
                     normal_types_set.add('date')
                 elif v_tuple[:3] == (0, 0, 0):
                     # Time only
+                    print v_tuple
                     normal_values.append(datetime.time(*v_tuple[3:]))
                     normal_types_set.add('time')
                 else:
