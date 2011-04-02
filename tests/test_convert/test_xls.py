@@ -1,6 +1,7 @@
 import unittest
 
 import xlrd
+from xlrd.xldate import xldate_from_date_tuple as xldate, xldate_from_time_tuple as xltime, xldate_from_datetime_tuple as xldatetime
 
 from csvkit.convert import xls
 
@@ -22,7 +23,12 @@ class TestXLS(unittest.TestCase):
         self.assertEquals(normal_values, [1.01, 418000000.0, -817.043, 0.0001, None])
 
     def test_dates_column_dates(self):
-        pass
+        normal_values = xls.normalize_dates([
+            xldate((2004, 6, 5), 0),
+            xldate((1984, 2, 23), 0),
+            xldate((1907, 12, 25), 0),
+            ''], 0)
+        self.assertEquals(normal_values, ['2004-06-05', '1984-02-23', '1907-12-25', None])
 
     def test_dates_column_times(self):
         pass
