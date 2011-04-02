@@ -41,7 +41,7 @@ def normalize_numbers(values):
             break
 
     if integral:
-        return [int(v) if v else None for v in values]
+        return [int(v) if v != '' else None for v in values]
     else:
         # Convert blanks to None
         return [v if v else None for v in values]
