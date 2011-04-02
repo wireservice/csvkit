@@ -31,19 +31,39 @@ class TestXLS(unittest.TestCase):
         self.assertEquals(normal_values, ['2004-06-05', '1984-02-23', '1907-12-25', None])
 
     def test_dates_column_times(self):
-        pass
+        normal_values = xls.normalize_dates([
+            xltime((14, 30, 0)),
+            xltime((4, 5, 37)),
+            xltime((0, 0, 0)),
+            ''], 0)
+        self.assertEquals(normal_values, ['14:30:00', '04:05:37', '00:00:00', None])
 
     def test_dates_column_datetimes(self):
-        pass
+        normal_values = xls.normalize_dates([
+            xldatetime((2004, 6, 5, 14, 30, 23), 0),
+            xldatetime((1984, 2, 23, 0, 0, 0), 0),
+            xldatetime((1907, 12, 25, 2, 0, 0), 0),
+            ''], 0)
+        self.assertEquals(normal_values, ['2004-06-05T14:30:23', '1984-02-23T00:00:00', '1907-12-25T02:00:00', None])
 
     def test_dates_column_dates_and_times(self):
-        pass
+        self.assertRaises(xls.XLSDataError, xls.normalize_dates, [
+            xldate((2004, 6, 5), 0),
+            xltime((4, 5, 37)),
+            ''], 0)
 
     def tests_dates_column_dates_and_datetimes(self):
-        pass
+        normal_values = xls.normalize_dates([
+            xldate((2004, 6, 5), 0),
+            xldatetime((2001, 1, 1, 4, 5, 37), 0),
+            ''], 0)
+        self.assertEquals(normal_values, ['2004-06-05T00:00:00', '2001-01-01T04:05:37', None])
 
     def test_dates_column_times_and_datetimes(self):
-        pass
+        self.assertRaises(xls.XLSDataError, xls.normalize_dates, [
+            xldatetime((2004, 6, 5, 0, 30, 0), 0),
+            xltime((4, 5, 37)),
+            ''], 0)
 
     def test_determine_column_type_single(self):
         column_type = xls.determine_column_type([xlrd.biffh.XL_CELL_NUMBER, xlrd.biffh.XL_CELL_NUMBER, xlrd.biffh.XL_CELL_EMPTY])
