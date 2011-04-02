@@ -16,7 +16,7 @@ def main():
     parser.add_argument('-f', '--format', dest='format',
                         help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(convert.SUPPORTED_FORMATS)))
     parser.add_argument('-s', '--schema', dest='schema',
-                        help='Specifies a CSV-format schema file for converting fixed-width files.  See documentation for details.')
+                        help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
 
     args = parser.parse_args()
 
@@ -33,8 +33,8 @@ def main():
             print 'Unable to automatically determine the format of the input file. Try specifying a format with --format.'
             sys.exit()
 
-    with open(args.file, 'rU') as f:
-        output = convert.convert(f, format, args.schema)
+    with open(args.file, 'r') as f:
+        output = convert.convert(f, format, schema=args.schema)
 
     print output
 

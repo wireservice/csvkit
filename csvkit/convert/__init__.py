@@ -22,11 +22,11 @@ def convert(f, format, schema=None):
         if not schema:
             raise ValueError('schema must not be null when format is "fixed"')
 
-        fixed2csv(f, schema)
+        return fixed2csv(f, schema)
     elif format == 'xls':
-        xls2csv(f)
+        return xls2csv(f)
     elif format == 'xlsx':
-        xlsx2csv(f)
+        return xlsx2csv(f)
     else:
         raise ValueError('format "%s" is not supported' % format)
 
