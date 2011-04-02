@@ -3,7 +3,6 @@
 import csv
 from cStringIO import StringIO
 import datetime
-import sets
 
 import xlrd
 
@@ -92,66 +91,75 @@ def xls2csv(f):
 
     for i in range(sheet.ncols):
         # Trim headers
+        column_name = sheet.col_values(i)[0]
         values = sheet.col_values(i)[1:]
         types = sheet.col_types(i)[1:]
 
-        types_set = sets.Set(types)
+        types_set = set(types)
         types_set.discard(xlrd.biffh.XL_CELL_EMPTY)
         types_set.discard(xlrd.biffh.XL_CELL_BLANK)
 
         if len(types_set) > 1:
-            raise ValueError('Column %i of xls file contains mixed data types. This is not supported' % i)
+            raise ValueError('Column %i ("%s") of xls file contains mixed data types. This is not supported' % (i, column_name))
 
-        column_type = types.pop()
+        column_type = types_set.pop()
         normal_values = []
 
         if column_type == xlrd.biffh.XL_CELL_TEXT:
-            normal_values = values 
+            normal_values = [v if v else None for v in values]
         elif column_type == xlrd.biffh.XL_CELL_NUMBER:
             # Test if all values are whole numbers, if so coerce floats it ints
             integral = True
 
             for v in values:
-                if v % 1 != 0:
+                if v and v % 1 != 0:
                     integral = False
                     break
 
             if integral:
-                normal_values = [int(v) for v in values]
+                normal_values = [int(v) if v else None for v in values]
             else:
-                normal_values = values
+                # Convert blanks to None
+                normal_values = [v if v else None for v in values]
         elif column_type == xlrd.biffh.XL_CELL_DATE:
-            datetime_values = [datetime.datetime(*xlrd.xldate_as_tuple(v, book.datemode)) for v in values]
+            normal_values = []
+            normal_types_set = set()
 
-            # Test if all values contain only dates, if so coerce datetimes to dates
-            dates_only = True
+            for v in values:
+                # Convert blanks to None
+                if not v:
+                    normal_values.append(None)
+                    continue
 
-            for v in datetime_values:
-                if v.hour != 0 or v.minute != 0:
-                    dates_only = False
-                    break
-            
-            if dates_only:
-                normal_values = [v.date() for v in datetime_values]
-            else:
-                # Test if all values contain only times, if so coerce datetimes to times
-                times_only = True
+                v_tuple = xlrd.xldate_as_tuple(v, book.datemode)
 
-                for v in datetime_values:
-                    if v.year != 0 or v.month != 0 or v.day != 0:
-                        times_only = False
-                        break
-
-                if times_only:
-                    normal_values = [v.time() for v in datetime_values]
+                if v_tuple[3:] == (0, 0, 0):
+                    # Date only
+                    normal_values.append(datetime.date(*v_tuple[:3]))
+                    normal_types_set.add('date')
+                elif v_tuple[:3] == (0, 0, 0):
+                    # Time only
+                    normal_values.append(datetime.time(*v_tuple[3:]))
+                    normal_types_set.add('time')
                 else:
-                    normal_values = datetime_values
-        elif column_type == xlrd.biffh.XL_CELL_BOOLEAN:
-            raise NotImplementedError()
-        else:
-            raise ValueError('Column %i of xls file contains values of unsupported type "%s".' % (i, column_type))
+                    # Date and time
+                    normal_values.append(datetime.datetime(*v_tuple))
+                    normal_types_set.add('datetime')
 
-        print normal_values
+            if len(normal_types_set) == 1:
+                pass 
+            elif normal_types_set == set(['datetime', 'date']):
+                # If a mix of dates and datetimes, up-convert dates to datetimes
+                normal_values = [datetime.datetime.combine(v, datetime.time()) if v else None for v in normal_values]
+            elif normal_types_set == set(['datetime', 'time']):
+                raise ValueError('Column %i ("%s") of xls file contains a mixes of times and datetimes.' % (i, column_name))
+            elif normal_types_set == set(['date', 'time']):
+                raise ValueError('Column %i ("%s") of xls file contains a mix of dates and times.' % (i, column_name))
+        elif column_type == xlrd.biffh.XL_CELL_BOOLEAN:
+            normal_values = [bool(v) if v != '' else None for v in values] 
+        else:
+            raise ValueError('Column %i ("%s") of xls file contains values of unsupported type "%s".' % (i, column_name, column_type))
+
         data_columns.append(normal_values)
 
     data = zip(*data_columns)

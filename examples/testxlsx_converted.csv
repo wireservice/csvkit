@@ -1,4 +1,5 @@
-newspaper,a date,years_old
-Chicago Reader,1/1/1971,40
-Chicago Sun-Times,1/1/1948,63
-Chicago Tribune,1/1/920,164
+text,date,integer,boolean,float,time,datetime
+Chicago Reader,1/1/1971,40,TRUE,1,4:14,1/1/1971 4:14
+Chicago Sun-Times,1/1/1948,63,TRUE,1.27,14:57:13,1/1/1948 14:57:13
+Chicago Tribune,1/1/1920,164,FALSE,41800000.01,12:00,1/1/1920 12:00
+This row has blanks,,,,,,
