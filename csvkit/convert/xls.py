@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import csv
-from cStringIO import StringIO
 import datetime
 
 import xlrd

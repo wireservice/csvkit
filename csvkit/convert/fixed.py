@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import csv
-from cStringIO import StringIO
 
 from csvkit import typeinference
 import utils
