@@ -4,26 +4,9 @@ from fixed import fixed2csv
 from xls import xls2csv
 from xlsx import xlsx2csv
 
+from utils import guess_format
+
 SUPPORTED_FORMATS = ['fixed', 'xls', 'xlsx']
-
-def guess_format(filename):
-    """
-    Try to guess a file's format based on its extension (or lack thereof).
-    """
-    last_period = filename.rfind('.')
-
-    if last_period == -1:
-        # No extension: assume fixed-width
-        return 'fixed'
-
-    extension = filename[last_period + 1:]
-
-    if extension == 'xlsx':
-        return extension
-    elif extension == 'xls':
-        return extension
-
-    return None
 
 def convert(f, format, schema=None):
     """
