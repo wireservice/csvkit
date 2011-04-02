@@ -4,6 +4,7 @@ import csv
 from cStringIO import StringIO
 
 from csvkit import typeinference
+import utils
 
 def fixed2csv(f, schema):
     """
@@ -47,10 +48,4 @@ def fixed2csv(f, schema):
     # Insert header row
     data.insert(0, [c[NAME] for c in schema_columns])
 
-    o = StringIO()
-    writer = csv.writer(o, lineterminator='\n')
-    writer.writerows(data)
-    output = o.getvalue()
-    o.close()
-
-    return output
+    return utils.rows_to_csv_string(data)

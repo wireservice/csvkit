@@ -7,6 +7,7 @@ import datetime
 import xlrd
 
 from csvkit import typeinference
+import utils
 
 def xls2csv(f):
     """
@@ -114,10 +115,4 @@ def xls2csv(f):
     # Insert header row
     data.insert(0, [sheet.col_values(i)[0] for i in range(sheet.ncols)])
 
-    o = StringIO()
-    writer = csv.writer(o, lineterminator='\n')
-    writer.writerows(data)
-    output = o.getvalue()
-    o.close()
-
-    return output
+    return utils.rows_to_csv_string(data) 
