@@ -150,11 +150,16 @@ def xls2csv(f):
                 pass 
             elif normal_types_set == set(['datetime', 'date']):
                 # If a mix of dates and datetimes, up-convert dates to datetimes
-                normal_values = [datetime.datetime.combine(v, datetime.time()) if v else None for v in normal_values]
+                for i, v in enumerate(normal_values):
+                    if v.__class__ == datetime.date:
+                        normal_values[i] = datetime.datetime.combine(v, datetime.time())
             elif normal_types_set == set(['datetime', 'time']):
                 raise ValueError('Column %i ("%s") of xls file contains a mixes of times and datetimes.' % (i, column_name))
             elif normal_types_set == set(['date', 'time']):
                 raise ValueError('Column %i ("%s") of xls file contains a mix of dates and times.' % (i, column_name))
+
+            # Natural serialization of dates and times by csv.writer is insufficent so they get converted back to strings as part of processing.
+            normal_values = [v.isoformat() if v else None for v in normal_values] 
         elif column_type == xlrd.biffh.XL_CELL_BOOLEAN:
             normal_values = [bool(v) if v != '' else None for v in values] 
         else:
@@ -162,7 +167,11 @@ def xls2csv(f):
 
         data_columns.append(normal_values)
 
+    # Convert columns to rows
     data = zip(*data_columns)
+
+    # Insert header row
+    data.insert(0, [sheet.col_values(i)[0] for i in range(sheet.ncols)])
 
     o = StringIO()
     writer = csv.writer(o, lineterminator='\n')
