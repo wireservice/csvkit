@@ -13,7 +13,6 @@ def normalize_column_type(l):
     Like infer_simple_type, but will also attempt to infer dates, times, and datetimes. 
     """
     # Are they null?
-    # TKTK
     try:
         for x in l:
             if x != '':
