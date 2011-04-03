@@ -14,6 +14,14 @@ def normalize_column_type(l):
     """
     # Are they null?
     # TKTK
+    try:
+        for x in l:
+            if x != '':
+                raise ValueError('Not null')
+
+        return None, [None] * len(l)
+    except ValueError:
+        pass
 
     # Are they boolean?
     try:
@@ -32,8 +40,6 @@ def normalize_column_type(l):
         return bool, normal_values
     except ValueError:
         pass
-
-    # TKTK
 
     # Are they integers?
     try:
