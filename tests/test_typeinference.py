@@ -37,11 +37,12 @@ class TestNormalizeType(unittest.TestCase):
         self.assertEqual((datetime.time, [datetime.time(4, 40, 0), datetime.time(3, 45, 0), datetime.time(16, 14, 45), None]), typeinference.normalize_column_type(['4:40 AM', '03:45:00', '16:14:45', '']))
 
     def test_dates_and_times(self):
-        pass
+        self.assertEqual((str, ['Jan 1, 2008', '2010-01-27', '16:14:45', None]), typeinference.normalize_column_type(['Jan 1, 2008', '2010-01-27', '16:14:45', '']))
 
     def test_datetimes_and_dates(self):
-        pass
+        self.assertEqual((datetime.datetime, [datetime.datetime(2008, 1, 1, 4, 40, 0), datetime.datetime(2010, 1, 27, 3, 45, 0), datetime.datetime(2008, 3, 1, 0, 0, 0), None]), typeinference.normalize_column_type(['Jan 1, 2008 at 4:40 AM', '2010-01-27T03:45:00', '3/1/08', '']))
 
     def test_datetimes_and_times(self):
-        pass
+        self.assertEqual((str, ['Jan 1, 2008 at 4:40 AM', '2010-01-27T03:45:00', '16:14:45', None]), typeinference.normalize_column_type(['Jan 1, 2008 at 4:40 AM', '2010-01-27T03:45:00', '16:14:45', '']))
+
 
