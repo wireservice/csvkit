@@ -16,6 +16,23 @@ def normalize_column_type(l):
     # TKTK
 
     # Are they boolean?
+    try:
+        normal_values = []
+
+        for x in l:
+            if x == '':
+                normal_values.append(None)
+            elif x.lower() in ('1', 'yes', 'true'):
+                normal_values.append(True)
+            elif x.lower() in ('0', 'no', 'false'):
+                normal_values.append(False)
+            else:
+                raise ValueError('Not boolean')
+
+        return bool, normal_values
+    except ValueError:
+        pass
+
     # TKTK
 
     # Are they integers?
