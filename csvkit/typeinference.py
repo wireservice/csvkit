@@ -10,7 +10,9 @@ NULL_TIME = datetime.time(0, 0, 0)
 
 def normalize_column_type(l):
     """
-    Like infer_simple_type, but will also attempt to infer dates, times, and datetimes. 
+    Attempts to normalize a column (list) of values to booleans, integers, floats, dates, times, datetimes, or strings. Empty strings are converted to nulls.
+
+    Returns a tuple of (type, normal_values).
     """
     # Are they null?
     try:
