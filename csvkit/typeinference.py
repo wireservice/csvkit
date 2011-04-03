@@ -4,9 +4,9 @@ import datetime
 
 from dateutil.parser import parse
 
-DEFAULT_DATETIME = datetime.datetime(3000, 1, 1, 0, 0, 0)
-DATE_ZERO = datetime.date(3000, 1, 1)
-TIME_ZERO = datetime.time(0, 0, 0)
+DEFAULT_DATETIME = datetime.datetime(9999, 12, 31, 0, 0, 0)
+NULL_DATE = datetime.date(9999, 12, 31)
+NULL_TIME = datetime.time(0, 0, 0)
 
 def normalize_column_type(l):
     """
@@ -66,11 +66,11 @@ def normalize_column_type(l):
             d = parse(x, default=DEFAULT_DATETIME)
             
             # Is it only a date?
-            if d.time() == TIME_ZERO:
+            if d.time() == NULL_TIME:
                 d = d.date()
                 normal_types_set.add(datetime.date)
             # Is it only a time?
-            elif d.date() == DATE_ZERO:
+            elif d.date() == NULL_DATE:
                 d = d.time()
                 normal_types_set.add(datetime.time)
             # It must be a date and time
@@ -86,7 +86,7 @@ def normalize_column_type(l):
         elif normal_types_set == set([datetime.datetime, datetime.date]):
             for i, v in enumerate(normal_values):
                 if v.__class__ == datetime.date:
-                    normal_values[i] = datetime.datetime.combine(v, TIME_ZERO)
+                    normal_values[i] = datetime.datetime.combine(v, NULL_TIME)
 
             normal_types_set.discard(datetime.date)
         # Datetimes and times don't mix -- fallback to using strings
