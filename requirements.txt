@@ -1,4 +1,5 @@
 argparse==1.2.1
 nose==1.0.0   
 xlrd==0.7.1
--e git+https://github.com/staale/python-xlsx.git@674102ff#egg=python-xlsx
+openpyxl==1.5.0
+python-dateutil==1.5

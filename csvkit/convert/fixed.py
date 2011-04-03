@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import csv
+import datetime
 
 from csvkit import typeinference
 import utils
@@ -39,7 +40,11 @@ def fixed2csv(f, schema):
 
     # Use type-inference to normalize columns
     for column in data_columns:
-        column = typeinference.infer_simple_type(column)
+        t, column = typeinference.normalize_column_type(column)
+
+        # Stringify datetimes, dates, and times
+        if t in [datetime.datetime, datetime.date, datetime.time]:
+            column = [v.isoformat() if v != None else None for v in column]
 
     # Convert columns to rows
     data = zip(*data_columns)

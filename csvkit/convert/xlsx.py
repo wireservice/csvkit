@@ -6,13 +6,13 @@ from openpyxl.cell import Cell
 import utils
 
 """
-    Cell.TYPE_STRING = 's'
-    TYPE_FORMULA = 'f'
-    TYPE_NUMERIC = 'n'
-    TYPE_BOOL = 'b'
-    TYPE_NULL = 's'
-    TYPE_INLINE = 'inlineStr'
-    TYPE_ERROR = 'e'
+TYPE_STRING = 's'
+TYPE_FORMULA = 'f'
+TYPE_NUMERIC = 'n'
+TYPE_BOOL = 'b'
+TYPE_NULL = 's'
+TYPE_INLINE = 'inlineStr'
+TYPE_ERROR = 'e'
 """
 
 def normalize_string(values):
@@ -57,7 +57,7 @@ def xlsx2csv(f):
     """
     Convert an Excel .xlsx file to csv.
     """
-    book = load_workbook('examples/test.xls')
+    book = load_workbook('examples/test.xlsx')
     sheet = book.worksheets[0]
 
     data_columns = []
