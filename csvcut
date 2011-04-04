@@ -48,8 +48,12 @@ Usage:
     (prints the first two columns of the comma-delimited, pipe-quoted foorbar.csv.)
 """
 
-import sys, csv, getopt
+import csv
+import getopt
+import sys
+
 opts, args = getopt.getopt(sys.argv[1:], "f:d:o:q:ht", [])
+
 if args:
     i = open(args[0],"U")
 else:
@@ -57,20 +61,25 @@ else:
 
 delimiter = ','
 output_delimiter = ' '
-cols = [0, ]
+columns = [0, ]
 show_headers = False
 
 if opts:
     opts = dict(opts)
+
     show_headers = '-h' in opts
+
     if '-f' in opts:
-        cols = opts['-f'].split(",")
+        columns = opts['-f'].split(",")
+
     if '-t' in opts:
         delimiter = "\t"    
     elif '-d' in opts:
         delimiter = opts['-d']
+
     if '-o' in opts:
         output_delimiter = opts['-o']
+
     if '-q' in opts:
         quotechar = opts['-q']
     else:
@@ -78,10 +87,13 @@ if opts:
 
 for row in csv.reader(i, delimiter=delimiter, quotechar=quotechar):
     if show_headers:
-        for i,c in enumerate(row):
-            print "%3i: %s" % (i,c)
+        for i, c in enumerate(row):
+            print "%3i: %s" % (i, c)
         break
+
     writer = csv.writer(sys.stdout, delimiter=output_delimiter)
-    if cols == [':']:
-        cols = range(len(row))
-    writer.writerow([row[int(c)] for c in cols])
+
+    if columns == [':']:
+        columns = range(len(row))
+
+    writer.writerow([row[int(c)] for c in columns])
