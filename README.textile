@@ -18,6 +18,25 @@ in2csv data.xls | csvcut -c 0,2
 
 * Standardize, standardize, standardize. Floats should end with ".0", even if they are round. Dates and times should be in ISO8601 format. Etc.
 
+h2. Install
+
+For developers:
+
+<pre>
+git clone git://github.com/onyxfish/csvkit.git
+cd csvkit
+mkvirtualenv --no-site-packages csvkit
+pip install -r requirements.txt
+</pre>
+
+For users (until first PyPI build is ready):
+
+<pre>
+git://github.com/onyxfish/csvkit.git
+cd csvkit
+python setup.py install
+</pre>
+
 h2. Usage: in2csv
 
 Converts various formats into csv. Currently supported: fixed-width and xls (Excel).
