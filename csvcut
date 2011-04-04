@@ -48,52 +48,51 @@ Usage:
     (prints the first two columns of the comma-delimited, pipe-quoted foorbar.csv.)
 """
 
-import csv
-import getopt
+import csv 
 import sys
 
-opts, args = getopt.getopt(sys.argv[1:], "f:d:o:q:ht", [])
+import argparse
 
-if args:
-    i = open(args[0],"U")
-else:
-    i = sys.stdin
+def main():
+    """
+    Command line-utility that splices and truncates CSV files in a variety of ways.
+    """
+    parser = argparse.ArgumentParser(description='Convert common, but less awesome, tabular data formats to CSV.')
+    parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('r'), default=sys.stdin,
+                        help='The CSV file to operate on. If omitted, will accept input on STDIN.')
+    parser.add_argument('-n', '--names', dest='show_headers', action='store_true',
+                        help='Display column names and indices from the input CSV and exit.')
+    parser.add_argument('-f', dest='columns', default='0',
+                        help='A comma separated list of column indexes to be extracted. Defaults to first column only. Use ":" for all columns.')
+    parser.add_argument('-d', '--delimiter', dest='delimiter', default=',',
+                        help='Delimiting character of the input CSV file.')
+    parser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
+                        help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
+    parser.add_argument('-o', '--outdelimiter', dest='output_delimiter', default=',',
+                        help='Delimiting character of the output CSV file.')
+    parser.add_argument('-q', '--quotechar', dest='quotechar', default='"',
+                        help='Character used to quote strings in the input CSV file.')
 
-delimiter = ','
-output_delimiter = ' '
-columns = [0, ]
-show_headers = False
+    args = parser.parse_args()
 
-if opts:
-    opts = dict(opts)
+    columns_split = [int(i) for i in args.columns.split(",")]
 
-    show_headers = '-h' in opts
+    for row in csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar):
+        # Show headers and exit
+        if args.show_headers:
+            for i, c in enumerate(row):
+                print "%3i: %s" % (i, c)
 
-    if '-f' in opts:
-        columns = opts['-f'].split(",")
+            return 
 
-    if '-t' in opts:
-        delimiter = "\t"    
-    elif '-d' in opts:
-        delimiter = opts['-d']
+        writer = csv.writer(sys.stdout, delimiter=args.output_delimiter)
 
-    if '-o' in opts:
-        output_delimiter = opts['-o']
+        if args.columns == [':']:
+            columns = range(len(row))
+        else:
+            columns = columns_split 
 
-    if '-q' in opts:
-        quotechar = opts['-q']
-    else:
-        quotechar = None
+        writer.writerow([row[int(c)] for c in columns])
 
-for row in csv.reader(i, delimiter=delimiter, quotechar=quotechar):
-    if show_headers:
-        for i, c in enumerate(row):
-            print "%3i: %s" % (i, c)
-        break
-
-    writer = csv.writer(sys.stdout, delimiter=output_delimiter)
-
-    if columns == [':']:
-        columns = range(len(row))
-
-    writer.writerow([row[int(c)] for c in columns])
+if __name__ == "__main__":
+    main()
