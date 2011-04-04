@@ -97,13 +97,13 @@ def main():
     parser.add_argument('-c', '--columns', dest='columns', default='0',
                         help='A comma separated list of column indices or names to be extracted. Defaults to first column only. Use ":" for all columns.')
     parser.add_argument('-d', '--delimiter', dest='delimiter', default=',',
-                        help='Delimiting character of the input CSV file.')
+                        help='Delimiting character of the input CSV file. Defaults to comma.')
     parser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
                         help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
     parser.add_argument('-o', '--outdelimiter', dest='output_delimiter', default=',',
-                        help='Delimiting character of the output CSV file.')
+                        help='Delimiting character of the output CSV file. Defaults to comma.')
     parser.add_argument('-q', '--quotechar', dest='quotechar', default='"',
-                        help='Character used to quote strings in the input CSV file.')
+                        help='Character used to quote strings in the input CSV file. Defaults to double-quote.')
 
     args = parser.parse_args()
 
