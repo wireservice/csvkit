@@ -80,6 +80,9 @@ def main():
 
     args = parser.parse_args()
 
+    if args.tabs:
+        args.delimiter = '\t'
+
     # Create an output csv writer in advance, in order to save overhead
     writer = csv.writer(sys.stdout)
 
