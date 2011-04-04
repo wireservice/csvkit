@@ -10,6 +10,7 @@ Used and modified with permission.
 """
 
 import csv 
+from itertools import islice
 import sys
 
 import argparse
@@ -53,12 +54,6 @@ def parse_column_identifiers(ids, column_names):
 
     return columns
 
-def parse_row_identifiers(ids):
-    if not ids:
-        return None
-    else:
-        return [int(i) - 1 for i in ids.split(',')]
-
 def main():
     """
     Command line-utility that filters and truncates CSV files. Like unix "cut" command, but for tabular data.
@@ -72,31 +67,26 @@ def main():
                         help='Display column names and indices from the input CSV and exit.')
     parser.add_argument('-c', '--columns', dest='columns',
                         help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
-    parser.add_argument('-r', '--rows', dest='rows',
-                        help='A comma separated list of row indices to be extracted. Defaults to all rows.')
     parser.add_argument('-d', '--delimiter', dest='delimiter', default=',',
                         help='Delimiting character of the input CSV file. Defaults to comma.')
     parser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
                         help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
     parser.add_argument('-q', '--quotechar', dest='quotechar', default='"',
                         help='Character used to quote strings in the input CSV file. Defaults to double-quote.')
+    parser.add_argument('-s', '--skipheader', dest='skipheader', action='store_true',
+                        help='Do not display the csv header in the output. Useful when piping to grep or uniq.')
 
     args = parser.parse_args()
-
-    # Determine rows to display
-    rows = parse_row_identifiers(args.rows)
 
     # Create an output csv writer in advance, in order to save overhead
     writer = csv.writer(sys.stdout)
 
-    i = 0
-
-    for row in csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar):
+    for i, row in enumerate(csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar)):
         if i == 0:
             # Show headers and exit
             if args.show_headers:
                 for i, c in enumerate(row):
-                    print "%3i: %s" % (i, c)
+                    print "%3i: %s" % (i + 1, c)
 
                 sys.exit()
             # Fetch column names for by-name indexing 
@@ -108,10 +98,10 @@ def main():
                 except ColumnIdentifierError, e:
                     sys.exit(e.msg)
 
-        if rows and i in rows: 
-            writer.writerow([row[c] for c in columns])
+        if i == 0 and args.skipheader:
+            continue
 
-        i+= 1
+        writer.writerow([row[c] for c in columns])
 
 if __name__ == "__main__":
     main()

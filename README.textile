@@ -8,10 +8,10 @@ h2. Principles
 
 * Produce compatibility-oriented CSVs. This means that quoting is done with double-quotes and only when necessary, columns are separated with commas, and lines are terminated with unix style line endings ("\n").
 
-* Write to STDOUT in order to support piping. Example:
+* Write to STDOUT in order to support piping. As an example, the following would display the top 10 rows, columns 1 and 3 only, of a Excel xls file that has been converted to csv:
 
 <pre>
-in2csv data.xls | csvcut -c 1,3
+in2csv data.xls | csvcut -c 1,3 | head 10
 </pre>
 
 * Read and write rectangular data. Columns without headers are ignored.
@@ -55,13 +55,13 @@ The header line is required and must match exactly.
 
 All output from in2csv is written to standard out.
 
-Example conversion of fixed-width file:
+Convert a fixed-width file:
 
 <pre>
 in2csv -s examples/textfised_schema.csv examples/testfixed
 </pre>
 
-Example conversion of xls file:
+Convert an xls file:
 
 <pre>
 in2csv examples/test.xls
@@ -70,6 +70,8 @@ in2csv examples/test.xls
 h2. Usage: csvcut
 
 Filters and truncates CSV files. Like unix "cut" command, but for tabular data.
+
+Note that csvcut does not include row slicing or filtering, for this you should pipe data to head, tail, or grep.
 
 Print the indices and names of all columns:
 
@@ -87,6 +89,30 @@ Extract columns named "integer" and "date":
 
 <pre>
 csvcut -c integer,date examples/testfixed_converted.csv
+</pre>
+
+Show the first ten values in column 1:
+
+<pre>
+csvcut -c 1 -s examples/testfixed_converted.csv | head -n 10
+</pre>
+
+Show the last value in column 6:
+
+<pre>
+csvcut -c 6 -s examples/testfixed_converted.csv | tail -n 1
+</pre>
+
+Show unique values in the fourth column:
+
+<pre>
+csvcut -c 4 -s examples/testfixed_converted.csv | uniq
+</pre>
+
+Search for rows about Chicago:
+
+<pre>
+csvcut -s examples/testfixed_converted.csv | grep -i chicago
 </pre>
 
 h2. Projected list of utilities:
