@@ -132,6 +132,9 @@ def xlsx2csv(f):
 
         try:
             column_type = determine_column_type(types)
+
+            if column_type in [Cell.TYPE_FORMULA, Cell.TYPE_INLINE, Cell.TYPE_ERROR]:
+                raise XLSXDataError('Column contains unsupported data type "%s"' % column_type)
              
             normal_values = NORMALIZERS[column_type](values)
         except XLSXDataError, e:
