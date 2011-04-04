@@ -34,7 +34,11 @@ def main():
             sys.exit()
 
     with open(args.file, 'r') as f:
-        output = convert.convert(f, format, schema=args.schema)
+        if args.schema:
+            with open(args.schema, 'r') as s:
+                output = convert.convert(f, format, schema=s)
+        else:
+            output = convert.convert(f, format)
 
     print output
 
