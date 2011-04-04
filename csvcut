@@ -76,7 +76,7 @@ def main():
     parser.add_argument('-s', '--skipheader', dest='skipheader', action='store_true',
                         help='Do not display the csv header in the output. Useful when piping to grep or uniq.')
     parser.add_argument('-l', '--linenumbers', dest='linenumbers', action='store_true',
-                        help='Insert a column of line numbers at the front of the output. Useful when piping to grep.')
+                        help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple unique id.')
 
     args = parser.parse_args()
 
