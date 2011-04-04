@@ -8,12 +8,6 @@ https://gist.github.com/561347/9846ebf8d0a69b06681da9255ffe3d3f59ec2c97
 """
 
 """
-Like cut, but for CSVs. To be used from a shell command line.
-
-Note that fields are zero-based, as opposed to 'cut' where they are 1-based.
-
-Should use something better than getopt, but this works...
-
 Usage: 
     csvcut foobar.csv
     (prints the first column of each row of foobar.csv)
@@ -55,15 +49,17 @@ import argparse
 
 def main():
     """
-    Command line-utility that splices and truncates CSV files in a variety of ways.
+    Command line-utility that filters and truncates CSV files in a variety of ways. Like unix 'cut' command, but for tabular data.
+
+    Note that fields are zero-based, as opposed to 'cut' where they are 1-based.
     """
     parser = argparse.ArgumentParser(description='Convert common, but less awesome, tabular data formats to CSV.')
     parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('r'), default=sys.stdin,
                         help='The CSV file to operate on. If omitted, will accept input on STDIN.')
     parser.add_argument('-n', '--names', dest='show_headers', action='store_true',
                         help='Display column names and indices from the input CSV and exit.')
-    parser.add_argument('-f', dest='columns', default='0',
-                        help='A comma separated list of column indexes to be extracted. Defaults to first column only. Use ":" for all columns.')
+    parser.add_argument('-c', '--columns', dest='columns', default='0',
+                        help='A comma separated list of column indices or names to be extracted. Defaults to first column only. Use ":" for all columns.')
     parser.add_argument('-d', '--delimiter', dest='delimiter', default=',',
                         help='Delimiting character of the input CSV file.')
     parser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
@@ -75,24 +71,45 @@ def main():
 
     args = parser.parse_args()
 
-    columns_split = [int(i) for i in args.columns.split(",")]
+    all_columns = True if args.columns == ':' else False
 
-    for row in csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar):
-        # Show headers and exit
-        if args.show_headers:
-            for i, c in enumerate(row):
-                print "%3i: %s" % (i, c)
+    # Create an output csv writer in advance, in order to save overhead
+    writer = csv.writer(sys.stdout, delimiter=args.output_delimiter)
 
-            return 
+    for i, row in enumerate(csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar)):
+        if i == 0:
+            # Show headers and exit
+            if args.show_headers:
+                for i, c in enumerate(row):
+                    print "%3i: %s" % (i, c)
 
-        writer = csv.writer(sys.stdout, delimiter=args.output_delimiter)
+                sys.exit()
+            # Fetch column names for by-name indexing 
+            else:
+                column_names = row
 
-        if args.columns == [':']:
-            columns = range(len(row))
-        else:
-            columns = columns_split 
+                if args.columns == ':':
+                    columns = range(len(column_names))
+                else:
+                    columns = []
 
-        writer.writerow([row[int(c)] for c in columns])
+                    for c in args.columns.split(","):
+                        if c in column_names:
+                            columns.append(column_names.index(c))
+                        else:
+                            try:
+                                c = int(c)
+                            # Fail out if neither a column name nor an integer
+                            except:
+                                sys.exit('Column identifier "%s" is neither a index, nor a existing column\'s name.' % c)
+
+                            # Fail out if index is out of range
+                            if c >= len(column_names):
+                                sys.exit('Index %i is beyond the last named column, "%s" at index %i.' % (c, column_names[-1], len(column_names) - 1))
+
+                            columns.append(c)
+
+        writer.writerow([row[c] for c in columns])
 
 if __name__ == "__main__":
     main()

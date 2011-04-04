@@ -46,6 +46,12 @@ All tools will write to STDOUT and therefore support piping, such as:
 
 in2csv data.xls | csvcut -f 0,2 | csvsql
 
+h2. Authors
+
+Christopher Groskopf
+Joe Germuska
+Aaron Bycoffe
+
 h2. License
 
 MIT
