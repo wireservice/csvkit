@@ -31,15 +31,19 @@ def parse_column_identifiers(ids, column_names):
 
     columns = []
 
-    for c in ids.split(","):
+    for c in ids.split(','):
         if c in column_names:
             columns.append(column_names.index(c))
         else:
             try:
-                c = int(c)
+                c = int(c) - 1
             # Fail out if neither a column name nor an integer
             except:
                 raise ColumnIdentifierError('Column identifier "%s" is neither a index, nor a existing column\'s name.' % c)
+
+            # Fail out if index is 0-based
+            if c < 0:
+                raise ColumnIdentifierError('Columns 0 is not valid; columns are 1-based.')
 
             # Fail out if index is out of range
             if c >= len(column_names):
@@ -53,7 +57,6 @@ def main():
     """
     Command line-utility that filters and truncates CSV files. Like unix "cut" command, but for tabular data.
 
-    Note: fields are zero-based, as opposed to 'cut' where they are 1-based.
     Note: columns without a header are ignored (non-rectangular data).
     """
     parser = argparse.ArgumentParser(description='Filter and trucate CSV files. Like unix "cut" command, but for tabular data.')
@@ -75,7 +78,9 @@ def main():
     # Create an output csv writer in advance, in order to save overhead
     writer = csv.writer(sys.stdout)
 
-    for i, row in enumerate(csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar)):
+    i = 0
+
+    for row in csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar):
         if i == 0:
             # Show headers and exit
             if args.show_headers:
@@ -93,6 +98,8 @@ def main():
                     sys.exit(e.msg)
 
         writer.writerow([row[c] for c in columns])
+
+        i+= 1
 
 if __name__ == "__main__":
     main()
