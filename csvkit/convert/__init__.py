@@ -25,8 +25,6 @@ def convert(f, format, schema=None):
         return fixed2csv(f, schema)
     elif format == 'xls':
         return xls2csv(f)
-    elif format == 'xlsx':
-        return xlsx2csv(f)
     else:
         raise ValueError('format "%s" is not supported' % format)
 
