@@ -1,0 +1,47 @@
+h1. csvkit
+
+A library of utilities for working with CSV, the king of tabular file formats.  Inspired by pdftk.
+
+*THIS CODE IS VERY ALPHA*
+
+h2. in2csv
+
+Converts various formats into csv. Currently supported: fixed-width and xls. Converting fixed width requires that you provide a schema file with the "-s" option. The schema file should have the following format:
+
+<pre>
+column,start,length
+name,0,30
+birthday,30,10
+age,40,3
+</pre>
+
+The header line is required and must match exactly. All output from in2csv is written to standard out.
+
+Example conversion of fixed-width file:
+
+<pre>
+./in2csv -s examples/textfised_schema.csv examples/testfixed > testfixed.csv
+</pre>
+
+Example conversion of Excel xls file:
+
+<pre>
+./in2csv examples/test.xls > testxls.csv
+</pre>
+
+h2. Projected list of utilities:
+
+in2csv - convert fixed-width, xls, xlsx, odf, and dbf files into csv (inspired by ogr2ogr)
+csvcut - extension of Joe Germuska and Aaron Bycoffe's CSV splicing/munging tool
+csv2sql - generate a sql create table statement for a CSV using type inference (in particular for use with the COPY command in postgres)
+csvtest - validate that a CSV does not contain mixed datatypes and other anomalies
+csvsummary - generate summary statistics for columns in a CSV (like R's summary() function)
+csvjoin - quickly merge two CSV files by a shared column
+
+All tools will write to STDOUT and therefore support piping, such as:
+
+in2csv data.xls | csvcut -f 0,2 | csvsql
+
+h2. License
+
+MIT
