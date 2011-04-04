@@ -27,6 +27,7 @@ git clone git://github.com/onyxfish/csvkit.git
 cd csvkit
 mkvirtualenv --no-site-packages csvkit
 pip install -r requirements.txt
+nosetests
 </pre>
 
 For users (until first PyPI build is ready):
