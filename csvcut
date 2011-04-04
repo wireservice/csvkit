@@ -47,13 +47,49 @@ import sys
 
 import argparse
 
+class ColumnIdentifierError(Exception):
+    """
+    Exception raised when the user supplies an invalid column identifier.
+    """
+    def __init__(self, msg):
+        self.msg = msg
+
+def parse_column_identifiers(ids, column_names):
+    """
+    Parse a comma-separated list of column indicies and names into a list of integer indices.
+    """
+    # Check for wildcard
+    if ids == ':':
+        return range(len(column_names))
+
+    columns = []
+
+    for c in ids.split(","):
+        if c in column_names:
+            columns.append(column_names.index(c))
+        else:
+            try:
+                c = int(c)
+            # Fail out if neither a column name nor an integer
+            except:
+                raise ColumnIdentifierError('Column identifier "%s" is neither a index, nor a existing column\'s name.' % c)
+
+            # Fail out if index is out of range
+            if c >= len(column_names):
+                raise ColumnIdentifierError('Index %i is beyond the last named column, "%s" at index %i.' % (c, column_names[-1], len(column_names) - 1))
+
+            columns.append(c)
+
+    return columns
+
 def main():
     """
-    Command line-utility that filters and truncates CSV files in a variety of ways. Like unix 'cut' command, but for tabular data.
+    Command line-utility that filters and truncates CSV files. Like unix "cut" command, but for tabular data.
 
-    Note that fields are zero-based, as opposed to 'cut' where they are 1-based.
+    Note: fields are zero-based, as opposed to 'cut' where they are 1-based.
+    Note: columns without a header are ignored (non-rectangular data).
     """
-    parser = argparse.ArgumentParser(description='Convert common, but less awesome, tabular data formats to CSV.')
+    parser = argparse.ArgumentParser(description='Filter and trucate CSV files. Like unix "cut" command, but for tabular data.')
     parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('r'), default=sys.stdin,
                         help='The CSV file to operate on. If omitted, will accept input on STDIN.')
     parser.add_argument('-n', '--names', dest='show_headers', action='store_true',
@@ -71,8 +107,6 @@ def main():
 
     args = parser.parse_args()
 
-    all_columns = True if args.columns == ':' else False
-
     # Create an output csv writer in advance, in order to save overhead
     writer = csv.writer(sys.stdout, delimiter=args.output_delimiter)
 
@@ -88,26 +122,10 @@ def main():
             else:
                 column_names = row
 
-                if args.columns == ':':
-                    columns = range(len(column_names))
-                else:
-                    columns = []
-
-                    for c in args.columns.split(","):
-                        if c in column_names:
-                            columns.append(column_names.index(c))
-                        else:
-                            try:
-                                c = int(c)
-                            # Fail out if neither a column name nor an integer
-                            except:
-                                sys.exit('Column identifier "%s" is neither a index, nor a existing column\'s name.' % c)
-
-                            # Fail out if index is out of range
-                            if c >= len(column_names):
-                                sys.exit('Index %i is beyond the last named column, "%s" at index %i.' % (c, column_names[-1], len(column_names) - 1))
-
-                            columns.append(c)
+                try:
+                    columns = parse_column_identifiers(args.columns, column_names)
+                except ColumnIdentifierError, e:
+                    sys.exit(e.msg)
 
         writer.writerow([row[c] for c in columns])
 
