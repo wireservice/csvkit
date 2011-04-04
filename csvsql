@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 
 import csv
+import sys
 
-import sqlalchemy as sql
 import argparse
+
+from csvkit import sql
+from csvkit import typeinference
 
 def main():
     parser = argparse.ArgumentParser(description='Generate a SQL CREATE TABLE statement for a CSV file.')
@@ -16,11 +19,34 @@ def main():
     parser.add_argument('-q', '--quotechar', dest='quotechar', default='"',
                         help='Character used to quote strings in the input CSV file. Defaults to double-quote.')
 
+    args = parser.parse_args()
+    
     if args.tabs:
         args.delimiter = '\t'
 
-    for row in csv.reader(args.file, delimter=args.delimeter, quotechar=args.quotechar):
-        pass
+    reader = csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar)
+
+    column_names = reader.next()
+
+    data_columns = [[] for h in column_names]
+
+    for row in reader:
+        try:
+            for i, d in enumerate(row):
+                data_columns[i].append(d)
+        except KeyError, e:
+            # TKTK - non-rectangular data
+            raise
+
+    normal_types = []
+    normal_columns= []
+
+    for column in data_columns:
+        t, c = typeinference.normalize_column_type(column)
+        normal_types.append(t)
+        normal_columns.append(c)
+
+    print sql.make_create_table(column_names, normal_types, normal_columns)
 
 if __name__ == '__main__':
     main()
