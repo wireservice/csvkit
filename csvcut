@@ -75,6 +75,8 @@ def main():
                         help='Character used to quote strings in the input CSV file. Defaults to double-quote.')
     parser.add_argument('-s', '--skipheader', dest='skipheader', action='store_true',
                         help='Do not display the csv header in the output. Useful when piping to grep or uniq.')
+    parser.add_argument('-l', '--linenumbers', dest='linenumbers', action='store_true',
+                        help='Insert a column of line numbers at the front of the output. Useful when piping to grep.')
 
     args = parser.parse_args()
 
@@ -98,10 +100,20 @@ def main():
                 except ColumnIdentifierError, e:
                     sys.exit(e.msg)
 
+        # Don't display headers?
         if i == 0 and args.skipheader:
             continue
 
-        writer.writerow([row[c] for c in columns])
+        row = [row[c] for c in columns]
+
+        # Add line numbers?
+        if args.linenumbers:
+            if i == 0:
+                row.insert(0, 'line_number')
+            else:
+                row.insert(0, i)
+
+        writer.writerow(row)
 
 if __name__ == "__main__":
     main()
