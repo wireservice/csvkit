@@ -11,7 +11,7 @@ h2. Principles
 * Write to STDOUT in order to support piping. Example:
 
 <pre>
-in2csv data.xls | csvcut -c 0,2
+in2csv data.xls | csvcut -c 1,3
 </pre>
 
 * Read and write rectangular data. Columns without headers are ignored.
