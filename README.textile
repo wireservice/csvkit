@@ -4,7 +4,21 @@ A library of utilities for working with CSV, the king of tabular file formats.  
 
 *THIS CODE IS VERY ALPHA*
 
-h2. in2csv
+h2. Guiding principles for all utilities
+
+* Produce compatibility-oriented CSVs. This means that quoting is done with double-quotes and only when necessary, columns are separated with commas, and lines are terminated with unix style line endings ("\n").
+
+* Write to STDOUT in order to support piping. Example:
+
+<pre>
+in2csv data.xls | csvcut -c 0,2
+</pre>
+
+* Read and write rectangular data. Columns without headers are ignored.
+
+* Standardize, standardize, standardize. Floats should end with ".0", even if they are round. Dates and times should be in ISO8601 format. Etc.
+
+h2. Usage: in2csv
 
 Converts various formats into csv. Currently supported: fixed-width and xls (Excel).
 
@@ -44,7 +58,7 @@ csvjoin - quickly merge two CSV files by a shared column
 
 All tools will write to STDOUT and therefore support piping, such as:
 
-in2csv data.xls | csvcut -f 0,2 | csvsql
+
 
 h2. Authors
 

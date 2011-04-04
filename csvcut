@@ -5,41 +5,8 @@ csvcut is originally the work of eminent hackers Joe Germuska and Aaron Bycoffe.
 
 This code is forked from:
 https://gist.github.com/561347/9846ebf8d0a69b06681da9255ffe3d3f59ec2c97
-"""
 
-"""
-Usage: 
-    csvcut foobar.csv
-    (prints the first column of each row of foobar.csv)
-    
-    head -10 foobar.csv | csvcut -f 0,2
-    (prints the first and third columns of the first ten lines of foobar.csv)
-
-    csvcut -f 0,2 -d "|" foobar.csv
-    (prints the first and third columns of the pipe-delimited foobar.csv)
-
-    csvcut -f 0,2 -t foobar.csv
-    (prints the first and third columns of the tab-delimited foobar.csv
-     if present, the -d option will be ignored.)
-
-    csvcut -h foobar.csv
-    (prints the values of the first line of foobar.csv, preceded by the field index which would 
-     be used to display that column.  If present, the -f option will be ignored.)
-
-    csvcut -f 0,1,2 -d "|" -o , foobar.csv
-    (prints the first three columns of the pipe-delimited foobar.csv; output
-    will be comma-delimited.)
-
-    csvcut -f 0,1,2 -o "|" foobar.csv
-    (prints the first three columns of the comma-delimited foobar.csv; output
-    will be pipe-delimited.)
-
-    csvcut -f : -o "|" foobar.csv
-    (prints all the columns of the comma-delimited foobar.csv; output will be
-    pipe-delimited.)
-
-    csvcut -f 0,1 -d "," -q "|" foobar.csv
-    (prints the first two columns of the comma-delimited, pipe-quoted foorbar.csv.)
+Used and modified with permission.
 """
 
 import csv 
@@ -100,15 +67,13 @@ def main():
                         help='Delimiting character of the input CSV file. Defaults to comma.')
     parser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
                         help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
-    parser.add_argument('-o', '--outdelimiter', dest='output_delimiter', default=',',
-                        help='Delimiting character of the output CSV file. Defaults to comma.')
     parser.add_argument('-q', '--quotechar', dest='quotechar', default='"',
                         help='Character used to quote strings in the input CSV file. Defaults to double-quote.')
 
     args = parser.parse_args()
 
     # Create an output csv writer in advance, in order to save overhead
-    writer = csv.writer(sys.stdout, delimiter=args.output_delimiter)
+    writer = csv.writer(sys.stdout)
 
     for i, row in enumerate(csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar)):
         if i == 0:
