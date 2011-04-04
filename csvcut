@@ -1,0 +1,87 @@
+#!/usr/bin/env python
+
+"""
+csvcut is originally the work of eminent hackers Joe Germuska and Aaron Bycoffe.
+
+This code is forked from:
+https://gist.github.com/561347/9846ebf8d0a69b06681da9255ffe3d3f59ec2c97
+"""
+
+"""
+Like cut, but for CSVs. To be used from a shell command line.
+
+Note that fields are zero-based, as opposed to 'cut' where they are 1-based.
+
+Should use something better than getopt, but this works...
+
+Usage: 
+    csvcut foobar.csv
+    (prints the first column of each row of foobar.csv)
+    
+    head -10 foobar.csv | csvcut -f 0,2
+    (prints the first and third columns of the first ten lines of foobar.csv)
+
+    csvcut -f 0,2 -d "|" foobar.csv
+    (prints the first and third columns of the pipe-delimited foobar.csv)
+
+    csvcut -f 0,2 -t foobar.csv
+    (prints the first and third columns of the tab-delimited foobar.csv
+     if present, the -d option will be ignored.)
+
+    csvcut -h foobar.csv
+    (prints the values of the first line of foobar.csv, preceded by the field index which would 
+     be used to display that column.  If present, the -f option will be ignored.)
+
+    csvcut -f 0,1,2 -d "|" -o , foobar.csv
+    (prints the first three columns of the pipe-delimited foobar.csv; output
+    will be comma-delimited.)
+
+    csvcut -f 0,1,2 -o "|" foobar.csv
+    (prints the first three columns of the comma-delimited foobar.csv; output
+    will be pipe-delimited.)
+
+    csvcut -f : -o "|" foobar.csv
+    (prints all the columns of the comma-delimited foobar.csv; output will be
+    pipe-delimited.)
+
+    csvcut -f 0,1 -d "," -q "|" foobar.csv
+    (prints the first two columns of the comma-delimited, pipe-quoted foorbar.csv.)
+"""
+
+import sys, csv, getopt
+opts, args = getopt.getopt(sys.argv[1:], "f:d:o:q:ht", [])
+if args:
+    i = open(args[0],"U")
+else:
+    i = sys.stdin
+
+delimiter = ','
+output_delimiter = ' '
+cols = [0, ]
+show_headers = False
+
+if opts:
+    opts = dict(opts)
+    show_headers = '-h' in opts
+    if '-f' in opts:
+        cols = opts['-f'].split(",")
+    if '-t' in opts:
+        delimiter = "\t"    
+    elif '-d' in opts:
+        delimiter = opts['-d']
+    if '-o' in opts:
+        output_delimiter = opts['-o']
+    if '-q' in opts:
+        quotechar = opts['-q']
+    else:
+        quotechar = None
+
+for row in csv.reader(i, delimiter=delimiter, quotechar=quotechar):
+    if show_headers:
+        for i,c in enumerate(row):
+            print "%3i: %s" % (i,c)
+        break
+    writer = csv.writer(sys.stdout, delimiter=output_delimiter)
+    if cols == [':']:
+        cols = range(len(row))
+    writer.writerow([row[int(c)] for c in cols])
