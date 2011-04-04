@@ -58,7 +58,7 @@ All output from in2csv is written to standard out.
 Convert a fixed-width file:
 
 <pre>
-in2csv -s examples/textfised_schema.csv examples/testfixed
+in2csv -s examples/testfixed_schema.csv examples/testfixed
 </pre>
 
 Convert an xls file:
