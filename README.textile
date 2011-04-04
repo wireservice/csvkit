@@ -6,7 +6,9 @@ A library of utilities for working with CSV, the king of tabular file formats.  
 
 h2. in2csv
 
-Converts various formats into csv. Currently supported: fixed-width and xls. Converting fixed width requires that you provide a schema file with the "-s" option. The schema file should have the following format:
+Converts various formats into csv. Currently supported: fixed-width and xls (Excel).
+
+Converting fixed width requires that you provide a schema file with the "-s" option. The schema file should have the following format:
 
 <pre>
 column,start,length
@@ -15,7 +17,9 @@ birthday,30,10
 age,40,3
 </pre>
 
-The header line is required and must match exactly. All output from in2csv is written to standard out.
+The header line is required and must match exactly.
+
+All output from in2csv is written to standard out.
 
 Example conversion of fixed-width file:
 
@@ -23,7 +27,7 @@ Example conversion of fixed-width file:
 ./in2csv -s examples/textfised_schema.csv examples/testfixed > testfixed.csv
 </pre>
 
-Example conversion of Excel xls file:
+Example conversion of xls file:
 
 <pre>
 ./in2csv examples/test.xls > testxls.csv
