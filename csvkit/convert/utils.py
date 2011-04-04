@@ -15,9 +15,7 @@ def guess_format(filename):
 
     extension = filename[last_period + 1:]
 
-    if extension == 'xlsx':
-        return extension
-    elif extension == 'xls':
+    if extension == 'xls':
         return extension
 
     return None

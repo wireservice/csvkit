@@ -6,7 +6,7 @@ from xlsx import xlsx2csv
 
 from utils import guess_format
 
-SUPPORTED_FORMATS = ['fixed', 'xls', 'xlsx']
+SUPPORTED_FORMATS = ['fixed', 'xls']
 
 def convert(f, format, schema=None):
     """
