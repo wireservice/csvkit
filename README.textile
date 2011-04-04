@@ -4,7 +4,7 @@ A library of utilities for working with CSV, the king of tabular file formats.  
 
 *THIS CODE IS VERY ALPHA*
 
-h2. Guiding principles for all utilities
+h2. Principles 
 
 * Produce compatibility-oriented CSVs. This means that quoting is done with double-quotes and only when necessary, columns are separated with commas, and lines are terminated with unix style line endings ("\n").
 
@@ -18,7 +18,7 @@ in2csv data.xls | csvcut -c 0,2
 
 * Standardize, standardize, standardize. Floats should end with ".0", even if they are round. Dates and times should be in ISO8601 format. Etc.
 
-h2. Install
+h2. Installation
 
 For developers:
 
@@ -96,10 +96,6 @@ csv2sql - generate a sql create table statement for a CSV using type inference (
 csvtest - validate that a CSV does not contain mixed datatypes and other anomalies
 csvsummary - generate summary statistics for columns in a CSV (like R's summary() function)
 csvjoin - quickly merge two CSV files by a shared column
-
-All tools will write to STDOUT and therefore support piping, such as:
-
-
 
 h2. Authors
 
