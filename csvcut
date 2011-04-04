@@ -25,8 +25,8 @@ def parse_column_identifiers(ids, column_names):
     """
     Parse a comma-separated list of column indicies and names into a list of integer indices.
     """
-    # Check for wildcard
-    if ids == ':':
+    # If not specified, return all columns 
+    if not ids:
         return range(len(column_names))
 
     columns = []
@@ -53,6 +53,12 @@ def parse_column_identifiers(ids, column_names):
 
     return columns
 
+def parse_row_identifiers(ids):
+    if not ids:
+        return None
+    else:
+        return [int(i) - 1 for i in ids.split(',')]
+
 def main():
     """
     Command line-utility that filters and truncates CSV files. Like unix "cut" command, but for tabular data.
@@ -64,8 +70,10 @@ def main():
                         help='The CSV file to operate on. If omitted, will accept input on STDIN.')
     parser.add_argument('-n', '--names', dest='show_headers', action='store_true',
                         help='Display column names and indices from the input CSV and exit.')
-    parser.add_argument('-c', '--columns', dest='columns', default='0',
-                        help='A comma separated list of column indices or names to be extracted. Defaults to first column only. Use ":" for all columns.')
+    parser.add_argument('-c', '--columns', dest='columns',
+                        help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
+    parser.add_argument('-r', '--rows', dest='rows',
+                        help='A comma separated list of row indices to be extracted. Defaults to all rows.')
     parser.add_argument('-d', '--delimiter', dest='delimiter', default=',',
                         help='Delimiting character of the input CSV file. Defaults to comma.')
     parser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
@@ -74,6 +82,9 @@ def main():
                         help='Character used to quote strings in the input CSV file. Defaults to double-quote.')
 
     args = parser.parse_args()
+
+    # Determine rows to display
+    rows = parse_row_identifiers(args.rows)
 
     # Create an output csv writer in advance, in order to save overhead
     writer = csv.writer(sys.stdout)
@@ -97,7 +108,8 @@ def main():
                 except ColumnIdentifierError, e:
                     sys.exit(e.msg)
 
-        writer.writerow([row[c] for c in columns])
+        if rows and i in rows: 
+            writer.writerow([row[c] for c in columns])
 
         i+= 1
 
