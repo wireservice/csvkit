@@ -37,8 +37,8 @@ def main():
             for i, d in enumerate(row):
                 data_columns[i].append(d)
         except KeyError, e:
-            # TKTK - non-rectangular data
-            raise
+            # Discard data in columns without headers
+            pass 
 
     normal_types = []
     normal_columns= []
@@ -48,7 +48,7 @@ def main():
         normal_types.append(t)
         normal_columns.append(c)
 
-    print sql.make_create_table(column_names, normal_types, normal_columns, dialect=args.dialect)
+    print sql.make_create_table_statement(column_names, normal_types, normal_columns, dialect=args.dialect)
 
 if __name__ == '__main__':
     main()

@@ -48,7 +48,7 @@ def make_column(column_name, normal_type, normal_column):
 
     return column
 
-def make_create_table(column_names, normal_types, normal_columns, dialect=None):
+def make_create_table_statement(column_names, normal_types, normal_columns, dialect=None):
     metadata = MetaData()
     table = Table('csvsql', metadata)
 
