@@ -1,6 +1,8 @@
 h1. csvkit
 
-A library of utilities for working with CSV, the king of tabular file formats.  Inspired by pdftk.
+A library of utilities for working with CSV, the king of tabular file formats.
+
+Inspired by pdftk and the original csvcut utility (by Joe Germuska and Aaron Bycoffe).
 
 *THIS CODE IS VERY ALPHA*
 
