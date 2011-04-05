@@ -18,6 +18,8 @@ def main():
                         help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
     parser.add_argument('-q', '--quotechar', dest='quotechar', default='"',
                         help='Character used to quote strings in the input CSV file. Defaults to double-quote.')
+    parser.add_argument('-i', '--dialect', dest='dialect',
+                        help='SQLAlchemy dialect module to use for compiling output. Ex. "postgresql.psycopg2".')
 
     args = parser.parse_args()
     
@@ -46,7 +48,7 @@ def main():
         normal_types.append(t)
         normal_columns.append(c)
 
-    print sql.make_create_table(column_names, normal_types, normal_columns)
+    print sql.make_create_table(column_names, normal_types, normal_columns, dialect=args.dialect)
 
 if __name__ == '__main__':
     main()
