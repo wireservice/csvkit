@@ -6,6 +6,14 @@ from sqlalchemy import Column, MetaData, Table
 from sqlalchemy import Boolean, Date, DateTime, Float, Integer, String, Time
 from sqlalchemy.schema import CreateTable
 
+DIALECTS = {
+    'mssql': 'mssql.pyodbc',
+    'mysql': 'mysql.mysqlconnector',
+    'oracle': 'oracle.cx_oracle',
+    'postgresql': 'postgresql.psycopg2',
+    'sqlite': 'sqlite.pysqlite'
+}
+
 def make_column(column_name, normal_type, normal_column):
     column_kwargs = {'nullable': False}
     type_kwargs = {}
@@ -49,7 +57,7 @@ def make_create_table(column_names, normal_types, normal_columns, dialect=None):
         table.append_column(c)
 
     if dialect:
-        module = __import__('sqlalchemy.dialects.%s' % dialect, fromlist=['dialect'])
+        module = __import__('sqlalchemy.dialects.%s' % DIALECTS[dialect], fromlist=['dialect'])
         dialect = module.dialect() 
 
     return CreateTable(table).compile(dialect=dialect)
