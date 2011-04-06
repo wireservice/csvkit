@@ -47,6 +47,10 @@ class TestSQL(unittest.TestCase):
         c = sql.make_column('test', str, ['this', 'is', 'test', 'data'])
         self.assertEqual(type(c.type), String)
 
+    def test_make_column_string_length(self):
+        c = sql.make_column('test', str, ['this', 'is', 'test', 'data', 'that', 'is', 'awesome'])
+        self.assertEqual(c.type.length, 7)
+    
     def test_column_nullable(self):
         c = sql.make_column('test', int, [1, -87, 418000000, None])
         self.assertEqual(c.key, 'test')
@@ -60,5 +64,23 @@ class TestSQL(unittest.TestCase):
         self.assertEqual(c.nullable, False)
 
     def test_make_create_table_statement(self):
-        pass
+        statement = sql.make_create_table_statement(
+            ['text', 'integer', 'datetime', 'empty_column'],
+            [str, int, datetime.datetime, None],
+            [
+                ['Chicago Reader', 'Chicago Sun-Times', 'Chicago Tribune', 'Row with blanks'],
+                [40, 63, 164, None],
+                [datetime.datetime(1971, 1, 1, 4, 14), datetime.datetime(1948, 1, 1, 14, 57, 13), datetime.datetime(1920, 1, 1, 0, 0), None],
+                [None, None, None, None]
+            ])
+
+        self.assertEqual(str(statement).strip(), 
+"""CREATE TABLE csvsql (
+\ttext VARCHAR(17) NOT NULL, 
+\tinteger INTEGER, 
+\tdatetime DATETIME, 
+\tempty_column VARCHAR(32)
+)""")
+
+
 
