@@ -7,11 +7,16 @@ from sqlalchemy import Boolean, Date, DateTime, Float, Integer, String, Time
 from sqlalchemy.schema import CreateTable
 
 DIALECTS = {
+    'access': 'access.base',
+    'firebird': 'firebird.kinterbasdb',
+    'informix': 'informix.informixdb',
+    'maxdb': 'maxdb.sapdb',
     'mssql': 'mssql.pyodbc',
     'mysql': 'mysql.mysqlconnector',
     'oracle': 'oracle.cx_oracle',
     'postgresql': 'postgresql.psycopg2',
-    'sqlite': 'sqlite.pysqlite'
+    'sqlite': 'sqlite.pysqlite',
+    'sybase': 'sybase.pyodbc'
 }
 
 def make_column(column_name, normal_type, normal_column):
