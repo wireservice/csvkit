@@ -19,7 +19,34 @@ class LengthMismatch(CSVTestException):
     def __init__(self, line_number, row, expected_length):
         msg = "Expected length [%i], got length [%i]" % (expected_length, len(row))
         super(LengthMismatch, self).__init__(line_number, row, msg)
+
+class DeferredWriter(object):
+    """A thing which waits to open a file and write the first row until its write method is called.
+       Kind of a tentative idea, but it would be nice not to have files which are empty except for
+       the header...  Don't get the idea that this is threadsafe or anything like that...
+    """
+    def __init__(self, filename, firstrow, **kwargs):
+        super(DeferredWriter, self).__init__()
+        self.filename = filename
+        self.firstrow = firstrow
+        self.kwargs = kwargs
+        self.file = None
+        self.writer = None
         
+    def writerow(self, row):
+        if self.writer is None:
+            self.file = open(self.filename,"w")
+            self.writer = csv.writer(self.file,**self.kwargs)
+            self.writer.writerow(self.firstrow)
+        self.writer.writerow(row)
+        
+    def writerows(self,rows):
+        for row in rows: self.writerow(row)
+        
+    def close(self):
+        if self.file:
+            self.file.close()
+
 def main():
     parser = init_common_parser(description='Perform a few basic sanity checks on a CSV file.')
     parser.add_argument('-c', '--clean', dest='clean', action='store_true',
@@ -38,19 +65,15 @@ def main():
         args.delimiter = '\t'
 
     reader = csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar)
-    if args.clean:
-        base,ext = splitext(args.file.name)
-        cleaned = csv.writer(open("%s_out.csv" % base, "w"), delimiter=args.delimiter, quotechar=args.quotechar)
-        err = csv.writer(open("%s_err.csv" % base, "w"), delimiter=args.delimiter, quotechar=args.quotechar)
-
     column_names = reader.next()
 
     if args.clean:
-        cleaned.writerow(column_names)
+        base,ext = splitext(args.file.name)
+        cleaned = DeferredWriter("%s_out.csv" % base, column_names, delimiter=args.delimiter, quotechar=args.quotechar)
         err_header = ['line_number','error']
         err_header.extend(column_names)
-        err.writerow(err_header)
-    
+        err = DeferredWriter("%s_err.csv" % base, err_header, delimiter=args.delimiter, quotechar=args.quotechar)
+
     data_columns = [[] for h in column_names]
 
     for i,row in enumerate(reader):
@@ -68,6 +91,11 @@ def main():
                 err.writerow(err_row)
             else:
                 print "Line: %i: %s" % (e.line_number,e.msg)
+
+
+    if args.clean:
+        cleaned.close()
+        err.close()
 
 if __name__ == '__main__':
     main()
