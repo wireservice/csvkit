@@ -17,6 +17,10 @@ def guess_format(filename):
 
     if extension == 'xls':
         return extension
+    elif extension == 'csv':
+        return extension
+    elif extension == 'fixed':
+        return extension
 
     return None
 

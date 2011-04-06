@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from csvitself import csv2csv
 from fixed import fixed2csv
 from xls import xls2csv
 from xlsx import xlsx2csv
@@ -10,7 +11,7 @@ SUPPORTED_FORMATS = ['fixed', 'xls']
 
 def convert(f, format, schema=None):
     """
-    Convert a file, f, of a specified format to CSV.
+    Convert a file of a specified format to CSV.
     """
     if not f:
         raise ValueError('f must not be None')
@@ -25,6 +26,8 @@ def convert(f, format, schema=None):
         return fixed2csv(f, schema)
     elif format == 'xls':
         return xls2csv(f)
+    elif format == 'csv':
+        return csv2csv(f)
     else:
         raise ValueError('format "%s" is not supported' % format)
 
