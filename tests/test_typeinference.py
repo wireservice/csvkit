@@ -46,3 +46,28 @@ class TestNormalizeType(unittest.TestCase):
         self.assertEqual((str, ['Jan 1, 2008 at 4:40 AM', '2010-01-27T03:45:00', '16:14:45', None]), typeinference.normalize_column_type(['Jan 1, 2008 at 4:40 AM', '2010-01-27T03:45:00', '16:14:45', '']))
 
 
+    def test_normalize_table(self):
+        expected_types = [str,int,float,None]
+        data = [
+            ['a','1','2.1', ''],
+            ['b', '5', '4.1', ''],
+            ['c', '100', '100.9999', ''],
+            ['d', '2', '5.3', '']
+        ]
+        column_count = len(expected_types)
+        types, columns = typeinference.normalize_table(data,column_count)
+
+        self.assertEqual(column_count, len(types))
+        self.assertEqual(column_count, len(columns))
+
+        for i,tup in enumerate(zip(columns,types,expected_types)):
+            c, t, et= tup
+            self.assertEqual(et, t)
+            for row,normalized in zip(data,c):
+                if t is None:
+                    self.assertTrue(normalized is None)
+                    self.assertEqual('', row[i])
+                else:
+                    self.assertEqual(t(row[i]),normalized)
+
+                

@@ -21,24 +21,7 @@ def main():
 
     column_names = reader.next()
 
-    data_columns = [[] for h in column_names]
-
-    for row in reader:
-        try:
-            for i, d in enumerate(row):
-                data_columns[i].append(d)
-        except KeyError, e:
-            # Discard data in columns without headers
-            pass 
-
-    normal_types = []
-    normal_columns= []
-
-    for column in data_columns:
-        t, c = typeinference.normalize_column_type(column)
-        normal_types.append(t)
-        normal_columns.append(c)
-
+    normal_types, normal_columns = typeinference.normalize_table(reader,len(column_names))
     print sql.make_create_table_statement(column_names, normal_types, normal_columns, dialect=args.dialect)
 
 if __name__ == '__main__':

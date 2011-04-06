@@ -103,3 +103,22 @@ def normalize_column_type(l):
 
     # Don't know what they are, so they must just be strings 
     return str, [x if x != '' else None for x in l]
+
+def normalize_table(rows,column_count):
+    """Given a sequence of sequences, normalize the lot.
+       
+    """
+    data_columns = [[] for x in range(0,column_count)]
+    for row in rows:
+        for data_column, value in zip(data_columns,row):
+            data_column.append(value)
+
+    normal_types = []
+    normal_columns= []
+
+    for column in data_columns:
+        t, c = normalize_column_type(column)
+        normal_types.append(t)
+        normal_columns.append(c)
+    
+    return normal_types, normal_columns
