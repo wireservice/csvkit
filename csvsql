@@ -3,21 +3,12 @@
 import csv
 import sys
 
-import argparse
-
+from csvkit import init_common_parser
 from csvkit import sql
 from csvkit import typeinference
 
 def main():
-    parser = argparse.ArgumentParser(description='Generate a SQL CREATE TABLE statement for a CSV file.')
-    parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('r'), default=sys.stdin,
-                        help='The CSV file to operate on. If omitted, will accept input on STDIN.')
-    parser.add_argument('-d', '--delimiter', dest='delimiter', default=',',
-                        help='Delimiting character of the input CSV file. Defaults to comma.')
-    parser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
-                        help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
-    parser.add_argument('-q', '--quotechar', dest='quotechar', default='"',
-                        help='Character used to quote strings in the input CSV file. Defaults to double-quote.')
+    parser = init_common_parser(description='Generate a SQL CREATE TABLE statement for a CSV file.')
     parser.add_argument('-i', '--dialect', dest='dialect', choices=sql.DIALECTS,
                         help='Dialect of SQL to generate.')
 
