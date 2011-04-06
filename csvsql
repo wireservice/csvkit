@@ -48,10 +48,6 @@ def main():
         normal_types.append(t)
         normal_columns.append(c)
 
-    print column_names
-    print normal_types
-    print normal_columns
-
     print sql.make_create_table_statement(column_names, normal_types, normal_columns, dialect=args.dialect)
 
 if __name__ == '__main__':

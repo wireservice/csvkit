@@ -123,6 +123,16 @@ Add line-numbers to the csvcut output, then find the Chicago Tribune:
 csvcut -l -s examples/testfixed_converted.csv | grep -i tribune
 </pre>
 
+h2. Usage: csvsql
+
+Generates a SQL "CREATE TABLE" statement for a given CSV file.
+
+Generate a statement in the postgresql dialect:
+
+<pre>
+csvsql -i postgresql examples/testfixed_converted.csv
+</pre>
+
 h2. Projected list of utilities:
 
 in2csv - convert fixed-width, xls, xlsx, odf, and dbf files into csv (inspired by ogr2ogr)

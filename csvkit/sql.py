@@ -65,4 +65,4 @@ def make_create_table_statement(column_names, normal_types, normal_columns, dial
         module = __import__('sqlalchemy.dialects.%s' % DIALECTS[dialect], fromlist=['dialect'])
         dialect = module.dialect() 
 
-    return CreateTable(table).compile(dialect=dialect)
+    return str(CreateTable(table).compile(dialect=dialect)).strip()
