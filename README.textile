@@ -125,7 +125,7 @@ csvcut -l -s examples/testfixed_converted.csv | grep -i tribune
 
 h2. Usage: csvsql
 
-Generates a SQL "CREATE TABLE" statement for a given CSV file.
+Generates a SQL "CREATE TABLE" statement for a given CSV file. Supports a variety of SQL dialects (execute "csvsql -h" for a complete list).
 
 Generate a statement in the postgresql dialect:
 
