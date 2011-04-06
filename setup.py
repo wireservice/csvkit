@@ -25,6 +25,8 @@ setup(
     ],
     scripts = [
         'in2csv',
-        'csvcut'
+        'csvcut',
+        'csvtest',
+        'csvsql',
     ],
 )
