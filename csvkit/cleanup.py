@@ -40,6 +40,13 @@ def join_rows(rows):
     fixed_row.append('\n'.join(merged))
     fixed_row.extend(rows[-1][1:])
     return fixed_row
+        
+def join_two_rows(a,b):
+    row = a[:]
+    if b:
+        row[-1] += "\n%s" % b[0]
+    row.extend(b[1:])
+    return row
 
 def fix_length_errors(errs, target_line_length):
     """If possible, transform the rows backed up in the list of errors into rows of the correct length.
@@ -60,12 +67,6 @@ def fix_length_errors(errs, target_line_length):
         
     return fixed_rows
 
-def format_error_row(e):
-    """Format a row for """
-    err_row = [e.line_number, e.msg]
-    err_row.extend(row)
-    return err_row
-
 def extract_joinable_row_errors(errs):
     joinable = []
     for err in reversed(errs):
@@ -79,26 +80,30 @@ def extract_joinable_row_errors(errs):
     return joinable
 
 class RowChecker(object):
-    """docstring for RowChecker"""
+    """When created with a reader, can yield clean rows from the reader and expose some information about what wasn't clean."""
     def __init__(self, reader):
         super(RowChecker, self).__init__()
         self.reader = reader
         self.column_names = reader.next()
+        self.input_rows = 1 
         self.errs = []
         self.rows_joined = 0
         self.joins = 0
         
     def checked_rows(self):
         """A generator which yields OK rows which are ready to write to output."""
-        for i,row in enumerate(self.reader):
-            line_number = i + 2 # adjust for header row, plus add one for 1-based counting
+        for row in self.reader:
+            self.input_rows += 1 
+            line_number = self.input_rows + 1 # add one for 1-based counting
+
             try:
                 if len(row) != len(self.column_names):
                     raise LengthMismatch(line_number,row,len(self.column_names))
-
+                # any other tests?
                 yield row
             except LengthMismatch, e:
                 self.errs.append(e)
+                # see if we can actually clean up those length mismatches
                 joinable_row_errors = extract_joinable_row_errors(self.errs)
                 while joinable_row_errors:
                     fixed_row = join_rows(err.row for err in joinable_row_errors)

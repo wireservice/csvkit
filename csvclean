@@ -4,6 +4,11 @@ import csv
 from csvkit import init_common_parser
 from csvkit.cleanup import RowChecker
 
+def format_error_row(e):
+    """Format a row for """
+    err_row = [e.line_number, e.msg]
+    err_row.extend(e.row)
+    return err_row
 
 def main():
     parser = init_common_parser(description='Clean up a CSV file.')
@@ -42,8 +47,11 @@ def main():
         
         if checker.errs:
             err_file = csv.writer(open("%s_err.csv" % base, "w"))
+            err_header = ['line_number','msg']
+            err_header.extend(checker.column_names)
+            err_file.writerow(err_header)
             for e in checker.errs:
-                print "Line: %i: %s\n" % (e.line_number,e.msg)
+                err_file.writerow(format_error_row(e))
         else:
             print "No errors."
 
