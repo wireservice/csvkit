@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+from os.path import splitext
+import csv
+from csvkit import init_common_parser
+from csvkit.cleanup import RowChecker
+
+
+def main():
+    parser = init_common_parser(description='Clean up a CSV file.')
+    parser.add_argument('-n', '--dry-run', dest='dryrun', action='store_true',
+                        help='''If this argument is present, no output will be created.
+                                Information about what would have been done will be printed
+                                to STDERR.
+                        ''')
+
+
+    args = parser.parse_args()
+    
+    if args.tabs:
+        args.delimiter = '\t'
+
+    reader = csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar)
+
+    if args.dryrun:
+        checker = RowChecker(reader)
+        for row in checker.checked_rows():
+            pass
+        for e in checker.errs:
+            print "Line: %i: %s\n" % (e.line_number,e.msg)
+        else:
+            print "No errors."
+        if checker.joins:
+            print "%i rows would have been joined/reduced to %i rows after eliminating expected internal line breaks" % (checker.rows_joined, checker.joins)
+    else:
+        base,ext = splitext(args.file.name)
+        cleaned_file = csv.writer(open("%s_out.csv" % base,"w"))
+
+        checker = RowChecker(reader)
+        cleaned_file.writerow(checker.column_names)
+        for row in checker.checked_rows():
+            cleaned_file.writerow(row)
+        
+        if checker.errs:
+            err_file = csv.writer(open("%s_err.csv" % base, "w"))
+            for e in checker.errs:
+                print "Line: %i: %s\n" % (e.line_number,e.msg)
+        else:
+            print "No errors."
+
+        if checker.joins:
+            print "%i rows were joined/reduced to %i rows after eliminating expected internal line breaks" % (checker.rows_joined, checker.joins)
+
+
+if __name__ == '__main__':
+    main()
