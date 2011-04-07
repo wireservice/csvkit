@@ -38,6 +38,7 @@ def main():
             print "%i rows would have been joined/reduced to %i rows after eliminating expected internal line breaks" % (checker.rows_joined, checker.joins)
     else:
         base,ext = splitext(args.file.name)
+        # should we preserve delimiters and other dialect args from CLI?
         cleaned_file = csv.writer(open("%s_out.csv" % base,"w"))
 
         checker = RowChecker(reader)
@@ -46,6 +47,7 @@ def main():
             cleaned_file.writerow(row)
         
         if checker.errs:
+            # should we preserve delimiters and other dialect args from CLI?
             err_file = csv.writer(open("%s_err.csv" % base, "w"))
             err_header = ['line_number','msg']
             err_header.extend(checker.column_names)
