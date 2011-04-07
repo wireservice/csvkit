@@ -24,21 +24,13 @@ class LengthMismatch(CSVTestException):
 def join_rows(rows):
     """Given a series of rows, return them as a single row where the inner edge cells are merged"""
     rows = list(rows)
-    fixed_row = rows[0][:-1]
-    merged = [rows[0][-1]]
-    for row in rows[1:-1]:
-        merged.extend(row)
+    fixed_row = rows[0][:]
+    for row in rows[1:]:
+        if len(row) == 0:
+            row = ['']
+        fixed_row[-1] += "\n%s" % row[0]
+        fixed_row.extend(row[1:])
 
-    if len(rows) > 1 and len(rows[-1]) > 0:
-        try:    
-            merged.append(rows[-1][0])
-        except IndexError:
-            from pprint import pprint
-            print "index error?"
-            pprint(rows)
-
-    fixed_row.append('\n'.join(merged))
-    fixed_row.extend(rows[-1][1:])
     return fixed_row
         
 def join_two_rows(a,b):
