@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+from csvkit import init_common_parser
+
+
+def main():
+    parser = init_common_parser(description='Join a CSV file on a specified column or columns.',omitflags='f')
+
+    parser.add_argument('files', metavar="FILES", nargs='+', type=argparse.FileType('r'),
+                        help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
+
+    parser.add_argument('-j', '--join', nargs='+', 
+                        help='The columns on which to join. Should be either one, or as many as there are files.')
+
+
+    args = parser.parse_args()
+    
+
+if __name__ == '__main__':
+    main()
