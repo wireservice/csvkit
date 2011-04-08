@@ -1,7 +1,5 @@
 Bugs:
 
-Normalize ints with leading zeroes to strings (careful of 0!)
-
 Best practice:
 
 Test main functions of tools

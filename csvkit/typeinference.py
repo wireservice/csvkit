@@ -44,7 +44,23 @@ def normalize_column_type(l):
 
     # Are they integers?
     try:
-        return int, [int(x) if x != '' else None for x in l]
+        normal_values = []
+
+        for x in l:
+            if x == '':
+                normal_values.append(None)
+                continue
+
+            int_x = int(x)
+
+            if x[0] == '0' and int(x) != 0:
+                raise TypeError('Integer is padded with 0s, so treat it as a string instead.')
+            
+            normal_values.append(int_x)
+
+        return int, normal_values
+    except TypeError:
+        return unicode, [x if x != '' else None for x in l]
     except ValueError:
         pass
 

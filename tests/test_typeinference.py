@@ -11,6 +11,9 @@ class TestNormalizeType(unittest.TestCase):
 
     def test_ints(self): 
         self.assertEqual((int, [1, -87, 418000000, None]), typeinference.normalize_column_type(['1', '-87', '418000000', '']))
+
+    def test_padded_ints(self):
+        self.assertEqual((unicode, [u'0001', u'0997', u'8.7', None]), typeinference.normalize_column_type(['0001', '0997', '8.7', '']))
     
     def test_floats(self):
         self.assertEqual((float, [1.01, -87.413, 418000000.0, None]), typeinference.normalize_column_type(['1.01', '-87.413', '418000000.0', '']))
