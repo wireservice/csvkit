@@ -62,24 +62,31 @@ class Table(list):
         """
         return '\n'.join([unicode(c) for c in self])
 
+    def _reindex_columns(self):
+        for i, c in enumerate(self):
+            c.index = i
+
     def append(self, column):
         list.append(self, column)
         column.index = len(self) - 1
 
     def insert(self, i, column):
-        pass
+        list.insert(self, i, column)
+        self._reindex_columns()
 
     def extend(self, columns):
-        pass
+        list.extend(self, columns)
+        self._reindex_columns()
 
     def remove(self, column):
-        pass
+        list.remove(self, column)
+        self._reindex_columns()
 
     def sort(self):
-        pass
+        raise NotImplementedError()
 
     def reverse(self):
-        pass
+        raise NotImplementedError()
 
     @classmethod
     def from_csv(self, f, **kwargs):

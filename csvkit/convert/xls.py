@@ -158,11 +158,9 @@ def xls2csv(f):
             raise e
 
         column = table.Column(i, column_name, normal_values, normal_type=t)
-        print column
         tab.append(column)
 
     o = StringIO()
-    print tab
     output = tab.to_csv(o)
     output = o.getvalue()
     o.close()

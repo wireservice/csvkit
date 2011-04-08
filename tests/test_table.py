@@ -50,4 +50,46 @@ class TestTable(unittest.TestCase):
         self.assertEqual(t[0], c)
 
     def test_table_insert(self):
-        pass
+        c = table.Column(0, u'test', [u'test', u'column', None])
+        c2 = table.Column(0, u'test', [u'test', u'column', None])
+        t = table.Table([c])
+        t.insert(0, c2)
+        self.assertEqual(len(t), 2)
+        self.assertEqual(t[0], c2)
+        self.assertEqual(t[1], c)
+        self.assertEqual(t[0].index, 0)
+        self.assertEqual(t[1].index, 1)
+
+    def test_table_extend(self):
+        c = table.Column(0, u'test', [u'test', u'column', None])
+        c2 = table.Column(0, u'test', [u'test', u'column', None])
+        c3 = table.Column(0, u'test', [u'test', u'column', None])
+        t = table.Table([c])
+        t.extend([c2, c3])
+        self.assertEqual(len(t), 3)
+        self.assertEqual(t[0], c)
+        self.assertEqual(t[1], c2)
+        self.assertEqual(t[2], c3)
+        self.assertEqual(t[0].index, 0)
+        self.assertEqual(t[1].index, 1)
+        self.assertEqual(t[2].index, 2)
+
+    def test_table_remove(self):
+        c = table.Column(0, u'test', [u'test', u'column', None])
+        c2 = table.Column(0, u'test', [u'test', u'column', None])
+        c3 = table.Column(0, u'test', [u'test', u'column', None])
+        t = table.Table([c, c2, c3])
+        t.remove(c2)
+        self.assertEqual(len(t), 2)
+        self.assertEqual(t[0], c)
+        self.assertEqual(t[1], c3)
+        self.assertEqual(t[0].index, 0)
+        self.assertEqual(t[1].index, 1)
+
+    def test_table_sort(self):
+        t = table.Table()
+        self.assertRaises(NotImplementedError, t.sort)
+
+    def test_table_reverse(self):
+        t = table.Table()
+        self.assertRaises(NotImplementedError, t.reverse)
