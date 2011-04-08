@@ -28,5 +28,6 @@ setup(
         'csvcut',
         'csvclean',
         'csvsql',
+        'csvjoin',
     ],
 )

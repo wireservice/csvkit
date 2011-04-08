@@ -8,12 +8,21 @@ def main():
     parser.add_argument('files', metavar="FILES", nargs='+', type=argparse.FileType('r'),
                         help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
 
-    parser.add_argument('-j', '--join', nargs='+', 
-                        help='The columns on which to join. Should be either one, or as many as there are files.')
+    parser.add_argument('-j', '--join', dest='join',
+                        help='The columns on which to join. Should be either one, or a comma-separated list with one element for each file, in the same order the files were specified.')
 
     args = parser.parse_args()
 
+    join_cols = map(str.strip,args.join.split(','))
     
-
+    if len(join_cols) == 1:
+        join_cols = join_cols * len(args.files)
+        
+    if len(join_cols) != len(args.files):
+        raise ValueError("Number of join columns must match number of files, unless join column has the same name in all files.")
+    
+    for j,f in zip(join_cols,args.files):
+        print j,f
+    
 if __name__ == '__main__':
     main()
