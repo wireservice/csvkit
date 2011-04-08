@@ -6,20 +6,10 @@ import argparse
 
 from csvkit import convert
 
-def main():
+def main(args):
     """
     Command line-utility that convert tabular data formats into CSV.
     """
-    parser = argparse.ArgumentParser(description='Convert common, but less awesome, tabular data formats to CSV.')
-    parser.add_argument('file', metavar="FILE",
-                        help='The file to convert.')
-    parser.add_argument('-f', '--format', dest='format',
-                        help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(convert.SUPPORTED_FORMATS)))
-    parser.add_argument('-s', '--schema', dest='schema',
-                        help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
-
-    args = parser.parse_args()
-
     if args.format:
         format = args.format
 
@@ -43,4 +33,12 @@ def main():
     print output
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Convert common, but less awesome, tabular data formats to CSV.')
+    parser.add_argument('file', metavar="FILE",
+                        help='The file to convert.')
+    parser.add_argument('-f', '--format', dest='format',
+                        help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(convert.SUPPORTED_FORMATS)))
+    parser.add_argument('-s', '--schema', dest='schema',
+                        help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
+
+    main(parser.parse_args())

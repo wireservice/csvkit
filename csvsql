@@ -7,13 +7,10 @@ from csvkit import sql
 from csvkit import typeinference
 from csvkit.unicode import UnicodeCSVReader
 
-def main():
-    parser = init_common_parser(description='Generate a SQL CREATE TABLE statement for a CSV file.')
-    parser.add_argument('-i', '--dialect', dest='dialect', choices=sql.DIALECTS,
-                        help='Dialect of SQL to generate.')
-
-    args = parser.parse_args()
-    
+def main(args):
+    """
+    Generate a SQL create table statement for a given CSV file.
+    """
     reader = UnicodeCSVReader(args.file, **extract_csv_reader_kwargs(args))
 
     column_names = reader.next()
@@ -23,4 +20,8 @@ def main():
     print sql.make_create_table_statement(column_names, normal_types, normal_columns, dialect=args.dialect)
 
 if __name__ == '__main__':
-    main()
+    parser = init_common_parser(description='Generate a SQL CREATE TABLE statement for a CSV file.')
+    parser.add_argument('-i', '--dialect', dest='dialect', choices=sql.DIALECTS,
+                        help='Dialect of SQL to generate.')
+
+    main(parser.parse_args())
