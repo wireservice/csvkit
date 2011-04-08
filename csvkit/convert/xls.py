@@ -4,7 +4,6 @@ import datetime
 
 import xlrd
 
-from csvkit import typeinference
 import utils
 
 class XLSDataError(Exception):
@@ -116,7 +115,7 @@ def determine_column_type(types):
     types_set.discard(xlrd.biffh.XL_CELL_EMPTY)
 
     if len(types_set) > 1:
-        raise XLSDataError('Column contains multiple data types: %s' % str(types_set)) 
+        raise XLSDataError('Column contains multiple data types: %s' % unicode(types_set)) 
 
     try:
         return types_set.pop()
@@ -135,6 +134,11 @@ def xls2csv(f):
     for i in range(sheet.ncols):
         # Trim headers
         column_name = sheet.col_values(i)[0]
+
+        # Empty column name? Truncate remaining data
+        if not column_name:
+            break
+
         values = sheet.col_values(i)[1:]
         types = sheet.col_types(i)[1:]
 
@@ -156,6 +160,6 @@ def xls2csv(f):
     data = zip(*data_columns)
 
     # Insert header row
-    data.insert(0, [sheet.col_values(i)[0] for i in range(sheet.ncols)])
+    data.insert(0, [sheet.col_values(i)[0] for i in range(len(data_columns))])
 
     return utils.rows_to_csv_string(data) 

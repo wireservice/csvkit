@@ -1,20 +1,20 @@
 Bugs:
 
-Normalize whitespace stripping across importers
-Normalize ints with leading zeroes to strings (careful of 0!)
-Unicode support (-e, --encoding flag)
-
 Best practice:
 
-Test command-line interfaces? (Factor argparsing out of main so args can be mocked)
+Test main functions of tools
 Have normalize_column_type also return nullable and max_length?
 Factor existing utilities to use abstracted normalize_table method
 
 Features:
 
 Implement csv.Sniffer to auto-detect dialect
+Implement Brian's crazy/awesome csvsql "insert" idea
+Expand functionality of csvtest
+
+New utilities:
+
 csvlook: print to console in R/psql style fixed width table?
 csvdiff: identify which rows/cells have changed
-csvtest: validate that a CSV does not contain mixed datatypes and other anomalies
 csvsummary: generate summary statistics for columns in a CSV (like R’s summary() function)
 csvjoin: quickly merge two CSV files by a shared column

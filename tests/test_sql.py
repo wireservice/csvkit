@@ -4,9 +4,7 @@ import datetime
 import unittest
 
 from csvkit import sql
-from csvkit import typeinference
 
-from sqlalchemy import Column
 from sqlalchemy import Boolean, Date, DateTime, Float, Integer, String, Time
 
 class TestSQL(unittest.TestCase):
@@ -40,15 +38,15 @@ class TestSQL(unittest.TestCase):
         self.assertEqual(type(c.type), Time)
 
     def test_make_column_null(self):
-        c = sql.make_column('test', str, [None, None, None])
+        c = sql.make_column('test', unicode, [None, None, None])
         self.assertEqual(type(c.type), String)
 
     def test_make_column_string(self):
-        c = sql.make_column('test', str, ['this', 'is', 'test', 'data'])
+        c = sql.make_column('test', unicode, ['this', 'is', 'test', 'data'])
         self.assertEqual(type(c.type), String)
 
     def test_make_column_string_length(self):
-        c = sql.make_column('test', str, ['this', 'is', 'test', 'data', 'that', 'is', 'awesome'])
+        c = sql.make_column('test', unicode, ['this', 'is', 'test', 'data', 'that', 'is', 'awesome'])
         self.assertEqual(c.type.length, 7)
     
     def test_column_nullable(self):
@@ -66,7 +64,7 @@ class TestSQL(unittest.TestCase):
     def test_make_create_table_statement(self):
         statement = sql.make_create_table_statement(
             ['text', 'integer', 'datetime', 'empty_column'],
-            [str, int, datetime.datetime, None],
+            [unicode, int, datetime.datetime, None],
             [
                 ['Chicago Reader', 'Chicago Sun-Times', 'Chicago Tribune', 'Row with blanks'],
                 [40, 63, 164, None],
@@ -74,8 +72,8 @@ class TestSQL(unittest.TestCase):
                 [None, None, None, None]
             ])
 
-        self.assertEqual(str(statement).strip(), 
-"""CREATE TABLE csvsql (
+        self.assertEqual(unicode(statement).strip(), 
+u"""CREATE TABLE csvsql (
 \ttext VARCHAR(17) NOT NULL, 
 \tinteger INTEGER, 
 \tdatetime DATETIME, 

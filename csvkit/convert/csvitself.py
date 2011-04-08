@@ -4,13 +4,14 @@ import csv
 import datetime
 
 from csvkit import typeinference
+from csvkit.unicode import UnicodeCSVReader
 import utils
 
-def csv2csv(f, delimiter=',', quotechar='"'):
+def csv2csv(f, **kwargs):
     """
     "Convert" a CSV into a new CSV by normalizing types and correcting for other anomalies.
     """
-    rows = csv.reader(f, delimiter=delimiter, quotechar=quotechar) 
+    rows = UnicodeCSVReader(f, **kwargs) 
     headers = rows.next()
 
     # Data is processed first into columns (rather than rows) for easier type inference
@@ -19,7 +20,7 @@ def csv2csv(f, delimiter=',', quotechar='"'):
     for row in rows:
         for i, d in enumerate(row):
             try:
-                data_columns[i].append(d)
+                data_columns[i].append(d.strip())
             except KeyError:
                 # Non-rectangular data is truncated
                 break

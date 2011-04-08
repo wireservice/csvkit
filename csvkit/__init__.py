@@ -23,6 +23,13 @@ def init_common_parser(description='',omitflags=''):
 
     if 'e' not in omitflags:
         parser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
-                            help='NOT YET IMPLEMENTED. Reserving flag for unicode-aware future.')
-
-    return parser                    
+                            help='Specify the encoding the input file.')
+def extract_csv_reader_kwargs(args):
+    """
+    Extracts those from the command-line arguments those would should be passed through to the CSV reader.
+    """
+    return {
+            'encoding': args.encoding,
+            'delimiter': '\t' if args.tabs else args.delimiter,
+            'quotechar': args.quotechar,
+        }

@@ -44,7 +44,23 @@ def normalize_column_type(l):
 
     # Are they integers?
     try:
-        return int, [int(x) if x != '' else None for x in l]
+        normal_values = []
+
+        for x in l:
+            if x == '':
+                normal_values.append(None)
+                continue
+
+            int_x = int(x)
+
+            if x[0] == '0' and int(x) != 0:
+                raise TypeError('Integer is padded with 0s, so treat it as a string instead.')
+            
+            normal_values.append(int_x)
+
+        return int, normal_values
+    except TypeError:
+        return unicode, [x if x != '' else None for x in l]
     except ValueError:
         pass
 
@@ -102,15 +118,16 @@ def normalize_column_type(l):
         pass
 
     # Don't know what they are, so they must just be strings 
-    return str, [x if x != '' else None for x in l]
+    return unicode, [x if x != '' else None for x in l]
 
-def normalize_table(rows,column_count):
-    """Given a sequence of sequences, normalize the lot.
-       
+def normalize_table(rows, column_count):
     """
-    data_columns = [[] for x in range(0,column_count)]
+    Given a sequence of sequences, normalize the lot.
+    """
+    data_columns = [[] for x in range(column_count)]
+
     for row in rows:
-        for data_column, value in zip(data_columns,row):
+        for data_column, value in zip(data_columns, row):
             data_column.append(value)
 
     normal_types = []

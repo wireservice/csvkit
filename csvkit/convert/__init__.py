@@ -3,9 +3,6 @@
 from csvitself import csv2csv
 from fixed import fixed2csv
 from xls import xls2csv
-from xlsx import xlsx2csv
-
-from utils import guess_format
 
 SUPPORTED_FORMATS = ['fixed', 'xls']
 
