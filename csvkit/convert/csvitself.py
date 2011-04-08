@@ -1,43 +1,18 @@
 #!/usr/bin/env python
 
-import csv
-import datetime
+from cStringIO import StringIO
 
-from csvkit import typeinference
-from csvkit.unicode import UnicodeCSVReader
-import utils
+from csvkit import table
 
 def csv2csv(f, **kwargs):
     """
     "Convert" a CSV into a new CSV by normalizing types and correcting for other anomalies.
     """
-    rows = UnicodeCSVReader(f, **kwargs) 
-    headers = rows.next()
+    tab = table.Table.from_csv(f, **kwargs) 
 
-    # Data is processed first into columns (rather than rows) for easier type inference
-    data_columns = [[] for c in headers]
+    o = StringIO()
+    output = tab.to_csv(o)
+    output = o.getvalue()
+    o.close()
 
-    for row in rows:
-        for i, d in enumerate(row):
-            try:
-                data_columns[i].append(d.strip())
-            except KeyError:
-                # Non-rectangular data is truncated
-                break
-
-    # Use type-inference to normalize columns
-    for column in data_columns:
-        t, column = typeinference.normalize_column_type(column)
-
-        # Stringify datetimes, dates, and times
-        if t in [datetime.datetime, datetime.date, datetime.time]:
-            column = [v.isoformat() if v != None else None for v in column]
-
-    # Convert columns to rows
-    data = zip(*data_columns)
-
-    # Insert header row
-    data.insert(0, headers)
-
-    return utils.rows_to_csv_string(data)
-
+    return output

@@ -5,15 +5,27 @@ import datetime
 from csvkit import typeinference
 from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter
 
+class InvalidType(object):
+    """
+    Dummy object type for Column initialization, since None is being used as a valid value.
+    """
+    pass
+
 class Column(list):
     """
     A normalized data column and inferred annotations (nullable, etc.).
     """
-    def __init__(self, index, header, l):
+    def __init__(self, index, header, l, normal_type=InvalidType):
         """
         Construct a column from a sequence of values.
+        
+        If normal_type is not None, inference will be skipped and values assumed to have already been normalized.
         """
-        t, data = typeinference.normalize_column_type(l)
+        if normal_type != InvalidType:
+            t = normal_type
+            data = l
+        else:
+            t, data = typeinference.normalize_column_type(l)
         
         list.__init__(self, data)
         self.index = index
@@ -35,7 +47,7 @@ class Table(list):
     """
     A normalized data table and inferred annotations (nullable, etc.).
     """
-    def __init__(self, headers, columns):
+    def __init__(self, headers=[], columns=[]):
         """
         Generic constructor. You should normally use a from_* method to create a Table.
         """
@@ -51,6 +63,22 @@ class Table(list):
         Stringify a description of all columns in this table.
         """
         return '\n'.join([unicode(c) for c in self])
+
+    def add_column(self, column, position=None):
+        """
+        Add a Column to this Table.
+        """
+        if not position:
+            column.index = len(self.headers)
+            self.headers.append(column.header)
+            self.append(column.index)
+        else:
+            self.headers.insert(position, column.header)
+            self.insert(position, column)
+
+            # Update indices
+            for i, c in enumerate(self):
+                c.index = i
 
     @classmethod
     def from_csv(self, f, **kwargs):
