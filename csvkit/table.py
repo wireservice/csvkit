@@ -9,7 +9,7 @@ class Column(list):
     """
     A normalized data column and inferred annotations (nullable, etc.).
     """
-    def __init__(self, index, name, l):
+    def __init__(self, index, header, l):
         """
         Construct a column from a sequence of values.
         """
@@ -17,21 +17,18 @@ class Column(list):
         
         list.__init__(self, data)
         self.index = index
-        self.name = name 
+        self.header = header 
         self.type = t
         # self.nullable = ?
         # self.max_length = ?
-
-    def __getslice__(self, i, j):
-        return list.__getslice__(self, i, j)
 
     def __unicode__(self):
         """
         Stringify a description of this column.
         """
-        return '%3i: %s (%s)' (self.index, self.name, self.type)
+        return '%3i: %s (%s)' % (self.index, self.header, self.type)
 
-class Table(object):
+class Table(list):
     """
     A normalized data table and inferred annotations (nullable, etc.).
     """
@@ -39,14 +36,15 @@ class Table(object):
         """
         Generic constructor. You should normally use a from_* method to create a Table.
         """
+        list.__init__(self, columns)
+
         self.headers = headers 
-        self.columns = columns
 
     def __unicode__(self):
         """
         Stringify a description of all columns in this table.
         """
-        return '\n'.join([unicode(c) for c in self.columns])
+        return '\n'.join([unicode(c) for c in self])
 
     @classmethod
     def from_csv(self, f, **kwargs):
@@ -82,7 +80,7 @@ class Table(object):
         """
         out_columns = []
         
-        for c in self.columns:
+        for c in self:
             # Stringify datetimes, dates, and times
             if c.type in [datetime.datetime, datetime.date, datetime.time]:
                 out_columns.append([v.isoformat() if v != None else None for v in c])

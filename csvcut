@@ -9,7 +9,6 @@ https://gist.github.com/561347/9846ebf8d0a69b06681da9255ffe3d3f59ec2c97
 Used and modified with permission.
 """
 
-import csv 
 import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs

@@ -19,50 +19,52 @@ DIALECTS = {
     'sybase': 'sybase.pyodbc'
 }
 
-def make_column(column_name, normal_type, normal_column):
-    column_kwargs = {'nullable': False}
-    type_kwargs = {}
+def make_column(column):
+    sql_column_kwargs = {'nullable': False}
+    sql_type_kwargs = {}
 
-    if normal_type == bool:
-        column_type = Boolean  
-    elif normal_type == int:
-        column_type = Integer
-    elif normal_type == float:
-        column_type = Float
-    elif normal_type == datetime.datetime:
-        column_type = DateTime
-    elif normal_type == datetime.date:
-        column_type = Date
-    elif normal_type == datetime.time:
-        column_type = Time
-    elif normal_type == None:
-        column_type = String
-        type_kwargs['length'] = 32
-    elif normal_type == unicode:
-        column_type = String
-        type_kwargs['length'] = max([len(d) if d else 0 for d in normal_column])
+    if column.type == bool:
+        sql_column_type = Boolean  
+    elif column.type == int:
+        sql_column_type = Integer
+    elif column.type == float:
+        sql_column_type = Float
+    elif column.type == datetime.datetime:
+        sql_column_type = DateTime
+    elif column.type == datetime.date:
+        sql_column_type = Date
+    elif column.type == datetime.time:
+        sql_column_type = Time
+    elif column.type == None:
+        sql_column_type = String
+        sql_type_kwargs['length'] = 32
+    elif column.type == unicode:
+        sql_column_type = String
+        sql_type_kwargs['length'] = max([len(d) if d else 0 for d in column])
     else:
-        raise ValueError('Unexpected normalized column type: %s' % normal_type)
+        raise ValueError('Unexpected normalized column type: %s' % column.type)
 
-    for d in normal_column:
+    for d in column:
         if d == None:
-            column_kwargs['nullable'] = True
+            sql_column_kwargs['nullable'] = True
             break
 
-    column = Column(column_name, column_type(**type_kwargs), **column_kwargs)
+    column = Column(column.header, sql_column_type(**sql_type_kwargs), **sql_column_kwargs)
 
     return column
 
-def make_create_table_statement(column_names, normal_types, normal_columns, dialect=None):
+def make_create_table_statement(table, dialect=None):
+    """
+    Creates a SQL create table statement
+    """
     metadata = MetaData()
-    table = Table('csvsql', metadata)
+    sql_table = Table('csvsql', metadata)
 
-    for i in range(len(column_names)):
-        c = make_column(column_names[i], normal_types[i], normal_columns[i])
-        table.append_column(c)
+    for column in table:
+        sql_table.append_column(make_column(column))
 
     if dialect:
         module = __import__('sqlalchemy.dialects.%s' % DIALECTS[dialect], fromlist=['dialect'])
         dialect = module.dialect() 
 
-    return unicode(CreateTable(table).compile(dialect=dialect)).strip()
+    return unicode(CreateTable(sql_table).compile(dialect=dialect)).strip()

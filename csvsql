@@ -1,23 +1,16 @@
 #!/usr/bin/env python
 
-import csv
-
 from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import sql
-from csvkit import typeinference
-from csvkit.unicode import UnicodeCSVReader
+from csvkit import table
 
 def main(args):
     """
     Generate a SQL create table statement for a given CSV file.
     """
-    reader = UnicodeCSVReader(args.file, **extract_csv_reader_kwargs(args))
+    tab = table.Table.from_csv(args.file, **extract_csv_reader_kwargs(args))
 
-    column_names = reader.next()
-
-    normal_types, normal_columns = typeinference.normalize_table(reader, len(column_names))
-
-    print sql.make_create_table_statement(column_names, normal_types, normal_columns, dialect=args.dialect)
+    print sql.make_create_table_statement(tab, dialect=args.dialect)
 
 if __name__ == '__main__':
     parser = init_common_parser(description='Generate a SQL CREATE TABLE statement for a CSV file.')
