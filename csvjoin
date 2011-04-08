@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from csvkit import init_common_parser
-
+import argparse
 
 def main():
     parser = init_common_parser(description='Join a CSV file on a specified column or columns.',epilog="Note that the join operation requires reading all files into memory. Don't try this on very large files.",omitflags='f')

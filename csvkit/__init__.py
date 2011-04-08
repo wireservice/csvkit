@@ -24,6 +24,10 @@ def init_common_parser(description='', epilog='', omitflags=''):
     if 'e' not in omitflags:
         parser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
                             help='Specify the encoding the input file.')
+
+
+    return parser
+
 def extract_csv_reader_kwargs(args):
     """
     Extracts those from the command-line arguments those would should be passed through to the CSV reader.
