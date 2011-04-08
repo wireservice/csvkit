@@ -20,7 +20,7 @@ def csv2csv(f, **kwargs):
     for row in rows:
         for i, d in enumerate(row):
             try:
-                data_columns[i].append(d)
+                data_columns[i].append(d.strip())
             except KeyError:
                 # Non-rectangular data is truncated
                 break

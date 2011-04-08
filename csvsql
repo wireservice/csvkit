@@ -15,7 +15,7 @@ def main(args):
 
     column_names = reader.next()
 
-    normal_types, normal_columns = typeinference.normalize_table(reader,len(column_names))
+    normal_types, normal_columns = typeinference.normalize_table(reader, len(column_names))
 
     print sql.make_create_table_statement(column_names, normal_types, normal_columns, dialect=args.dialect)
 
