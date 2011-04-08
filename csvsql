@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import csv
-import sys
 
 from csvkit import init_common_parser
 from csvkit import sql

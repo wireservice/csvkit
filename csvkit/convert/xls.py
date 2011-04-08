@@ -4,7 +4,6 @@ import datetime
 
 import xlrd
 
-from csvkit import typeinference
 import utils
 
 class XLSDataError(Exception):

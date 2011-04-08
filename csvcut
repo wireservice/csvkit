@@ -10,7 +10,6 @@ Used and modified with permission.
 """
 
 import csv 
-from itertools import islice
 import sys
 
 from csvkit import init_common_parser
