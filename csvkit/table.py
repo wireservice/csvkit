@@ -63,29 +63,38 @@ class Table(list):
         return '\n'.join([unicode(c) for c in self])
 
     def _reindex_columns(self):
+        """
+        Update index properties of all columns in table.
+        """
         for i, c in enumerate(self):
             c.index = i
 
     def append(self, column):
+        """Implements list append."""
         list.append(self, column)
         column.index = len(self) - 1
 
     def insert(self, i, column):
+        """Implements list insert."""
         list.insert(self, i, column)
         self._reindex_columns()
 
     def extend(self, columns):
+        """Implements list extend."""
         list.extend(self, columns)
         self._reindex_columns()
 
     def remove(self, column):
+        """Implements list remove."""
         list.remove(self, column)
         self._reindex_columns()
 
     def sort(self):
+        """Forbids list sort."""
         raise NotImplementedError()
 
     def reverse(self):
+        """Forbids list reverse."""
         raise NotImplementedError()
 
     @classmethod
