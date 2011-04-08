@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from cStringIO import StringIO
+import datetime
 
 from csvkit import typeinference
 from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter
@@ -12,8 +12,6 @@ class Column(list):
     def __init__(self, index, name, l):
         """
         Construct a column from a sequence of values.
-
-        TODO: anything special for iterators?
         """
         t, data = typeinference.normalize_column_type(l)
         
@@ -28,22 +26,39 @@ class Column(list):
         return list.__getslice__(self, i, j)
 
     def __unicode__(self):
+        """
+        Stringify a description of this column.
+        """
         return '%3i: %s (%s)' (self.index, self.name, self.type)
 
 class Table(object):
     """
     A normalized data table and inferred annotations (nullable, etc.).
     """
-    def __init__(self, f, **kwargs):
+    def __init__(self, headers, columns):
         """
-        Construct a table from an csv.reader or reader-like iterable.
+        Generic constructor. You should normally use a from_* method to create a Table.
+        """
+        self.headers = headers 
+        self.columns = columns
+
+    def __unicode__(self):
+        """
+        Stringify a description of all columns in this table.
+        """
+        return '\n'.join([unicode(c) for c in self.columns])
+
+    @classmethod
+    def from_csv(self, f, **kwargs):
+        """
+        Creates a new Table from a file-like object containng CSV data.
         """
         reader = UnicodeCSVReader(f, **kwargs)
 
-        self.headers = reader.next()
+        headers = reader.next()
 
         # Data is processed first into columns (rather than rows) for easier type inference
-        data_columns = [[] for c in self.headers] 
+        data_columns = [[] for c in headers] 
 
         for row in reader:
             for i, d in enumerate(row):
@@ -53,30 +68,35 @@ class Table(object):
                     # Non-rectangular data is truncated
                     break
 
+        columns = []
+
         # Convert to "heavy" columns
-        self.columns = [Column(n, c) for n, c in zip(self.headers, data_columns)]
+        for i, c in enumerate(data_columns): 
+            columns.append(Column(i, headers[i], c))
 
-    def __unicode__(self):
-        return '\n'.join([unicode(c) for c in self.columns])
+        return Table(headers, columns)
 
-    def to_csv(self):
+    def to_csv(self, output, **kwargs):
         """
-        Serializes the table to a CSV string.
+        Serializes the table to CSV and writes it to any file-like object.
         """
+        out_columns = []
+        
+        for c in self.columns:
+            # Stringify datetimes, dates, and times
+            if c.type in [datetime.datetime, datetime.date, datetime.time]:
+                out_columns.append([v.isoformat() if v != None else None for v in c])
+            else:
+                out_columns.append(c)
+        
         # Convert columns to rows
-        data = zip(*data_columns)
+        rows = zip(*out_columns)
 
         # Insert header row
-        data.insert(0, headers)
+        rows.insert(0, self.headers)
 
-        # Stringify datetimes, dates, and times
-        if t in [datetime.datetime, datetime.date, datetime.time]:
-            column = [v.isoformat() if v != None else None for v in column]
+        writer_kwargs = { 'lineterminator': '\n' }
+        writer_kwargs.update(kwargs)
 
-        o = StringIO()
-        writer = UnicodeCSVWriter(o, lineterminator='\n')
+        writer = UnicodeCSVWriter(output, **writer_kwargs)
         writer.writerows(rows)
-        output = o.getvalue()
-        o.close()
-
-        return output
