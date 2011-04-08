@@ -1,0 +1,4 @@
+column_a,column_b,column_c
+1,27,,"I'm too long!"
+,"I'm too short!"
+0,mixed types.... uh oh,17

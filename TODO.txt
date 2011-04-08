@@ -10,8 +10,11 @@ Features:
 
 Implement csv.Sniffer to auto-detect dialect
 Implement Brian's crazy/awesome csvsql "insert" idea
+Expand functionality of csvtest
+
+New utilities:
+
 csvlook: print to console in R/psql style fixed width table?
 csvdiff: identify which rows/cells have changed
-csvtest: validate that a CSV does not contain mixed datatypes and other anomalies
 csvsummary: generate summary statistics for columns in a CSV (like R’s summary() function)
 csvjoin: quickly merge two CSV files by a shared column
