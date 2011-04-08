@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import csv
-import sys
 from os.path import splitext
 
-from csvkit import typeinference, init_common_parser
+from csvkit import init_common_parser, extract_csv_reader_kwargs
+from csvkit.unicode import UnicodeCSVReader
 
 class CSVTestException(Exception):
     """Superclass for all row-test-failed exceptions. 
@@ -33,11 +33,9 @@ def main():
                         ''')
 
     args = parser.parse_args()
-    
-    if args.tabs:
-        args.delimiter = '\t'
 
-    reader = csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar)
+    reader = UnicodeCSVReader(args.file, **extract_csv_reader_kwargs(args))
+
     if args.clean:
         base,ext = splitext(args.file.name)
         cleaned = csv.writer(open("%s_out.csv" % base, "w"), delimiter=args.delimiter, quotechar=args.quotechar)
@@ -51,8 +49,6 @@ def main():
         err_header.extend(column_names)
         err.writerow(err_header)
     
-    data_columns = [[] for h in column_names]
-
     for i,row in enumerate(reader):
         line_number = i + 2 # adjust for header row, plus add one for 1-based counting
         try:

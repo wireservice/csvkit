@@ -12,7 +12,8 @@ Used and modified with permission.
 import csv 
 import sys
 
-from csvkit import init_common_parser
+from csvkit import init_common_parser, extract_csv_reader_kwargs
+from csvkit.unicode import UnicodeCSVReader 
 
 class ColumnIdentifierError(Exception):
     """
@@ -71,13 +72,10 @@ def main():
 
     args = parser.parse_args()
 
-    if args.tabs:
-        args.delimiter = '\t'
-
     # Create an output csv writer in advance, in order to save overhead
     writer = csv.writer(sys.stdout)
 
-    for i, row in enumerate(csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar)):
+    for i, row in enumerate(UnicodeCSVReader(args.file, **extract_csv_reader_kwargs(args))):
         if i == 0:
             # Show headers and exit
             if args.show_headers:

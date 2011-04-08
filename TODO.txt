@@ -2,7 +2,6 @@ Bugs:
 
 Normalize whitespace stripping across importers
 Normalize ints with leading zeroes to strings (careful of 0!)
-Unicode support (-e, --encoding flag)
 
 Best practice:
 
@@ -13,6 +12,7 @@ Factor existing utilities to use abstracted normalize_table method
 Features:
 
 Implement csv.Sniffer to auto-detect dialect
+Implement Brian's crazy/awesome csvsql "insert" idea
 csvlook: print to console in R/psql style fixed width table?
 csvdiff: identify which rows/cells have changed
 csvtest: validate that a CSV does not contain mixed datatypes and other anomalies

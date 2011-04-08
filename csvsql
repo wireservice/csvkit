@@ -2,9 +2,10 @@
 
 import csv
 
-from csvkit import init_common_parser
+from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import sql
 from csvkit import typeinference
+from csvkit.unicode import UnicodeCSVReader
 
 def main():
     parser = init_common_parser(description='Generate a SQL CREATE TABLE statement for a CSV file.')
@@ -13,14 +14,12 @@ def main():
 
     args = parser.parse_args()
     
-    if args.tabs:
-        args.delimiter = '\t'
-
-    reader = csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar)
+    reader = UnicodeCSVReader(args.file, **extract_csv_reader_kwargs(args))
 
     column_names = reader.next()
 
     normal_types, normal_columns = typeinference.normalize_table(reader,len(column_names))
+
     print sql.make_create_table_statement(column_names, normal_types, normal_columns, dialect=args.dialect)
 
 if __name__ == '__main__':

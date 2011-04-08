@@ -11,8 +11,8 @@ class TestXLS(unittest.TestCase):
         self.assertEquals(normal_values, [None, None, None])
 
     def test_text_column(self):
-        normal_values = xls.normalize_text(['This', '', 'text'])
-        self.assertEquals(normal_values, ['This', None, 'text'])
+        normal_values = xls.normalize_text([u'This', u'', u'text'])
+        self.assertEquals(normal_values, [u'This', None, u'text'])
 
     def test_numbers_column_integral(self):
         normal_values = xls.normalize_numbers([1.0, 418000000, -817, 0.0, ''])

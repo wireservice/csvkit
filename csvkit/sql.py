@@ -38,7 +38,7 @@ def make_column(column_name, normal_type, normal_column):
     elif normal_type == None:
         column_type = String
         type_kwargs['length'] = 32
-    elif normal_type == str:
+    elif normal_type == unicode:
         column_type = String
         type_kwargs['length'] = max([len(d) if d else 0 for d in normal_column])
     else:
@@ -65,4 +65,4 @@ def make_create_table_statement(column_names, normal_types, normal_columns, dial
         module = __import__('sqlalchemy.dialects.%s' % DIALECTS[dialect], fromlist=['dialect'])
         dialect = module.dialect() 
 
-    return str(CreateTable(table).compile(dialect=dialect)).strip()
+    return unicode(CreateTable(table).compile(dialect=dialect)).strip()
