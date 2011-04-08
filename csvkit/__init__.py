@@ -1,13 +1,13 @@
 import argparse
 import sys
 
-def init_common_parser(description='',omitflags=''):
+def init_common_parser(description='', epilog='', omitflags=''):
     """Prepare a base argparse argument parser so that flags are consistent across different shell command tools.
        If you want to constrain which common args are present, you can pass a string for 'omitflags'. Any argument
        whose single-letter form is contained in 'omitflags' will be left out of the configured parser.  Use 'f' for 
        file.
     """
-    parser = argparse.ArgumentParser(description=description)
+    parser = argparse.ArgumentParser(description=description, epilog=epilog)
     if 'f' not in omitflags:
         parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('r'), default=sys.stdin,
                             help='The CSV file to operate on. If omitted, will accept input on STDIN.')
