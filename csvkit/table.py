@@ -22,6 +22,9 @@ class Column(list):
         # self.nullable = ?
         # self.max_length = ?
 
+    def __str__(self):
+        return str(self.__unicode__)
+
     def __unicode__(self):
         """
         Stringify a description of this column.
@@ -39,6 +42,9 @@ class Table(list):
         list.__init__(self, columns)
 
         self.headers = headers 
+
+    def __str__(self):
+        return str(self.__unicode__)
 
     def __unicode__(self):
         """

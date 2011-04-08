@@ -20,6 +20,9 @@ DIALECTS = {
 }
 
 def make_column(column):
+    """
+    Creates a sqlalchemy column from a csvkit Column.
+    """
     sql_column_kwargs = {'nullable': False}
     sql_type_kwargs = {}
 
@@ -53,16 +56,22 @@ def make_column(column):
 
     return column
 
-def make_create_table_statement(table, dialect=None):
+def make_table(table, name='table_name'):
     """
-    Creates a SQL create table statement
+    Creates a sqlalchemy table from a csvkit Table.
     """
     metadata = MetaData()
-    sql_table = Table('csvsql', metadata)
+    sql_table = Table(name, metadata)
 
     for column in table:
         sql_table.append_column(make_column(column))
 
+    return sql_table
+
+def make_create_table_statement(sql_table, dialect=None):
+    """
+    Generates a CREATE TABLE statement for a sqlalchemy table.
+    """
     if dialect:
         module = __import__('sqlalchemy.dialects.%s' % DIALECTS[dialect], fromlist=['dialect'])
         dialect = module.dialect() 

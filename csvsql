@@ -8,9 +8,10 @@ def main(args):
     """
     Generate a SQL create table statement for a given CSV file.
     """
-    tab = table.Table.from_csv(args.file, **extract_csv_reader_kwargs(args))
+    csv_table = table.Table.from_csv(args.file, **extract_csv_reader_kwargs(args))
+    sql_table = sql.make_table(csv_table)
 
-    print sql.make_create_table_statement(tab, dialect=args.dialect)
+    print sql.make_create_table_statement(sql_table, dialect=args.dialect)
 
 if __name__ == '__main__':
     parser = init_common_parser(description='Generate a SQL CREATE TABLE statement for a CSV file.')
