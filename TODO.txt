@@ -2,7 +2,7 @@ Bugs:
 
 Best practice:
 
-Test main functions of tools
+Factor main functions of tools into library and test them
 Have normalize_column_type also return nullable and max_length?
 Factor existing utilities to use abstracted normalize_table method
 
