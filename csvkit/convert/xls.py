@@ -157,10 +157,12 @@ def xls2csv(f):
             e.msg = 'Error in column %i, "%s": %s' % (i, column_name, e.msg)
             raise e
 
-        column = table.Column(0, column_name, normal_values, normal_type=t)
-        tab.add_column(column)
+        column = table.Column(i, column_name, normal_values, normal_type=t)
+        print column
+        tab.append(column)
 
     o = StringIO()
+    print tab
     output = tab.to_csv(o)
     output = o.getvalue()
     o.close()

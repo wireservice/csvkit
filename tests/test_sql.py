@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import datetime
 import unittest
 
 from csvkit import sql
@@ -63,7 +62,7 @@ class TestSQL(unittest.TestCase):
         self.assertEqual(c.nullable, False)
 
     def test_make_create_table_statement(self):
-        csv_table = table.Table(['text', 'integer', 'datetime', 'empty_column'], [
+        csv_table = table.Table([
             table.Column(0, 'text', ['Chicago Reader', 'Chicago Sun-Times', 'Chicago Tribune', 'Row with blanks']),
             table.Column(1, 'integer', ['40', '63', '164', '']),
             table.Column(2, 'datetime', ['Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '']),

@@ -15,7 +15,7 @@ class Column(list):
     """
     A normalized data column and inferred annotations (nullable, etc.).
     """
-    def __init__(self, index, header, l, normal_type=InvalidType):
+    def __init__(self, index, name, l, normal_type=InvalidType):
         """
         Construct a column from a sequence of values.
         
@@ -29,34 +29,32 @@ class Column(list):
         
         list.__init__(self, data)
         self.index = index
-        self.header = header 
+        self.name = name 
         self.type = t
         # self.nullable = ?
         # self.max_length = ?
 
     def __str__(self):
-        return str(self.__unicode__)
+        return str(self.__unicode__())
 
     def __unicode__(self):
         """
         Stringify a description of this column.
         """
-        return '%3i: %s (%s)' % (self.index, self.header, self.type)
+        return '%3i: %s (%s)' % (self.index, self.name, self.type)
 
 class Table(list):
     """
     A normalized data table and inferred annotations (nullable, etc.).
     """
-    def __init__(self, headers=[], columns=[]):
+    def __init__(self, columns=[]):
         """
         Generic constructor. You should normally use a from_* method to create a Table.
         """
         list.__init__(self, columns)
 
-        self.headers = headers 
-
     def __str__(self):
-        return str(self.__unicode__)
+        return str(self.__unicode__())
 
     def __unicode__(self):
         """
@@ -64,21 +62,24 @@ class Table(list):
         """
         return '\n'.join([unicode(c) for c in self])
 
-    def add_column(self, column, position=None):
-        """
-        Add a Column to this Table.
-        """
-        if not position:
-            column.index = len(self.headers)
-            self.headers.append(column.header)
-            self.append(column.index)
-        else:
-            self.headers.insert(position, column.header)
-            self.insert(position, column)
+    def append(self, column):
+        list.append(self, column)
+        column.index = len(self) - 1
 
-            # Update indices
-            for i, c in enumerate(self):
-                c.index = i
+    def insert(self, i, column):
+        pass
+
+    def extend(self, columns):
+        pass
+
+    def remove(self, column):
+        pass
+
+    def sort(self):
+        pass
+
+    def reverse(self):
+        pass
 
     @classmethod
     def from_csv(self, f, **kwargs):
@@ -106,7 +107,7 @@ class Table(list):
         for i, c in enumerate(data_columns): 
             columns.append(Column(i, headers[i], c))
 
-        return Table(headers, columns)
+        return Table(columns)
 
     def to_csv(self, output, **kwargs):
         """
@@ -125,7 +126,7 @@ class Table(list):
         rows = zip(*out_columns)
 
         # Insert header row
-        rows.insert(0, self.headers)
+        rows.insert(0, [c.name for c in self])
 
         writer_kwargs = { 'lineterminator': '\n' }
         writer_kwargs.update(kwargs)

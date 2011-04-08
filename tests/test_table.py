@@ -12,7 +12,7 @@ class TestColumn(unittest.TestCase):
     def test_create_column(self):
         self.assertEqual(type(self.c), table.Column)
         self.assertEqual(self.c.index, 0)
-        self.assertEqual(self.c.header, u'test')
+        self.assertEqual(self.c.name, u'test')
         self.assertEqual(self.c.type, unicode)
         self.assertEqual(self.c, [u'test', u'column', None])
 
@@ -28,7 +28,6 @@ class TestTable(unittest.TestCase):
             t = table.Table.from_csv(f)
 
         self.assertEqual(type(t), table.Table)
-        self.assertEqual(t.headers, [u'text', u'date', u'integer', u'boolean', u'float', u'time', u'datetime', u'empty_column'])
         self.assertEqual(type(t[0]), table.Column)
         self.assertEqual(len(t), 8)
 
@@ -42,3 +41,13 @@ class TestTable(unittest.TestCase):
             o.close()
         
         self.assertEqual(contents, conversion)
+
+    def test_table_append(self):
+        c = table.Column(0, u'test', [u'test', u'column', None])
+        t = table.Table()
+        t.append(c)
+        self.assertEqual(len(t), 1)
+        self.assertEqual(t[0], c)
+
+    def test_table_insert(self):
+        pass

@@ -52,7 +52,7 @@ def make_column(column):
             sql_column_kwargs['nullable'] = True
             break
 
-    column = Column(column.header, sql_column_type(**sql_type_kwargs), **sql_column_kwargs)
+    column = Column(column.name, sql_column_type(**sql_type_kwargs), **sql_column_kwargs)
 
     return column
 
