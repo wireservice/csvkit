@@ -19,7 +19,7 @@ def parse_join_columns(join_string):
 
     return join_cols
 
-def main():
+def main(args):
     """
     Join 2 or more CSVs on a common column.
     """
@@ -41,8 +41,13 @@ if __name__ == '__main__':
 
     parser.add_argument('files', metavar="FILES", nargs='+', type=argparse.FileType('r'),
                         help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
-
     parser.add_argument('-j', '--join', dest='join',
-                        help='The columns on which to join. Should be either one, or a comma-separated list with one element for each file, in the same order the files were specified.')
+                        help='The column name(s) on which to join. Should be either one name or a comma-separated list with one name for each file, in the same order the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
+    parser.add_argumentt('--outer', dest='outer_join', action='store_true',
+                        help='Perform a full outer join, rather than the default inner join.')
+    parser.add_argumentt('--left', dest='left_outer_join', action='store_true',
+                        help='Perform a left outer join, rather than the default inner join. Only valid for exactly two inputs.')
+    parser.add_argumentt('--right', dest='left_outer_join', action='store_true',
+                        help='Perform a right outer join, rather than the default inner join. Only valid for exactly two inputs.')
 
     main(parser.parse_args())
