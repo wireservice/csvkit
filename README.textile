@@ -165,11 +165,6 @@ This is especially useful when piping through other utilities:
 csvcut -c 2,3 -l examples/testfixed_converted.csv | csvlook
 </pre>
 
-h2. Possible future utilities:
-
-csvjoin - quickly merge two CSV files by a shared column
-csvdiff - identify what rows/cells are different between two tables
-
 h2. Authors
 
 Christopher Groskopf

@@ -17,3 +17,4 @@ New utilities:
 
 csvdiff: identify which rows/cells have changed
 csvjoin: quickly merge two CSV files by a shared column
+csvjson: convert csv to the king of hierarchial data formats, JSON
