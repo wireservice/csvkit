@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import datetime
+from cStringIO import StringIO
 
 from csvkit import sniffer
 from csvkit import typeinference
@@ -201,7 +202,14 @@ class Table(list):
         """
         Creates a new Table from a file-like object containng CSV data.
         """
-        dialect = sniffer.sniff_dialect(f)
+        # This bit of nonsense is to deal with "files" from stdin,
+        # which are not seekable and thus must be buffered
+        contents = f.read()
+
+        sample = StringIO(contents[:4096])
+        dialect = sniffer.sniff_dialect(sample)
+
+        f = StringIO(contents) 
         reader = UnicodeCSVReader(f, dialect=dialect, **kwargs)
 
         headers = reader.next()
