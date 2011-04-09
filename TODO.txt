@@ -15,5 +15,4 @@ New utilities:
 
 csvlook: print to console in R/psql style fixed width table?
 csvdiff: identify which rows/cells have changed
-csvsummary: generate summary statistics for columns in a CSV (like R’s summary() function)
 csvjoin: quickly merge two CSV files by a shared column

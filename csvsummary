@@ -47,9 +47,13 @@ def main(args):
 
         print '\tUnique values: %i' % len(uniques)
 
-        if c.type == unicode and len(uniques) <= 11:
+        if c.type == unicode:
             uniques.discard(None)
-            print '\tFactor: %s' % (', '.join(['"%s"' % unicode(u) for u in uniques]))
+
+            if len(uniques) <= 10:
+                print '\tFactor: %s' % (', '.join(['"%s"' % unicode(u) for u in uniques]))
+            else:
+                print '\tSample: %s' % (', '.join(['"%s"' % unicode(u) for u in list(uniques)[:10]]))
 
 if __name__ == '__main__':
     parser = init_common_parser(description='Print descriptive statistics for all columns in a CSV file.')
