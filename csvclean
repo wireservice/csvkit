@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+from os.path import splitext
+import csv
+from csvkit import init_common_parser
+from csvkit.cleanup import RowChecker
+
+def format_error_row(e):
+    """Format a row for """
+    err_row = [e.line_number, e.msg]
+    err_row.extend(e.row)
+    return err_row
+
+def main():
+    parser = init_common_parser(description='Clean up a CSV file.')
+    parser.add_argument('-n', '--dry-run', dest='dryrun', action='store_true',
+                        help='''If this argument is present, no output will be created.
+                                Information about what would have been done will be printed
+                                to STDERR.
+                        ''')
+
+
+    args = parser.parse_args()
+    
+    if args.tabs:
+        args.delimiter = '\t'
+
+    reader = csv.reader(args.file, delimiter=args.delimiter, quotechar=args.quotechar)
+
+    if args.dryrun:
+        checker = RowChecker(reader)
+        for row in checker.checked_rows():
+            pass
+        for e in checker.errs:
+            print "Line: %i: %s\n" % (e.line_number,e.msg)
+        else:
+            print "No errors."
+        if checker.joins:
+            print "%i rows would have been joined/reduced to %i rows after eliminating expected internal line breaks" % (checker.rows_joined, checker.joins)
+    else:
+        base,ext = splitext(args.file.name)
+        # should we preserve delimiters and other dialect args from CLI?
+        cleaned_file = csv.writer(open("%s_out.csv" % base,"w"))
+
+        checker = RowChecker(reader)
+        cleaned_file.writerow(checker.column_names)
+        for row in checker.checked_rows():
+            cleaned_file.writerow(row)
+        
+        if checker.errs:
+            # should we preserve delimiters and other dialect args from CLI?
+            err_filename = "%s_err.csv" % base
+            err_file = csv.writer(open(err_filename, "w"))
+            err_header = ['line_number','msg']
+            err_header.extend(checker.column_names)
+            err_file.writerow(err_header)
+            for e in checker.errs:
+                err_file.writerow(format_error_row(e))
+                err_count = len(checker.errs)
+            print "%i error%s logged to %s" % (err_count,"" if err_count == 1 else "s", err_filename)
+        else:
+            print "No errors."
+
+        if checker.joins:
+            print "%i rows were joined/reduced to %i rows after eliminating expected internal line breaks" % (checker.rows_joined, checker.joins)
+
+
+if __name__ == '__main__':
+    main()

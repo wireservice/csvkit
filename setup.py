@@ -27,7 +27,7 @@ setup(
         'in2csv',
         'csvcut',
         'csvsql',
-        'csvtest',
+        'csvclean',
         'csvsummary',
         'csvlook'
     ],

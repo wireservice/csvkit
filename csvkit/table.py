@@ -196,7 +196,7 @@ class Table(list):
     @classmethod
     def from_csv(cls, f, name='from_csv_table', **kwargs):
         """
-        Creates a new Table from a file-like object containng CSV data.
+        Creates a new Table from a file-like object containing CSV data.
         """
         # This bit of nonsense is to deal with "files" from stdin,
         # which are not seekable and thus must be buffered
