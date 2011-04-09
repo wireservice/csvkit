@@ -63,19 +63,15 @@ class Column(list):
             self.max_length = max([len(d) if d else 0 for d in self])
         elif self.type in [int, float]:
             self.max_length = max([len(unicode(d)) if d else 0 for d in self])
+        elif self.type in [datetime.datetime, datetime.date, datetime.time]:
+            self.max_length = max([len(d.isoformat()) if d else 0 for d in self]) 
         elif self.type == bool:
-            self.max_length = 5
-        elif self.type == datetime.datetime:
-            self.max_length = 19
-        elif self.type == datetime.date:
-            self.max_length = 10
-        elif self.type == datetime.time:
-            self.max_length = 8
+            self.max_length = 5 # "False"
         else:
             self.max_length = 0 
 
         if self.nullable:
-            self.max_length = max(self.max_length, 4)
+            self.max_length = max(self.max_length, 4) # "None"
 
 class RowIterator(object):
     """
