@@ -29,6 +29,7 @@ setup(
         'csvsql',
         'csvclean',
         'csvsummary',
-        'csvlook'
+        'csvlook',
+        'csvjoin'
     ],
 )

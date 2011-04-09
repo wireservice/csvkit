@@ -1,6 +1,4 @@
-import csv
-import sys
-
+#!/usr/bin/env python
 
 class CSVTestException(Exception):
     """Superclass for all row-test-failed exceptions. 
