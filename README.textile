@@ -167,9 +167,7 @@ csvcut -c 2,3 -l examples/testfixed_converted.csv | csvlook
 
 h2. Possible future utilities:
 
-csvsummary - generate summary statistics for columns in a CSV (like R's summary() function)
 csvjoin - quickly merge two CSV files by a shared column
-csvlook - print table to console in R/psql fixed-width style
 csvdiff - identify what rows/cells are different between two tables
 
 h2. Authors
