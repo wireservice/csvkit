@@ -160,7 +160,6 @@ class Table(list):
 
         headers = reader.next()
 
-        # Data is processed first into columns (rather than rows) for easier type inference
         data_columns = [[] for c in headers] 
 
         for row in reader:
@@ -173,7 +172,6 @@ class Table(list):
 
         columns = []
 
-        # Convert to "heavy" columns
         for i, c in enumerate(data_columns): 
             columns.append(Column(i, headers[i], c))
 
