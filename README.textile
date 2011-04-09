@@ -153,7 +153,7 @@ csvsummary examples/testfixed_converted.csv
 
 h2. Usage: csvlook
 
-Renders a CSV to the command line in a readable, fixed-width format.
+Renders a CSV to the command line in a readable, fixed-width format. If the table is too long, try piping the output to head, tail, more or less.
 
 <pre>
 csvlook examples/testfixed_converted.csv
