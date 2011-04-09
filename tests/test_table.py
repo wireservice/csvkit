@@ -102,5 +102,14 @@ class TestTable(unittest.TestCase):
         self.assertEqual(t.row(1), [u'column', u'column', u'column'])
 
     def test_table_rows(self):
-        # TKTK
-        pass
+        c = table.Column(0, u'test', [u'test', u'column', None])
+        c2 = table.Column(0, u'test', [u'test', u'column', None])
+        c3 = table.Column(0, u'test', [u'test', u'column', None])
+        t = table.Table([c, c2, c3])
+        rows = t.rows()
+        self.assertEqual(type(rows), table.RowIterator)
+        self.assertEqual(rows.next(), [u'test', u'test', u'test'])
+        self.assertEqual(rows.next(), [u'column', u'column', u'column'])
+        self.assertEqual(rows.next(), [None, None, None])
+        self.assertRaises(StopIteration, rows.next)
+
