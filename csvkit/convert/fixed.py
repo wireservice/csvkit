@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
+from cStringIO import StringIO
 import csv
-import datetime
 
-from csvkit import typeinference
-import utils
+from csvkit import table
 
 def fixed2csv(f, schema):
     """
@@ -38,18 +37,15 @@ def fixed2csv(f, schema):
         for i, c in enumerate(schema_columns):
             data_columns[i].append(row[c[START]:c[START] + c[LENGTH]].strip())
 
+    tab = table.Table()
+
     # Use type-inference to normalize columns
-    for column in data_columns:
-        t, column = typeinference.normalize_column_type(column)
+    for i, c in enumerate(data_columns):
+        tab.append(table.Column(0, schema_columns[i][NAME], c))
 
-        # Stringify datetimes, dates, and times
-        if t in [datetime.datetime, datetime.date, datetime.time]:
-            column = [v.isoformat() if v != None else None for v in column]
+    o = StringIO()
+    output = tab.to_csv(o)
+    output = o.getvalue()
+    o.close()
 
-    # Convert columns to rows
-    data = zip(*data_columns)
-
-    # Insert header row
-    data.insert(0, [c[NAME] for c in schema_columns])
-
-    return utils.rows_to_csv_string(data)
+    return output

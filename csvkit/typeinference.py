@@ -81,15 +81,15 @@ def normalize_column_type(l):
                 continue
 
             d = parse(x, default=DEFAULT_DATETIME)
-            
-            # Is it only a date?
-            if d.time() == NULL_TIME:
-                d = d.date()
-                normal_types_set.add(datetime.date)
+
             # Is it only a time?
-            elif d.date() == NULL_DATE:
+            if d.date() == NULL_DATE:
                 d = d.time()
                 normal_types_set.add(datetime.time)
+            # Is it only a date?
+            elif d.time() == NULL_TIME:
+                d = d.date()
+                normal_types_set.add(datetime.date)
             # It must be a date and time
             else:
                 normal_types_set.add(datetime.datetime)

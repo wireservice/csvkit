@@ -2,19 +2,16 @@ Bugs:
 
 Best practice:
 
-Test main functions of tools
-Have normalize_column_type also return nullable and max_length?
-Factor existing utilities to use abstracted normalize_table method
+Factor main functions of tools into library and test them
+Factor argparse parser's to use "parents" argument for base options
+Add documentation for using csvkit as a library
 
 Features:
 
-Implement csv.Sniffer to auto-detect dialect
 Implement Brian's crazy/awesome csvsql "insert" idea
 Expand functionality of csvtest
 
 New utilities:
 
-csvlook: print to console in R/psql style fixed width table?
 csvdiff: identify which rows/cells have changed
-csvsummary: generate summary statistics for columns in a CSV (like R’s summary() function)
 csvjoin: quickly merge two CSV files by a shared column

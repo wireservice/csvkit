@@ -5,6 +5,7 @@ import sys
 import argparse
 
 from csvkit import convert
+from csvkit.convert import utils
 
 def main(args):
     """
@@ -17,7 +18,7 @@ def main(args):
             print '"%s" is not a supported format' % args.format
             sys.exit()
     else:
-        format = convert.guess_format(args.file)
+        format = utils.guess_format(args.file)
 
         if not format:
             print 'Unable to automatically determine the format of the input file. Try specifying a format with --format.'

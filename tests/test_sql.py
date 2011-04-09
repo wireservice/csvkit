@@ -1,79 +1,79 @@
 #!/usr/bin/env python
 
-import datetime
 import unittest
 
 from csvkit import sql
+from csvkit import table
 
 from sqlalchemy import Boolean, Date, DateTime, Float, Integer, String, Time
 
 class TestSQL(unittest.TestCase):
     def test_make_column_name(self):
-        c = sql.make_column('test', int, [1, -87, 418000000, None])
+        c = sql.make_column(table.Column(0, 'test', ['1', '-87', '418000000', '']))
         self.assertEqual(c.key, 'test')
 
     def test_make_column_bool(self):
-        c = sql.make_column('test', bool, [True, True, False, None])
+        c = sql.make_column(table.Column(0, 'test', ['True', 'True', 'False', '']))
         self.assertEqual(type(c.type), Boolean)
 
     def test_make_column_int(self):
-        c = sql.make_column('test', int, [1, -87, 418000000, None])
+        c = sql.make_column(table.Column(0, 'test', ['1', '-87', '418000000', '']))
         self.assertEqual(c.key, 'test')
         self.assertEqual(type(c.type), Integer)
 
     def test_make_column_float(self):
-        c = sql.make_column('test', float, [1.01, -87.34, 418000000.0, None])
+        c = sql.make_column(table.Column(0, 'test', ['1.01', '-87.34', '418000000.0', '']))
         self.assertEqual(type(c.type), Float)
 
     def test_make_column_datetime(self):
-        c = sql.make_column('test', datetime.datetime, [datetime.datetime(2010, 04, 05, 20, 42, 0), datetime.datetime(1910, 04, 05, 20, 37, 21), None])
+        c = sql.make_column(table.Column(0, 'test', [u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '']))
         self.assertEqual(type(c.type), DateTime)
 
     def test_make_column_date(self):
-        c = sql.make_column('test', datetime.date, [datetime.date(2010, 04, 05), datetime.datetime(1910, 04, 05), None])
+        c = sql.make_column(table.Column(0, 'test', ['Jan 1, 2008', '2010-01-27', '3/1/08', '']))
         self.assertEqual(type(c.type), Date)
 
     def test_make_column_time(self):
-        c = sql.make_column('test', datetime.time, [datetime.time(20, 42, 0), datetime.time(20, 37, 21), None])
+        c = sql.make_column(table.Column(0, 'test', ['4:40 AM', '03:45:00', '16:14:45', '']))
         self.assertEqual(type(c.type), Time)
 
     def test_make_column_null(self):
-        c = sql.make_column('test', unicode, [None, None, None])
+        c = sql.make_column(table.Column(0, 'test', ['', '', '']))
         self.assertEqual(type(c.type), String)
 
     def test_make_column_string(self):
-        c = sql.make_column('test', unicode, ['this', 'is', 'test', 'data'])
+        c = sql.make_column(table.Column(0, 'test', ['this', 'is', 'test', 'data']))
         self.assertEqual(type(c.type), String)
 
     def test_make_column_string_length(self):
-        c = sql.make_column('test', unicode, ['this', 'is', 'test', 'data', 'that', 'is', 'awesome'])
+        c = sql.make_column(table.Column(0, 'test', ['this', 'is', 'test', 'data', 'that', 'is', 'awesome']))
         self.assertEqual(c.type.length, 7)
     
     def test_column_nullable(self):
-        c = sql.make_column('test', int, [1, -87, 418000000, None])
+        c = sql.make_column(table.Column(0, 'test', ['1', '-87', '418000000', '']))
         self.assertEqual(c.key, 'test')
         self.assertEqual(type(c.type), Integer)
         self.assertEqual(c.nullable, True)
 
     def test_column_not_nullable(self):
-        c = sql.make_column('test', int, [1, -87, 418000000])
+        c = sql.make_column(table.Column(0, 'test', ['1', '-87', '418000000']))
         self.assertEqual(c.key, 'test')
         self.assertEqual(type(c.type), Integer)
         self.assertEqual(c.nullable, False)
 
     def test_make_create_table_statement(self):
-        statement = sql.make_create_table_statement(
-            ['text', 'integer', 'datetime', 'empty_column'],
-            [unicode, int, datetime.datetime, None],
-            [
-                ['Chicago Reader', 'Chicago Sun-Times', 'Chicago Tribune', 'Row with blanks'],
-                [40, 63, 164, None],
-                [datetime.datetime(1971, 1, 1, 4, 14), datetime.datetime(1948, 1, 1, 14, 57, 13), datetime.datetime(1920, 1, 1, 0, 0), None],
-                [None, None, None, None]
-            ])
+        csv_table = table.Table([
+            table.Column(0, 'text', ['Chicago Reader', 'Chicago Sun-Times', 'Chicago Tribune', 'Row with blanks']),
+            table.Column(1, 'integer', ['40', '63', '164', '']),
+            table.Column(2, 'datetime', ['Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '']),
+            table.Column(3, 'empty_column', ['', '', '', ''])],
+            name='test_table')
 
-        self.assertEqual(unicode(statement).strip(), 
-u"""CREATE TABLE csvsql (
+        sql_table = sql.make_table(csv_table, 'csvsql')
+        statement = sql.make_create_table_statement(sql_table)
+
+        self.assertEqual(statement, 
+u"""CREATE TABLE test_table (
 \ttext VARCHAR(17) NOT NULL, 
 \tinteger INTEGER, 
 \tdatetime DATETIME, 

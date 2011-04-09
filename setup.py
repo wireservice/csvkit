@@ -26,8 +26,9 @@ setup(
     scripts = [
         'in2csv',
         'csvcut',
-        'csvclean',
         'csvsql',
-        'csvjoin',
+        'csvclean',
+        'csvsummary',
+        'csvlook'
     ],
 )

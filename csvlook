@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+
+import datetime
+
+from csvkit import init_common_parser, extract_csv_reader_kwargs
+from csvkit import table
+
+def main(args):
+    """
+    Display a CSV in the console using a readable, fixed-width format.
+    """
+    tab = table.Table.from_csv(args.file, **extract_csv_reader_kwargs(args))
+
+    widths = [max(c.max_length, len(c.name)) for c in tab]
+    out_columns = []
+
+    for c in tab:
+        # Stringify datetimes, dates, and times
+        if c.type in [datetime.datetime, datetime.date, datetime.time]:
+            out_columns.append([v.isoformat() if v != None else None for v in c])
+        else:
+            out_columns.append(c)
+    
+    # Convert columns to rows
+    rows = zip(*out_columns)
+
+    # Insert header row
+    rows.insert(0, [c.name for c in tab])
+    
+    # Width of the fields, plus space between, plus fore and aft dividers 
+    divider = '-' * (sum(widths) + (3 * len(tab)) + 3)
+
+    print divider
+
+    for i, row in enumerate(rows):
+        output = []
+
+        for j, d in enumerate(row):
+            if d is None:
+                d = ''
+            output.append(' %s ' % unicode(d).ljust(widths[j]))
+
+        print '| %s |' % ('|'.join(output))
+
+        if i == 0 or i == tab.row_count:
+            print divider
+
+
+if __name__ == '__main__':
+    parser = init_common_parser(description='Display a CSV in the console using a readable, fixed-width format.')
+
+    main(parser.parse_args())
+
+
