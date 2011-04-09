@@ -34,11 +34,7 @@ class Column(list):
         self.type = t
         
         self.nullable = True if None in self else False
-
-        if self.type == unicode:
-            self.max_length = max([len(d) if d else 0 for d in self])
-        else:
-            self.max_length = None
+        self._compute_max_length()
 
     def __str__(self):
         return str(self.__unicode__())
@@ -57,6 +53,28 @@ class Column(list):
             return None
 
         return list.__getitem__(self, key)
+
+    def _compute_max_length(self):
+        """
+        Compute maximum length this column occupies when rendered as a string.
+        """
+        if self.type == unicode:
+            self.max_length = max([len(d) if d else 0 for d in self])
+        elif self.type in [int, float]:
+            self.max_length = max([len(unicode(d)) if d else 0 for d in self])
+        elif self.type == bool:
+            self.max_length = 5
+        elif self.type == datetime.datetime:
+            self.max_length = 19
+        elif self.type == datetime.date:
+            self.max_length = 10
+        elif self.type == datetime.time:
+            self.max_length = 8
+        else:
+            self.max_length = 0 
+
+        if self.nullable:
+            self.max_length = max(self.max_length, 4)
 
 class RowIterator(object):
     """

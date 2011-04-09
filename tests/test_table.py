@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from cStringIO import StringIO
+import datetime
 import unittest
 
 from csvkit import table 
@@ -9,6 +10,7 @@ class TestColumn(unittest.TestCase):
     def setUp(self):
         self.c = table.Column(0, u'test', [u'test', u'column', None])
         self.c2 = table.Column(0, u'test', [0, 1, 42], normal_type=int)
+        self.c3 = table.Column(0, u'test', [datetime.datetime(2007, 1, 1, 12, 13, 14)], normal_type=datetime.datetime)
 
     def test_create_column(self):
         self.assertEqual(type(self.c), table.Column)
@@ -34,9 +36,8 @@ class TestColumn(unittest.TestCase):
 
     def test_max_length(self):
         self.assertEqual(self.c.max_length, 6)
-
-    def test_no_max_length(self):
-        self.assertEqual(self.c2.max_length, None)
+        self.assertEqual(self.c2.max_length, 2)
+        self.assertEqual(self.c3.max_length, 19)
 
 class TestTable(unittest.TestCase):
     def test_from_csv(self):

@@ -96,7 +96,6 @@ def normalize_column_type(l):
             
             normal_values.append(d)
 
-        print normal_types_set
         # No special handling if column contains only one type
         if len(normal_types_set) == 1:
             pass
