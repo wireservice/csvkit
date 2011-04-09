@@ -66,13 +66,14 @@ class TestSQL(unittest.TestCase):
             table.Column(0, 'text', ['Chicago Reader', 'Chicago Sun-Times', 'Chicago Tribune', 'Row with blanks']),
             table.Column(1, 'integer', ['40', '63', '164', '']),
             table.Column(2, 'datetime', ['Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '']),
-            table.Column(3, 'empty_column', ['', '', '', ''])])
+            table.Column(3, 'empty_column', ['', '', '', ''])],
+            name='test_table')
 
         sql_table = sql.make_table(csv_table, 'csvsql')
         statement = sql.make_create_table_statement(sql_table)
 
         self.assertEqual(statement, 
-u"""CREATE TABLE csvsql (
+u"""CREATE TABLE test_table (
 \ttext VARCHAR(17) NOT NULL, 
 \tinteger INTEGER, 
 \tdatetime DATETIME, 

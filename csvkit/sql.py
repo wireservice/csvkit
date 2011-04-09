@@ -55,14 +55,14 @@ def make_column(column):
 
     return column
 
-def make_table(table, name='table_name'):
+def make_table(csv_table, name='table_name'):
     """
     Creates a sqlalchemy table from a csvkit Table.
     """
     metadata = MetaData()
-    sql_table = Table(name, metadata)
+    sql_table = Table(csv_table.name, metadata)
 
-    for column in table:
+    for column in csv_table:
         sql_table.append_column(make_column(column))
 
     return sql_table

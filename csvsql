@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import os
+
 from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import sql
 from csvkit import table
@@ -8,7 +10,13 @@ def main(args):
     """
     Generate a SQL create table statement for a given CSV file.
     """
-    csv_table = table.Table.from_csv(args.file, **extract_csv_reader_kwargs(args))
+    if args.file.name != '<stdin>':
+        # Use filename as table name
+        table_name = os.path.splitext(os.path.split(args.file.name)[1])[0]
+    else:
+        table_name = 'csvsql_table'
+
+    csv_table = table.Table.from_csv(args.file, name=table_name, **extract_csv_reader_kwargs(args))
     sql_table = sql.make_table(csv_table)
 
     print sql.make_create_table_statement(sql_table, dialect=args.dialect)

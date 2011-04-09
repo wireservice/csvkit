@@ -80,12 +80,13 @@ class Table(list):
     """
     A normalized data table and inferred annotations (nullable, etc.).
     """
-    def __init__(self, columns=[]):
+    def __init__(self, columns=[], name='new_table'):
         """
         Generic constructor. You should normally use a from_* method to create a Table.
         """
         list.__init__(self, columns)
         self._update_row_count()
+        self.name = name
 
     def __str__(self):
         return str(self.__unicode__())
@@ -172,7 +173,7 @@ class Table(list):
         return RowIterator(self)
 
     @classmethod
-    def from_csv(self, f, **kwargs):
+    def from_csv(self, f, name='from_csv_table', **kwargs):
         """
         Creates a new Table from a file-like object containng CSV data.
         """
@@ -195,7 +196,7 @@ class Table(list):
         for i, c in enumerate(data_columns): 
             columns.append(Column(i, headers[i], c))
 
-        return Table(columns)
+        return Table(columns, name=name)
 
     def to_csv(self, output, skipheader=False, **kwargs):
         """
