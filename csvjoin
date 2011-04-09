@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import table 
@@ -19,16 +20,42 @@ def parse_join_columns(join_string):
 
     return join_cols
 
-def main(args):
-    """
-    Join 2 or more CSVs on a common column.
-    """
+def get_tables(files):
     tabs = []
 
     for f in args.files:
         tabs.append(table.Table.from_csv(f, **extract_csv_reader_kwargs(args)))
 
-    # TODO: join tabs
+    return tabs
+
+def main(args):
+    """
+    Join 2 or more CSVs on a common column.
+    """
+    if len(args.files) < 2:
+        sys.exit('You must specify at least two files to join.')
+
+    if args.left_outer_join:
+        if args.right_outer_join:
+            sys.exit('It is not valid to specify both a left and a right join.')
+
+        if len(args.files) > 2:
+            sys.exit('Left and right outer joins are only valid for exactly two files.')
+
+        # left join
+        pass
+    elif args.right_outer_join:
+        if len(args.files) > 2:
+            sys.exit('Left and right outer joins are only valid for exactly two files.')
+
+        # right join
+        pass
+    elif args.outer_join:
+        # full outer join
+        pass
+    else:
+        # inner join
+        pass
     
     for j,f in zip(join_cols,args.files):
         print j,f
@@ -45,9 +72,9 @@ if __name__ == '__main__':
                         help='The column name(s) on which to join. Should be either one name or a comma-separated list with one name for each file, in the same order the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
     parser.add_argumentt('--outer', dest='outer_join', action='store_true',
                         help='Perform a full outer join, rather than the default inner join.')
-    parser.add_argumentt('--left', dest='left_outer_join', action='store_true',
-                        help='Perform a left outer join, rather than the default inner join. Only valid for exactly two inputs.')
-    parser.add_argumentt('--right', dest='left_outer_join', action='store_true',
-                        help='Perform a right outer join, rather than the default inner join. Only valid for exactly two inputs.')
+    parser.add_argumentt('--left', dest='left_join', action='store_true',
+                        help='Perform a left outer join, rather than the default inner join. Only valid for exactly two input files.')
+    parser.add_argumentt('--right', dest='left_join', action='store_true',
+                        help='Perform a right outer join, rather than the default inner join. Only valid for exactly two input files.')
 
     main(parser.parse_args())
