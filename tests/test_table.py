@@ -99,7 +99,7 @@ class TestTable(unittest.TestCase):
         c2 = table.Column(0, u'test', [u'test', u'column', None])
         c3 = table.Column(0, u'test', [u'test', u'column', None])
         t = table.Table([c, c2, c3])
-        self.assertEqual(t.row(2), [u'column', u'column', u'column'])
+        self.assertEqual(t.row(1), [u'column', u'column', u'column'])
 
     def test_table_rows(self):
         # TKTK
