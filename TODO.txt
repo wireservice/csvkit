@@ -8,8 +8,10 @@ Add documentation for using csvkit as a library
 
 Features:
 
-Implement Brian's crazy/awesome csvsql "insert" idea
-Expand functionality of csvtest
+Expand functionality of csvtest (mixed-type column warnings)
+Implement Brian's crazy/awesome csvsql "insert" idea (hard with sqlalchemy)
+XLSX support (really, really hard to get right)
+DBF support
 
 New utilities:
 
