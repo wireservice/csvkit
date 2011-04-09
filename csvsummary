@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+
+from csvkit import init_common_parser, extract_csv_reader_kwargs
+from csvkit import table
+
+def median(l):
+    length = len(l)
+
+    if len(l) % 2 == 1:
+        return l[((length + 1) / 2) - 1]
+    else:
+        a = l[(length / 2) - 1]
+        b = l[length / 2]
+    return (float(a + b)) / 2  
+
+def main(args):
+    """
+    Print descriptive statistics for all columns in a CSV.
+    """
+    tab = table.Table.from_csv(args.file, **extract_csv_reader_kwargs(args))
+
+    null_excluder = lambda i: i is not None
+
+    for c in tab:
+        values = sorted(filter(null_excluder, c))
+        uniques = set(c)
+
+        print '%3i. %s' % (c.index, c.name)
+        print '\tType: %s' % c.type
+
+        # Skip min/max for strings
+        if c.type not in [unicode, None]:
+            print '\tMin: %s' % min(values)
+            print '\tMax: %s' % max(values)
+
+            if c.type in [int, float]:
+                print '\tMean: %s' % (sum(values) / len(values))
+                print '\tMedian: %s' % median(values) 
+
+        print '\tNulls: %s' % ('Yes' if c.nullable else 'No')
+
+        if c.type == unicode:
+            print '\tMax length: %i' % c.max_length
+
+        print '\tUnique values: %i' % len(uniques)
+
+        if c.type == unicode and len(uniques) <= 11:
+            uniques.discard(None)
+            print '\tFactor: %s' % (', '.join(['"%s"' % unicode(u) for u in uniques]))
+
+
+if __name__ == '__main__':
+    parser = init_common_parser(description='Print descriptive statistics for all columns in a CSV file.')
+
+    main(parser.parse_args())
+
