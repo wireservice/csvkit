@@ -93,3 +93,14 @@ class TestTable(unittest.TestCase):
     def test_table_reverse(self):
         t = table.Table()
         self.assertRaises(NotImplementedError, t.reverse)
+
+    def test_table_row(self):
+        c = table.Column(0, u'test', [u'test', u'column', None])
+        c2 = table.Column(0, u'test', [u'test', u'column', None])
+        c3 = table.Column(0, u'test', [u'test', u'column', None])
+        t = table.Table([c, c2, c3])
+        self.assertEqual(t.row(2), [u'column', u'column', u'column'])
+
+    def test_table_rows(self):
+        # TKTK
+        pass

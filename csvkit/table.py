@@ -43,6 +43,25 @@ class Column(list):
         """
         return '%3i: %s (%s)' % (self.index, self.name, self.type)
 
+class RowIterator(object):
+    """
+    An iterator which constructs rows from a Table each time one is requested.
+    """
+    def __init__(self, table):
+		self.table = table
+		self.i = 0
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self.i == self.table.row_count:
+            raise StopIteration
+        else:
+            row = self.table.row(self.i)
+            self.i += 1
+            return row
+
 class Table(list):
     """
     A normalized data table and inferred annotations (nullable, etc.).
@@ -52,6 +71,7 @@ class Table(list):
         Generic constructor. You should normally use a from_* method to create a Table.
         """
         list.__init__(self, columns)
+        self._update_row_count()
 
     def __str__(self):
         return str(self.__unicode__())
@@ -69,25 +89,44 @@ class Table(list):
         for i, c in enumerate(self):
             c.index = i
 
+    def _update_row_count(self):
+        """
+        Update the row count.
+        """
+        if self:
+            self.row_count = max([len(c) for c in self])
+        else:
+            self.row_count = 0
+
     def append(self, column):
         """Implements list append."""
         list.append(self, column)
         column.index = len(self) - 1
+
+        if len(column) > self.row_count:
+            self.row_count = len(column)
 
     def insert(self, i, column):
         """Implements list insert."""
         list.insert(self, i, column)
         self._reindex_columns()
 
+        if len(column) > self.row_count:
+            self.row_count = len(column)
+
     def extend(self, columns):
         """Implements list extend."""
         list.extend(self, columns)
         self._reindex_columns()
 
+        self._update_row_count()
+
     def remove(self, column):
         """Implements list remove."""
         list.remove(self, column)
         self._reindex_columns()
+
+        self._update_row_count()
 
     def sort(self):
         """Forbids list sort."""
@@ -96,6 +135,21 @@ class Table(list):
     def reverse(self):
         """Forbids list reverse."""
         raise NotImplementedError()
+
+    def headers(self):
+        return [c.name for c in self]
+
+    def row(self, i):
+        """
+        Fetch a row of data from this table.
+        """
+        return [c[i] for c in self]
+
+    def rows(self):
+        """
+        Iterate over the rows in this table.
+        """
+        return RowIterator(self)
 
     @classmethod
     def from_csv(self, f, **kwargs):
@@ -125,7 +179,7 @@ class Table(list):
 
         return Table(columns)
 
-    def to_csv(self, output, **kwargs):
+    def to_csv(self, output, skipheader=False, **kwargs):
         """
         Serializes the table to CSV and writes it to any file-like object.
         """
@@ -142,7 +196,8 @@ class Table(list):
         rows = zip(*out_columns)
 
         # Insert header row
-        rows.insert(0, [c.name for c in self])
+        if not skipheader:
+            rows.insert(0, [c.name for c in self])
 
         writer_kwargs = { 'lineterminator': '\n' }
         writer_kwargs.update(kwargs)

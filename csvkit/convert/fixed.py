@@ -2,10 +2,8 @@
 
 from cStringIO import StringIO
 import csv
-import datetime
 
 from csvkit import table
-import utils
 
 def fixed2csv(f, schema):
     """

@@ -9,10 +9,11 @@ https://gist.github.com/561347/9846ebf8d0a69b06681da9255ffe3d3f59ec2c97
 Used and modified with permission.
 """
 
+from cStringIO import StringIO
 import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
-from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter 
+from csvkit import table 
 
 class ColumnIdentifierError(Exception):
     """
@@ -56,44 +57,30 @@ def parse_column_identifiers(ids, column_names):
 def main(args):
     """
     Command line-utility that filters and truncates CSV files. Like unix "cut" command, but for tabular data.
-
-    Note: columns without a header are ignored (non-rectangular data).
     """
-    # Create an output csv writer in advance, in order to save overhead
-    writer = UnicodeCSVWriter(sys.stdout)
+    tab = table.Table.from_csv(args.file, **extract_csv_reader_kwargs(args)) 
 
-    for i, row in enumerate(UnicodeCSVReader(args.file, **extract_csv_reader_kwargs(args))):
-        if i == 0:
-            # Show headers and exit
-            if args.show_headers:
-                for i, c in enumerate(row):
-                    print "%3i: %s" % (i + 1, c)
+    if args.show_headers:
+        print tab
+        sys.exit()
 
-                sys.exit()
-            # Fetch column names for by-name indexing 
-            else:
-                column_names = row
+    column_ids = parse_column_identifiers(args.columns, tab.headers())
 
-                try:
-                    columns = parse_column_identifiers(args.columns, column_names)
-                except ColumnIdentifierError, e:
-                    sys.exit(e.msg)
+    subtab = table.Table()
 
-        # Don't display headers?
-        if i == 0 and args.skipheader:
-            continue
+    for i in column_ids:
+        subtab.append(tab[i])
 
-        row = [row[c] for c in columns]
+    if args.linenumbers:
+        subtab.insert(0, table.Column(0, 'line_number', range(subtab.row_count), normal_type=int))
 
-        # Add line numbers?
-        if args.linenumbers:
-            if i == 0:
-                row.insert(0, 'line_number')
-            else:
-                row.insert(0, i)
+    o = StringIO()
+    output = subtab.to_csv(o, skipheader=args.skipheader)
+    output = o.getvalue()
+    o.close()
 
-        writer.writerow(row)
-
+    print output
+                
 if __name__ == "__main__":
     """
     Process command line arguments.
@@ -106,6 +93,6 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--skipheader', dest='skipheader', action='store_true',
                         help='Do not display the csv header in the output. Useful when piping to grep or uniq.')
     parser.add_argument('-l', '--linenumbers', dest='linenumbers', action='store_true',
-                        help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple unique id.')
+                        help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple primary key.')
 
     main(parser.parse_args())
