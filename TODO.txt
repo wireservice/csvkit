@@ -3,8 +3,8 @@ Bugs:
 Best practice:
 
 Factor main functions of tools into library and test them
-Have normalize_column_type also return nullable and max_length?
 Factor argparse parser's to use "parents" argument for base options
+Add documentation for using csvkit as a library
 
 Features:
 
