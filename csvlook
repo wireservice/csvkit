@@ -26,7 +26,8 @@ def main(args):
 
     # Insert header row
     rows.insert(0, [c.name for c in tab])
-
+    
+    # Width of the fields, plus space between, plus fore and aft dividers 
     divider = '-' * (sum(widths) + (3 * len(tab)) + 3)
 
     print divider

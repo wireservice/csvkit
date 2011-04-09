@@ -28,6 +28,7 @@ setup(
         'csvcut',
         'csvsql',
         'csvtest',
-        'csvsummary'
+        'csvsummary',
+        'csvlook'
     ],
 )

@@ -151,6 +151,20 @@ Prints descriptive statistics for all columns in a CSV file.
 csvsummary examples/testfixed_converted.csv
 </pre>
 
+h2. Usage: csvlook
+
+Renders a CSV to the command line in a readable, fixed-width format.
+
+<pre>
+csvlook examples/testfixed_converted.csv
+</pre>
+
+This is especially useful when piping through other utilities:
+
+<pre>
+csvcut -c 2,3 -l examples/testfixed_converted.csv | csvlook
+</pre>
+
 h2. Possible future utilities:
 
 csvsummary - generate summary statistics for columns in a CSV (like R's summary() function)

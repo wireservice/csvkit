@@ -13,6 +13,5 @@ Expand functionality of csvtest
 
 New utilities:
 
-csvlook: print to console in R/psql style fixed width table?
 csvdiff: identify which rows/cells have changed
 csvjoin: quickly merge two CSV files by a shared column
