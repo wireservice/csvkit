@@ -4,6 +4,9 @@ from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import table
 
 def median(l):
+    """
+    Compute the median of a list.
+    """
     length = len(l)
 
     if len(l) % 2 == 1:
@@ -47,7 +50,6 @@ def main(args):
         if c.type == unicode and len(uniques) <= 11:
             uniques.discard(None)
             print '\tFactor: %s' % (', '.join(['"%s"' % unicode(u) for u in uniques]))
-
 
 if __name__ == '__main__':
     parser = init_common_parser(description='Print descriptive statistics for all columns in a CSV file.')
