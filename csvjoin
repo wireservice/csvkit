@@ -1,18 +1,14 @@
 #!/usr/bin/env python
-from csvkit import init_common_parser
+
 import argparse
 
-def main():
-    parser = init_common_parser(description='Join a CSV file on a specified column or columns.',epilog="Note that the join operation requires reading all files into memory. Don't try this on very large files.",omitflags='f')
+from csvkit import init_common_parser, extract_csv_reader_kwargs
+from csvkit import table 
 
-    parser.add_argument('files', metavar="FILES", nargs='+', type=argparse.FileType('r'),
-                        help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
-
-    parser.add_argument('-j', '--join', dest='join',
-                        help='The columns on which to join. Should be either one, or a comma-separated list with one element for each file, in the same order the files were specified.')
-
-    args = parser.parse_args()
-
+def parse_join_columns(join_string):
+    """
+    Parse a list of join columns.
+    """
     join_cols = map(str.strip,args.join.split(','))
     
     if len(join_cols) == 1:
@@ -20,9 +16,33 @@ def main():
         
     if len(join_cols) != len(args.files):
         raise ValueError("Number of join columns must match number of files, unless join column has the same name in all files.")
+
+    return join_cols
+
+def main():
+    """
+    Join 2 or more CSVs on a common column.
+    """
+    tabs = []
+
+    for f in args.files:
+        tabs.append(table.Table.from_csv(f, **extract_csv_reader_kwargs(args)))
+
+    # TODO: join tabs
     
     for j,f in zip(join_cols,args.files):
         print j,f
     
 if __name__ == '__main__':
-    main()
+    """
+    Parse command line arguments.
+    """
+    parser = init_common_parser(description='Join a CSV file on a specified column or columns.', epilog="Note that the join operation requires reading all files into memory. Don't try this on very large files.", omitflags='f')
+
+    parser.add_argument('files', metavar="FILES", nargs='+', type=argparse.FileType('r'),
+                        help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
+
+    parser.add_argument('-j', '--join', dest='join',
+                        help='The columns on which to join. Should be either one, or a comma-separated list with one element for each file, in the same order the files were specified.')
+
+    main(parser.parse_args())
