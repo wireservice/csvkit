@@ -8,6 +8,7 @@ from csvkit import table
 class TestColumn(unittest.TestCase):
     def setUp(self):
         self.c = table.Column(0, u'test', [u'test', u'column', None])
+        self.c2 = table.Column(0, u'test', [0, 1, 42], normal_type=int)
 
     def test_create_column(self):
         self.assertEqual(type(self.c), table.Column)
@@ -24,6 +25,18 @@ class TestColumn(unittest.TestCase):
 
     def test_out_of_bounds(self):
         self.assertEqual(self.c[27], None)
+
+    def test_nullable(self):
+        self.assertEqual(self.c.nullable, True)
+
+    def test_not_nullable(self):
+        self.assertEqual(self.c2.nullable, False)
+
+    def test_max_length(self):
+        self.assertEqual(self.c.max_length, 6)
+
+    def test_no_max_length(self):
+        self.assertEqual(self.c2.max_length, None)
 
 class TestTable(unittest.TestCase):
     def test_from_csv(self):

@@ -31,8 +31,13 @@ class Column(list):
         self.index = index
         self.name = name 
         self.type = t
-        # self.nullable = ?
-        # self.max_length = ?
+        
+        self.nullable = True if None in self else False
+
+        if self.type == unicode:
+            self.max_length = max([len(d) if d else 0 for d in self])
+        else:
+            self.max_length = None
 
     def __str__(self):
         return str(self.__unicode__())

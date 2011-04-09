@@ -19,6 +19,8 @@ DIALECTS = {
     'sybase': 'sybase.pyodbc'
 }
 
+NULL_COLUMN_MAX_LENGTH = 32
+
 def make_column(column):
     """
     Creates a sqlalchemy column from a csvkit Column.
@@ -40,17 +42,14 @@ def make_column(column):
         sql_column_type = Time
     elif column.type == None:
         sql_column_type = String
-        sql_type_kwargs['length'] = 32
+        sql_type_kwargs['length'] = NULL_COLUMN_MAX_LENGTH
     elif column.type == unicode:
         sql_column_type = String
-        sql_type_kwargs['length'] = max([len(d) if d else 0 for d in column])
+        sql_type_kwargs['length'] = column.max_length 
     else:
         raise ValueError('Unexpected normalized column type: %s' % column.type)
 
-    for d in column:
-        if d == None:
-            sql_column_kwargs['nullable'] = True
-            break
+    sql_column_kwargs['nullable'] = column.nullable 
 
     column = Column(column.name, sql_column_type(**sql_type_kwargs), **sql_column_kwargs)
 
