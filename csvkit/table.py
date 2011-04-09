@@ -43,6 +43,15 @@ class Column(list):
         """
         return '%3i: %s (%s)' % (self.index, self.name, self.type)
 
+    def __getitem__(self, key):
+        """
+        Return null for keys beyond the range of the column. This allows for columns to be of uneven length and still be merged into rows cleanly.
+        """
+        if key >= len(self):
+            return None
+
+        return list.__getitem__(self, key)
+
 class RowIterator(object):
     """
     An iterator which constructs rows from a Table each time one is requested.
@@ -143,6 +152,12 @@ class Table(list):
         """
         Fetch a row of data from this table.
         """
+        if i < 0:
+            raise IndexError('Negative row numbers are not valid.')
+
+        if i >= self.row_count:
+            raise IndexError('Row number exceeds the number of rows in the table.')
+
         return [c[i] for c in self]
 
     def rows(self):

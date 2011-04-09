@@ -22,6 +22,9 @@ class TestColumn(unittest.TestCase):
     def test_access(self):
         self.assertEqual(self.c[-1], None)
 
+    def test_out_of_bounds(self):
+        self.assertEqual(self.c[27], None)
+
 class TestTable(unittest.TestCase):
     def test_from_csv(self):
         with open('examples/testfixed_converted.csv', 'r') as f:
@@ -43,15 +46,15 @@ class TestTable(unittest.TestCase):
         self.assertEqual(contents, conversion)
 
     def test_table_append(self):
-        c = table.Column(0, u'test', [u'test', u'column', None])
+        c = table.Column(0, u'test', [u'test', u'column', u''])
         t = table.Table()
         t.append(c)
         self.assertEqual(len(t), 1)
         self.assertEqual(t[0], c)
 
     def test_table_insert(self):
-        c = table.Column(0, u'test', [u'test', u'column', None])
-        c2 = table.Column(0, u'test', [u'test', u'column', None])
+        c = table.Column(0, u'test', [u'test', u'column', u''])
+        c2 = table.Column(0, u'test', [u'test', u'column', u''])
         t = table.Table([c])
         t.insert(0, c2)
         self.assertEqual(len(t), 2)
@@ -61,9 +64,9 @@ class TestTable(unittest.TestCase):
         self.assertEqual(t[1].index, 1)
 
     def test_table_extend(self):
-        c = table.Column(0, u'test', [u'test', u'column', None])
-        c2 = table.Column(0, u'test', [u'test', u'column', None])
-        c3 = table.Column(0, u'test', [u'test', u'column', None])
+        c = table.Column(0, u'test', [u'test', u'column', u''])
+        c2 = table.Column(0, u'test', [u'test', u'column', u''])
+        c3 = table.Column(0, u'test', [u'test', u'column', u''])
         t = table.Table([c])
         t.extend([c2, c3])
         self.assertEqual(len(t), 3)
@@ -75,9 +78,9 @@ class TestTable(unittest.TestCase):
         self.assertEqual(t[2].index, 2)
 
     def test_table_remove(self):
-        c = table.Column(0, u'test', [u'test', u'column', None])
-        c2 = table.Column(0, u'test', [u'test', u'column', None])
-        c3 = table.Column(0, u'test', [u'test', u'column', None])
+        c = table.Column(0, u'test', [u'test', u'column', u''])
+        c2 = table.Column(0, u'test', [u'test', u'column', u''])
+        c3 = table.Column(0, u'test', [u'test', u'column', u''])
         t = table.Table([c, c2, c3])
         t.remove(c2)
         self.assertEqual(len(t), 2)
@@ -93,18 +96,49 @@ class TestTable(unittest.TestCase):
     def test_table_reverse(self):
         t = table.Table()
         self.assertRaises(NotImplementedError, t.reverse)
+    
+    def test_table_updating_row_count(self):
+        c = table.Column(0, u'test', [u'test', u'column', u''])
+        c_short = table.Column(0, u'test', [u'test'])
+        c_long = table.Column(0, u'test', ['', '', '', ''])
+        t = table.Table()
+        self.assertEqual(t.row_count, 0)
+        t.append(c)
+        self.assertEqual(t.row_count, 3)
+        t.append(c_short)
+        self.assertEqual(t.row_count, 3)
+        t.append(c_long)
+        self.assertEqual(t.row_count, 4)
 
     def test_table_row(self):
-        c = table.Column(0, u'test', [u'test', u'column', None])
-        c2 = table.Column(0, u'test', [u'test', u'column', None])
-        c3 = table.Column(0, u'test', [u'test', u'column', None])
+        c = table.Column(0, u'test', [u'test', u'column', u''])
+        c2 = table.Column(0, u'test', [u'test', u'column', u''])
+        c3 = table.Column(0, u'test', [u'test', u'column', u''])
         t = table.Table([c, c2, c3])
         self.assertEqual(t.row(1), [u'column', u'column', u'column'])
 
+    def test_table_row_out_of_bounds(self):
+        c = table.Column(0, u'test', [u'test', u'column', u''])
+        c2 = table.Column(0, u'test', [u'test', u'column', u''])
+        c3 = table.Column(0, u'test', [u'test', u'column', u''])
+        t = table.Table([c, c2, c3])
+        self.assertRaises(IndexError, t.row, -1)
+        self.assertRaises(IndexError, t.row, 3)
+
+    def test_table_uneven_columns(self):
+        c = table.Column(0, u'test', [u'test', u'column', u''])
+        c_short = table.Column(0, u'test', [u'test'])
+        c_long = table.Column(0, u'test', [u'', u'', u'', u'way out here'])
+        t = table.Table([c, c_short, c_long])
+        self.assertEqual(t.row(0), [u'test', u'test', None])
+        self.assertEqual(t.row(1), [u'column', None, None])
+        self.assertEqual(t.row(2), [None, None, None])
+        self.assertEqual(t.row(3), [None, None, u'way out here'])
+
     def test_table_rows(self):
-        c = table.Column(0, u'test', [u'test', u'column', None])
-        c2 = table.Column(0, u'test', [u'test', u'column', None])
-        c3 = table.Column(0, u'test', [u'test', u'column', None])
+        c = table.Column(0, u'test', [u'test', u'column', u''])
+        c2 = table.Column(0, u'test', [u'test', u'column', u''])
+        c3 = table.Column(0, u'test', [u'test', u'column', u''])
         t = table.Table([c, c2, c3])
         rows = t.rows()
         self.assertEqual(type(rows), table.RowIterator)
