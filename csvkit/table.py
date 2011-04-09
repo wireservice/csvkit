@@ -2,6 +2,7 @@
 
 import datetime
 
+from csvkit import sniffer
 from csvkit import typeinference
 from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter
 
@@ -154,7 +155,7 @@ class Table(list):
     def headers(self):
         return [c.name for c in self]
 
-    def row(self, i):
+    def row(self, i, as_dict=False):
         """
         Fetch a row of data from this table.
         """
@@ -164,7 +165,12 @@ class Table(list):
         if i >= self.row_count:
             raise IndexError('Row number exceeds the number of rows in the table.')
 
-        return [c[i] for c in self]
+        row_data = [c[i] for c in self]
+
+        if as_dict:
+            return zip(self.headers(), row_data)
+
+        return row_data
 
     def rows(self):
         """
@@ -173,11 +179,12 @@ class Table(list):
         return RowIterator(self)
 
     @classmethod
-    def from_csv(self, f, name='from_csv_table', **kwargs):
+    def from_csv(cls, f, name='from_csv_table', **kwargs):
         """
         Creates a new Table from a file-like object containng CSV data.
         """
-        reader = UnicodeCSVReader(f, **kwargs)
+        dialect = sniffer.sniff_dialect(f)
+        reader = UnicodeCSVReader(f, dialect=dialect, **kwargs)
 
         headers = reader.next()
 
