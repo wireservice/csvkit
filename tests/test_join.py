@@ -38,7 +38,7 @@ class TestJoin(unittest.TestCase):
         self.assertEqual(len(jointab), len(self.tab1) + len(self.tab2) - 1)
         self.assertEqual(jointab.headers(), ['id', 'name', 'i_work_here', 'age', 'i_work_here_2'])
         self.assertEqual(jointab.row(0), [1, u'Chicago Reader', False, 40, False])
-        self.assertEqual(jointab.row(2), [3, u'Chicago Tribune', True, None, None])
+        self.assertEqual(jointab.row(2), [3, 'Chicago Tribune', True, None, None])
         self.assertEqual(jointab.row_count, 3)
 
     def test_right_outer_join(self):

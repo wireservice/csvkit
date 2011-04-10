@@ -61,6 +61,7 @@ class Column(list):
         """
         if len(self) == 0:
             self.max_length = 0
+            return
 
         if self.type == unicode:
             self.max_length = max([len(d) if d else 0 for d in self])

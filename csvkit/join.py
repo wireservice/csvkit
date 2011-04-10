@@ -28,24 +28,20 @@ def inner_join(left_table, left_column_name, right_table, right_column_name):
     right_join_index, right_join_column = _get_join_column(right_table, right_column_name)
 
     # Join all columns in the new table
-    columns_from_left = [c for c in left_table]
-    columns_from_right = [c for c in right_table]
+    columns_from_left = [table.Column(0, c.name, [], normal_type=c.type) for c in left_table]
+    columns_from_right = [table.Column(0, c.name, [], normal_type=c.type) for c in right_table]
 
     for left_index, v in enumerate(left_join_column):
         try:
             right_index = right_join_column.index(v)
         except ValueError:
-            # Not in right so delete from left
-            for c in columns_from_left:
-                del c[left_index]
+            continue 
 
-    for right_index, v in enumerate(right_join_column):
-        try:
-            left_index = left_join_column.index(v)
-        except ValueError:
-            # Not in left so delete from right
-            for c in columns_from_right:
-                del c[right_index]
+        for i, c in enumerate(left_table):
+            columns_from_left[i].append(c[left_index])
+
+        for i, c in enumerate(right_table):
+            columns_from_right[i].append(c[right_index])
 
     # Drop duplicate id column
     del columns_from_right[right_join_index]
