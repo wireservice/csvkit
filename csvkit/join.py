@@ -28,8 +28,22 @@ def inner_join(left_table, left_column_name, right_table, right_column_name):
     right_join_index, right_join_column = _get_join_column(right_table, right_column_name)
 
     # Join all columns in the new table
-    columns_from_left = [table.Column(0, c.name, [], normal_type=c.type) for c in left_table]
-    columns_from_right = [table.Column(0, c.name, [], normal_type=c.type) for c in right_table]
+    columns_from_left = []
+    columns_from_right = []
+
+    for c in left_table:
+        n = table.Column(0, c.name, [], normal_type=c.type)
+        n.nullable = c.nullable
+        n.max_lenght = c.max_length
+
+        columns_from_left.append(n)
+
+    for c in right_table:
+        n = table.Column(0, c.name, [], normal_type=c.type)
+        n.nullable = c.nullable
+        n.max_lenght = c.max_length
+
+        columns_from_right.append(n)
 
     for left_index, v in enumerate(left_join_column):
         try:
