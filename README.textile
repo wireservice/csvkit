@@ -133,14 +133,14 @@ Generate a statement in the postgresql dialect:
 csvsql -i postgresql examples/testfixed_converted.csv
 </pre>
 
-h2. Usage: csvtest
+h2. Usage: csvclean
 
-Tests a CSV file for common errors. If you specify the the "-c" flag it will output [basename]_out.csv and [basename]_err.csv, the former containing all valid rows in the original file and the latter containing all error rows along with line numbers and descriptions.
+Cleans a CSV file of common syntax errors. Outputs [basename]_out.csv and [basename]_err.csv, the former containing all valid rows and the latter containing all error rows along with line numbers and descriptions.
 
 Test a file with known bad rows:
 
 <pre>
-csvtest examples/bad.csv
+csvclean examples/bad.csv
 </pre>
 
 h2. Usage: csvsummary
@@ -164,13 +164,6 @@ This is especially useful when piping through other utilities:
 <pre>
 csvcut -c 2,3 -l examples/testfixed_converted.csv | csvlook
 </pre>
-
-h2. Possible future utilities:
-
-csvsummary - generate summary statistics for columns in a CSV (like R's summary() function)
-csvjoin - quickly merge two CSV files by a shared column
-csvlook - print table to console in R/psql fixed-width style
-csvdiff - identify what rows/cells are different between two tables
 
 h2. Authors
 

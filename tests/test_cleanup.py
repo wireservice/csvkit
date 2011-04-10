@@ -48,7 +48,6 @@ class TestNormalizeType(unittest.TestCase):
         self.assertEqual(1,len(joinable))
         self.assertTrue(iter(joinable).next() is e3)
 
-
     def test_extract_joinable_row_errors_3(self):
         e1 = CSVTestException(1,['foo', 'bar', 'baz'], "A throwaway message.")
         e2 = LengthMismatch(2,['foo', 'bar', 'baz'], 10)
@@ -59,8 +58,7 @@ class TestNormalizeType(unittest.TestCase):
         self.assertTrue(iter(joinable).next() is e2)
         self.assertTrue(iter(joinable).next() is e3)
 
-
-    def test_extract_joinable_row_errors_3(self):
+    def test_extract_joinable_row_errors_4(self):
         e1 = CSVTestException(1,['foo', 'bar', 'baz'], "A throwaway message.")
         e2 = LengthMismatch(2,['foo', 'bar', 'baz'], 10)
         e3 = LengthMismatch(4,['foo', 'bar', 'baz'], 10)

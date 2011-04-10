@@ -14,7 +14,7 @@ class TestColumn(unittest.TestCase):
 
     def test_create_column(self):
         self.assertEqual(type(self.c), table.Column)
-        self.assertEqual(self.c.index, 0)
+        self.assertEqual(self.c.order, 0)
         self.assertEqual(self.c.name, u'test')
         self.assertEqual(self.c.type, unicode)
         self.assertEqual(self.c, [u'test', u'column', None])
@@ -66,6 +66,18 @@ class TestTable(unittest.TestCase):
         self.assertEqual(len(t), 1)
         self.assertEqual(t[0], c)
 
+    def test_table_append_duplicate_name(self):
+        c = table.Column(0, u'test', [u'test', u'column', u''])
+        c2 = table.Column(0, u'test', [u'test', u'column', u''])
+        c3 = table.Column(0, u'test', [u'test', u'column', u''])
+        t = table.Table()
+        t.append(c)
+        t.append(c2)
+        t.append(c3)
+        self.assertEqual(t[0].name, 'test')
+        self.assertEqual(t[1].name, 'test_2')
+        self.assertEqual(t[2].name, 'test_3')
+
     def test_table_insert(self):
         c = table.Column(0, u'test', [u'test', u'column', u''])
         c2 = table.Column(0, u'test', [u'test', u'column', u''])
@@ -74,8 +86,8 @@ class TestTable(unittest.TestCase):
         self.assertEqual(len(t), 2)
         self.assertEqual(t[0], c2)
         self.assertEqual(t[1], c)
-        self.assertEqual(t[0].index, 0)
-        self.assertEqual(t[1].index, 1)
+        self.assertEqual(t[0].order, 0)
+        self.assertEqual(t[1].order, 1)
 
     def test_table_extend(self):
         c = table.Column(0, u'test', [u'test', u'column', u''])
@@ -87,9 +99,9 @@ class TestTable(unittest.TestCase):
         self.assertEqual(t[0], c)
         self.assertEqual(t[1], c2)
         self.assertEqual(t[2], c3)
-        self.assertEqual(t[0].index, 0)
-        self.assertEqual(t[1].index, 1)
-        self.assertEqual(t[2].index, 2)
+        self.assertEqual(t[0].order, 0)
+        self.assertEqual(t[1].order, 1)
+        self.assertEqual(t[2].order, 2)
 
     def test_table_remove(self):
         c = table.Column(0, u'test', [u'test', u'column', u''])
@@ -100,8 +112,8 @@ class TestTable(unittest.TestCase):
         self.assertEqual(len(t), 2)
         self.assertEqual(t[0], c)
         self.assertEqual(t[1], c3)
-        self.assertEqual(t[0].index, 0)
-        self.assertEqual(t[1].index, 1)
+        self.assertEqual(t[0].order, 0)
+        self.assertEqual(t[1].order, 1)
 
     def test_table_sort(self):
         t = table.Table()

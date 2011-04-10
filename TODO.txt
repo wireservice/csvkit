@@ -1,5 +1,7 @@
 Bugs:
 
+Correct for duplicate column names when adding columns to Tables
+
 Best practice:
 
 Factor main functions of tools into library and test them
@@ -8,10 +10,13 @@ Add documentation for using csvkit as a library
 
 Features:
 
-Implement Brian's crazy/awesome csvsql "insert" idea
-Expand functionality of csvtest
+Expand functionality of csvtest (mixed-type column warnings)
+Implement Brian's crazy/awesome csvsql "insert" idea (hard with sqlalchemy)
+XLSX support (really, really hard to get right)
+DBF support
 
 New utilities:
 
 csvdiff: identify which rows/cells have changed
-csvjoin: quickly merge two CSV files by a shared column
+csvjson: convert csv to the king of hierarchial data formats, JSON
+csvstack: stack the rows from multiple csv files on top of one other, optionally adding a grouping value to each set of rows
