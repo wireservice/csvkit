@@ -21,6 +21,8 @@ def get_tables(args):
     tabs = []
     reader_kwargs = extract_csv_reader_kwargs(args)
 
+    print args.files
+
     for f in args.files:
         tabs.append(table.Table.from_csv(f, **reader_kwargs))
 
@@ -78,8 +80,6 @@ def main(args):
                 join.inner_join(t)
         else:
             # Sequential join
-            tabs = get_tables(args)
-
             for t in tabs:
                 jointab.extend(t)
 
