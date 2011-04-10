@@ -27,7 +27,7 @@ def inner_join(left_table, left_column_name, right_table, right_column_name):
     left_join_index, left_join_column = _get_join_column(left_table, left_column_name)
     right_join_index, right_join_column = _get_join_column(right_table, right_column_name)
 
-    # Join all columns in the new table
+    # Create new columns to hold outputs from both tables 
     columns_from_left = []
     columns_from_right = []
 
@@ -45,6 +45,7 @@ def inner_join(left_table, left_column_name, right_table, right_column_name):
 
         columns_from_right.append(n)
 
+    # Iterate over tables, keeping only rows with ids in both
     for left_index, v in enumerate(left_join_column):
         try:
             right_index = right_join_column.index(v)

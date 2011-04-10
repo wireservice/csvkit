@@ -13,8 +13,8 @@ class TestJoin(unittest.TestCase):
             table.Column(2, 'i_work_here', [u'0', u'0', u'1'])])
 
         self.tab2 = table.Table([
-            table.Column(0, 'id', [u'1', u'2', u'4']),
-            table.Column(1, 'age', [u'40', u'63', u'5']),
+            table.Column(0, 'id', [u'1', u'4', u'2']),
+            table.Column(1, 'age', [u'40', u'5', u'63']),
             table.Column(2, 'i_work_here', [u'0', u'0', u'0', u'0'])]) # Not extra value in this column
 
     def test_inner_join(self):
