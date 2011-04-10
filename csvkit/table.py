@@ -17,7 +17,7 @@ class Column(list):
     """
     A normalized data column and inferred annotations (nullable, etc.).
     """
-    def __init__(self, index, name, l, normal_type=InvalidType):
+    def __init__(self, order, name, l, normal_type=InvalidType):
         """
         Construct a column from a sequence of values.
         
@@ -30,7 +30,7 @@ class Column(list):
             t, data = typeinference.normalize_column_type(l)
         
         list.__init__(self, data)
-        self.index = index
+        self.order = order
         self.name = name 
         self.type = t
         
@@ -44,7 +44,7 @@ class Column(list):
         """
         Stringify a description of this column.
         """
-        return '%3i: %s (%s)' % (self.index, self.name, self.type)
+        return '%3i: %s (%s)' % (self.order, self.name, self.type)
 
     def __getitem__(self, key):
         """
@@ -59,6 +59,9 @@ class Column(list):
         """
         Compute maximum length this column occupies when rendered as a string.
         """
+        if len(self) == 0:
+            self.max_length = 0
+
         if self.type == unicode:
             self.max_length = max([len(d) if d else 0 for d in self])
         elif self.type in [int, float]:
@@ -115,10 +118,10 @@ class Table(list):
 
     def _reindex_columns(self):
         """
-        Update index properties of all columns in table.
+        Update order properties of all columns in table.
         """
         for i, c in enumerate(self):
-            c.index = i
+            c.order = i
 
     def _update_row_count(self):
         """
@@ -129,8 +132,21 @@ class Table(list):
         else:
             self.row_count = 0
 
+    def _deduplicate_column_name(self, column):
+        while column.name in self.headers():
+            try:
+                i = column.name.rindex('_')
+                counter = int(column.name[i + 1:])
+                column.name = '%s_%i' % (column.name[:i], counter + 1)
+            except:
+                column.name += '_2'
+
+        return column.name
+
     def append(self, column):
         """Implements list append."""
+        self._deduplicate_column_name(column)
+
         list.append(self, column)
         column.index = len(self) - 1
 
@@ -139,6 +155,8 @@ class Table(list):
 
     def insert(self, i, column):
         """Implements list insert."""
+        self._deduplicate_column_name(column)
+
         list.insert(self, i, column)
         self._reindex_columns()
 
@@ -147,6 +165,9 @@ class Table(list):
 
     def extend(self, columns):
         """Implements list extend."""
+        for c in columns:
+            self._deduplicate_column_name(c)
+
         list.extend(self, columns)
         self._reindex_columns()
 
