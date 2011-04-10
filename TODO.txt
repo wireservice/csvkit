@@ -1,5 +1,7 @@
 Bugs:
 
+Correct for duplicate column names when adding columns to Tables
+
 Best practice:
 
 Factor main functions of tools into library and test them
@@ -16,5 +18,5 @@ DBF support
 New utilities:
 
 csvdiff: identify which rows/cells have changed
-csvjoin: quickly merge two CSV files by a shared column
 csvjson: convert csv to the king of hierarchial data formats, JSON
+csvstack: stack the rows from multiple csv files on top of one other, optionally adding a grouping value to each set of rows

@@ -1,30 +1,28 @@
 #!/usr/bin/env python
 
 import argparse
+from cStringIO import StringIO
 import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
+from csvkit import join
 from csvkit import table 
 
-def parse_join_columns(join_string):
+def parse_join_column_names(join_string):
     """
     Parse a list of join columns.
     """
-    join_cols = map(str.strip,args.join.split(','))
-    
-    if len(join_cols) == 1:
-        join_cols = join_cols * len(args.files)
-        
-    if len(join_cols) != len(args.files):
-        raise ValueError("Number of join columns must match number of files, unless join column has the same name in all files.")
+    return map(str.strip, join_string.split(','))
 
-    return join_cols
-
-def get_tables(files):
+def get_tables(args):
+    """
+    Create Table objects for all input files.
+    """
     tabs = []
+    reader_kwargs = extract_csv_reader_kwargs(args)
 
     for f in args.files:
-        tabs.append(table.Table.from_csv(f, **extract_csv_reader_kwargs(args)))
+        tabs.append(table.Table.from_csv(f, **reader_kwargs))
 
     return tabs
 
@@ -35,30 +33,62 @@ def main(args):
     if len(args.files) < 2:
         sys.exit('You must specify at least two files to join.')
 
-    if args.left_outer_join:
-        if args.right_outer_join:
-            sys.exit('It is not valid to specify both a left and a right join.')
+    if args.join:
+        join_column_names = parse_join_column_names(args.join)
 
-        if len(args.files) > 2:
-            sys.exit('Left and right outer joins are only valid for exactly two files.')
+        if len(join_column_names) == 1:
+            join_column_names = join_column_names * len(args.files)
 
-        # left join
-        pass
-    elif args.right_outer_join:
-        if len(args.files) > 2:
-            sys.exit('Left and right outer joins are only valid for exactly two files.')
+        if len(join_column_names) != len(args.files):
+            sys.exit('The number of join column names must match the number of files, or be a single column name for all files.')
 
-        # right join
-        pass
+    if (args.left_join or args.right_join or args.outer_join) and not args.join:
+        sys.exit('You must provide join column names when performing a left outer, right outer, full outer join.')
+
+    if args.left_join and args.right_join:
+         sys.exit('It is not valid to specify both a left and a right join.')
+
+    jointab = table.Table()
+    tabs = get_tables(args)
+
+    if args.left_join:
+        # Left join
+        jointab.extend(tabs[0])
+
+        for t in tabs[1:]:
+            join.left_outer_join(jointab, t)
+    elif args.right_join:
+        # Right join
+        jointab.extend(tabs[-1])
+
+        for t in tabs[:-1].reverse():
+            join.right_outer_join(t, jointab)
     elif args.outer_join:
-        # full outer join
-        pass
+        # Full outer join
+        jointab.extend(tabs[0])
+
+        for t in tabs[1:]:
+            join.full_outer_join(jointab, t)
     else:
-        # inner join
-        pass
-    
-    for j,f in zip(join_cols,args.files):
-        print j,f
+        if args.join:
+            # Inner join
+            jointab.extend(tabs[0])
+
+            for t in tabs[1:]:
+                join.inner_join(t)
+        else:
+            # Sequential join
+            tabs = get_tables(args)
+
+            for t in tabs:
+                jointab.extend(t)
+
+    o = StringIO()
+    output = jointab.to_csv(o)
+    output = o.getvalue()
+    o.close()
+
+    print output
     
 if __name__ == '__main__':
     """
@@ -70,11 +100,11 @@ if __name__ == '__main__':
                         help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
     parser.add_argument('-j', '--join', dest='join',
                         help='The column name(s) on which to join. Should be either one name or a comma-separated list with one name for each file, in the same order the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
-    parser.add_argumentt('--outer', dest='outer_join', action='store_true',
+    parser.add_argument('--outer', dest='outer_join', action='store_true',
                         help='Perform a full outer join, rather than the default inner join.')
-    parser.add_argumentt('--left', dest='left_join', action='store_true',
-                        help='Perform a left outer join, rather than the default inner join. Only valid for exactly two input files.')
-    parser.add_argumentt('--right', dest='left_join', action='store_true',
-                        help='Perform a right outer join, rather than the default inner join. Only valid for exactly two input files.')
+    parser.add_argument('--left', dest='left_join', action='store_true',
+                        help='Perform a left outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of left outer joins, starting at the left.')
+    parser.add_argument('--right', dest='right_join', action='store_true',
+                        help='Perform a right outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of right outer joins, starting at the right.')
 
     main(parser.parse_args())

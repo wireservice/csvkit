@@ -12,13 +12,13 @@ def init_common_parser(description='', epilog='', omitflags=''):
         parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('r'), default=sys.stdin,
                             help='The CSV file to operate on. If omitted, will accept input on STDIN.')
     if 'd' not in omitflags:
-        parser.add_argument('-d', '--delimiter', dest='delimiter', default=',',
+        parser.add_argument('-d', '--delimiter', dest='delimiter',
                             help='Delimiting character of the input CSV file. Defaults to comma.')
     if 't' not in omitflags:
         parser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
                             help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
     if 'q' not in omitflags:
-        parser.add_argument('-q', '--quotechar', dest='quotechar', default='"',
+        parser.add_argument('-q', '--quotechar', dest='quotechar',
                             help='Character used to quote strings in the input CSV file. Defaults to double-quote.')
 
     if 'e' not in omitflags:
@@ -32,8 +32,14 @@ def extract_csv_reader_kwargs(args):
     """
     Extracts those from the command-line arguments those would should be passed through to the CSV reader.
     """
-    return {
-            'encoding': args.encoding,
-            'delimiter': '\t' if args.tabs else args.delimiter,
-            'quotechar': args.quotechar,
-        }
+    kwargs = {}
+    if args.encoding:
+        kwargs['encoding'] = args.encoding
+
+    if args.delimiter:
+        kwargs['delimiter'] = '\t' if args.tabs else args.delimiter
+
+    if args.quotechar:
+        kwargs['quotechar'] = args.quotechar
+
+    return kwargs
