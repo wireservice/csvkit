@@ -227,7 +227,7 @@ class Table(list):
         # which are not seekable and thus must be buffered
         contents = f.read()
 
-        sample = StringIO(contents[:4096])
+        sample = contents[:4096]
         dialect = sniffer.sniff_dialect(sample)
 
         f = StringIO(contents) 
@@ -241,7 +241,7 @@ class Table(list):
             for i, d in enumerate(row):
                 try:
                     data_columns[i].append(d.strip())
-                except KeyError:
+                except IndexError:
                     # Non-rectangular data is truncated
                     break
 

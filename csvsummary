@@ -28,7 +28,7 @@ def main(args):
         values = sorted(filter(null_excluder, c))
         uniques = set(c)
 
-        print '%3i. %s' % (c.index, c.name)
+        print '%3i. %s' % (c.order, c.name)
         print '\tType: %s' % c.type
 
         # Skip min/max for strings
