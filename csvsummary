@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+import datetime
+import random
+
 from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import table
 
@@ -29,31 +32,40 @@ def main(args):
         uniques = set(c)
 
         print '%3i. %s' % (c.order, c.name)
-        print '\tType: %s' % c.type
 
-        # Skip min/max for strings
-        if c.type not in [unicode, None]:
-            print '\tMin: %s' % min(values)
-            print '\tMax: %s' % max(values)
-
-            if c.type in [int, float]:
-                print '\tMean: %s' % (sum(values) / len(values))
-                print '\tMedian: %s' % median(values) 
-
+        if c.type == None:
+            print '\tEmpty column'
+            continue
+            
+        print '\t%s' % c.type
         print '\tNulls: %s' % ('Yes' if c.nullable else 'No')
+        
+        if len(uniques) <= 5:
+            print '\tValues: %s' % ', '.join(['"%s"' % unicode(u) for u in uniques])
+        else:
+            # Skip min/max for strings and bools
+            if c.type not in [unicode, bool]:
+                minval = min(values)
+                maxval = max(values)
 
-        if c.type == unicode:
-            print '\tMax length: %i' % c.max_length
+                if c.type in [datetime.datetime, datetime.date, datetime.time]:
+                    minval = minval.isoformat()
+                    maxval = maxval.isoformat()
 
-        print '\tUnique values: %i' % len(uniques)
+                print '\tMin: %s' % min(values)
+                print '\tMax: %s' % max(values)
 
-        if c.type == unicode:
-            uniques.discard(None)
+                if c.type in [int, float]:
+                    print '\tMean: %s' % (sum(values) / len(values))
+                    print '\tMedian: %s' % median(values) 
 
-            if len(uniques) <= 10:
-                print '\tFactor: %s' % (', '.join(['"%s"' % unicode(u) for u in uniques]))
-            else:
-                print '\tSample: %s' % (', '.join(['"%s"' % unicode(u) for u in list(uniques)[:10]]))
+            print '\tUnique values: %i' % len(uniques)
+
+            if c.type == unicode:
+                print '\tMax length: %i' % c.max_length
+                
+                uniques.discard(None)
+                print '\tSamples: %s' % (', '.join(['"%s"' % unicode(u) for u in random.sample(uniques, 5)]))
 
 if __name__ == '__main__':
     parser = init_common_parser(description='Print descriptive statistics for all columns in a CSV file.')

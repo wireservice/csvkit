@@ -31,9 +31,9 @@ def normalize_column_type(l):
         for x in l:
             if x == '':
                 normal_values.append(None)
-            elif x.lower() in ('1', 'yes', 'true'):
+            elif x.lower() in ('1', 'yes', 'y', 'true', 't'):
                 normal_values.append(True)
-            elif x.lower() in ('0', 'no', 'false'):
+            elif x.lower() in ('0', 'no', 'n', 'false', 'f'):
                 normal_values.append(False)
             else:
                 raise ValueError('Not boolean')
