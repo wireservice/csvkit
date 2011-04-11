@@ -34,7 +34,7 @@ class Column(list):
         self.name = name 
         self.type = t
         
-        self.nullable = True if None in self else False
+        self._compute_nullable() 
         self._compute_max_length()
 
     def __str__(self):
@@ -54,6 +54,9 @@ class Column(list):
             return None
 
         return list.__getitem__(self, key)
+
+    def _compute_nullable(self):
+        self.nullable = True if None in self else False
 
     def _compute_max_length(self):
         """
@@ -224,7 +227,7 @@ class Table(list):
         # which are not seekable and thus must be buffered
         contents = f.read()
 
-        sample = StringIO(contents[:4096])
+        sample = contents[:4096]
         dialect = sniffer.sniff_dialect(sample)
 
         f = StringIO(contents) 
@@ -238,7 +241,7 @@ class Table(list):
             for i, d in enumerate(row):
                 try:
                     data_columns[i].append(d.strip())
-                except KeyError:
+                except IndexError:
                     # Non-rectangular data is truncated
                     break
 
