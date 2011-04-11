@@ -151,6 +151,10 @@ Prints descriptive statistics for all columns in a CSV file.
 csvsummary examples/testfixed_converted.csv
 </pre>
 
+h2. Usage: csvjoin
+
+Merges two CSV tables together using a method analogous to SQL JOIN operation. By default it performs an inner join, but full outer, left outer, and right outer are all available via flags. Key columns are specified with the -c flag (either a single column which exists in all tables, or a comma-seperated list of columns with one corresponding to each). If the columns flag is not provided then the tables will be merged "sequentially", that is they will be attached side-by-side with no concern for ordering or matching.
+
 h2. Usage: csvlook
 
 Renders a CSV to the command line in a readable, fixed-width format. If the table is too long, try piping the output to head, tail, more or less.
