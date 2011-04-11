@@ -98,8 +98,6 @@ def full_outer_join(left_table, left_column_name, right_table, right_column_name
     
     # Create a column to hold key values
     key_column = table.Column(0, left_join_column.name, [], normal_type=left_join_column.type)
-    key_column.nullable = left_join_column.nullable
-    key_column.max_length = left_join_column.max_length
 
     # Create new columns to hold outputs from both tables 
     columns_from_left = _clone_columns_empty(left_table)
@@ -144,7 +142,109 @@ def full_outer_join(left_table, left_column_name, right_table, right_column_name
     return jointab
 
 def left_outer_join(left_table, left_column_name, right_table, right_column_name):
-    raise NotImplementedError()
+    """
+    Execute left outer join on two tables and return the combined table.
+    """
+    jointab = table.Table()
+    
+    # Get the columns which will function as keys 
+    left_join_index, left_join_column, left_as_set = _get_join_column(left_table, left_column_name)
+    right_join_index, right_join_column, right_as_set = _get_join_column(right_table, right_column_name)
+    
+    # Left outer join = left keys only
+    joined_keys = sorted(left_join_column)
+    
+    # Create a column to hold key values
+    key_column = table.Column(0, left_join_column.name, [], normal_type=left_join_column.type)
+
+    # Create new columns to hold outputs from both tables 
+    columns_from_left = _clone_columns_empty(left_table)
+    columns_from_right = _clone_columns_empty(right_table)
+
+    # Iterate over joined keys, adding column values from both tables
+    for v in joined_keys:
+        key_column.append(v)
+
+        i = left_join_column.index(v)
+
+        for j, c in enumerate(left_table):
+            columns_from_left[j].append(c[i])
+
+        try:
+            i = right_join_column.index(v)
+
+            for j, c in enumerate(right_table):
+                columns_from_right[j].append(c[i])
+        except:
+            for j, c in enumerate(right_table):
+                columns_from_right[j].append(None)
+
+    # Drop key columns
+    del columns_from_left[left_join_index]
+    del columns_from_right[right_join_index]
+
+    # Build table from newly truncated columns
+    jointab.append(key_column)
+    jointab.extend(columns_from_left)
+    jointab.extend(columns_from_right)
+
+    # Compute nullable and max_length properties for joined columns 
+    for c in jointab:
+        c._compute_nullable()
+        c._compute_max_length()
+
+    return jointab
 
 def right_outer_join(left_table, left_column_name, right_table, right_column_name):
-    raise NotImplementedError()
+    """
+    Execute right outer join on two tables and return the combined table.
+    """
+    jointab = table.Table()
+    
+    # Get the columns which will function as keys 
+    left_join_index, left_join_column, left_as_set = _get_join_column(left_table, left_column_name)
+    right_join_index, right_join_column, right_as_set = _get_join_column(right_table, right_column_name)
+    
+    # Left outer join = left keys only
+    joined_keys = sorted(right_join_column)
+    
+    # Create a column to hold key values
+    key_column = table.Column(0, left_join_column.name, [], normal_type=left_join_column.type)
+
+    # Create new columns to hold outputs from both tables 
+    columns_from_left = _clone_columns_empty(left_table)
+    columns_from_right = _clone_columns_empty(right_table)
+
+    # Iterate over joined keys, adding column values from both tables
+    for v in joined_keys:
+        key_column.append(v)
+
+        try:
+            i = left_join_column.index(v)
+
+            for j, c in enumerate(left_table):
+                columns_from_left[j].append(c[i])
+        except:
+            for j, c in enumerate(left_table):
+                columns_from_left[j].append(None)
+
+        i = right_join_column.index(v)
+
+        for j, c in enumerate(right_table):
+            columns_from_right[j].append(c[i])
+
+    # Drop key columns
+    del columns_from_left[left_join_index]
+    del columns_from_right[right_join_index]
+
+    # Build table from newly truncated columns
+    jointab.append(key_column)
+    jointab.extend(columns_from_left)
+    jointab.extend(columns_from_right)
+
+    # Compute nullable and max_length properties for joined columns 
+    for c in jointab:
+        c._compute_nullable()
+        c._compute_max_length()
+
+    return jointab
