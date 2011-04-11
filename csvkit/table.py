@@ -34,7 +34,7 @@ class Column(list):
         self.name = name 
         self.type = t
         
-        self.nullable = True if None in self else False
+        self._compute_nullable() 
         self._compute_max_length()
 
     def __str__(self):
@@ -54,6 +54,9 @@ class Column(list):
             return None
 
         return list.__getitem__(self, key)
+
+    def _compute_nullable(self):
+        self.nullable = True if None in self else False
 
     def _compute_max_length(self):
         """
