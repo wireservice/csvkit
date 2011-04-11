@@ -34,14 +34,14 @@ def inner_join(left_table, left_column_name, right_table, right_column_name):
     for c in left_table:
         n = table.Column(0, c.name, [], normal_type=c.type)
         n.nullable = c.nullable
-        n.max_lenght = c.max_length
+        n.max_length = c.max_length
 
         columns_from_left.append(n)
 
     for c in right_table:
         n = table.Column(0, c.name, [], normal_type=c.type)
         n.nullable = c.nullable
-        n.max_lenght = c.max_length
+        n.max_length = c.max_length
 
         columns_from_right.append(n)
 
