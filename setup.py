@@ -21,7 +21,8 @@ setup(
         'csvclean',
         'csvsummary',
         'csvlook',
-        'csvjoin'
+        'csvjoin',
+        'csvstack'
     ],
     install_requires = [
         'argparse==1.2.1',
