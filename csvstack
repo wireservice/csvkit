@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+
+import argparse
+from cStringIO import StringIO
+import sys
+
+from csvkit import init_common_parser, extract_csv_reader_kwargs
+from csvkit import table
+
+def main(args):
+    """
+    Stack up the rows from multiple CSV files, optionally adding a grouping value.
+    """
+    if len(args.files) < 2:
+        sys.exit('You must specify at least two files to stack.')
+
+    tabs = []
+
+    for f in args.files:
+        tabs.append(table.Table.from_csv(f, **extract_csv_reader_kwargs(args)))
+
+    headers = tabs[0].headers()
+
+    for t in tabs[1:]:
+        if t.headers() != headers:
+            sys.exit('All CSV files must have the same number of columns with the same column names.')
+
+    stacktab = tabs[0]
+
+    for t in tabs[1:]:
+        for i, c in enumerate(t):
+            stacktab[i].extend(c)
+
+    # TKTK - stacktab.row_count is now wrong
+    
+    # Compute nullable and max_length properties for joined columns 
+    for c in stacktab:
+        c._compute_nullable()
+        c._compute_max_length()
+
+    o = StringIO()
+    output = stacktab.to_csv(o)
+    output = o.getvalue()
+    o.close()
+
+    print output
+    
+if __name__ == '__main__':
+    parser = init_common_parser(description='Stack up the rows from multiple CSV files, optionally adding a grouping value.', omitflags='f')
+
+    parser.add_argument('files', metavar="FILES", nargs='+', type=argparse.FileType('r'))
+
+    main(parser.parse_args())
+
+
