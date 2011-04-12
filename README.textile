@@ -145,7 +145,7 @@ csvclean examples/bad.csv
 
 h2. Usage: csvsummary
 
-Prints descriptive statistics for all columns in a CSV file.
+Prints descriptive statistics for all columns in a CSV file:
 
 <pre>
 csvsummary examples/testfixed_converted.csv
@@ -153,7 +153,17 @@ csvsummary examples/testfixed_converted.csv
 
 h2. Usage: csvjoin
 
-Merges two CSV tables together using a method analogous to SQL JOIN operation. By default it performs an inner join, but full outer, left outer, and right outer are all available via flags. Key columns are specified with the -c flag (either a single column which exists in all tables, or a comma-seperated list of columns with one corresponding to each). If the columns flag is not provided then the tables will be merged "sequentially", that is they will be attached side-by-side with no concern for ordering or matching.
+Merges two or more CSV tables together using a method analogous to SQL JOIN operation. By default it performs an inner join, but full outer, left outer, and right outer are all available via flags. Key columns are specified with the -c flag (either a single column which exists in all tables, or a comma-seperated list of columns with one corresponding to each). If the columns flag is not provided then the tables will be merged "sequentially", that is they will be attached side-by-side with no concern for ordering or matching.
+
+h2. Usage: csvstack
+
+Stack up the rows from multiple CSV files, optionally adding a grouping value. Each CSV file must have the same number of columns and they must have the same column names.
+
+Contrived example: joining a set of homogoenous files for different years:
+
+<pre>
+csvstack -g 1984,1985 -n year examples/testfixed_converted.csv examples/testfixed_converted.csv
+</pre>
 
 h2. Usage: csvlook
 
