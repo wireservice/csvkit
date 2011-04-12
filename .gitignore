@@ -4,3 +4,5 @@
 build
 csvkit.egg-info
 reference
+dist
+*.swo
