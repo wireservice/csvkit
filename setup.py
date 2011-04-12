@@ -1,15 +1,6 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
-import subprocess
-
-with open('requirements.txt', 'r') as f:
-    packages = f.readlines()
-
-subprocess.call(['easy_install', 'pip'])
-
-for p in packages:
-    subprocess.call(['pip', 'install', p])
+from setuptools import setup
 
 setup(
     name='csvkit',
@@ -32,4 +23,10 @@ setup(
         'csvlook',
         'csvjoin'
     ],
+    install_requires = [
+        'argparse==1.2.1',
+        'nose==1.0.0',
+        'xlrd==0.7.1',
+        'python-dateutil==1.5',
+        'sqlalchemy==0.6.6']
 )
