@@ -55,8 +55,9 @@ class TestNormalizeType(unittest.TestCase):
         errs = [e1, e2, e3]
         joinable = extract_joinable_row_errors(errs)
         self.assertEqual(2,len(joinable))
-        self.assertTrue(iter(joinable).next() is e2)
-        self.assertTrue(iter(joinable).next() is e3)
+        joinable = list(joinable)
+        self.assertTrue(joinable[0] is e2)
+        self.assertTrue(joinable[1] is e3)
 
     def test_extract_joinable_row_errors_4(self):
         e1 = CSVTestException(1,['foo', 'bar', 'baz'], "A throwaway message.")
