@@ -25,14 +25,23 @@ def main(args):
         if t.headers() != headers:
             sys.exit('All CSV files must have the same number of columns with the same column names.')
 
+    if args.groups:
+        groups = args.groups.split(',')
+
+        if len(groups) != len(tabs):
+            sys.exit('The number of grouping values must be equal to the number of CSV files being stacked.')
+
+        group_name = args.group_name if args.group_name else 'group'
+
+        for i, t in enumerate(tabs):
+            t.insert(0, table.Column(0, group_name, [groups[i]] * t.row_count))
+
     stacktab = tabs[0]
 
     for t in tabs[1:]:
         for i, c in enumerate(t):
             stacktab[i].extend(c)
 
-    # TKTK - stacktab.row_count is now wrong
-    
     # Compute nullable and max_length properties for joined columns 
     for c in stacktab:
         c._compute_nullable()
@@ -49,6 +58,10 @@ if __name__ == '__main__':
     parser = init_common_parser(description='Stack up the rows from multiple CSV files, optionally adding a grouping value.', omitflags='f')
 
     parser.add_argument('files', metavar="FILES", nargs='+', type=argparse.FileType('r'))
+    parser.add_argument('-g', '--groups', dest='groups',
+                        help='A comma-seperated list of values to add as a "grouping factor", one for each CSV being stacked. These will be added to the stacked CSV as a new column. You may specify a name for the grouping column using the -')
+    parser.add_argument('-n', '--group-name', dest='group_name',
+                        help='A name for the grouping column, e.g. "year". Only used when also specifying -g.')
 
     main(parser.parse_args())
 
