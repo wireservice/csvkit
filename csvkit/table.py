@@ -215,7 +215,7 @@ class Table(list):
         # which are not seekable and thus must be buffered
         contents = f.read()
 
-        sample = contents[:4096]
+        sample = contents
         dialect = sniffer.sniff_dialect(sample)
 
         f = StringIO(contents) 
@@ -245,15 +245,17 @@ class Table(list):
         Serializes the table to CSV and writes it to any file-like object.
         """
         out_columns = []
-        
+
         for c in self:
             # Stringify datetimes, dates, and times
             if c.type in [datetime.datetime, datetime.date, datetime.time]:
-                out_columns.append([v.isoformat() if v != None else None for v in c])
+                out_columns.append(Column(0, c.name, [v.isoformat() if v != None else None for v in c], normal_type=unicode))
             else:
                 out_columns.append(c)
-        
-        # Convert columns to rows
+
+        rows = []
+
+        # Convert columns to rows 
         rows = zip(*out_columns)
 
         # Insert header row
