@@ -72,7 +72,7 @@ def main(args):
         subtab.append(tab[i])
 
     if args.linenumbers:
-        subtab.insert(0, table.Column(0, 'line_number', range(subtab.row_count), normal_type=int))
+        subtab.insert(0, table.Column(0, 'line_number', range(subtab.count_rows()), normal_type=int))
 
     o = StringIO()
     output = subtab.to_csv(o, skipheader=args.skipheader)

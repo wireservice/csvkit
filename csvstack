@@ -34,7 +34,7 @@ def main(args):
         group_name = args.group_name if args.group_name else 'group'
 
         for i, t in enumerate(tabs):
-            t.insert(0, table.Column(0, group_name, [groups[i]] * t.row_count))
+            t.insert(0, table.Column(0, group_name, [groups[i]] * t.count_rows()))
 
     stacktab = tabs[0]
 

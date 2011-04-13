@@ -123,18 +123,18 @@ class TestTable(unittest.TestCase):
         t = table.Table()
         self.assertRaises(NotImplementedError, t.reverse)
     
-    def test_table_updating_row_count(self):
+    def test_table_count_rows(self):
         c = table.Column(0, u'test', [u'test', u'column', u''])
         c_short = table.Column(0, u'test', [u'test'])
         c_long = table.Column(0, u'test', ['', '', '', ''])
         t = table.Table()
-        self.assertEqual(t.row_count, 0)
+        self.assertEqual(t.count_rows(), 0)
         t.append(c)
-        self.assertEqual(t.row_count, 3)
+        self.assertEqual(t.count_rows(), 3)
         t.append(c_short)
-        self.assertEqual(t.row_count, 3)
+        self.assertEqual(t.count_rows(), 3)
         t.append(c_long)
-        self.assertEqual(t.row_count, 4)
+        self.assertEqual(t.count_rows(), 4)
 
     def test_table_row(self):
         c = table.Column(0, u'test', [u'test', u'column', u''])

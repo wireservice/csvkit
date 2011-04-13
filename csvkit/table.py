@@ -92,7 +92,7 @@ class RowIterator(object):
         return self
 
     def next(self):
-        if self.i == self.table.row_count:
+        if self.i == self.table.count_rows():
             raise StopIteration
         else:
             row = self.table.row(self.i)
@@ -108,7 +108,6 @@ class Table(list):
         Generic constructor. You should normally use a from_* method to create a Table.
         """
         list.__init__(self, columns)
-        self._update_row_count()
         self.name = name
 
     def __str__(self):
@@ -126,15 +125,6 @@ class Table(list):
         """
         for i, c in enumerate(self):
             c.order = i
-
-    def _update_row_count(self):
-        """
-        Update the row count.
-        """
-        if self:
-            self.row_count = max([len(c) for c in self])
-        else:
-            self.row_count = 0
 
     def _deduplicate_column_name(self, column):
         while column.name in self.headers():
@@ -154,18 +144,12 @@ class Table(list):
         list.append(self, column)
         column.index = len(self) - 1
 
-        if len(column) > self.row_count:
-            self.row_count = len(column)
-
     def insert(self, i, column):
         """Implements list insert."""
         self._deduplicate_column_name(column)
 
         list.insert(self, i, column)
         self._reindex_columns()
-
-        if len(column) > self.row_count:
-            self.row_count = len(column)
 
     def extend(self, columns):
         """Implements list extend."""
@@ -175,14 +159,10 @@ class Table(list):
         list.extend(self, columns)
         self._reindex_columns()
 
-        self._update_row_count()
-
     def remove(self, column):
         """Implements list remove."""
         list.remove(self, column)
         self._reindex_columns()
-
-        self._update_row_count()
 
     def sort(self):
         """Forbids list sort."""
@@ -195,6 +175,14 @@ class Table(list):
     def headers(self):
         return [c.name for c in self]
 
+    def count_rows(self):
+        lengths = [len(c) for c in self]
+
+        if lengths:
+            return max(lengths)
+
+        return 0 
+
     def row(self, i, as_dict=False):
         """
         Fetch a row of data from this table.
@@ -202,7 +190,7 @@ class Table(list):
         if i < 0:
             raise IndexError('Negative row numbers are not valid.')
 
-        if i >= self.row_count:
+        if i >= self.count_rows():
             raise IndexError('Row number exceeds the number of rows in the table.')
 
         row_data = [c[i] for c in self]
