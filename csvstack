@@ -4,7 +4,7 @@ import argparse
 import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
-from csvkit import unicode
+from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter
 
 def main(args):
     """
@@ -21,10 +21,10 @@ def main(args):
             
         group_name = args.group_name if args.group_name else 'group'
 
-    output = unicode.UnicodeCSVWriter(sys.stdout)
+    output = UnicodeCSVWriter(sys.stdout)
 
     for i, f in enumerate(args.files):
-        rows = unicode.UnicodeCSVReader(f, **extract_csv_reader_kwargs(args))
+        rows = UnicodeCSVReader(f, **extract_csv_reader_kwargs(args))
         headers = rows.next()
 
         if i == 0:
@@ -49,5 +49,3 @@ if __name__ == '__main__':
                         help='A name for the grouping column, e.g. "year". Only used when also specifying -g.')
 
     main(parser.parse_args())
-
-
