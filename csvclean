@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from os.path import splitext
+import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit.cleanup import RowChecker
@@ -23,11 +24,11 @@ def main(args):
         for row in checker.checked_rows():
             pass
         for e in checker.errs:
-            print "Line: %i: %s\n" % (e.line_number,e.msg)
+            sys.stdout.write("Line: %i: %s\n" % (e.line_number,e.msg))
         else:
-            print "No errors."
+            sys.stdout.write("No errors.\n")
         if checker.joins:
-            print "%i rows would have been joined/reduced to %i rows after eliminating expected internal line breaks" % (checker.rows_joined, checker.joins)
+            sys.stdout.write("%i rows would have been joined/reduced to %i rows after eliminating expected internal line breaks.\n" % (checker.rows_joined, checker.joins))
     else:
         base,ext = splitext(args.file.name)
         # should we preserve delimiters and other dialect args from CLI?
@@ -48,13 +49,12 @@ def main(args):
             for e in checker.errs:
                 err_file.writerow(format_error_row(e))
                 err_count = len(checker.errs)
-            print "%i error%s logged to %s" % (err_count,"" if err_count == 1 else "s", err_filename)
+            sys.stdout.write("%i error%s logged to %s\n" % (err_count,"" if err_count == 1 else "s", err_filename))
         else:
-            print "No errors."
+            sys.stdout.write("No errors.\n")
 
         if checker.joins:
-            print "%i rows were joined/reduced to %i rows after eliminating expected internal line breaks" % (checker.rows_joined, checker.joins)
-
+            sys.stdout.write("%i rows were joined/reduced to %i rows after eliminating expected internal line breaks.\n" % (checker.rows_joined, checker.joins))
 
 if __name__ == '__main__':
     """

@@ -22,7 +22,7 @@ class TestJoin(unittest.TestCase):
         self.assertEqual(len(jointab), len(self.tab1) + len(self.tab2) - 1)
         self.assertEqual(jointab.headers(), ['id', 'name', 'i_work_here', 'age', 'i_work_here_2'])
         self.assertEqual(jointab.row(0), [1, u'Chicago Reader', False, 40, False])
-        self.assertEqual(jointab.row_count, 2)
+        self.assertEqual(jointab.count_rows(), 2)
 
     def test_full_outer_join(self):
         jointab = join.full_outer_join(self.tab1, 'id', self.tab2, 'id')
@@ -31,7 +31,7 @@ class TestJoin(unittest.TestCase):
         self.assertEqual(jointab.row(0), [1, u'Chicago Reader', False, 40, False])
         self.assertEqual(jointab.row(2), [3, u'Chicago Tribune', True, None, None])
         self.assertEqual(jointab.row(3), [4, None, None, 5, False])
-        self.assertEqual(jointab.row_count, 4)
+        self.assertEqual(jointab.count_rows(), 4)
 
     def test_left_outer_join(self):
         jointab = join.left_outer_join(self.tab1, 'id', self.tab2, 'id')
@@ -39,7 +39,7 @@ class TestJoin(unittest.TestCase):
         self.assertEqual(jointab.headers(), ['id', 'name', 'i_work_here', 'age', 'i_work_here_2'])
         self.assertEqual(jointab.row(0), [1, u'Chicago Reader', False, 40, False])
         self.assertEqual(jointab.row(2), [3, 'Chicago Tribune', True, None, None])
-        self.assertEqual(jointab.row_count, 3)
+        self.assertEqual(jointab.count_rows(), 3)
 
     def test_right_outer_join(self):
         jointab = join.right_outer_join(self.tab1, 'id', self.tab2, 'id')
@@ -47,4 +47,4 @@ class TestJoin(unittest.TestCase):
         self.assertEqual(jointab.headers(), ['id', 'name', 'i_work_here', 'age', 'i_work_here_2'])
         self.assertEqual(jointab.row(0), [1, u'Chicago Reader', False, 40, False])
         self.assertEqual(jointab.row(2), [4, None, None, 5, False])
-        self.assertEqual(jointab.row_count, 3)
+        self.assertEqual(jointab.count_rows(), 3)

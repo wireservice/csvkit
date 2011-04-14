@@ -1,36 +1,31 @@
 #!/usr/bin/env python
 
-import datetime
+import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
-from csvkit import table
+from csvkit.unicode import UnicodeCSVReader
 
 def main(args):
     """
     Display a CSV in the console using a readable, fixed-width format.
     """
-    tab = table.Table.from_csv(args.file, **extract_csv_reader_kwargs(args))
+    rows = UnicodeCSVReader(args.file, **extract_csv_reader_kwargs(args))
+    rows = list(rows)
 
-    widths = [max(c.max_length, len(c.name)) for c in tab]
-    out_columns = []
+    widths = []
 
-    for c in tab:
-        # Stringify datetimes, dates, and times
-        if c.type in [datetime.datetime, datetime.date, datetime.time]:
-            out_columns.append([v.isoformat() if v != None else None for v in c])
-        else:
-            out_columns.append(c)
-    
-    # Convert columns to rows
-    rows = zip(*out_columns)
+    for row in rows:
+        for i, v in enumerate(row):
+            try:
+                if len(v) > widths[i]:
+                    widths[i] = len(v)
+            except IndexError:
+                widths.append(len(v))
 
-    # Insert header row
-    rows.insert(0, [c.name for c in tab])
-    
     # Width of the fields, plus space between, plus fore and aft dividers 
-    divider = '-' * (sum(widths) + (3 * len(tab)) + 3)
+    divider = '-' * (sum(widths) + (3 * len(widths)) + 3)
 
-    print divider
+    sys.stdout.write('%s\n' % divider)
 
     for i, row in enumerate(rows):
         output = []
@@ -40,11 +35,10 @@ def main(args):
                 d = ''
             output.append(' %s ' % unicode(d).ljust(widths[j]))
 
-        print '| %s |' % ('|'.join(output))
+        sys.stdout.write('| %s |\n' % ('|'.join(output)))
 
-        if i == 0 or i == tab.row_count:
-            print divider
-
+        if i == 0 or i == len(widths) + 1:
+            sys.stdout.write('%s\n' % divider)
 
 if __name__ == '__main__':
     parser = init_common_parser(description='Display a CSV in the console using a readable, fixed-width format.')

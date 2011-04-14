@@ -2,6 +2,7 @@
 
 import datetime
 import random
+import sys 
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import table
@@ -31,17 +32,17 @@ def main(args):
         values = sorted(filter(null_excluder, c))
         uniques = set(c)
 
-        print '%3i. %s' % (c.order, c.name)
+        sys.stdout.write('%3i. %s\n' % (c.order, c.name))
 
         if c.type == None:
-            print '\tEmpty column'
+            sys.stdout.write('\tEmpty column\n')
             continue
             
-        print '\t%s' % c.type
-        print '\tNulls: %s' % ('Yes' if c.nullable else 'No')
+        sys.stdout.write('\t%s\n' % c.type)
+        sys.stdout.write('\tNulls: %s\n' % ('Yes' if c.nullable else 'No'))
         
         if len(uniques) <= 5:
-            print '\tValues: %s' % ', '.join(['"%s"' % unicode(u) for u in uniques])
+            sys.stdout.write('\tValues: %s\n' % ', '.join(['"%s"' % unicode(u) for u in uniques]))
         else:
             # Skip min/max for strings and bools
             if c.type not in [unicode, bool]:
@@ -52,20 +53,20 @@ def main(args):
                     minval = minval.isoformat()
                     maxval = maxval.isoformat()
 
-                print '\tMin: %s' % min(values)
-                print '\tMax: %s' % max(values)
+                sys.stdout.write('\tMin: %s\n' % min(values))
+                sys.stdout.write('\tMax: %s\n' % max(values))
 
                 if c.type in [int, float]:
-                    print '\tMean: %s' % (sum(values) / len(values))
-                    print '\tMedian: %s' % median(values) 
+                    sys.stdout.write('\tMean: %s\n' % (sum(values) / len(values)))
+                    sys.stdout.write('\tMedian: %s\n' % median(values))
 
-            print '\tUnique values: %i' % len(uniques)
+            sys.stdout.write('\tUnique values: %i\n' % len(uniques))
 
             if c.type == unicode:
-                print '\tMax length: %i' % c.max_length
+                sys.stdout.write('\tMax length: %i\n' % c.max_length)
                 
                 uniques.discard(None)
-                print '\tSamples: %s' % (', '.join(['"%s"' % unicode(u) for u in random.sample(uniques, 5)]))
+                sys.stdout.write('\tSamples: %s\n' % (', '.join(['"%s"' % unicode(u) for u in random.sample(uniques, 5)])))
 
 if __name__ == '__main__':
     parser = init_common_parser(description='Print descriptive statistics for all columns in a CSV file.')
