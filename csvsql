@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import sql
@@ -19,7 +20,7 @@ def main(args):
     csv_table = table.Table.from_csv(args.file, name=table_name, **extract_csv_reader_kwargs(args))
     sql_table = sql.make_table(csv_table)
 
-    print sql.make_create_table_statement(sql_table, dialect=args.dialect)
+    sys.stdout.write(sql.make_create_table_statement(sql_table, dialect=args.dialect))
 
 if __name__ == '__main__':
     parser = init_common_parser(description='Generate a SQL CREATE TABLE statement for a CSV file.')
