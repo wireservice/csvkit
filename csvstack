@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
 import argparse
-from cStringIO import StringIO
 import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
-from csvkit import table
+from csvkit import unicode
 
 def main(args):
     """
@@ -14,46 +13,32 @@ def main(args):
     if len(args.files) < 2:
         sys.exit('You must specify at least two files to stack.')
 
-    tabs = []
-
-    for f in args.files:
-        tabs.append(table.Table.from_csv(f, **extract_csv_reader_kwargs(args)))
-
-    headers = tabs[0].headers()
-
-    for t in tabs[1:]:
-        if t.headers() != headers:
-            sys.exit('All CSV files must have the same number of columns with the same column names.')
-
     if args.groups:
         groups = args.groups.split(',')
 
-        if len(groups) != len(tabs):
+        if len(groups) != len(args.files):
             sys.exit('The number of grouping values must be equal to the number of CSV files being stacked.')
-
+            
         group_name = args.group_name if args.group_name else 'group'
 
-        for i, t in enumerate(tabs):
-            t.insert(0, table.Column(0, group_name, [groups[i]] * t.count_rows()))
+    output = unicode.UnicodeCSVWriter(sys.stdout)
 
-    stacktab = tabs[0]
+    for i, f in enumerate(args.files):
+        rows = unicode.UnicodeCSVReader(f, **extract_csv_reader_kwargs(args))
+        headers = rows.next()
 
-    for t in tabs[1:]:
-        for i, c in enumerate(t):
-            stacktab[i].extend(c)
+        if i == 0:
+            if args.groups:
+                headers.insert(0, group_name)
+            
+            output.writerow(headers)
 
-    # Compute nullable and max_length properties for joined columns 
-    for c in stacktab:
-        c._compute_nullable()
-        c._compute_max_length()
+        for row in rows:
+            if args.groups:
+                row.insert(0, groups[i])
 
-    o = StringIO()
-    output = stacktab.to_csv(o)
-    output = o.getvalue()
-    o.close()
+            output.writerow(row)
 
-    print output
-    
 if __name__ == '__main__':
     parser = init_common_parser(description='Stack up the rows from multiple CSV files, optionally adding a grouping value.', omitflags='f')
 
