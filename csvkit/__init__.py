@@ -67,3 +67,44 @@ def extract_csv_reader_kwargs(args):
         kwargs['escapechar'] = args.escapechar
 
     return kwargs
+
+class ColumnIdentifierError(Exception):
+    """
+    Exception raised when the user supplies an invalid column identifier.
+    """
+    def __init__(self, msg):
+        self.msg = msg
+
+def parse_column_identifiers(ids, column_names):
+    """
+    Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
+
+    Note: Column indices are 1-based.
+    """
+    # If not specified, return all columns 
+    if not ids:
+        return range(len(column_names))
+
+    columns = []
+
+    for c in ids.split(','):
+        if c in column_names:
+            columns.append(column_names.index(c))
+        else:
+            try:
+                c = int(c) - 1
+            # Fail out if neither a column name nor an integer
+            except:
+                raise ColumnIdentifierError('Column identifier "%s" is neither a index, nor a existing column\'s name.' % c)
+
+            # Fail out if index is 0-based
+            if c < 0:
+                raise ColumnIdentifierError('Columns 0 is not valid; columns are 1-based.')
+
+            # Fail out if index is out of range
+            if c >= len(column_names):
+                raise ColumnIdentifierError('Index %i is beyond the last named column, "%s" at index %i.' % (c, column_names[-1], len(column_names) - 1))
+
+            columns.append(c)
+
+    return columns
