@@ -58,12 +58,21 @@ def main(args):
     """
     Command line-utility that filters and truncates CSV files. Like unix "cut" command, but for tabular data.
     """
-    tab = table.Table.from_csv(args.file, **extract_csv_reader_kwargs(args)) 
-
+    # When the user only wants to see headers, we shortcut normal CSV loading in order to bypass the slow
+    # type inference routines
     if args.show_headers:
-        print tab
+        from csvkit.unicode import UnicodeCSVReader 
+        
+        reader = UnicodeCSVReader(args.file, **extract_csv_reader_kwargs(args))
+        header = reader.next()
+
+        for i, c in enumerate(header):
+            print '%3i: %s' % (i + 1, c)
+
         sys.exit()
 
+    tab = table.Table.from_csv(args.file, **extract_csv_reader_kwargs(args)) 
+    
     column_ids = parse_column_identifiers(args.columns, tab.headers())
 
     subtab = table.Table()
