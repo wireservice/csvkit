@@ -2,26 +2,19 @@
 
 from csvkit.exceptions import CSVTestException, LengthMismatchError
 
-def join_rows(rows):
-    """Given a series of rows, return them as a single row where the inner edge cells are merged"""
+def join_rows(rows,joiner=' '):
+    """Given a series of rows, return them as a single row where the inner edge cells are merged. By default joins with a single space character, but you can specify new-line, empty string, or anything else with the 'joiner' kwarg."""
     rows = list(rows)
     fixed_row = rows[0][:]
     for row in rows[1:]:
         if len(row) == 0:
             row = ['']
-        fixed_row[-1] += "\n%s" % row[0]
+        fixed_row[-1] += "%s%s" % (joiner,row[0])
         fixed_row.extend(row[1:])
 
     return fixed_row
         
-def join_two_rows(a,b):
-    row = a[:]
-    if b:
-        row[-1] += "\n%s" % b[0]
-    row.extend(b[1:])
-    return row
-
-def fix_length_errors(errs, target_line_length):
+def fix_length_errors(errs, target_line_length,joiner=' '):
     """If possible, transform the rows backed up in the list of errors into rows of the correct length.
        If the list of errors does not yet produce a row of target_line_length, return an empty array.
        If the joining the list of error
@@ -79,7 +72,7 @@ class RowChecker(object):
                 # see if we can actually clean up those length mismatches
                 joinable_row_errors = extract_joinable_row_errors(self.errs)
                 while joinable_row_errors:
-                    fixed_row = join_rows(err.row for err in joinable_row_errors)
+                    fixed_row = join_rows(err.row for err in joinable_row_errors,joiner=' ')
                     if len(fixed_row) < len(self.column_names): break
                     if len(fixed_row) == len(self.column_names):
                         self.rows_joined += len(joinable_row_errors)
