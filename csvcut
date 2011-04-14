@@ -23,7 +23,7 @@ def main(args):
 
     if args.names_only:
         for i, c in enumerate(column_names):
-            print '%3i: %s' % (i + 1, c)
+            sys.stdout.write('%3i: %s\n' % (i + 1, c))
 
         sys.exit()
 
