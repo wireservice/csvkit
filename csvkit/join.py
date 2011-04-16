@@ -9,79 +9,70 @@ class JoinError(Exception):
     def __init__(self, msg):
         self.msg = msg
 
-def _get_join_column(tab, name):
+def _get_join_column(headers, column_name):
     """
     Get the column that should be used for making the join. 
     """
     try:
-        index = tab.headers().index(name)
+        index = headers.index(column_name)
     except ValueError:
-        raise JoinError('Table does not have a column named "%s"' % name)
+        raise JoinError('Table does not have a column named "%s"' % column_name)
 
-    as_set = set(tab[index])
+    return index
 
-    if len(tab[index]) != len(as_set):
-        raise JoinError('Table\'s column named "%s" contains duplicate values')
-
-    return index, tab[index], as_set
-
-def _clone_columns_empty(tab):
+def _get_ordered_keys(rows, column_index):
     """
-    Creates an array of columns that duplicate those in an existing table, but have no data.
+    Get ordered keys from rows, given the key column index.
     """
-    columns = []
+    return [r[column_index] for r in rows]
 
-    for c in tab:
-        n = table.Column(0, c.name, [], normal_type=c.type)
-        n.nullable = c.nullable
-        n.max_length = c.max_length
+def _get_mapped_keys(rows, column_index):
+    mapped_keys = {}
 
-        columns.append(n)
+    for r in rows:
+        key = r[column_index]
 
-    return columns
+        if key in mapped_keys:
+            mapped_keys[key].append(r)
+        else:
+            mapped_keys[key] = [r]
+
+    return mapped_keys
 
 def inner_join(left_table, left_column_name, right_table, right_column_name):
     """
     Execute an inner join on two tables and return the combined table.
     """
-    jointab = table.Table()
-    
+    output = []
+
+    # Grab headers
+    left_headers = left_table[0]
+    right_headers = right_table[0]
+    left_rows = left_table[1:]
+    right_rows = right_table[1:]
+
     # Get the columns which will function as keys 
-    left_join_index, left_join_column, left_as_set = _get_join_column(left_table, left_column_name)
-    right_join_index, right_join_column, right_as_set = _get_join_column(right_table, right_column_name)
+    left_column_index = _get_join_column(left_headers, left_column_name)
+    right_column_index = _get_join_column(right_headers, right_column_name)
 
-    # Inner join = interesection
-    joined_keys = sorted(list(left_as_set.intersection(right_as_set)))
+    # Get ordered keys
+    #left_ordered_keys = _get_ordered_keys(left_rows, left_column_index)
+    #right_ordered_keys = _get_ordered_keys(right_rows, right_column_index)
 
-    # Create new columns to hold outputs from both tables 
-    columns_from_left = _clone_columns_empty(left_table)
-    columns_from_right = _clone_columns_empty(right_table)
+    # Get mapped keys
+    #left_mapped_keys = _get_mapped_keys(left_rows, left_column_index)
+    right_mapped_keys = _get_mapped_keys(right_rows, right_column_index)
 
-    # Iterate over joined keys, adding column values from both tables
-    for v in joined_keys:
-        i = left_join_column.index(v)
+    output.append(left_headers + right_headers)
 
-        for j, c in enumerate(left_table):
-            columns_from_left[j].append(c[i])
+    for left_row in left_rows:
+        left_key = left_row[left_column_index]
 
-        i = right_join_column.index(v)
+        if left_key in right_mapped_keys:
+            for right_row in right_mapped_keys[left_key]:
+                output.append(left_row + right_row)
 
-        for j, c in enumerate(right_table):
-            columns_from_right[j].append(c[i])
-
-    # Drop duplicate key column
-    del columns_from_right[right_join_index]
-
-    # Build table from newly truncated columns
-    jointab.extend(columns_from_left)
-    jointab.extend(columns_from_right)
-
-    # Compute nullable and max_length properties for joined columns 
-    for c in jointab:
-        c._compute_nullable()
-        c._compute_max_length()
-
-    return jointab
+    return output
 
 def full_outer_join(left_table, left_column_name, right_table, right_column_name):
     """

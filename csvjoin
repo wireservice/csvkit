@@ -6,25 +6,14 @@ import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import join
-from csvkit import table 
+from csvkit import table
+from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter
 
 def parse_join_column_names(join_string):
     """
     Parse a list of join columns.
     """
     return map(str.strip, join_string.split(','))
-
-def get_tables(args):
-    """
-    Create Table objects for all input files.
-    """
-    tabs = []
-    reader_kwargs = extract_csv_reader_kwargs(args)
-
-    for f in args.files:
-        tabs.append(table.Table.from_csv(f, **reader_kwargs))
-
-    return tabs
 
 def main(args):
     """
@@ -40,16 +29,19 @@ def main(args):
             join_column_names = join_column_names * len(args.files)
 
         if len(join_column_names) != len(args.files):
-            sys.exit('The number of join column names must match the number of files, or be a single column name for all files.')
+            sys.exit('The number of join column names must match the number of files, or be a single column name that exists in all files.')
 
     if (args.left_join or args.right_join or args.outer_join) and not args.join:
-        sys.exit('You must provide join column names when performing a left outer, right outer, full outer join.')
+        sys.exit('You must provide join column names when performing an outer join.')
 
     if args.left_join and args.right_join:
          sys.exit('It is not valid to specify both a left and a right join.')
 
-    jointab = table.Table()
-    tabs = get_tables(args)
+    reader_kwargs = extract_csv_reader_kwargs(args)
+    tables = []
+
+    for f in args.files:
+        tables.append(list(UnicodeCSVReader(f, **reader_kwargs)))
 
     if args.left_join:
         # Left outer join
