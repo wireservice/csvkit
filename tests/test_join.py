@@ -20,12 +20,6 @@ class TestJoin(unittest.TestCase):
             [u'1', u'second', u'0'],
             [u'2', u'only', u'0', u'0']] # Note extra value in this column
 
-    def test_get_join_column(self):
-        self.assertEqual(join._get_join_column(self.tab1[0], 'id'), 0)
-
-    def test_get_join_column_invalid(self):
-        self.assertRaises(join.JoinError, join._get_join_column, self.tab1[0], 'no_id')
-
     def test_get_ordered_keys(self):
         self.assertEqual(join._get_ordered_keys(self.tab1[1:], 0), [u'1', u'2', u'3', u'1'])
         self.assertEqual(join._get_ordered_keys(self.tab2[1:], 0), [u'1', u'4', u'1', u'2'])
@@ -45,7 +39,7 @@ class TestJoin(unittest.TestCase):
             [u'1', u'Chicago Reader', u'second', u'2', u'only', u'0', u'0']])
 
     def test_inner_join(self):
-        self.assertEqual(join.inner_join(self.tab1, 'id', self.tab2, 'id'), [
+        self.assertEqual(join.inner_join(self.tab1, 'id', self.tab2, u'1'), [
             ['id', 'name', 'i_work_here', 'id', 'age', 'i_work_here'],
             [u'1', u'Chicago Reader', u'first', u'1', u'first', u'0'],
             [u'1', u'Chicago Reader', u'first', u'1', u'second', u'0'],
@@ -54,7 +48,7 @@ class TestJoin(unittest.TestCase):
             [u'1', u'Chicago Reader', u'second', u'1', u'second', u'0']])
 
     def test_full_outer_join(self):
-        self.assertEqual(join.full_outer_join(self.tab1, 'id', self.tab2, 'id'), [
+        self.assertEqual(join.full_outer_join(self.tab1, u'1', self.tab2, u'1'), [
             ['id', 'name', 'i_work_here', 'id', 'age', 'i_work_here'],
             [u'1', u'Chicago Reader', u'first', u'1', u'first', u'0'],
             [u'1', u'Chicago Reader', u'first', u'1', u'second', u'0'],

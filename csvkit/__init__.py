@@ -75,6 +75,29 @@ class ColumnIdentifierError(Exception):
     def __init__(self, msg):
         self.msg = msg
 
+def match_column_id(column_names, c):
+    """
+    Determine what column a single column id (name or index) matches in a series of column names.
+    """
+    if c in column_names:
+        return column_names.index(c)
+    else:
+        try:
+            c = int(c) - 1
+        # Fail out if neither a column name nor an integer
+        except:
+            raise ColumnIdentifierError('Column identifier "%s" is neither a index, nor a existing column\'s name.' % c)
+
+        # Fail out if index is 0-based
+        if c < 0:
+            raise ColumnIdentifierError('Columns 0 is not valid; columns are 1-based.')
+
+        # Fail out if index is out of range
+        if c >= len(column_names):
+            raise ColumnIdentifierError('Index %i is beyond the last named column, "%s" at index %i.' % (c, column_names[-1], len(column_names) - 1))
+
+    return c
+
 def parse_column_identifiers(ids, column_names):
     """
     Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
@@ -88,23 +111,6 @@ def parse_column_identifiers(ids, column_names):
     columns = []
 
     for c in ids.split(','):
-        if c in column_names:
-            columns.append(column_names.index(c))
-        else:
-            try:
-                c = int(c) - 1
-            # Fail out if neither a column name nor an integer
-            except:
-                raise ColumnIdentifierError('Column identifier "%s" is neither a index, nor a existing column\'s name.' % c)
-
-            # Fail out if index is 0-based
-            if c < 0:
-                raise ColumnIdentifierError('Columns 0 is not valid; columns are 1-based.')
-
-            # Fail out if index is out of range
-            if c >= len(column_names):
-                raise ColumnIdentifierError('Index %i is beyond the last named column, "%s" at index %i.' % (c, column_names[-1], len(column_names) - 1))
-
-            columns.append(c)
+        columns.append(match_column_id(column_names, c))
 
     return columns

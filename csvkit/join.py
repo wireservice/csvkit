@@ -1,22 +1,13 @@
 #!/usr/bin/env python
 
+from csvkit import match_column_id
+
 class JoinError(Exception):
     """
     Exception raised when there is a problem joing tables.
     """
     def __init__(self, msg):
         self.msg = msg
-
-def _get_join_column(headers, column_name):
-    """
-    Get the column that should be used for making the join. 
-    """
-    try:
-        index = headers.index(column_name)
-    except ValueError:
-        raise JoinError('Table does not have a column named "%s"' % column_name)
-
-    return index
 
 def _get_ordered_keys(rows, column_index):
     """
@@ -73,8 +64,8 @@ def inner_join(left_table, left_column_name, right_table, right_column_name):
     right_rows = right_table[1:]
 
     # Get the columns which will function as keys 
-    left_column_index = _get_join_column(left_headers, left_column_name)
-    right_column_index = _get_join_column(right_headers, right_column_name)
+    left_column_index = match_column_id(left_headers, left_column_name)
+    right_column_index = match_column_id(right_headers, right_column_name)
     
     # Map right rows to keys
     right_mapped_keys = _get_mapped_keys(right_rows, right_column_index)
@@ -101,8 +92,8 @@ def full_outer_join(left_table, left_column_name, right_table, right_column_name
     right_rows = right_table[1:]
 
     # Get the columns which will function as keys 
-    left_column_index = _get_join_column(left_headers, left_column_name)
-    right_column_index = _get_join_column(right_headers, right_column_name)
+    left_column_index = match_column_id(left_headers, left_column_name)
+    right_column_index = match_column_id(right_headers, right_column_name)
 
     # Get ordered keys
     left_ordered_keys = _get_ordered_keys(left_rows, left_column_index)
@@ -140,8 +131,8 @@ def left_outer_join(left_table, left_column_name, right_table, right_column_name
     right_rows = right_table[1:]
 
     # Get the columns which will function as keys 
-    left_column_index = _get_join_column(left_headers, left_column_name)
-    right_column_index = _get_join_column(right_headers, right_column_name)
+    left_column_index = match_column_id(left_headers, left_column_name)
+    right_column_index = match_column_id(right_headers, right_column_name)
 
     # Get mapped keys
     right_mapped_keys = _get_mapped_keys(right_rows, right_column_index)
@@ -170,8 +161,8 @@ def right_outer_join(left_table, left_column_name, right_table, right_column_nam
     right_rows = right_table[1:]
 
     # Get the columns which will function as keys 
-    left_column_index = _get_join_column(left_headers, left_column_name)
-    right_column_index = _get_join_column(right_headers, right_column_name)
+    left_column_index = match_column_id(left_headers, left_column_name)
+    right_column_index = match_column_id(right_headers, right_column_name)
 
     # Get ordered keys
     left_ordered_keys = _get_ordered_keys(left_rows, left_column_index)
