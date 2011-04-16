@@ -25,6 +25,10 @@ csvkit has been developed with a number of guiding principles in mind:
 Installation
 ============
 
+For users::
+
+    pip install csvkit
+
 For developers::
 
     git clone git://github.com/onyxfish/csvkit.git
@@ -32,12 +36,6 @@ For developers::
     mkvirtualenv --no-site-packages csvkit
     pip install -r requirements.txt
     nosetests
-
-For users (until first PyPI build is ready)::
-
-    git://github.com/onyxfish/csvkit.git
-    cd csvkit
-    python setup.py install
 
 Tutorial
 ========
