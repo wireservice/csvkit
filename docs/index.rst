@@ -69,9 +69,7 @@ Developer documentation coming soon...
 Authors
 =======
 
-* Christopher Groskopf
-* Joe Germuska
-* Aaron Bycoffe
+.. include:: ../AUTHORS
 
 License
 =======

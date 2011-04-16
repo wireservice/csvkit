@@ -28,16 +28,21 @@ def make_column(column):
     sql_column_kwargs = {'nullable': False}
     sql_type_kwargs = {}
 
-    column_types = {bool: Boolean,
-                    int: Integer,
-                    float: Float,
-                    datetime.datetime: DateTime,
-                    datetime.date: Date,
-                    datetime.time: Time,
-                    None: String,
-                    unicode: String}
-    max_lengths = {None: NULL_COLUMN_MAX_LENGTH,
-                  unicode: column.max_length}
+    column_types = {
+        bool: Boolean,
+        int: Integer,
+        float: Float,
+        datetime.datetime: DateTime,
+        datetime.date: Date,
+        datetime.time: Time,
+        None: String,
+        unicode: String
+        }
+
+    max_lengths = {
+        None: NULL_COLUMN_MAX_LENGTH,
+        unicode: column.max_length
+        }
 
     if column.type in column_types:
         sql_column_type = column_types[column.type]
