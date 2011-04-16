@@ -28,32 +28,28 @@ def make_column(column):
     sql_column_kwargs = {'nullable': False}
     sql_type_kwargs = {}
 
-    if column.type == bool:
-        sql_column_type = Boolean  
-    elif column.type == int:
-        sql_column_type = Integer
-    elif column.type == float:
-        sql_column_type = Float
-    elif column.type == datetime.datetime:
-        sql_column_type = DateTime
-    elif column.type == datetime.date:
-        sql_column_type = Date
-    elif column.type == datetime.time:
-        sql_column_type = Time
-    elif column.type == None:
-        sql_column_type = String
-        sql_type_kwargs['length'] = NULL_COLUMN_MAX_LENGTH
-    elif column.type == unicode:
-        sql_column_type = String
-        sql_type_kwargs['length'] = column.max_length 
+    column_types = {bool: Boolean,
+                    int: Integer,
+                    float: Float,
+                    datetime.datetime: DateTime,
+                    datetime.date: Date,
+                    datetime.time: Time,
+                    None: String,
+                    unicode: String}
+    max_lengths = {None: NULL_COLUMN_MAX_LENGTH,
+                  unicode: column.max_length}
+
+    if column.type in column_types:
+        sql_column_type = column_types[column.type]
     else:
         raise ValueError('Unexpected normalized column type: %s' % column.type)
 
-    sql_column_kwargs['nullable'] = column.nullable 
+    if column.type in max_lengths:
+        sql_type_kwargs['length'] = max_lengths[column.type]
 
-    column = Column(column.name, sql_column_type(**sql_type_kwargs), **sql_column_kwargs)
+    sql_column_kwargs['nullable'] = column.nullable
 
-    return column
+    return Column(column.name, sql_column_type(**sql_type_kwargs), **sql_column_kwargs)
 
 def make_table(csv_table, name='table_name'):
     """
