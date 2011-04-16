@@ -26,7 +26,6 @@ setup(
     ],
     install_requires = [
         'argparse==1.2.1',
-        'nose==1.0.0',
         'xlrd==0.7.1',
         'python-dateutil==1.5',
         'sqlalchemy==0.6.6']
