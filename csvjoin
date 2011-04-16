@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 
 import argparse
-from cStringIO import StringIO
 import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import join
-from csvkit import table
 from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter
 
 def parse_join_column_names(join_string):
@@ -43,42 +41,44 @@ def main(args):
     for f in args.files:
         tables.append(list(UnicodeCSVReader(f, **reader_kwargs)))
 
+    jointab = []
+    
     if args.left_join:
         # Left outer join
-        jointab.extend(tabs[0])
+        jointab = tables[0]
 
-        for i, t in enumerate(tabs[1:]):
-            join.left_outer_join(jointab, join_column_names[0], t, join_column_names[i + 1])
+        for i, t in enumerate(tables[1:]):
+            jointab = join.left_outer_join(jointab, join_column_names[0], t, join_column_names[i + 1])
     elif args.right_join:
         # Right outer join
-        jointab.extend(tabs[-1])
+        jointab = tables[-1]
 
-        for i, t in enumerate(tabs[:-1].reverse()):
-            join.right_outer_join(t, join_column_names[-(i + 2)], jointab, join_column_names[-1])
+        for i, t in enumerate(tables[:-1].reverse()):
+            jointab = join.right_outer_join(t, join_column_names[-(i + 2)], jointab, join_column_names[-1])
     elif args.outer_join:
         # Full outer join
-        jointab.extend(tabs[0])
+        jointab = tables[0]
 
-        for i, t in enumerate(tabs[1:]):
-            join.full_outer_join(jointab, join_column_names[0], t, join_column_names[i + 1])
+        for i, t in enumerate(tables[1:]):
+            jointab = join.full_outer_join(jointab, join_column_names[0], t, join_column_names[i + 1])
     else:
         if args.join:
             # Inner join
-            jointab.extend(tabs[0])
+            jointab = tables[0]
 
-            for i, t in enumerate(tabs[1:]):
-                join.inner_join(jointab, join_column_names[0], t, join_column_names[i + 1])
+            for i, t in enumerate(tables[1:]):
+                jointab = join.inner_join(jointab, join_column_names[0], t, join_column_names[i + 1])
         else:
+            jointab = tables[0]
+
             # Sequential join
-            for t in tabs:
-                jointab.extend(t)
+            for t in tables[1:]:
+                jointab = join.sequential_join(jointab, t)
 
-    o = StringIO()
-    output = jointab.to_csv(o)
-    output = o.getvalue()
-    o.close()
+    output = UnicodeCSVWriter(sys.stdout)
 
-    sys.stdout.write('%s\n' % output)
+    for row in jointab:
+        output.writerow(row)
     
 if __name__ == '__main__':
     """

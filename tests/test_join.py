@@ -36,6 +36,14 @@ class TestJoin(unittest.TestCase):
             u'2': [[u'2', u'Chicago Sun-Times', u'only']],
             u'3': [[u'3', u'Chicago Tribune', u'only']]})
 
+    def test_sequential_join(self):
+        self.assertEqual(join.sequential_join(self.tab1, self.tab2), [
+            ['id', 'name', 'i_work_here', 'id', 'age', 'i_work_here'],
+            [u'1', u'Chicago Reader', u'first', u'1', u'first', u'0'],
+            [u'2', u'Chicago Sun-Times', u'only', u'4', u'only', u'0'],
+            [u'3', u'Chicago Tribune', u'only', u'1', u'second', u'0'],
+            [u'1', u'Chicago Reader', u'second', u'2', u'only', u'0', u'0']])
+
     def test_inner_join(self):
         self.assertEqual(join.inner_join(self.tab1, 'id', self.tab2, 'id'), [
             ['id', 'name', 'i_work_here', 'id', 'age', 'i_work_here'],

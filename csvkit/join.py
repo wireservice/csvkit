@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from csvkit import table
-
 class JoinError(Exception):
     """
     Exception raised when there is a problem joing tables.
@@ -38,6 +36,31 @@ def _get_mapped_keys(rows, column_index):
             mapped_keys[key] = [r]
 
     return mapped_keys
+
+def sequential_join(left_table, right_table):
+    """
+    Join two tables by aligning them horizontally without performing any filtering.
+    """
+    # Grab headers
+    left_headers = left_table[0]
+    right_headers = right_table[0]
+    left_rows = left_table[1:]
+    right_rows = iter(right_table[1:])
+
+    output = [left_headers + right_headers]
+
+    for left_row in left_rows:
+        try:
+            right_row = right_rows.next()
+        except StopIteration:
+            output.append(left_row + ([u''] * len(right_headers)))
+
+        output.append(left_row + right_row)
+
+    for right_row in right_rows:
+        output.append(([u''] * len(left_headers)) + right_row)
+
+    return output
 
 def inner_join(left_table, left_column_name, right_table, right_column_name):
     """
