@@ -18,7 +18,7 @@ csvkit has been developed with a number of guiding principles in mind:
 
     in2csv data.xls | csvcut -c 1,3 | head 10
 
-* Do not modify input data unless specifically requested by the user (i.e. conversion).
+* Do not modify input data unless specifically requested by the user (i.e. conversion or error cleaning).
 
 * When modifying input data, conform to good standards. Floats should end with ".0", even if they are round, dates and times should be in ISO8601 format, etc.
 
@@ -39,8 +39,15 @@ For users (until first PyPI build is ready)::
     cd csvkit
     python setup.py install
 
+Tutorial
+========
+
+Tutorial coming soon...
+
 Usage
 =====
+
+csvkit is comprised of a number of individual command line utilities. Documentation and examples of each can be found on the following pages:
 
 .. toctree::
     :maxdepth: 1 
@@ -48,11 +55,11 @@ Usage
     scripts/in2csv
     scripts/csvclean
     scripts/csvcut
+    scripts/csvstack
     scripts/csvjoin
     scripts/csvlook
-    scripts/csvsql
-    scripts/csvstack
     scripts/csvsummary
+    scripts/csvsql
 
 Development
 ===========
