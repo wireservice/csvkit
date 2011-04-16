@@ -4,12 +4,27 @@ from setuptools import setup
 
 setup(
     name='csvkit',
-    version='0.0.1',
+    version='0.1.0',
     description='A library of utilities for working with CSV, the king of tabular file formats.',
     author='Christopher Groskopf',
     author_email='staringmonkey@gmail.com',
     url='http://blog.apps.chicagotribune.com/',
     license='MIT',
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: End Users/Desktop',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.6',
+        'Topic :: Scientific/Engineering :: Information Analysis',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Utilities'
+    ],
     packages=[
         'csvkit', 
         'csvkit.convert'
