@@ -6,6 +6,7 @@ setup(
     name='csvkit',
     version='0.1.0',
     description='A library of utilities for working with CSV, the king of tabular file formats.',
+    long_description=open('README'),
     author='Christopher Groskopf',
     author_email='staringmonkey@gmail.com',
     url='http://blog.apps.chicagotribune.com/',
