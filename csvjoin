@@ -53,7 +53,10 @@ def main(args):
         # Right outer join
         jointab = tables[-1]
 
-        for i, t in enumerate(tables[:-1].reverse()):
+        remaining_tables = tables[:-1]
+        remaining_tables.reverse()
+
+        for i, t in enumerate(remaining_tables):
             jointab = join.right_outer_join(t, join_column_names[-(i + 2)], jointab, join_column_names[-1])
     elif args.outer_join:
         # Full outer join
