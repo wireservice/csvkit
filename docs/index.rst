@@ -69,7 +69,7 @@ Authors
 License
 =======
 
-csvkit is licensed under the permissive MIT license.
+.. include:: ../COPYING
 
 Indices and tables
 ==================
