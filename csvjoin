@@ -21,8 +21,6 @@ def get_tables(args):
     tabs = []
     reader_kwargs = extract_csv_reader_kwargs(args)
 
-    print args.files
-
     for f in args.files:
         tabs.append(table.Table.from_csv(f, **reader_kwargs))
 
@@ -88,7 +86,7 @@ def main(args):
     output = o.getvalue()
     o.close()
 
-    print output
+    sys.stdout.write('%s\n' % output)
     
 if __name__ == '__main__':
     """

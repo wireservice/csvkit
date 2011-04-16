@@ -15,14 +15,12 @@ def main(args):
         format = args.format
 
         if format not in convert.SUPPORTED_FORMATS:
-            print '"%s" is not a supported format' % args.format
-            sys.exit()
+            sys.exit('"%s" is not a supported format' % args.format)
     else:
         format = utils.guess_format(args.file)
 
         if not format:
-            print 'Unable to automatically determine the format of the input file. Try specifying a format with --format.'
-            sys.exit()
+            sys.exit('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
     with open(args.file, 'r') as f:
         if args.schema:
@@ -31,7 +29,7 @@ def main(args):
         else:
             output = convert.convert(f, format)
 
-    print output
+    sys.stdout.write(output)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert common, but less awesome, tabular data formats to CSV.')

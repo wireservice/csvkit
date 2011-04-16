@@ -9,99 +9,53 @@ https://gist.github.com/561347/9846ebf8d0a69b06681da9255ffe3d3f59ec2c97
 Used and modified with permission.
 """
 
-from cStringIO import StringIO
 import sys
 
-from csvkit import init_common_parser, extract_csv_reader_kwargs
-from csvkit import table 
-
-class ColumnIdentifierError(Exception):
-    """
-    Exception raised when the user supplies an invalid column identifier.
-    """
-    def __init__(self, msg):
-        self.msg = msg
-
-def parse_column_identifiers(ids, column_names):
-    """
-    Parse a comma-separated list of column indicies and names into a list of integer indices.
-    """
-    # If not specified, return all columns 
-    if not ids:
-        return range(len(column_names))
-
-    columns = []
-
-    for c in ids.split(','):
-        if c in column_names:
-            columns.append(column_names.index(c))
-        else:
-            try:
-                c = int(c) - 1
-            # Fail out if neither a column name nor an integer
-            except:
-                raise ColumnIdentifierError('Column identifier "%s" is neither a index, nor a existing column\'s name.' % c)
-
-            # Fail out if index is 0-based
-            if c < 0:
-                raise ColumnIdentifierError('Columns 0 is not valid; columns are 1-based.')
-
-            # Fail out if index is out of range
-            if c >= len(column_names):
-                raise ColumnIdentifierError('Index %i is beyond the last named column, "%s" at index %i.' % (c, column_names[-1], len(column_names) - 1))
-
-            columns.append(c)
-
-    return columns
+from csvkit import * 
+from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter 
 
 def main(args):
     """
     Command line-utility that filters and truncates CSV files. Like unix "cut" command, but for tabular data.
     """
-    # When the user only wants to see headers, we shortcut normal CSV loading in order to bypass the slow
-    # type inference routines
-    if args.show_headers:
-        from csvkit.unicode import UnicodeCSVReader 
-        
-        reader = UnicodeCSVReader(args.file, **extract_csv_reader_kwargs(args))
-        header = reader.next()
+    rows = UnicodeCSVReader(args.file, **extract_csv_reader_kwargs(args))
+    column_names = rows.next()
 
-        for i, c in enumerate(header):
-            print '%3i: %s' % (i + 1, c)
+    if args.names_only:
+        for i, c in enumerate(column_names):
+            sys.stdout.write('%3i: %s\n' % (i + 1, c))
 
         sys.exit()
 
-    tab = table.Table.from_csv(args.file, **extract_csv_reader_kwargs(args)) 
-    
-    column_ids = parse_column_identifiers(args.columns, tab.headers())
+    column_ids = parse_column_identifiers(args.columns, column_names)
+    output = UnicodeCSVWriter(sys.stdout)
 
-    subtab = table.Table()
+    if not args.skip_header:
+        if args.line_numbers:
+            column_names.insert(0, 'line_number')
 
-    for i in column_ids:
-        subtab.append(tab[i])
+        output.writerow(column_names[c] for c in column_ids)
 
-    if args.linenumbers:
-        subtab.insert(0, table.Column(0, 'line_number', range(subtab.count_rows()), normal_type=int))
+    for row in rows:
+        out_row = [row[c] if c < len(row) else None for c in column_ids] 
+        
+        if args.line_numbers:
+            out_row.insert(0, i) 
 
-    o = StringIO()
-    output = subtab.to_csv(o, skipheader=args.skipheader)
-    output = o.getvalue()
-    o.close()
-
-    print output
+        output.writerow(out_row)
                 
 if __name__ == "__main__":
     """
     Process command line arguments.
     """
     parser = init_common_parser(description='Filter and truncate CSV files. Like unix "cut" command, but for tabular data.')
-    parser.add_argument('-n', '--names', dest='show_headers', action='store_true',
+    parser.add_argument('-n', '--names', dest='names_only', action='store_true',
                         help='Display column names and indices from the input CSV and exit.')
     parser.add_argument('-c', '--columns', dest='columns',
                         help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
-    parser.add_argument('-s', '--skipheader', dest='skipheader', action='store_true',
+    parser.add_argument('-s', '--skipheader', dest='skip_header', action='store_true',
                         help='Do not display the csv header in the output. Useful when piping to grep or uniq.')
-    parser.add_argument('-l', '--linenumbers', dest='linenumbers', action='store_true',
+    parser.add_argument('-l', '--linenumbers', dest='line_numbers', action='store_true',
                         help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple primary key.')
 
     main(parser.parse_args())
