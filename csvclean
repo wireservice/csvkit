@@ -24,7 +24,7 @@ def main(args):
         for row in checker.checked_rows():
             pass
         for e in checker.errs:
-            sys.stdout.write("Line: %i: %s\n" % (e.line_number,e.msg))
+            sys.stdout.write("Line %i: %s\n" % (e.line_number,e.msg))
         else:
             sys.stdout.write("No errors.\n")
         if checker.joins:

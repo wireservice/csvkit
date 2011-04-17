@@ -12,7 +12,7 @@ class CSVTestException(Exception):
 class LengthMismatch(CSVTestException):
     """Encapsulate information about a row which as the wrong length."""
     def __init__(self, line_number, row, expected_length):
-        msg = "Expected length [%i], got length [%i]" % (expected_length, len(row))
+        msg = "Expected %i columns, found %i columns" % (expected_length, len(row))
         super(LengthMismatch, self).__init__(line_number, row, msg)
     
     @property
