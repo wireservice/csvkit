@@ -12,7 +12,7 @@ Used and modified with permission.
 import sys
 
 from csvkit import * 
-from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter 
+from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter 
 
 def main(args):
     """

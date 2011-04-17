@@ -3,7 +3,7 @@
 import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
-from csvkit.unicode import UnicodeCSVReader
+from csvkit.unicsv import UnicodeCSVReader
 
 def main(args):
     """

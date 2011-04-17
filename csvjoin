@@ -5,7 +5,7 @@ import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import join
-from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter
+from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter
 
 def parse_join_column_names(join_string):
     """
