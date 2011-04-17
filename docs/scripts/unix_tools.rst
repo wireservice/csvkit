@@ -33,6 +33,8 @@ sed
 
 Coming soon...
 
+For more on sed, follow this link: http://www.grymoire.com/Unix/Sed.html
+
 sort
 ====
 
@@ -47,3 +49,13 @@ wc (-l)
 =======
 
 Coming soon...
+
+Further reading
+===============
+
+For more on text processing with standard Unix utilities, try some of these pages:
+
+* http://www.ibm.com/developerworks/aix/library/au-textprocess.html
+* http://en.wikibooks.org/wiki/Ad_Hoc_Data_Analysis_From_The_Unix_Command_Line
+* http://www.brezeale.com/technical_notes/text_processing.shtml
+* http://tldp.org/LDP/abs/html/textproc.html
