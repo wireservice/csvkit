@@ -51,6 +51,8 @@ def normalize_column_type(l):
                 normal_values.append(None)
                 continue
 
+            x = x.replace(',', '')
+            
             int_x = int(x)
 
             if x[0] == '0' and int(x) != 0:
@@ -66,7 +68,7 @@ def normalize_column_type(l):
 
     # Are they floats?
     try:
-        return float, [float(x) if x != '' else None for x in l]
+        return float, [float(x.replace(',', '')) if x != '' else None for x in l]
     except ValueError:
         pass
 
