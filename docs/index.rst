@@ -45,19 +45,40 @@ Tutorial coming soon...
 Usage
 =====
 
-csvkit is comprised of a number of individual command line utilities. Documentation and examples of each can be found on the following pages:
+csvkit is comprised of a number of individual command line utilities that be loosely divided into a few major categories: Input, Processing, and Output. Documentation and examples for each utility are described on the following pages.
+
+*Input*
 
 .. toctree::
     :maxdepth: 1 
 
     scripts/in2csv
+
+*Processing*
+
+.. toctree::
+    :maxdepth: 1 
+
     scripts/csvclean
     scripts/csvcut
-    scripts/csvstack
     scripts/csvjoin
+    scripts/csvstack
+
+*Output and Analysis*
+   
+.. toctree::
+    :maxdepth: 1 
+
     scripts/csvlook
-    scripts/csvsummary
     scripts/csvsql
+    scripts/csvsummary
+
+*Appendices*
+
+.. toctree::
+    :maxdepth: 1 
+
+    scripts/common_arguments
 
 Development
 ===========
