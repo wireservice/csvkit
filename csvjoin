@@ -87,12 +87,12 @@ if __name__ == '__main__':
     """
     Parse command line arguments.
     """
-    parser = init_common_parser(description='Join a CSV file on a specified column or columns.', epilog="Note that the join operation requires reading all files into memory. Don't try this on very large files.", omitflags='f')
+    parser = init_common_parser(description='Execute a SQL-like join to merge CSV files on a specified column or columns.', epilog="Note that the join operation requires reading all files into memory. Don't try this on very large files.", omitflags='f')
 
     parser.add_argument('files', metavar="FILES", nargs='+', type=argparse.FileType('r'),
                         help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
     parser.add_argument('-j', '--join', dest='join',
-                        help='The column name(s) on which to join. Should be either one name or a comma-separated list with one name for each file, in the same order the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
+                        help='The column name(s) on which to join. Should be either one name or a comma-separated list with one name for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
     parser.add_argument('--outer', dest='outer_join', action='store_true',
                         help='Perform a full outer join, rather than the default inner join.')
     parser.add_argument('--left', dest='left_join', action='store_true',

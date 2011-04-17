@@ -5,4 +5,44 @@ csvjoin
 Description
 ===========
 
-Merges two or more CSV tables together using a method analogous to SQL JOIN operation. By default it performs an inner join, but full outer, left outer, and right outer are all available via flags. Key columns are specified with the -c flag (either a single column which exists in all tables, or a comma-seperated list of columns with one corresponding to each). If the columns flag is not provided then the tables will be merged "sequentially", that is they will be attached side-by-side with no concern for ordering or matching.
+Merges two or more CSV tables together using a method analogous to SQL JOIN operation. By default it performs an inner join, but full outer, left outer, and right outer are also available via flags. Key columns are specified with the -c flag (either a single column which exists in all tables, or a comma-seperated list of columns with one corresponding to each). If the columns flag is not provided then the tables will be merged "sequentially", that is they will be merged in row order with no filtering::
+
+    usage: csvjoin [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
+                   [-p` ESCAPECHAR] [-e ENCODING] [-j JOIN] [--outer] [--left]
+                   [--right]
+                   FILES [FILES ...]
+
+    Execute a SQL-like join to merge CSV files on a specified column or columns.
+
+    positional arguments:
+      FILES                 The CSV files to operate on. If only one is specified,
+                            it will be copied to STDOUT.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -j JOIN, --join JOIN  The column name(s) on which to join. Should be either
+                            one name or a comma-separated list with one name for
+                            each file, in the same order that the files were
+                            specified. May also be left unspecified, in which case
+                            the two files will be joined sequentially without
+                            performing any matching.
+      --outer               Perform a full outer join, rather than the default
+                            inner join.
+      --left                Perform a left outer join, rather than the default
+                            inner join. If more than two files are provided this
+                            will be executed as a sequence of left outer joins,
+                            starting at the left.
+      --right               Perform a right outer join, rather than the default
+                            inner join. If more than two files are provided this
+                            will be executed as a sequence of right outer joins,
+                            starting at the right.
+
+    Note that the join operation requires reading all files into memory. Don't try
+    this on very large files.
+
+Also see: :doc:`common_arguments`.
+
+Examples
+========
+
+Join examples coming soon...

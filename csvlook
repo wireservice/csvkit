@@ -41,7 +41,7 @@ def main(args):
             sys.stdout.write('%s\n' % divider)
 
 if __name__ == '__main__':
-    parser = init_common_parser(description='Display a CSV in the console using a readable, fixed-width format.')
+    parser = init_common_parser(description='Render a CSV file in the console as a fixed-width table.')
 
     main(parser.parse_args())
 

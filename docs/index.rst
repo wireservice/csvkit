@@ -79,6 +79,7 @@ csvkit is comprised of a number of individual command line utilities that be loo
     :maxdepth: 1 
 
     scripts/common_arguments
+    scripts/unix_tools
 
 Development
 ===========
