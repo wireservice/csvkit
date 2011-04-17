@@ -1,23 +1,6 @@
 #!/usr/bin/env python
 
-class CSVTestException(Exception):
-    """Superclass for all row-test-failed exceptions. 
-       All must have a line number, the problematic row, and a text explanation."""
-    def __init__(self, line_number, row, msg):
-        super(CSVTestException, self).__init__()
-        self.msg = msg
-        self.line_number = line_number
-        self.row = row
-        
-class LengthMismatch(CSVTestException):
-    """Encapsulate information about a row which as the wrong length."""
-    def __init__(self, line_number, row, expected_length):
-        msg = "Expected %i columns, found %i columns" % (expected_length, len(row))
-        super(LengthMismatch, self).__init__(line_number, row, msg)
-    
-    @property
-    def length(self):
-        return len(self.row)
+from csvkit.exceptions import CSVTestException, LengthMismatchError
 
 def join_rows(rows):
     """Given a series of rows, return them as a single row where the inner edge cells are merged"""
@@ -47,7 +30,7 @@ def fix_length_errors(errs, target_line_length):
     fixed_rows = []
     backlog = []
     for err in errs:
-        if type(err) is not LengthMismatch: return [] # give up if any are not length errors
+        if type(err) is not LengthMismatchError: return [] # give up if any are not length errors
         backlog.append(err)
         fixed_row = join_rows([err.row for err in backlog])
         if len(fixed_row) == target_line_length:
@@ -60,7 +43,7 @@ def fix_length_errors(errs, target_line_length):
 def extract_joinable_row_errors(errs):
     joinable = []
     for err in reversed(errs):
-        if type(err) is not LengthMismatch:
+        if type(err) is not LengthMismatchError:
             break
         if joinable and err.line_number != joinable[-1].line_number - 1:
             break
@@ -88,10 +71,10 @@ class RowChecker(object):
 
             try:
                 if len(row) != len(self.column_names):
-                    raise LengthMismatch(line_number,row,len(self.column_names))
+                    raise LengthMismatchError(line_number,row,len(self.column_names))
                 # any other tests?
                 yield row
-            except LengthMismatch, e:
+            except LengthMismatchError, e:
                 self.errs.append(e)
                 # see if we can actually clean up those length mismatches
                 joinable_row_errors = extract_joinable_row_errors(self.errs)

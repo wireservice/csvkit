@@ -1,6 +1,7 @@
 import unittest
 
 from csvkit.cleanup import *
+from csvkit.exceptions import LengthMismatchError
 
 class TestNormalizeType(unittest.TestCase):
     def test_fix_rows(self):
@@ -19,8 +20,8 @@ class TestNormalizeType(unittest.TestCase):
 
     def test_fix_length_errors_basic(self):
         expected_length = 4
-        errs = [LengthMismatch(1,['alpha','beta','gam'],expected_length)]
-        errs.append(LengthMismatch(2,['ma','delta'],expected_length))
+        errs = [LengthMismatchError(1,['alpha','beta','gam'],expected_length)]
+        errs.append(LengthMismatchError(2,['ma','delta'],expected_length))
         fixed = fix_length_errors(errs,expected_length)
         self.assertEqual(1,len(fixed))
         fixed = fixed[0]
@@ -30,9 +31,9 @@ class TestNormalizeType(unittest.TestCase):
         self.assertEqual('delta',fixed[3])
 
     def test_extract_joinable_row_errors(self):
-        e1 = LengthMismatch(1,['foo', 'bar', 'baz'], 10)
-        e2 = LengthMismatch(2,['foo', 'bar', 'baz'], 10)
-        e3 = LengthMismatch(3,['foo', 'bar', 'baz'], 10)
+        e1 = LengthMismatchError(1,['foo', 'bar', 'baz'], 10)
+        e2 = LengthMismatchError(2,['foo', 'bar', 'baz'], 10)
+        e3 = LengthMismatchError(3,['foo', 'bar', 'baz'], 10)
         errs = [e1, e2, e3]
         joinable = extract_joinable_row_errors(errs)
         self.assertEqual(3,len(joinable))
@@ -40,9 +41,9 @@ class TestNormalizeType(unittest.TestCase):
             self.assertTrue(e is j)
 
     def test_extract_joinable_row_errors_2(self):
-        e1 = LengthMismatch(1,['foo', 'bar', 'baz'], 10)
+        e1 = LengthMismatchError(1,['foo', 'bar', 'baz'], 10)
         e2 = CSVTestException(2,['foo', 'bar', 'baz'], "A throwaway message.")
-        e3 = LengthMismatch(3,['foo', 'bar', 'baz'], 10)
+        e3 = LengthMismatchError(3,['foo', 'bar', 'baz'], 10)
         errs = [e1, e2, e3]
         joinable = extract_joinable_row_errors(errs)
         self.assertEqual(1,len(joinable))
@@ -50,8 +51,8 @@ class TestNormalizeType(unittest.TestCase):
 
     def test_extract_joinable_row_errors_3(self):
         e1 = CSVTestException(1,['foo', 'bar', 'baz'], "A throwaway message.")
-        e2 = LengthMismatch(2,['foo', 'bar', 'baz'], 10)
-        e3 = LengthMismatch(3,['foo', 'bar', 'baz'], 10)
+        e2 = LengthMismatchError(2,['foo', 'bar', 'baz'], 10)
+        e3 = LengthMismatchError(3,['foo', 'bar', 'baz'], 10)
         errs = [e1, e2, e3]
         joinable = extract_joinable_row_errors(errs)
         self.assertEqual(2,len(joinable))
@@ -61,8 +62,8 @@ class TestNormalizeType(unittest.TestCase):
 
     def test_extract_joinable_row_errors_4(self):
         e1 = CSVTestException(1,['foo', 'bar', 'baz'], "A throwaway message.")
-        e2 = LengthMismatch(2,['foo', 'bar', 'baz'], 10)
-        e3 = LengthMismatch(4,['foo', 'bar', 'baz'], 10)
+        e2 = LengthMismatchError(2,['foo', 'bar', 'baz'], 10)
+        e3 = LengthMismatchError(4,['foo', 'bar', 'baz'], 10)
         errs = [e1, e2, e3]
         joinable = extract_joinable_row_errors(errs)
         self.assertEqual(1,len(joinable))

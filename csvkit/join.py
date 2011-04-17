@@ -2,13 +2,6 @@
 
 from csvkit import match_column_id
 
-class JoinError(Exception):
-    """
-    Exception raised when there is a problem joing tables.
-    """
-    def __init__(self, msg):
-        self.msg = msg
-
 def _get_ordered_keys(rows, column_index):
     """
     Get ordered keys from rows, given the key column index.

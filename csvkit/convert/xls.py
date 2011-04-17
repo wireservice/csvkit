@@ -6,13 +6,7 @@ import datetime
 import xlrd
 
 from csvkit import table
-
-class XLSDataError(Exception):
-    """
-    Exception raised when there is a problem converting XLS data.
-    """
-    def __init__(self, msg):
-        self.msg = msg
+from csvkit.exceptions import XLSDataError
 
 def normalize_empty(values):
     """
