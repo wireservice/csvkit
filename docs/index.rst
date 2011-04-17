@@ -40,7 +40,16 @@ For developers::
 Tutorial
 ========
 
-Tutorial coming soon...
+The csvkit tutorial walks through processing and analyzing a real dataset from `data.gov <http://data.gov>`_. It is divided into several parts for easier reading:
+
+.. toctree::
+    :maxdepth: 1
+    :numbered:
+
+    tutorial/getting_started
+    tutorial/examining_the_data
+    tutorial/adding_another_year
+    tutorial/wrapping_up
 
 Usage
 =====
@@ -84,7 +93,7 @@ csvkit is comprised of a number of individual command line utilities that be loo
 Development
 ===========
 
-Developer documentation coming soon...
+Coming soon...
 
 Authors
 =======
