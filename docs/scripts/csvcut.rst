@@ -30,7 +30,9 @@ Filters and truncates CSV files. Like unix "cut" command, but for tabular data::
                             output. Useful when piping to grep or as a simple
                             primary key.
 
-Note that csvcut does not include row slicing or filtering, for this you should pipe data to head, tail, or grep.
+Note that csvcut does not include row slicing or filtering, for this you should pipe data to grep. See :doc:`unix_tools`.
+
+Also see: :doc:`common_arguments`.
 
 Examples
 ========
