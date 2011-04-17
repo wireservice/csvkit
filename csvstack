@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     parser.add_argument('files', metavar="FILES", nargs='+', type=argparse.FileType('r'))
     parser.add_argument('-g', '--groups', dest='groups',
-                        help='A comma-seperated list of values to add as a "grouping factor", one for each CSV being stacked. These will be added to the stacked CSV as a new column. You may specify a name for the grouping column using the -')
+                        help='A comma-seperated list of values to add as "grouping factors", one for each CSV being stacked. These will be added to the stacked CSV as a new column. You may specify a name for the grouping column using the -n flag.')
     parser.add_argument('-n', '--group-name', dest='group_name',
                         help='A name for the grouping column, e.g. "year". Only used when also specifying -g.')
 

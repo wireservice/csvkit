@@ -4,6 +4,7 @@ import sys
 
 import argparse
 
+from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import convert
 from csvkit.convert import utils
 
@@ -11,33 +12,35 @@ def main(args):
     """
     Command line-utility that convert tabular data formats into CSV.
     """
+    kwargs = {}
+
+    if args.file.name == '<stdin>' and not args.format:
+        sys.exit('You must specify a format when inputting data via STDIN (pipe).')
+
     if args.format:
         format = args.format
 
         if format not in convert.SUPPORTED_FORMATS:
             sys.exit('"%s" is not a supported format' % args.format)
     else:
-        format = utils.guess_format(args.file)
+        format = utils.guess_format(args.file.name)
+
+        if format == 'csv':
+            kwargs.update(extract_csv_reader_kwargs(args))
 
         if not format:
             sys.exit('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
-    with open(args.file, 'r') as f:
-        if args.schema:
-            with open(args.schema, 'r') as s:
-                output = convert.convert(f, format, schema=s)
-        else:
-            output = convert.convert(f, format)
-
-    sys.stdout.write(output)
+    if args.schema:
+        kwargs['schema'] = args.schema
+        
+    sys.stdout.write(convert.convert(args.file, format, **kwargs))
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Convert common, but less awesome, tabular data formats to CSV.')
-    parser.add_argument('file', metavar="FILE",
-                        help='The file to convert.')
+    parser = init_common_parser(description='Convert common, but less awesome, tabular data formats to CSV.')
     parser.add_argument('-f', '--format', dest='format',
                         help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(convert.SUPPORTED_FORMATS)))
-    parser.add_argument('-s', '--schema', dest='schema',
+    parser.add_argument('-s', '--schema', dest='schema', type=argparse.FileType('r'),
                         help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
 
     main(parser.parse_args())

@@ -23,9 +23,11 @@ Generates a SQL "CREATE TABLE" statement for a given CSV file. Supports a variet
       -i {access,sybase,sqlite,informix,firebird,mysql,oracle,maxdb,postgresql,mssql}, --dialect {access,sybase,sqlite,informix,firebird,mysql,oracle,maxdb,postgresql,mssql}
                             Dialect of SQL to generate.
 
+Also see: :doc:`common_arguments`.
+
 Examples
 ========
 
 Generate a statement in the postgresql dialect::
 
-    csvsql -i postgresql examples/testfixed_converted.csv
+    $ csvsql -i postgresql examples/testfixed_converted.csv

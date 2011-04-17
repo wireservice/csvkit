@@ -31,8 +31,8 @@ Examples
 
 Basic use::
 
-    csvlook examples/testfixed_converted.csv
+    $ csvlook examples/testfixed_converted.csv
 
 This utility is especially useful when piping through other utilities::
 
-    csvcut -c 2,3 -l examples/testfixed_converted.csv | csvlook
+    $ csvcut -c 2,3 -l examples/testfixed_converted.csv | csvlook
