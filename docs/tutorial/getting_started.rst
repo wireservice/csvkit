@@ -5,9 +5,11 @@ Getting started
 Description
 ===========
 
-There is no better way to learn how to use a new tool than to see it applied in a real world situation. This tutorial will explain the workings of most of the csvkit utilities (including some nifty tricks) in the context of analyzing a dataset from `data.gov <http://data.gov>`_.
+There is no better way to learn how to use a new tool than to see it applied in a real world situation. This tutorial will explain the workings of most of the csvkit utilities (including some nifty tricks) in the context of analyzing a real dataset from `data.gov <http://data.gov>`_.
 
-The dataset that I've chosen to work with is recipients of United States Department of Veteran Affairs education benefits, by state and year. For those who are unfamiliar, these are individuals for who the US government is paying to attend school as a benefit of their serving in the military (or, in some case, close relatives of those who have served). We will be working with `2009 <http://www.data.gov/raw/4029>`_ and `2010 <http://www.data.gov/raw/4509>`_ data.
+The dataset that I've chosen to work with is recipients of United States Department of Veteran Affairs education benefits, by state and year. For those who are unfamiliar, these are individuals whom the US government is paying to attend school as a benefit of their having served in the military (or, in some case, having had a close relative who served). We will be working with `2009 <http://www.data.gov/raw/4029>`_ and `2010 <http://www.data.gov/raw/4509>`_ data.
+
+I strongly encourage anyone reading this tutorial to work through the examples, however, if you really want to cut to the chase you can see the final script for the entire tutorial at `this gist <https://gist.github.com/924589>`_.
 
 Getting the data
 ================
@@ -20,8 +22,6 @@ Let's start by creating a clean workspace::
 Now let's fetch the 2009 data file::
 
     $ wget -O 2009.csv http://www.data.gov/download/4029/csv
-
-**Red alert!**
 
 At first glance this may appear to have worked. You will end up with a ``2009.csv`` file in your working directory. However, when I said this tutorial would tackle real-world problems, I meant it. Let's take a look at the contents of that file::
 
@@ -49,7 +49,8 @@ That looks better so let's fetch the 2010 data using the same trick::
 
 If you're working from a copy of the csvkit source code, you can also find these files in the ``examples/realdata`` folder with their default names, `FY09_EDU_Recipients_by_State.csv` and `Datagov_FY10_EDU_recp_by_State.csv`, but getting them this way was a lot more fun, right?
 
-**Red alert!**
+Fixing the files
+================
 
 Nothing is ever easy when you're working with government data. We've got one more problem before we can get down to brass tacks and start hacking these files. The first file looks fine, but let's check out the ``head`` of that second file::
 
@@ -60,6 +61,30 @@ Nothing is ever easy when you're working with government data. We've got one mor
     ALABAMA,AL,7738,5779,2075,3102,883,5,"19,582"
     ALASKA,AK,1781,561,170,164,28,1,"2,705"
 
-Bah! This file is malformed! (Seriously, I chose these files at random, I didn't know they would be this screwed up when I started writing the tutorial!) Let's us our friendly hacker standby ``sed`` to kill those first two nonsensical lines::
+Bah! This file has extra lines before its header row! (I chose these files at random, I had no idea they would be this fortuitously screwed up when I started writing the tutorial!) Now we need to modify this file to fix the issue, but as a matter of best practice let's backup our originals first::
+
+    $ cp 2009.csv 2009_original.csv
+    $ cp 2010_csv 2010_original.csv
+
+With that done let's us our friendly hacker standby ``sed`` to kill those first two header lines::
 
     $ cat 2010.csv | sed 1,2d > 2010.csv
+
+If you've never used ``sed`` before, that part of the command translates to, "Select lines 1 and 2 of the input, (d)elete them." However, this command also introduces a couple other concepts that are much more important the indiosyncrancies of ``sed``.
+
+Piping
+======
+
+The first is piping. If you haven't spent too much time in the terminal you may be unfamiliar with the ``|`` (pipe). The pipe means, "take the output of the first command and use it as the input of the second command." So in this case the output of ``cat`` (which simply prints a file to the terminal) is being piped into sed.
+
+Output redirection
+==================
+
+The second interesting thing is output redirection. The ``>`` character means, send output from this command to a file. If I had used ``>>`` it would have appended to the end of the file rather than overwriting it. This is important because by default sed will simply sends its output to the console, which is great for piping, but not very useful if you want to save your results.
+
+Putting it together
+===================
+
+So why am I talking about piping and output redirection? Because all basic unix text processing utilities work with these operations in mind and so do the csvkit utilities. The output of any utility can be piped into another and into another and then at some point down the road redirected to a file. In this way they form a simple data processing pipeline, allowing you to do non-trivial, repeatable work without creating dozens of intermediary files.
+
+Make sense? If you think you've got it figured out, you can move on to :doc:`examining_the_data`.
