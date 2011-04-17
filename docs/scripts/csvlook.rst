@@ -22,7 +22,7 @@ Renders a CSV to the command line in a readable, fixed-width format::
 
 If a table is too wide to display properly try truncating it using :doc:`csvcut`.
 
-If the table is too long, try filtering it down with grep or piping the output to more. See :doc:`unix_tools`.
+If the table is too long, try filtering it down with grep or piping the output to less. See :doc:`unix_tools`.
 
 Also see: :doc:`common_arguments`.
 
