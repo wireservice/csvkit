@@ -75,12 +75,12 @@ If you've never used ``sed`` before, that part of the command translates to, "Se
 Piping
 ======
 
-The first is piping. If you haven't spent too much time in the terminal you may be unfamiliar with the ``|`` (pipe). The pipe means, "take the output of the first command and use it as the input of the second command." So in this case the output of ``cat`` (which simply prints a file to the terminal) is being piped into sed.
+The first is piping. If you haven't spent too much time in the terminal you may be unfamiliar with the ``|`` (pipe). The pipe means, "take the output of the first command and use it as the input of the second command." So in this case the output of ``cat`` (which simply prints a file to the terminal) is being piped into ``sed``.
 
 Output redirection
 ==================
 
-The second interesting thing is output redirection. The ``>`` character means, send output from this command to a file. If I had used ``>>`` it would have appended to the end of the file rather than overwriting it. This is important because by default sed will simply sends its output to the console, which is great for piping, but not very useful if you want to save your results.
+The second interesting thing is output redirection. The ``>`` character means, send output from this command to a file. If I had used ``>>`` it would have been appended to the end of the file rather than overwriting it. This is important because by default sed will simply sends its output to the console, which is great for piping, but not very useful if you want to save your results.
 
 Putting it together
 ===================
