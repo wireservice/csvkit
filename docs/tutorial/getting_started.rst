@@ -9,7 +9,10 @@ There is no better way to learn how to use a new tool than to see it applied in 
 
 The dataset that I've chosen to work with is recipients of United States Department of Veteran Affairs education benefits, by state and year. For those who are unfamiliar, these are individuals whom the US government is paying to attend school as a benefit of their having served in the military (or, in some case, having had a close relative who served). We will be working with `2009 <http://www.data.gov/raw/4029>`_ and `2010 <http://www.data.gov/raw/4509>`_ data.
 
-I strongly encourage anyone reading this tutorial to work through the examples, however, if you really want to cut to the chase you can see the final script for the entire tutorial at `this gist <https://gist.github.com/924589>`_.
+Following along
+===============
+
+I strongly encourage anyone reading this tutorial to work through the examples, however, if you really just want to see how of the tools are applied the complete bash script for the entire tutorial `available as a gist <https://gist.github.com/924589>`_.
 
 Getting the data
 ================

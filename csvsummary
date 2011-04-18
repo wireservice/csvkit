@@ -32,7 +32,7 @@ def main(args):
         values = sorted(filter(null_excluder, c))
         uniques = set(c)
 
-        sys.stdout.write('%3i. %s\n' % (c.order, c.name))
+        sys.stdout.write('%3i. %s\n' % (c.order + 1, c.name))
 
         if c.type == None:
             sys.stdout.write('\tEmpty column\n')
