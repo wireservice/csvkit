@@ -1,23 +1,28 @@
 #!/usr/bin/env python
 
 from cStringIO import StringIO
-import csv
-
+from csvkit.unicsv import UnicodeCSVReader
+from codecs import iterdecode
 from csvkit import table
 
-def fixed2csv(f, schema):
+def fixed2csv(f, schema, **kwargs):
     """
     Convert a fixed-width file to csv using a CSV-formatted schema description.
 
     A schema CSV must start with the header row "column,start,length".
     Each subsequent row, therefore, is a column name, the starting index of the column (an integer), and the length of the column (also an integer).
     """
+    
+    try:
+        f = iterdecode(f,kwargs['encoding'])
+    except KeyError: pass
+    
     NAME = 0
     START = 1
     LENGTH = 2
 
     schema_columns = []
-    schema_reader = csv.reader(schema)
+    schema_reader = UnicodeCSVReader(schema)
 
     header = schema_reader.next()
 
