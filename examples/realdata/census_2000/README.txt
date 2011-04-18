@@ -1,6 +1,5 @@
 The file 'usgeo.upl' in this directory is the "Geographic Header File" distributed with the 
-"Race and Hispanic or Latino Summary File" dataset from the 2000 Census of Population and 
-Housing (US). 
+"Race and Hispanic or Latino Summary File" dataset from the 2000 US Census. 
 
 <http://www2.census.gov/census_2000/datasets/Race_Hispanic_Latino_Summary_File/USGEO.UPL.ZIP>
 
