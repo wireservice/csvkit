@@ -12,7 +12,7 @@ def main(args):
     """
     Command line-utility that convert tabular data formats into CSV.
     """
-    kwargs = {}
+    kwargs = extract_csv_reader_kwargs(args)
 
     if args.file.name == '<stdin>' and not args.format:
         sys.exit('You must specify a format when inputting data via STDIN (pipe).')
@@ -25,9 +25,6 @@ def main(args):
     else:
         format = utils.guess_format(args.file.name)
 
-        if format == 'csv':
-            kwargs.update(extract_csv_reader_kwargs(args))
-
         if not format:
             sys.exit('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
@@ -37,7 +34,7 @@ def main(args):
     sys.stdout.write(convert.convert(args.file, format, **kwargs))
 
 if __name__ == "__main__":
-    parser = init_common_parser(description='Convert common, but less awesome, tabular data formats to CSV.')
+    parser = init_common_parser(description='Convert common, but less awesome, tabular data formats to CSV.', epilog='Many command line flags only pertain to specific input formats.')
     parser.add_argument('-f', '--format', dest='format',
                         help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(convert.SUPPORTED_FORMATS)))
     parser.add_argument('-s', '--schema', dest='schema', type=argparse.FileType('r'),
