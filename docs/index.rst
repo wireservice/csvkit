@@ -43,7 +43,7 @@ Tutorial
 The csvkit tutorial walks through processing and analyzing a real dataset from `data.gov <http://data.gov>`_. It is divided into several parts for easier reading:
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2 
     :numbered:
 
     tutorial/getting_started
