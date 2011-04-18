@@ -21,7 +21,7 @@ def init_common_parser(description='', epilog='', omitflags=''):
         parser.add_argument('-q', '--quotechar', dest='quotechar',
                             help='Character used to quote strings in the input CSV file.')
     if 'u' not in omitflags:
-        parser.add_argument('-u', '--quoting', dest='quoting', choices=[0,1,2,3],
+        parser.add_argument('-u', '--quoting', dest='quoting', type=int, choices=[0,1,2,3],
                             help='Quoting style used in the input CSV file. 0 = Quote Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 = Quote None.')
     if 'b' not in omitflags:
         parser.add_argument('-b', '--doublequote', dest='doublequote', action='store_true',

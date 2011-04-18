@@ -37,7 +37,7 @@ def main(args):
 
         sys.stdout.write('| %s |\n' % ('|'.join(output)))
 
-        if i == 0 or i == len(widths) + 1:
+        if i == 0 or i == len(rows) - 1:
             sys.stdout.write('%s\n' % divider)
 
 if __name__ == '__main__':

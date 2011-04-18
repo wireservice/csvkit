@@ -52,8 +52,8 @@ That looks better so let's fetch the 2010 data using the same trick::
 
 If you're working from a copy of the csvkit source code, you can also find these files in the ``examples/realdata`` folder with their default names, `FY09_EDU_Recipients_by_State.csv` and `Datagov_FY10_EDU_recp_by_State.csv`, but getting them this way was a lot more fun, right?
 
-Fixing the files
-================
+Fixing the files with sed
+=========================
 
 Nothing is ever easy when you're working with government data. We've got one more problem before we can get down to brass tacks and start hacking these files. The first file looks fine, but let's check out the ``head`` of that second file::
 
@@ -74,6 +74,8 @@ With that done let's us our friendly hacker standby ``sed`` to kill those first 
     $ cat 2010.csv | sed 1,2d > 2010.csv
 
 If you've never used ``sed`` before, that part of the command translates to, "Select lines 1 and 2 of the input, (d)elete them." However, this command also introduces a couple other concepts that are much more important the indiosyncrancies of ``sed``.
+
+For more on ``sed`` and other Unix utilities, see :doc:`/scripts/unix_tools`.
 
 Piping
 ======
