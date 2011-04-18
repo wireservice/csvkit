@@ -3,7 +3,7 @@
 import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
-from csvkit.unicode import UnicodeCSVReader
+from csvkit.unicsv import UnicodeCSVReader
 
 def main(args):
     """
@@ -37,11 +37,11 @@ def main(args):
 
         sys.stdout.write('| %s |\n' % ('|'.join(output)))
 
-        if i == 0 or i == len(widths) + 1:
+        if i == 0 or i == len(rows) - 1:
             sys.stdout.write('%s\n' % divider)
 
 if __name__ == '__main__':
-    parser = init_common_parser(description='Display a CSV in the console using a readable, fixed-width format.')
+    parser = init_common_parser(description='Render a CSV file in the console as a fixed-width table.')
 
     main(parser.parse_args())
 

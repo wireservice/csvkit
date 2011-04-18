@@ -6,3 +6,4 @@ csvkit.egg-info
 reference
 dist
 *.swo
+docs/_build

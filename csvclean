@@ -5,7 +5,7 @@ import sys
 
 from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit.cleanup import RowChecker
-from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter
+from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter
 
 def format_error_row(e):
     """Format a row for """
@@ -24,7 +24,7 @@ def main(args):
         for row in checker.checked_rows():
             pass
         for e in checker.errs:
-            sys.stdout.write("Line: %i: %s\n" % (e.line_number,e.msg))
+            sys.stdout.write("Line %i: %s\n" % (e.line_number,e.msg))
         else:
             sys.stdout.write("No errors.\n")
         if checker.joins:

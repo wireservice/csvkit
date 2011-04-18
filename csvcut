@@ -12,7 +12,7 @@ Used and modified with permission.
 import sys
 
 from csvkit import * 
-from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter 
+from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter 
 
 def main(args):
     """
@@ -36,7 +36,7 @@ def main(args):
 
         output.writerow(column_names[c] for c in column_ids)
 
-    for row in rows:
+    for i, row in enumerate(rows):
         out_row = [row[c] if c < len(row) else None for c in column_ids] 
         
         if args.line_numbers:

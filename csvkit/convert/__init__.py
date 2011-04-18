@@ -4,9 +4,9 @@ from csvitself import csv2csv
 from fixed import fixed2csv
 from xls import xls2csv
 
-SUPPORTED_FORMATS = ['fixed', 'xls']
+SUPPORTED_FORMATS = ['fixed', 'xls', 'csv']
 
-def convert(f, format, schema=None):
+def convert(f, format, schema=None, **kwargs):
     """
     Convert a file of a specified format to CSV.
     """
@@ -20,11 +20,11 @@ def convert(f, format, schema=None):
         if not schema:
             raise ValueError('schema must not be null when format is "fixed"')
 
-        return fixed2csv(f, schema)
+        return fixed2csv(f, schema, **kwargs)
     elif format == 'xls':
-        return xls2csv(f)
+        return xls2csv(f, **kwargs)
     elif format == 'csv':
-        return csv2csv(f)
+        return csv2csv(f, **kwargs)
     else:
         raise ValueError('format "%s" is not supported' % format)
 

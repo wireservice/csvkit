@@ -1,0 +1,9 @@
+csvkit is a library of utilities for working with CSV, the king of tabular file formats.
+
+It is inspired by pdftk, gdal and the original csvcut utility by Joe Germuska and Aaron Bycoffe.
+
+Important links:
+
+* Repository:    https://github.com/onyxfish/csvkit
+* Issues:        https://github.com/onyxfish/csvkit/issues
+* Documentation: http://csvkit.rtfd.org/

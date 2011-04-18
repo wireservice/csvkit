@@ -13,25 +13,22 @@ def init_common_parser(description='', epilog='', omitflags=''):
                             help='The CSV file to operate on. If omitted, will accept input on STDIN.')
     if 'd' not in omitflags:
         parser.add_argument('-d', '--delimiter', dest='delimiter',
-                            help='Delimiting character of the input CSV file. Defaults to comma.')
+                            help='Delimiting character of the input CSV file.')
     if 't' not in omitflags:
         parser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
                             help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
     if 'q' not in omitflags:
         parser.add_argument('-q', '--quotechar', dest='quotechar',
-                            help='Character used to quote strings in the input CSV file. Defaults to double-quote.')
+                            help='Character used to quote strings in the input CSV file.')
     if 'u' not in omitflags:
-        parser.add_argument('-u', '--quoting', dest='quoting', choices=[0,1,2,3],
+        parser.add_argument('-u', '--quoting', dest='quoting', type=int, choices=[0,1,2,3],
                             help='Quoting style used in the input CSV file. 0 = Quote Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 = Quote None.')
-    if 'r' not in omitflags:
-        parser.add_argument('-r', '--lineterminator', dest='lineterminator',
-                            help='Character(s) used to terminate a line in the input CSV file.')
     if 'b' not in omitflags:
         parser.add_argument('-b', '--doublequote', dest='doublequote', action='store_true',
                             help='Whether or not double quotes are doubled in the input CSV file.')
     if 'p' not in omitflags:
         parser.add_argument('-p`', '--escapechar', dest='escapechar',
-                            help='Character usedto escape the delimiter if quoting is set to "Quote None" and the quotechar if doublequote is not specified.')
+                            help='Character used to escape the delimiter if quoting is set to "Quote None" and the quotechar if doublequote is not specified.')
 
     if 'e' not in omitflags:
         parser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
@@ -57,9 +54,6 @@ def extract_csv_reader_kwargs(args):
     if args.quotechar:
         kwargs['quoting'] = args.quoting
 
-    if args.quotechar:
-        kwargs['lineterminator'] = args.lineterminator
-
     if args.doublequote:
         kwargs['doublequote'] = args.doublequote
 
@@ -75,6 +69,29 @@ class ColumnIdentifierError(Exception):
     def __init__(self, msg):
         self.msg = msg
 
+def match_column_id(column_names, c):
+    """
+    Determine what column a single column id (name or index) matches in a series of column names.
+    """
+    if c in column_names:
+        return column_names.index(c)
+    else:
+        try:
+            c = int(c) - 1
+        # Fail out if neither a column name nor an integer
+        except:
+            raise ColumnIdentifierError('Column identifier "%s" is neither a index, nor a existing column\'s name.' % c)
+
+        # Fail out if index is 0-based
+        if c < 0:
+            raise ColumnIdentifierError('Columns 0 is not valid; columns are 1-based.')
+
+        # Fail out if index is out of range
+        if c >= len(column_names):
+            raise ColumnIdentifierError('Index %i is beyond the last named column, "%s" at index %i.' % (c, column_names[-1], len(column_names) - 1))
+
+    return c
+
 def parse_column_identifiers(ids, column_names):
     """
     Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
@@ -88,23 +105,6 @@ def parse_column_identifiers(ids, column_names):
     columns = []
 
     for c in ids.split(','):
-        if c in column_names:
-            columns.append(column_names.index(c))
-        else:
-            try:
-                c = int(c) - 1
-            # Fail out if neither a column name nor an integer
-            except:
-                raise ColumnIdentifierError('Column identifier "%s" is neither a index, nor a existing column\'s name.' % c)
-
-            # Fail out if index is 0-based
-            if c < 0:
-                raise ColumnIdentifierError('Columns 0 is not valid; columns are 1-based.')
-
-            # Fail out if index is out of range
-            if c >= len(column_names):
-                raise ColumnIdentifierError('Index %i is beyond the last named column, "%s" at index %i.' % (c, column_names[-1], len(column_names) - 1))
-
-            columns.append(c)
+        columns.append(match_column_id(column_names, c))
 
     return columns

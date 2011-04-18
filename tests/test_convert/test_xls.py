@@ -4,6 +4,7 @@ import unittest
 import xlrd
 from xlrd.xldate import xldate_from_date_tuple as xldate, xldate_from_time_tuple as xltime, xldate_from_datetime_tuple as xldatetime
 
+from csvkit.exceptions import XLSDataError
 from csvkit.convert import xls
 
 class TestXLS(unittest.TestCase):
@@ -48,7 +49,7 @@ class TestXLS(unittest.TestCase):
         self.assertEquals(normal_values, (datetime.datetime, [datetime.datetime(2004, 6, 5, 14, 30, 23), datetime.datetime(1984, 2, 23, 0, 0, 0), datetime.datetime(1907, 12, 25, 2, 0, 0), None]))
 
     def test_dates_column_dates_and_times(self):
-        self.assertRaises(xls.XLSDataError, xls.normalize_dates, [
+        self.assertRaises(XLSDataError, xls.normalize_dates, [
             xldate((2004, 6, 5), 0),
             xltime((4, 5, 37)),
             ''], 0)
@@ -61,7 +62,7 @@ class TestXLS(unittest.TestCase):
         self.assertEquals(normal_values, (datetime.datetime, [datetime.datetime(2004, 6, 5, 0, 0, 0), datetime.datetime(2001, 1, 1, 4, 5, 37), None]))
 
     def test_dates_column_times_and_datetimes(self):
-        self.assertRaises(xls.XLSDataError, xls.normalize_dates, [
+        self.assertRaises(XLSDataError, xls.normalize_dates, [
             xldatetime((2004, 6, 5, 0, 30, 0), 0),
             xltime((4, 5, 37)),
             ''], 0)
@@ -71,7 +72,7 @@ class TestXLS(unittest.TestCase):
         self.assertEquals(column_type, xlrd.biffh.XL_CELL_NUMBER)
 
     def test_determine_column_type_multiple(self):
-        self.assertRaises(xls.XLSDataError, xls.determine_column_type, [xlrd.biffh.XL_CELL_NUMBER, xlrd.biffh.XL_CELL_TEXT, xlrd.biffh.XL_CELL_EMPTY]) 
+        self.assertRaises(XLSDataError, xls.determine_column_type, [xlrd.biffh.XL_CELL_NUMBER, xlrd.biffh.XL_CELL_TEXT, xlrd.biffh.XL_CELL_EMPTY]) 
 
     def test_determine_column_type_empty(self):
         column_type = xls.determine_column_type([xlrd.biffh.XL_CELL_EMPTY, xlrd.biffh.XL_CELL_EMPTY, xlrd.biffh.XL_CELL_EMPTY])

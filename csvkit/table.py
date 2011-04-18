@@ -5,7 +5,7 @@ from cStringIO import StringIO
 
 from csvkit import sniffer
 from csvkit import typeinference
-from csvkit.unicode import UnicodeCSVReader, UnicodeCSVWriter
+from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter
 
 class InvalidType(object):
     """

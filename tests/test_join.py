@@ -3,48 +3,77 @@
 import unittest
 
 from csvkit import join
-from csvkit import table
 
 class TestJoin(unittest.TestCase):
     def setUp(self):
-        self.tab1 = table.Table([
-            table.Column(0, 'id', [u'1', u'2', u'3']),
-            table.Column(1, 'name', [u'Chicago Reader', u'Chicago Sun-Times', u'Chicago Tribune']),
-            table.Column(2, 'i_work_here', [u'0', u'0', u'1'])])
+        self.tab1 = [
+            ['id', 'name', 'i_work_here'],
+            [u'1', u'Chicago Reader', u'first'],
+            [u'2', u'Chicago Sun-Times', u'only'],
+            [u'3', u'Chicago Tribune', u'only'],
+            [u'1', u'Chicago Reader', u'second']]
 
-        self.tab2 = table.Table([
-            table.Column(0, 'id', [u'1', u'4', u'2']),
-            table.Column(1, 'age', [u'40', u'5', u'63']),
-            table.Column(2, 'i_work_here', [u'0', u'0', u'0', u'0'])]) # Not extra value in this column
+        self.tab2 = [
+            ['id', 'age', 'i_work_here'],
+            [u'1', u'first', u'0'],
+            [u'4', u'only', u'0'],
+            [u'1', u'second', u'0'],
+            [u'2', u'only', u'0', u'0']] # Note extra value in this column
+
+    def test_get_ordered_keys(self):
+        self.assertEqual(join._get_ordered_keys(self.tab1[1:], 0), [u'1', u'2', u'3', u'1'])
+        self.assertEqual(join._get_ordered_keys(self.tab2[1:], 0), [u'1', u'4', u'1', u'2'])
+
+    def test_get_mapped_keys(self):
+        self.assertEqual(join._get_mapped_keys(self.tab1[1:], 0), {
+            u'1': [[u'1', u'Chicago Reader', u'first'], [u'1', u'Chicago Reader', u'second']],
+            u'2': [[u'2', u'Chicago Sun-Times', u'only']],
+            u'3': [[u'3', u'Chicago Tribune', u'only']]})
+
+    def test_sequential_join(self):
+        self.assertEqual(join.sequential_join(self.tab1, self.tab2), [
+            ['id', 'name', 'i_work_here', 'id', 'age', 'i_work_here'],
+            [u'1', u'Chicago Reader', u'first', u'1', u'first', u'0'],
+            [u'2', u'Chicago Sun-Times', u'only', u'4', u'only', u'0'],
+            [u'3', u'Chicago Tribune', u'only', u'1', u'second', u'0'],
+            [u'1', u'Chicago Reader', u'second', u'2', u'only', u'0', u'0']])
 
     def test_inner_join(self):
-        jointab = join.inner_join(self.tab1, 'id', self.tab2, 'id')
-        self.assertEqual(len(jointab), len(self.tab1) + len(self.tab2) - 1)
-        self.assertEqual(jointab.headers(), ['id', 'name', 'i_work_here', 'age', 'i_work_here_2'])
-        self.assertEqual(jointab.row(0), [1, u'Chicago Reader', False, 40, False])
-        self.assertEqual(jointab.count_rows(), 2)
+        self.assertEqual(join.inner_join(self.tab1, 'id', self.tab2, u'1'), [
+            ['id', 'name', 'i_work_here', 'id', 'age', 'i_work_here'],
+            [u'1', u'Chicago Reader', u'first', u'1', u'first', u'0'],
+            [u'1', u'Chicago Reader', u'first', u'1', u'second', u'0'],
+            [u'2', u'Chicago Sun-Times', u'only', u'2', u'only', u'0', u'0'],
+            [u'1', u'Chicago Reader', u'second', u'1', u'first', u'0'],
+            [u'1', u'Chicago Reader', u'second', u'1', u'second', u'0']])
 
     def test_full_outer_join(self):
-        jointab = join.full_outer_join(self.tab1, 'id', self.tab2, 'id')
-        self.assertEqual(len(jointab), len(self.tab1) + len(self.tab2) - 1)
-        self.assertEqual(jointab.headers(), ['id', 'name', 'i_work_here', 'age', 'i_work_here_2'])
-        self.assertEqual(jointab.row(0), [1, u'Chicago Reader', False, 40, False])
-        self.assertEqual(jointab.row(2), [3, u'Chicago Tribune', True, None, None])
-        self.assertEqual(jointab.row(3), [4, None, None, 5, False])
-        self.assertEqual(jointab.count_rows(), 4)
+        self.assertEqual(join.full_outer_join(self.tab1, u'1', self.tab2, u'1'), [
+            ['id', 'name', 'i_work_here', 'id', 'age', 'i_work_here'],
+            [u'1', u'Chicago Reader', u'first', u'1', u'first', u'0'],
+            [u'1', u'Chicago Reader', u'first', u'1', u'second', u'0'],
+            [u'2', u'Chicago Sun-Times', u'only', u'2', u'only', u'0', u'0'],
+            [u'3', u'Chicago Tribune', u'only', u'', u'', u''],
+            [u'1', u'Chicago Reader', u'second', u'1', u'first', u'0'],
+            [u'1', u'Chicago Reader', u'second', u'1', u'second', u'0'],
+            [u'', u'', u'', u'4', u'only', u'0']])
 
     def test_left_outer_join(self):
-        jointab = join.left_outer_join(self.tab1, 'id', self.tab2, 'id')
-        self.assertEqual(len(jointab), len(self.tab1) + len(self.tab2) - 1)
-        self.assertEqual(jointab.headers(), ['id', 'name', 'i_work_here', 'age', 'i_work_here_2'])
-        self.assertEqual(jointab.row(0), [1, u'Chicago Reader', False, 40, False])
-        self.assertEqual(jointab.row(2), [3, 'Chicago Tribune', True, None, None])
-        self.assertEqual(jointab.count_rows(), 3)
+        self.assertEqual(join.left_outer_join(self.tab1, 'id', self.tab2, 'id'), [
+            ['id', 'name', 'i_work_here', 'id', 'age', 'i_work_here'],
+            [u'1', u'Chicago Reader', u'first', u'1', u'first', u'0'],
+            [u'1', u'Chicago Reader', u'first', u'1', u'second', u'0'],
+            [u'2', u'Chicago Sun-Times', u'only', u'2', u'only', u'0', u'0'],
+            [u'3', u'Chicago Tribune', u'only', u'', u'', u''],
+            [u'1', u'Chicago Reader', u'second', u'1', u'first', u'0'],
+            [u'1', u'Chicago Reader', u'second', u'1', u'second', u'0']])
 
     def test_right_outer_join(self):
-        jointab = join.right_outer_join(self.tab1, 'id', self.tab2, 'id')
-        self.assertEqual(len(jointab), len(self.tab1) + len(self.tab2) - 1)
-        self.assertEqual(jointab.headers(), ['id', 'name', 'i_work_here', 'age', 'i_work_here_2'])
-        self.assertEqual(jointab.row(0), [1, u'Chicago Reader', False, 40, False])
-        self.assertEqual(jointab.row(2), [4, None, None, 5, False])
-        self.assertEqual(jointab.count_rows(), 3)
+        self.assertEqual(join.right_outer_join(self.tab1, 'id', self.tab2, 'id'), [
+            ['id', 'name', 'i_work_here', 'id', 'age', 'i_work_here'],
+            [u'1', u'Chicago Reader', u'first', u'1', u'first', u'0'],
+            [u'1', u'Chicago Reader', u'first', u'1', u'second', u'0'],
+            [u'2', u'Chicago Sun-Times', u'only', u'2', u'only', u'0', u'0'],
+            [u'1', u'Chicago Reader', u'second', u'1', u'first', u'0'],
+            [u'1', u'Chicago Reader', u'second', u'1', u'second', u'0'],
+            [u'', u'', u'', u'4', u'only', u'0']])
