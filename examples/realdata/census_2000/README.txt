@@ -9,9 +9,13 @@ sample file into CSV.  Note that 'usgeo.upl' is in ISO-8859-1 (latin-1) encoding
 
 Thus, to convert the fixed-width geographic header file to CSV, use:
 
-% in2csv -e iso-8859-1 -f fixed -s census2000_geo_schema.csv usgeo.pl > usgeo.csv
+% in2csv -e iso-8859-1 -f fixed -s census2000_geo_schema.csv usgeo.upl > usgeo.csv
 
-As is standard with csvkit tools, the output csv is UTF-8 encoded.
+As is standard with csvkit tools, the output csv is UTF-8 encoded.  To see that it worked, try:
+
+% csvcut -c 64 usgeo.csv
+
+This will print the NAME column to STDOUT.
 
 The documentation for that dataset notes, "The geographic header record is standard across all 
 electronic data products from Census 2000."  Therefore, the same schema can also be used to convert 
