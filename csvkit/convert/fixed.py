@@ -11,6 +11,8 @@ def fixed2csv(f, schema, **kwargs):
 
     A schema CSV must start with the header row "column,start,length".
     Each subsequent row, therefore, is a column name, the starting index of the column (an integer), and the length of the column (also an integer).
+    
+    Values in the 'start' column are assumed to be zero-based, unless the first value for 'start' is 1, in which case all values are assumed to be one-based.
     """
     
     try:
@@ -21,11 +23,12 @@ def fixed2csv(f, schema, **kwargs):
     START = 1
     LENGTH = 2
 
+    one_based = None
+
     schema_columns = []
     schema_reader = UnicodeCSVReader(schema)
 
     header = schema_reader.next()
-
     if header != ['column', 'start', 'length']:
         raise ValueError('schema CSV must begin with a "column,start,length" header row.')
 
@@ -33,7 +36,15 @@ def fixed2csv(f, schema, **kwargs):
         if row == 'column,start,length':
             continue
 
-        schema_columns.append((row[NAME], int(row[START]), int(row[LENGTH])))
+        if one_based is None:
+            one_based = bool(int(row[START]) == 1)
+        
+        if one_based:
+            start = int(row[START]) - 1
+        else: 
+            start = int(row[START])
+
+        schema_columns.append((row[NAME], start, int(row[LENGTH])))
 
     # Data is processed first into columns (rather than rows) for easier type inference
     data_columns = [[] for c in schema_columns]
