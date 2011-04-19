@@ -116,8 +116,6 @@ def normalize_column_type(l):
             raise ValueError('Can\'t coherently mix dates and times in a single column.')
 
         return normal_types_set.pop(), normal_values 
-    except TypeError:
-        pass
     except ValueError:
         pass
 
