@@ -103,7 +103,7 @@ For more on ``grep`` and other Unix utilities, see :doc:`/scripts/unix_tools`.
 Normalizing data with in2csv
 ============================
 
-What if we wanted to know exactly where Illinois ranks? For that we need to go down the rabbit hole. In order to properly sort the data we need to remove those extraneous commas from the numbers. :doc:`/scripts/in2csv` is a utility for converting other data formats into CSV, however, it can also be used to standardize the format of an existing CSV. In this case we can use it to eliminate the commas which prevent us from sorting the counts in our table.
+What if we wanted to know exactly where Illinois ranks? In order to properly sort the data we need to remove those extraneous commas from the numbers. :doc:`/scripts/in2csv` is a utility for converting other data formats into CSV, however, it can also be used to standardize the format of an existing CSV. In this case we can use it to eliminate the commas which prevent us from sorting the counts in our table.
 
 *(Note: In the next few sections we will repeat some commands to show how you can build up a complex operation as a sequence of simple ones.)*::
 
@@ -138,7 +138,7 @@ Isn't that better? You may still find it annoying it to have the entire contents
 Flipping column order with csvcut
 =================================
 
-Returning for a moment to ``csvcut``, we can use its column selection logic as a powertool for reordering columns. Let's pare back the number of columns and put the number we want to sort on first::
+Returning for a moment to ``csvcut``, we can use its column selection logic as a powertool for reordering columns. Let's pare back the number of columns and make the column we want to sort on first::
 
     $ in2csv 2009.csv | csvcut -c 9,1 | head -n 5
     TOTAL,State Name
@@ -161,7 +161,7 @@ Now that the column we want to sort by is first we can use the Unix utility ``so
 
 The -n argument tells ``sort`` to sort numerically and the -r tells it to sort in descending order. In this case we have also updated csvcut to use the --skipheader option, which prevents the header from being output, thus keeping it from inteferring with the sorting.
 
-We can now see that Illinois ranks fifth for individuals claiming VA benefits, behind mostly larger states, although Arizona is a surprising name to appear in the top five, given its relative size. If we were to join this data up with a table of state population's we could see just how much of an outlier it really is. In future sections we'll present tools for doing just that, however, this specific question is left as an exercise for the reader.
+We can now see that Illinois ranks fifth for individuals claiming VA benefits, behind mostly larger states, although Arizona is a surprising name to appear in the top five, given its relative size. If we were to join this data up with a table of state population's we could see just how much of an outlier it really is. In future sections we'll present tools for doing just that, however, this specific question is left as an experiment for the reader.
 
 Saving your work
 ================
