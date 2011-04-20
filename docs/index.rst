@@ -93,7 +93,17 @@ csvkit is comprised of a number of individual command line utilities that be loo
 Development
 ===========
 
-Coming soon...
+Documentation on how to use csvkit as a library is coming soon...
+
+Contributing
+============
+
+Want to hack on csvkit? Here's how:
+
+.. toctree::
+    :maxdepth: 2
+
+    contributing
 
 Authors
 =======
