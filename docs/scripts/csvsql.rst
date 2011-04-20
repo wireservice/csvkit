@@ -22,6 +22,9 @@ Generates a SQL "CREATE TABLE" statement for a given CSV file. Supports a variet
       -h, --help            show this help message and exit
       -i {access,sybase,sqlite,informix,firebird,mysql,oracle,maxdb,postgresql,mssql}, --dialect {access,sybase,sqlite,informix,firebird,mysql,oracle,maxdb,postgresql,mssql}
                             Dialect of SQL to generate.
+      --inserts             In additional to generating a CREATE TABLE statement,
+                            also generate an INSERT statement for each row of
+                            data.                     
 
 Also see: :doc:`common_arguments`.
 

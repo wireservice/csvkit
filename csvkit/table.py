@@ -31,7 +31,7 @@ class Column(list):
         
         list.__init__(self, data)
         self.order = order
-        self.name = name 
+        self.name = name or '_unnamed' # empty column names don't make sense 
         self.type = t
         
         self._compute_nullable() 
