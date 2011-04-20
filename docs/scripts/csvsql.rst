@@ -33,4 +33,8 @@ Examples
 
 Generate a statement in the postgresql dialect::
 
-    $ csvsql -i postgresql examples/testfixed_converted.csv
+    $ csvsql -i postgresql  examples/realdata/FY09_EDU_Recipients_by_State.csv
+
+Generate create and insert statements for postgres, then actually run those statements to import all data into a test database::
+
+    $ csvsql -i postgresql --inserts examples/realdata/FY09_EDU_Recipients_by_State.csv | psql -d test
