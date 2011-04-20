@@ -9,7 +9,7 @@ def init_common_parser(description='', epilog='', omitflags=''):
     """
     parser = argparse.ArgumentParser(description=description, epilog=epilog)
     if 'f' not in omitflags:
-        parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('r'), default=sys.stdin,
+        parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('rU'), default=sys.stdin,
                             help='The CSV file to operate on. If omitted, will accept input on STDIN.')
     if 'd' not in omitflags:
         parser.add_argument('-d', '--delimiter', dest='delimiter',

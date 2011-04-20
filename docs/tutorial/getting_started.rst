@@ -12,7 +12,7 @@ The dataset that I've chosen to work with is recipients of United States Departm
 Following along
 ===============
 
-I strongly encourage anyone reading this tutorial to work through the examples, however, if you really just want to see how of the tools are applied the complete bash script for the entire tutorial `available as a gist <https://gist.github.com/924589>`_.
+I strongly encourage anyone reading this tutorial to work through the examples, however, if you really just want to see how of the tools are applied then you can read through `the complete bash script for the entire tutorial <https://gist.github.com/924589>`_.
 
 Getting the data
 ================
@@ -50,12 +50,12 @@ That looks better so let's fetch the 2010 data using the same trick::
 
     $ wget -O 2010.csv -U "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.205 Safari/534.16" http://www.data.gov/download/4509/csv
 
-If you're working from a copy of the csvkit source code, you can also find these files in the ``examples/realdata`` folder with their default names, `FY09_EDU_Recipients_by_State.csv` and `Datagov_FY10_EDU_recp_by_State.csv`, but getting them this way was a lot more fun, right?
+If you're working from a copy of the csvkit source code, you can also find these files in the ``examples/realdata`` folder with their default names, ``FY09_EDU_Recipients_by_State.csv`` and ``Datagov_FY10_EDU_recp_by_State.csv``, but getting them this way was a lot more fun, right?
 
 Fixing the files with sed
 =========================
 
-Nothing is ever easy when you're working with government data. We've got one more problem before we can get down to brass tacks and start hacking these files. The first file looks fine, but let's check out the ``head`` of that second file::
+Nothing is ever easy when you're working with government data. We've got one more problem before we can get down to brass tacks and start hacking these files. The first file looked fine, but let's check out the ``head`` of that second file::
 
     $ head -n 5 2010.csv 
     ,,,,,,,,
@@ -64,32 +64,34 @@ Nothing is ever easy when you're working with government data. We've got one mor
     ALABAMA,AL,7738,5779,2075,3102,883,5,"19,582"
     ALASKA,AK,1781,561,170,164,28,1,"2,705"
 
-Bah! This file has extra lines before its header row! (I chose these files at random, I had no idea they would be this fortuitously screwed up when I started writing the tutorial!) Now we need to modify this file to fix the issue, but as a matter of best practice let's backup our originals first::
+Bah! This file has extra lines before its header row! (I chose these files at random, I really had no idea they would be this fortuitously screwed up when I started writing the tutorial.) Now we need to modify this file to fix the issue, but as a matter of best practice let's backup our originals first::
 
     $ cp 2009.csv 2009_original.csv
     $ cp 2010_csv 2010_original.csv
 
-With that done let's us our friendly hacker standby ``sed`` to kill those first two header lines::
+With that done let's use the old hacker standby ``sed`` to kill those first two header lines::
 
     $ cat 2010.csv | sed 1,2d > 2010.csv
 
-If you've never used ``sed`` before, that part of the command translates to, "Select lines 1 and 2 of the input, (d)elete them." However, this command also introduces a couple other concepts that are much more important the indiosyncrancies of ``sed``.
+``sed`` is an abbreviation for "stream editor", which is a useful phrase to keep in mind if you're not used to working with these tools. csvkit and the other tools introduced in the next chapter all operate on streams of data, processing them one line at a time. The ``sed`` command we just used translates to, "Select lines 1 and 2 of the input, (d)elete them."
 
 For more on ``sed`` and other Unix utilities, see :doc:`/scripts/unix_tools`.
+
+The previous command also introduces a couple other concepts that are much more important the indiosyncrancies of ``sed``.
 
 Piping
 ======
 
-The first is piping. If you haven't spent too much time in the terminal you may be unfamiliar with the ``|`` (pipe). The pipe means, "take the output of the first command and use it as the input of the second command." So in this case the output of ``cat`` (which simply prints a file to the terminal) is being piped into ``sed``.
+The first is piping. If you haven't spent too much time in the terminal you may be unfamiliar with the ``|`` (pipe). The pipe means, "take the output of the former command and use it as input to the latter." So in this case the output of ``cat`` (which simply prints a file) is being piped into ``sed``.
 
 Output redirection
 ==================
 
-The second interesting thing is output redirection. The ``>`` character means, send output from this command to a file. If I had used ``>>`` it would have been appended to the end of the file rather than overwriting it. This is important because by default sed will simply sends its output to the console, which is great for piping, but not very useful if you want to save your results.
+The second interesting thing is output redirection. The ``>`` character means, send output from this command to a file. If I had used ``>>`` it would have been appended to the end of the file rather than overwriting it. This is important because by default ``sed`` will simply send its output to the console, which is great for piping, but not very useful if you want to save your results.
 
 Putting it together
 ===================
 
-So why am I talking about piping and output redirection? Because all basic unix text processing utilities work with these operations in mind and so do the csvkit utilities. The output of any utility can be piped into another and into another and then at some point down the road redirected to a file. In this way they form a simple data processing pipeline, allowing you to do non-trivial, repeatable work without creating dozens of intermediary files.
+So why am I talking about piping and output redirection? Because all basic unix text processing utilities work with these operations in mind and so do the csvkit utilities. The output of any utility can be piped into another and into another and then at some point down the road redirected to a file. In this way they form a data processing "pipeline" of sorts, allowing you to do non-trivial, repeatable work without creating dozens of intermediary files.
 
 Make sense? If you think you've got it figured out, you can move on to :doc:`examining_the_data`.

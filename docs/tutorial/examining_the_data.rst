@@ -19,9 +19,9 @@ Now let's start investigating this dataset. The first thing we might want to kno
       9: TOTAL
      10: 
 
-``csvcut`` is probably the heart of csvkit and was the original inspiration for building it. However, with the -n flag it simply prints the column numbers and names and exits. We'll see the rest of its capabilities shortly.
+``csvcut`` is the beating heart of csvkit and was the original inspiration for building the rest of the tools. However, in this case we aren't using its full power. When the -n flag is specified, ``csvcut`` simply prints the column numbers and names and exits. We'll see the rest of its capabilities shortly.
 
-This tells us a few things about the dataset, including that the final column doesn't have a name. However, we don't know what types of values are in each column. Let's try peeking at a couple to figure that out::
+This tells us a few things about the dataset, including that the final column doesn't have a name. However, it doesn't tell you anything about what sort of data is in each column. Let's try peeking at a couple columns to try to figure that out::
 
     $ csvcut -c 2,3 2009.csv | head -n 5
     State Name,Code
@@ -30,7 +30,7 @@ This tells us a few things about the dataset, including that the final column do
     AZ,04
     AR,05
 
-Now we see the power of ``csvcut``. Using the -c flag we are able to specify just those columns we want to extract. We also use Unix utility ``head`` to look at just the first five rows of output. From the look of things the "Code" column is a identifier that is unique to each state. It also appears that the data is alphabetical by state.
+Now we see the power of ``csvcut``. Using the -c flag we are able to specify columns we want to extract from the input. We also use Unix utility ``head`` to look at just the first five rows of output. From the look of things the "Code" column is a identifier that is unique to each state. It also appears that the dataset is alphabetical by state.
 
 Let's try one more way of using csvcut::
 
@@ -45,14 +45,14 @@ Let's try one more way of using csvcut::
 As you can see we can identify a column by its number *or* its name. We are also showing how, in theory we might pipe the output to sort and have the values sorted, however, two things are preventing this from working correctly:
 
 * the numbers have commas in them, which messes up the ordering
-* the output data out csvcut is itself CSV, and the column is being quoted because of the internal commas
+* the output of ``csvcut`` is itself in CSV format, and the column is being quoted because of the commas in the numbers
 
 Statistics on demand with csvsummary
 ====================================
 
-Fortunantely, there is a better way to do this. Another utility included with csvkit is :doc:`/scripts/csvsummary`, which mimics the summary() function from the computational statistics programming language `"R" <http://www.r-project.org/>`_.
+Fortunantely, there is a much better way to do this. Another utility included with csvkit is :doc:`/scripts/csvsummary`, which mimics the summary() function from the computational statistics programming language `"R" <http://www.r-project.org/>`_.
 
-We will use what we learned in the previous section to look at just a slice of the data::
+Let's use what we learned in the previous section to look at just a slice of the data::
 
     $ csvcut -c 1,4,9,10 2009.csv | csvsummary 
       1. State Name
@@ -80,7 +80,7 @@ We will use what we learned in the previous section to look at just a slice of t
       4. 
 	    Empty column
 
-Like ``csvcut``, ``csvsummary`` lists columns with their numbers (in this case the column numbers are for after the original file has been cut). However, ``csvsummary`` also performs type inference on the columns and computes relevant statistics based on their types. In this case we have a 'unicode' column (internally csvkit uses unicode exclusively to represent text), and two 'int' (integer) columns. For the unicode column we know it contains nulls (blanks), that it has 53 unique values, that the longest one is 17 characters, and we have five examples of data from that column.
+Like ``csvcut``, ``csvsummary`` lists columns with their numbers (in this case the column numbers are those of the CSV file *output* by ``csvcut``). However, ``csvsummary`` also performs type inference on the columns and computes relevant statistics based on their types. In this case we have a *unicode* column (internally csvkit uses unicode exclusively to represent text), and two *int* (integer) columns. For the unicode column we know it contains nulls (blanks), that it has 53 unique values, that the longest one is 17 characters, and we also have five examples of data from that column.
 
 From the statistics on the integer columns we can see that the median number of indviduals exercising VA benefits across the states is 6520, of which 3548 is the median number exercising the GI Bill while on active duty. 
 

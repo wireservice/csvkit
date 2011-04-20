@@ -72,7 +72,7 @@ class RowChecker(object):
                 # see if we can actually clean up those length mismatches
                 joinable_row_errors = extract_joinable_row_errors(self.errs)
                 while joinable_row_errors:
-                    fixed_row = join_rows(err.row for err in joinable_row_errors,joiner=' ')
+                    fixed_row = join_rows([err.row for err in joinable_row_errors], joiner=' ')
                     if len(fixed_row) < len(self.column_names): break
                     if len(fixed_row) == len(self.column_names):
                         self.rows_joined += len(joinable_row_errors)
