@@ -8,6 +8,14 @@ from csvkit import table
 from sqlalchemy import Boolean, Date, DateTime, Float, Integer, String, Time
 
 class TestSQL(unittest.TestCase):
+    def setUp(self):
+        self.csv_table = table.Table([
+            table.Column(0, u'text', [u'Chicago Reader', u'Chicago Sun-Times', u'Chicago Tribune', u'Row with blanks']),
+            table.Column(1, u'integer', [u'40', u'63', u'164', u'']),
+            table.Column(2, u'datetime', [u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '']),
+            table.Column(3, u'empty_column', [u'', u'', u'', u''])],
+            name='test_table')
+
     def test_make_column_name(self):
         c = sql.make_column(table.Column(0, 'test', ['1', '-87', '418000000', '']))
         self.assertEqual(c.key, 'test')
@@ -62,14 +70,7 @@ class TestSQL(unittest.TestCase):
         self.assertEqual(c.nullable, False)
 
     def test_make_create_table_statement(self):
-        csv_table = table.Table([
-            table.Column(0, 'text', ['Chicago Reader', 'Chicago Sun-Times', 'Chicago Tribune', 'Row with blanks']),
-            table.Column(1, 'integer', ['40', '63', '164', '']),
-            table.Column(2, 'datetime', ['Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '']),
-            table.Column(3, 'empty_column', ['', '', '', ''])],
-            name='test_table')
-
-        sql_table = sql.make_table(csv_table, 'csvsql')
+        sql_table = sql.make_table(self.csv_table, 'csvsql')
         statement = sql.make_create_table_statement(sql_table)
 
         self.assertEqual(statement, 
@@ -78,7 +79,10 @@ u"""CREATE TABLE test_table (
 \tinteger INTEGER, 
 \tdatetime DATETIME, 
 \tempty_column VARCHAR(32)
-)""")
+);""")
 
-
+    def make_insert_statement(self):
+        sql_table = sql.make_table(self.csv_table, 'csvsql')
+        statement = sql.make_insert_statement(sql_table, self.csv_table._prepare_rows_for_serialization()[0])
+        self.assertEqual(statement, u'INSERT INTO test_table (text, integer, datetime, empty_column) VALUES (\'Chicago Reader\', 40, \'2008-01-01T04:40:00\', NULL);')
 

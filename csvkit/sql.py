@@ -67,8 +67,6 @@ def make_table(csv_table, name='table_name'):
     for column in csv_table:
         sql_table.append_column(make_column(column))
 
-    print make_insert_statements(sql_table, csv_table, dialect='postgresql')
-
     return sql_table
 
 def make_create_table_statement(sql_table, dialect=None):
@@ -81,7 +79,7 @@ def make_create_table_statement(sql_table, dialect=None):
     else:
         sql_dialect = None 
 
-    return unicode(CreateTable(sql_table).compile(dialect=sql_dialect)).strip()
+    return unicode(CreateTable(sql_table).compile(dialect=sql_dialect)).strip() + ';'
 
 def de_parameterize_insert_query(statement, values, dialect=None):
     """
@@ -92,25 +90,39 @@ def de_parameterize_insert_query(statement, values, dialect=None):
     # All dialects use VALUES to set off the start of the parameter clause
     start_params = statement.index('VALUES (') + 7 
     params_clause = statement[start_params:]
-
+    
+    # Get an iterator for the values (which are likely a tuple)
     values = iter(values)
 
-    # These database use ':column_name' syntax
-    if dialect in ['access', 'firebird', 'maxdb', 'mssql', 'oracle', 'sybase']:
-        params_clause = re.sub('(:"?.+?"?)(?=[,)])', lambda i: u'"%s"' % unicode(values.next()), params_clause)
-    # These databases use '?' syntax
+    # Use probably ill-advised closure magic to format values in way SQL understands
+    def value_formatter(*args):
+        v = values.next()
+
+        if v is None:
+            return 'NULL' 
+        elif type(v) == bool:
+            return unicode(v).upper()
+        elif type(v) == unicode:
+            return u'\'%s\'' % v 
+        else:
+            return unicode(v)
+
+    # ':column_name' syntax
+    if dialect in ['access', 'firebird', 'maxdb', 'mssql', 'oracle', 'sybase', None]:
+        params_clause = re.sub('(:"?.+?"?)(?=[,)])', value_formatter, params_clause)
+    # '?' syntax
     elif dialect in ['informix', 'sqlite']:
-        params_clause = re.sub('(\?)(?=[,)])', lambda i: u'"%s"' % unicode(values.next()), params_clause)
-    # These databases use '%s' syntax
+        params_clause = re.sub('(\?)(?=[,)])', value_formatter, params_clause)
+    # '%s' syntax
     elif dialect in ['mysql']:
-        params_clause = re.sub('(%s)(?=[,)])', lambda i: u'"%s"' % unicode(values.next()), params_clause)
-    # These databases use '%(column_name)s' syntax
+        params_clause = re.sub('(%s)(?=[,)])', value_formatter, params_clause)
+    # '%(column_name)s' syntax
     elif dialect in ['postgresql']:
-        params_clause = re.sub('(%("?.+?"?)s)(?=[,)])', lambda i: u'"%s"' % unicode(values.next()), params_clause)
+        params_clause = re.sub('(%("?.+?"?)s)(?=[,)])', value_formatter, params_clause)
 
     return statement[:start_params] + params_clause
 
-def make_insert_statements(sql_table, csv_table, dialect=None):
+def make_insert_statement(sql_table, values, dialect=None):
     """
     Generates INSERT statements for data in a Table using a sqlalchemy dialect.
     """
@@ -120,11 +132,8 @@ def make_insert_statements(sql_table, csv_table, dialect=None):
     else:
         sql_dialect = None
 
-    inserts = []
+    insert = unicode(sql_table.insert().compile(dialect=sql_dialect))
+    statement = de_parameterize_insert_query(insert, values, dialect=dialect)
 
-    for row in csv_table.rows():
-        insert = unicode(sql_table.insert().compile(dialect=sql_dialect))
-        inserts.append(de_parameterize_insert_query(insert, row, dialect=dialect))
-
-    return '\n'.join(inserts)
+    return statement.strip() + ';'
 

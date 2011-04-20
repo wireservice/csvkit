@@ -240,23 +240,27 @@ class Table(list):
 
         return Table(columns, name=name)
 
-    def to_csv(self, output, skipheader=False, **kwargs):
+    def _prepare_rows_for_serialization(self):
         """
-        Serializes the table to CSV and writes it to any file-like object.
+        Generates rows from columns and performs any preprocessing necessary for serializing.
         """
         out_columns = []
 
         for c in self:
             # Stringify datetimes, dates, and times
             if c.type in [datetime.datetime, datetime.date, datetime.time]:
-                out_columns.append(Column(0, c.name, [v.isoformat() if v != None else None for v in c], normal_type=unicode))
+                out_columns.append([unicode(v.isoformat()) if v != None else None for v in c])
             else:
                 out_columns.append(c)
 
-        rows = []
-
         # Convert columns to rows 
-        rows = zip(*out_columns)
+        return zip(*out_columns)
+
+    def to_csv(self, output, skipheader=False, **kwargs):
+        """
+        Serializes the table to CSV and writes it to any file-like object.
+        """
+        rows = self._prepare_rows_for_serialization()
 
         # Insert header row
         if not skipheader:
