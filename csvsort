@@ -31,6 +31,8 @@ def main(args):
 
     rows = tab.to_rows(serialize_dates=True) 
     rows.sort(key=lambda r: [r[c] for c in column_ids], reverse=args.reverse)
+    
+    rows.insert(0, tab.headers())
 
     output = UnicodeCSVWriter(sys.stdout)
 
