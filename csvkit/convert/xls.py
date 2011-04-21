@@ -119,7 +119,7 @@ def determine_column_type(types):
     except KeyError:
         return xlrd.biffh.XL_CELL_EMPTY
 
-def xls2csv(f):
+def xls2csv(f, **kwargs):
     """
     Convert an Excel .xls file to csv.
     """

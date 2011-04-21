@@ -3,9 +3,9 @@
 import datetime
 from cStringIO import StringIO
 
+from csvkit import CSVKitReader, CSVKitWriter
 from csvkit import sniffer
 from csvkit import typeinference
-from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter
 
 class InvalidType(object):
     """
@@ -191,7 +191,7 @@ class Table(list):
         dialect = sniffer.sniff_dialect(sample)
 
         f = StringIO(contents) 
-        reader = UnicodeCSVReader(f, dialect=dialect, **kwargs)
+        reader = CSVKitReader(f, dialect=dialect, **kwargs)
 
         headers = reader.next()
 
@@ -246,5 +246,5 @@ class Table(list):
         writer_kwargs = { 'lineterminator': '\n' }
         writer_kwargs.update(kwargs)
 
-        writer = UnicodeCSVWriter(output, **writer_kwargs)
+        writer = CSVKitWriter(output, **writer_kwargs)
         writer.writerows(rows)

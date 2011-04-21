@@ -12,6 +12,8 @@ def init_common_parser(description='', epilog='', omitflags=''):
        file.
     """
     parser = argparse.ArgumentParser(description=description, epilog=epilog)
+
+    # Input
     if 'f' not in omitflags:
         parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('rU'), default=sys.stdin,
                             help='The CSV file to operate on. If omitted, will accept input on STDIN.')
@@ -33,10 +35,14 @@ def init_common_parser(description='', epilog='', omitflags=''):
     if 'p' not in omitflags:
         parser.add_argument('-p`', '--escapechar', dest='escapechar',
                             help='Character used to escape the delimiter if quoting is set to "Quote None" and the quotechar if doublequote is not specified.')
-
     if 'e' not in omitflags:
         parser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
                             help='Specify the encoding the input file.')
+
+    # Output
+    if 'l' not in omitflags:
+        parser.add_argument('-l', '--linenumbers', dest='line_numbers', action='store_true',
+                            help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple primary key.')
 
     return parser
 
@@ -64,6 +70,14 @@ def extract_csv_reader_kwargs(args):
 
     if args.escapechar:
         kwargs['escapechar'] = args.escapechar
+
+    return kwargs
+
+def extract_csv_writer_kwargs(args):
+    kwargs = {}
+
+    if args.line_numbers:
+        kwargs['line_numbers'] = True
 
     return kwargs
 

@@ -11,14 +11,14 @@ Used and modified with permission.
 
 import sys
 
-from csvkit.cli import extract_csv_reader_kwargs, init_common_parser, parse_column_identifiers
-from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter 
+from csvkit import CSVKitReader, CSVKitWriter
+from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers
 
 def main(args):
     """
     Command line-utility that filters and truncates CSV files. Like unix "cut" command, but for tabular data.
     """
-    rows = UnicodeCSVReader(args.file, **extract_csv_reader_kwargs(args))
+    rows = CSVKitReader(args.file, **extract_csv_reader_kwargs(args))
     column_names = rows.next()
 
     if args.names_only:
@@ -28,20 +28,14 @@ def main(args):
         sys.exit()
 
     column_ids = parse_column_identifiers(args.columns, column_names)
-    output = UnicodeCSVWriter(sys.stdout)
+    output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
 
     if not args.skip_header:
-        if args.line_numbers:
-            column_names.insert(0, 'line_number')
-
-        output.writerow(column_names[c] for c in column_ids)
+        output.writerow([column_names[c] for c in column_ids])
 
     for i, row in enumerate(rows):
         out_row = [row[c] if c < len(row) else None for c in column_ids] 
         
-        if args.line_numbers:
-            out_row.insert(0, i) 
-
         output.writerow(out_row)
                 
 if __name__ == "__main__":
@@ -55,7 +49,5 @@ if __name__ == "__main__":
                         help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
     parser.add_argument('-s', '--skipheader', dest='skip_header', action='store_true',
                         help='Do not display the csv header in the output. Useful when piping to grep or uniq.')
-    parser.add_argument('-l', '--linenumbers', dest='line_numbers', action='store_true',
-                        help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple primary key.')
 
     main(parser.parse_args())

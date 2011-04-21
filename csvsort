@@ -3,16 +3,16 @@
 import os
 import sys
 
+from csvkit import CSVKitReader, CSVKitWriter
 from csvkit import table
-from csvkit.cli import extract_csv_reader_kwargs, init_common_parser, parse_column_identifiers
-from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter 
+from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers
 
 def main(args):
     """
     Command line-utility that sorts CSV files. Like unix "sort" command, but for tabular data.
     """
     if args.names_only:
-        rows = UnicodeCSVReader(args.file, **extract_csv_reader_kwargs(args))
+        rows = CSVKitReader(args.file, **extract_csv_reader_kwargs(args))
         column_names = rows.next()
 
         for i, c in enumerate(column_names):
@@ -34,7 +34,7 @@ def main(args):
     
     rows.insert(0, tab.headers())
 
-    output = UnicodeCSVWriter(sys.stdout)
+    output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
 
     for row in rows:
         output.writerow(row)

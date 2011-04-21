@@ -25,6 +25,9 @@ All utilities which accept CSV as input share a set of common command-line argum
                         is not specified.
   -e ENCODING, --encoding ENCODING
                         Specify the encoding the input file.
+  -l, --linenumbers     Insert a column of line numbers at the front of the
+                        output. Useful when piping to grep or as a simple
+                        primary key.
 
 These arguments may be used to override csvkit's default "smart" parsing of CSV files.  This is frequently necessary if the input file uses a particularly unusual style of quoting or is an encoding that is not compatible with utf-8.
 
@@ -37,3 +40,6 @@ Cut the 1st and 3rd columns from a file with pipe delimiters and latin-1 encodin
 
     $ csvcut -c 1,3 -d "|" -e "iso-8859-1" my_badly_formed.csv
 
+Add line numbers to a file, making no other changes::
+
+    $ csvcut -l examples/realdata/FY09_EDU_Recipients_by_State.csv
