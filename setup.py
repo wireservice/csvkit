@@ -35,7 +35,7 @@ setup(
         'csvcut',
         'csvsql',
         'csvclean',
-        'csvsummary',
+        'csvstat',
         'csvlook',
         'csvjoin',
         'csvstack'
