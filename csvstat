@@ -4,8 +4,8 @@ import datetime
 import random
 import sys 
 
-from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import table
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs
 
 def median(l):
     """

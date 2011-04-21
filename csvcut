@@ -11,7 +11,7 @@ Used and modified with permission.
 
 import sys
 
-from csvkit import * 
+from csvkit.cli import extract_csv_reader_kwargs, init_common_parser, parse_column_identifiers
 from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter 
 
 def main(args):

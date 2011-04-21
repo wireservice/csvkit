@@ -4,8 +4,8 @@ import sys
 
 import argparse
 
-from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import convert
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs
 from csvkit.convert import utils
 
 def main(args):

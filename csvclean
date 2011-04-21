@@ -3,7 +3,7 @@
 from os.path import splitext
 import sys
 
-from csvkit import init_common_parser, extract_csv_reader_kwargs
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs
 from csvkit.cleanup import RowChecker
 from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter
 
