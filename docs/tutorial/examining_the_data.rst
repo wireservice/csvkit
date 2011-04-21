@@ -152,14 +152,14 @@ Sorting with sort
 
 Now that the column we want to sort by is first we can use the Unix utility ``sort`` to numerically sort the rows::
 
-    $ in2csv 2009.csv | csvcut -c 9,1 --skipheader | sort -n -r | head -n 5
+    $ in2csv 2009.csv | csvcut -c 9,1 | sort -n -r | head -n 5
     46897,CALIFORNIA
     40402,TEXAS
     36394,FLORIDA
     33986,ARIZONA
     21964,ILLINOIS
 
-The -n argument tells ``sort`` to sort numerically and the -r tells it to sort in descending order. In this case we have also updated csvcut to use the --skipheader option, which prevents the header from being output, thus keeping it from inteferring with the sorting.
+The -n argument tells ``sort`` to sort numerically and the -r tells it to sort in descending order.
 
 We can now see that Illinois ranks fifth for individuals claiming VA benefits, behind mostly larger states, although Arizona is a surprising name to appear in the top five, given its relative size. If we were to join this data up with a table of state population's we could see just how much of an outlier it really is. In future sections we'll present tools for doing just that, however, this specific question is left as an experiment for the reader.
 
@@ -168,7 +168,7 @@ Saving your work
 
 The complete ranking might be a useful thing to have around. Rather than computing it every time, let's use output redirection to save a copy of it::
 
-    $ in2csv 2009.csv | csvcut -c 9,1 --skipheader | sort -n -r > 2009_ranking.csv
+    $ in2csv 2009.csv | csvcut -c 9,1 | sort -n -r > 2009_ranking.csv
 
 Note that this file won't work well with the csvkit utilities as it no longer has a header, however, you can still use ``grep`` and other Unix utilities to search through it.
 

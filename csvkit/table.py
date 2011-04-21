@@ -233,15 +233,14 @@ class Table(list):
         else:
             return zip(*self)
 
-    def to_csv(self, output, skipheader=False, **kwargs):
+    def to_csv(self, output, **kwargs):
         """
         Serializes the table to CSV and writes it to any file-like object.
         """
         rows = self.to_rows(serialize_dates=True)
 
         # Insert header row
-        if not skipheader:
-            rows.insert(0, self.headers())
+        rows.insert(0, self.headers())
 
         writer_kwargs = { 'lineterminator': '\n' }
         writer_kwargs.update(kwargs)

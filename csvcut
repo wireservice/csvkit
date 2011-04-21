@@ -30,8 +30,7 @@ def main(args):
     column_ids = parse_column_identifiers(args.columns, column_names)
     output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
 
-    if not args.skip_header:
-        output.writerow([column_names[c] for c in column_ids])
+    output.writerow([column_names[c] for c in column_ids])
 
     for i, row in enumerate(rows):
         out_row = [row[c] if c < len(row) else None for c in column_ids] 
@@ -47,7 +46,5 @@ if __name__ == "__main__":
                         help='Display column names and indices from the input CSV and exit.')
     parser.add_argument('-c', '--columns', dest='columns',
                         help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
-    parser.add_argument('-s', '--skipheader', dest='skip_header', action='store_true',
-                        help='Do not display the csv header in the output. Useful when piping to grep or uniq.')
 
     main(parser.parse_args())
