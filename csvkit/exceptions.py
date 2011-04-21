@@ -1,5 +1,19 @@
 #!/usr/bin/env python
 
+class ColumnIdentifierError(Exception):
+    """
+    Exception raised when the user supplies an invalid column identifier.
+    """
+    def __init__(self, msg):
+        self.msg = msg
+
+class XLSDataError(Exception):
+    """
+    Exception raised when there is a problem converting XLS data.
+    """
+    def __init__(self, msg):
+        self.msg = msg
+
 class CSVTestException(Exception):
     """
     Superclass for all row-test-failed exceptions. 
@@ -22,11 +36,4 @@ class LengthMismatchError(CSVTestException):
     @property
     def length(self):
         return len(self.row)
-
-class XLSDataError(Exception):
-    """
-    Exception raised when there is a problem converting XLS data.
-    """
-    def __init__(self, msg):
-        self.msg = msg
 

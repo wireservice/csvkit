@@ -1,6 +1,8 @@
 import argparse
 import sys
 
+from csvkit.exceptions import ColumnIdentifierError
+
 def init_common_parser(description='', epilog='', omitflags=''):
     """Prepare a base argparse argument parser so that flags are consistent across different shell command tools.
        If you want to constrain which common args are present, you can pass a string for 'omitflags'. Any argument
@@ -34,7 +36,6 @@ def init_common_parser(description='', epilog='', omitflags=''):
         parser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
                             help='Specify the encoding the input file.')
 
-
     return parser
 
 def extract_csv_reader_kwargs(args):
@@ -61,13 +62,6 @@ def extract_csv_reader_kwargs(args):
         kwargs['escapechar'] = args.escapechar
 
     return kwargs
-
-class ColumnIdentifierError(Exception):
-    """
-    Exception raised when the user supplies an invalid column identifier.
-    """
-    def __init__(self, msg):
-        self.msg = msg
 
 def match_column_id(column_names, c):
     """
