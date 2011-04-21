@@ -3,7 +3,7 @@ import csv
 from cStringIO import StringIO
 
 """
-The follownig classes are adapted from the CSV module documentation.
+The following classes are adapted from the CSV module documentation.
 """
 
 class UTF8Recoder:

@@ -48,8 +48,10 @@ def extract_csv_reader_kwargs(args):
     if args.encoding:
         kwargs['encoding'] = args.encoding
 
-    if args.delimiter:
-        kwargs['delimiter'] = '\t' if args.tabs else args.delimiter
+    if args.tabs:
+        kwargs['delimiter'] = '\t'
+    elif args.delimiter:
+        kwargs['delimiter'] = args.delimiter
 
     if args.quotechar:
         kwargs['quotechar'] = args.quotechar
