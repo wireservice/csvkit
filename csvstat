@@ -57,6 +57,7 @@ def main(args):
                 sys.stdout.write('\tMax: %s\n' % max(values))
 
                 if c.type in [int, float]:
+                    sys.stdout.write('\tSum: %s\n' % sum(values))
                     sys.stdout.write('\tMean: %s\n' % (sum(values) / len(values)))
                     sys.stdout.write('\tMedian: %s\n' % median(values))
 

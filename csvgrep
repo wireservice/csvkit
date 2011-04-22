@@ -53,7 +53,7 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--names', dest='names_only', action='store_true',
                         help='Display column names and indices from the input CSV and exit.')
     parser.add_argument('-c', '--columns', dest='columns',
-                        help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
+                        help='A comma separated list of column indices or names to be searched.')
     parser.add_argument('-r', '--regex', dest='regex', action='store_true',
                         help='If specified, the search pattern will be treated as a regular expression.')
     parser.add_argument('pattern', metavar="PATTERN",
