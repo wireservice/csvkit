@@ -38,7 +38,9 @@ setup(
         'csvstat',
         'csvlook',
         'csvjoin',
-        'csvstack'
+        'csvstack',
+        'csvsort',
+        'csvgrep'
     ],
     install_requires = [
         'argparse==1.2.1',
