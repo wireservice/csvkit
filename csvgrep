@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+
+import re
+import sys
+
+from csvkit import CSVKitReader, CSVKitWriter
+from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers
+
+def main(args):
+    """
+    Like the unix "grep" command, but for tabular data.
+    """
+    rows = CSVKitReader(args.file, **extract_csv_reader_kwargs(args))
+    column_names = rows.next()
+
+    if args.names_only:
+        for i, c in enumerate(column_names):
+            sys.stdout.write('%3i: %s\n' % (i + 1, c))
+
+        sys.exit()
+
+    column_ids = parse_column_identifiers(args.columns, column_names)
+    
+    if len(args.patterns) > 1 and len(args.patterns) != len(column_ids):
+        sys.exit('You must specify a pattern for each column specified with -c. or a single pattern for all columns.')
+
+    patterns = args.patterns
+    
+    if len(args.patterns) == 1:
+        patterns = patterns * len(column_ids)
+
+    if args.regex:
+        # TODO: compile regexes
+        pass
+
+    output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
+    output.writerow([column_names[c] for c in column_ids])
+
+    for i, row in enumerate(rows):
+        matches = True
+
+        for i, p in enumerate(patterns):
+            if p not in row[column_ids[i]]:
+                matches = False
+                break
+        
+        if matches:
+            output.writerow(row)
+                
+if __name__ == "__main__":
+    """
+    Process command line arguments.
+    """
+    parser = init_common_parser(description='Like the unix "grep" command, but for tabular data.')
+    parser.add_argument('-n', '--names', dest='names_only', action='store_true',
+                        help='Display column names and indices from the input CSV and exit.')
+    parser.add_argument('-c', '--columns', dest='columns',
+                        help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
+    parser.add_argument('-r', '--regex', dest='regex',
+                        help='If specified, search patterns will be treated as regular expressions.')
+    parser.add_argument('patterns', metavar="PATTERNS", nargs='+',
+                        help='A series of patterns to search one, one per column specified with -c, or one pattern for all columns.')
+
+    main(parser.parse_args())
+
