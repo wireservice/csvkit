@@ -3,9 +3,9 @@
 import argparse
 import sys
 
-from csvkit import init_common_parser, extract_csv_reader_kwargs
+from csvkit import CSVKitReader, CSVKitWriter
 from csvkit import join
-from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, extract_csv_writer_kwargs
 
 def parse_join_column_names(join_string):
     """
@@ -39,7 +39,7 @@ def main(args):
     tables = []
 
     for f in args.files:
-        tables.append(list(UnicodeCSVReader(f, **reader_kwargs)))
+        tables.append(list(CSVKitReader(f, **reader_kwargs)))
 
     jointab = []
     
@@ -78,7 +78,7 @@ def main(args):
             for t in tables[1:]:
                 jointab = join.sequential_join(jointab, t)
 
-    output = UnicodeCSVWriter(sys.stdout)
+    output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
 
     for row in jointab:
         output.writerow(row)

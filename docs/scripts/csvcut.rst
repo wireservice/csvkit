@@ -24,8 +24,6 @@ Filters and truncates CSV files. Like unix "cut" command, but for tabular data::
       -c COLUMNS, --columns COLUMNS
                             A comma separated list of column indices or names to
                             be extracted. Defaults to all columns.
-      -s, --skipheader      Do not display the csv header in the output. Useful
-                            when piping to grep or uniq.
       -l, --linenumbers     Insert a column of line numbers at the front of the
                             output. Useful when piping to grep or as a simple
                             primary key.

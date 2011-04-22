@@ -3,9 +3,9 @@
 import os
 import sys
 
-from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import sql
 from csvkit import table
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs
 
 def main(args):
     """
@@ -28,7 +28,7 @@ def main(args):
             sys.stdout.write('%s\n' % sql.make_insert_statement(sql_table, row, dialect=args.dialect))
 
 if __name__ == '__main__':
-    parser = init_common_parser(description='Generate a SQL CREATE TABLE statement for a CSV file.')
+    parser = init_common_parser(description='Generate a SQL CREATE TABLE statement for a CSV file.', omitflags='l')
     parser.add_argument('-i', '--dialect', dest='dialect', choices=sql.DIALECTS,
                         help='Dialect of SQL to generate.')
     parser.add_argument('--inserts', dest='inserts', action='store_true',

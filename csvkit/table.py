@@ -3,9 +3,9 @@
 import datetime
 from cStringIO import StringIO
 
+from csvkit import CSVKitReader, CSVKitWriter
 from csvkit import sniffer
 from csvkit import typeinference
-from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter
 
 class InvalidType(object):
     """
@@ -79,25 +79,6 @@ class Column(list):
 
         if self.nullable:
             self.max_length = max(self.max_length, 4) # "None"
-
-class RowIterator(object):
-    """
-    An iterator which constructs rows from a Table each time one is requested.
-    """
-    def __init__(self, table):
-		self.table = table
-		self.i = 0
-
-    def __iter__(self):
-        return self
-
-    def next(self):
-        if self.i == self.table.count_rows():
-            raise StopIteration
-        else:
-            row = self.table.row(self.i)
-            self.i += 1
-            return row
 
 class Table(list):
     """
@@ -181,9 +162,9 @@ class Table(list):
         if lengths:
             return max(lengths)
 
-        return 0 
+        return 0
 
-    def row(self, i, as_dict=False):
+    def row(self, i):
         """
         Fetch a row of data from this table.
         """
@@ -195,16 +176,7 @@ class Table(list):
 
         row_data = [c[i] for c in self]
 
-        if as_dict:
-            return zip(self.headers(), row_data)
-
         return row_data
-
-    def rows(self):
-        """
-        Iterate over the rows in this table.
-        """
-        return RowIterator(self)
 
     @classmethod
     def from_csv(cls, f, name='from_csv_table', **kwargs):
@@ -219,7 +191,7 @@ class Table(list):
         dialect = sniffer.sniff_dialect(sample)
 
         f = StringIO(contents) 
-        reader = UnicodeCSVReader(f, dialect=dialect, **kwargs)
+        reader = CSVKitReader(f, dialect=dialect, **kwargs)
 
         headers = reader.next()
 
@@ -240,34 +212,38 @@ class Table(list):
 
         return Table(columns, name=name)
 
-    def _prepare_rows_for_serialization(self):
+    def to_rows(self, serialize_dates=False):
         """
-        Generates rows from columns and performs any preprocessing necessary for serializing.
+        Generates rows from columns and performs.
+
+        Optionally serialize date objects to isoformat strings.
         """
-        out_columns = []
+        if serialize_dates:
+            out_columns = []
 
-        for c in self:
-            # Stringify datetimes, dates, and times
-            if c.type in [datetime.datetime, datetime.date, datetime.time]:
-                out_columns.append([unicode(v.isoformat()) if v != None else None for v in c])
-            else:
-                out_columns.append(c)
+            for c in self:
+                # Stringify datetimes, dates, and times
+                if c.type in [datetime.datetime, datetime.date, datetime.time]:
+                    out_columns.append([unicode(v.isoformat()) if v != None else None for v in c])
+                else:
+                    out_columns.append(c)
 
-        # Convert columns to rows 
-        return zip(*out_columns)
+            # Convert columns to rows 
+            return zip(*out_columns)
+        else:
+            return zip(*self)
 
-    def to_csv(self, output, skipheader=False, **kwargs):
+    def to_csv(self, output, **kwargs):
         """
         Serializes the table to CSV and writes it to any file-like object.
         """
-        rows = self._prepare_rows_for_serialization()
+        rows = self.to_rows(serialize_dates=True)
 
         # Insert header row
-        if not skipheader:
-            rows.insert(0, [c.name for c in self])
+        rows.insert(0, self.headers())
 
         writer_kwargs = { 'lineterminator': '\n' }
         writer_kwargs.update(kwargs)
 
-        writer = UnicodeCSVWriter(output, **writer_kwargs)
+        writer = CSVKitWriter(output, **writer_kwargs)
         writer.writerows(rows)

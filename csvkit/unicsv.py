@@ -3,10 +3,10 @@ import csv
 from cStringIO import StringIO
 
 """
-The follownig classes are adapted from the CSV module documentation.
+The following classes are adapted from the CSV module documentation.
 """
 
-class UTF8Recoder:
+class UTF8Recoder(object):
     """
     Iterator that reads an encoded stream and reencodes the input to UTF-8
     """
@@ -19,12 +19,11 @@ class UTF8Recoder:
     def next(self):
         return self.reader.next().encode('utf-8')
 
-class UnicodeCSVReader:
+class UnicodeCSVReader(object):
     """
     A CSV reader which will iterate over lines in the CSV file "f",
     which is encoded in the given encoding.
     """
-
     def __init__(self, f, encoding='utf-8', **kwargs):
         f = UTF8Recoder(f, encoding)
         self.reader = csv.reader(f, **kwargs)
@@ -36,12 +35,11 @@ class UnicodeCSVReader:
     def __iter__(self):
         return self
 
-class UnicodeCSVWriter:
+class UnicodeCSVWriter(object):
     """
     A CSV writer which will write rows to CSV file "f",
     which is encoded in the given encoding.
     """
-
     def __init__(self, f, encoding='utf-8', **kwargs):
         # Redirect output to a queue
         self.queue = StringIO()

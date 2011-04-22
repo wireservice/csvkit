@@ -3,8 +3,8 @@
 import argparse
 import sys
 
-from csvkit import init_common_parser, extract_csv_reader_kwargs
-from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter
+from csvkit import CSVKitReader, CSVKitWriter
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, extract_csv_writer_kwargs
 
 def main(args):
     """
@@ -21,10 +21,10 @@ def main(args):
             
         group_name = args.group_name if args.group_name else 'group'
 
-    output = UnicodeCSVWriter(sys.stdout)
+    output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
 
     for i, f in enumerate(args.files):
-        rows = UnicodeCSVReader(f, **extract_csv_reader_kwargs(args))
+        rows = CSVKitReader(f, **extract_csv_reader_kwargs(args))
         headers = rows.next()
 
         if i == 0:

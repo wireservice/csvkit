@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 
+import argparse
 import sys
 
-import argparse
-
-from csvkit import init_common_parser, extract_csv_reader_kwargs
 from csvkit import convert
-from csvkit.convert import utils
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs
 
 def main(args):
     """
@@ -23,7 +21,7 @@ def main(args):
         if format not in convert.SUPPORTED_FORMATS:
             sys.exit('"%s" is not a supported format' % args.format)
     else:
-        format = utils.guess_format(args.file.name)
+        format = convert.guess_format(args.file.name)
 
         if not format:
             sys.exit('Unable to automatically determine the format of the input file. Try specifying a format with --format.')

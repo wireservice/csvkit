@@ -47,14 +47,14 @@ As you can see we can identify a column by its number *or* its name. We are also
 * the numbers have commas in them, which messes up the ordering
 * the output of ``csvcut`` is itself in CSV format, and the column is being quoted because of the commas in the numbers
 
-Statistics on demand with csvsummary
-====================================
+Statistics on demand with csvstat
+=================================
 
-Fortunantely, there is a much better way to do this. Another utility included with csvkit is :doc:`/scripts/csvsummary`, which mimics the summary() function from the computational statistics programming language `"R" <http://www.r-project.org/>`_.
+Fortunantely, there is a much better way to do this. Another utility included with csvkit is :doc:`/scripts/csvstat`, which mimics the summary() function from the computational statistics programming language `"R" <http://www.r-project.org/>`_.
 
 Let's use what we learned in the previous section to look at just a slice of the data::
 
-    $ csvcut -c 1,4,9,10 2009.csv | csvsummary 
+    $ csvcut -c 1,4,9,10 2009.csv | csvstat 
       1. State Name
         <type 'unicode'>
         Nulls: Yes
@@ -80,13 +80,13 @@ Let's use what we learned in the previous section to look at just a slice of the
       4. 
 	    Empty column
 
-Like ``csvcut``, ``csvsummary`` lists columns with their numbers (in this case the column numbers are those of the CSV file *output* by ``csvcut``). However, ``csvsummary`` also performs type inference on the columns and computes relevant statistics based on their types. In this case we have a *unicode* column (internally csvkit uses unicode exclusively to represent text), and two *int* (integer) columns. For the unicode column we know it contains nulls (blanks), that it has 53 unique values, that the longest one is 17 characters, and we also have five examples of data from that column.
+Like ``csvcut``, ``csvstat`` lists columns with their numbers (in this case the column numbers are those of the CSV file *output* by ``csvcut``). However, ``csvstat`` also performs type inference on the columns and computes relevant statistics based on their types. In this case we have a *unicode* column (internally csvkit uses unicode exclusively to represent text), and two *int* (integer) columns. For the unicode column we know it contains nulls (blanks), that it has 53 unique values, that the longest one is 17 characters, and we also have five examples of data from that column.
 
 From the statistics on the integer columns we can see that the median number of indviduals exercising VA benefits across the states is 6520, of which 3548 is the median number exercising the GI Bill while on active duty. 
 
 We also see that the final column of the original CSV not only lacks a header, but is entirely empty.
 
-If this dataset had included a column of dates or times, ``csvsummary`` would have displayed the range and other details relevant to time-sequences. 
+If this dataset had included a column of dates or times, ``csvstat`` would have displayed the range and other details relevant to time-sequences. 
 
 Searching for rows with grep
 ============================
@@ -152,14 +152,14 @@ Sorting with sort
 
 Now that the column we want to sort by is first we can use the Unix utility ``sort`` to numerically sort the rows::
 
-    $ in2csv 2009.csv | csvcut -c 9,1 --skipheader | sort -n -r | head -n 5
+    $ in2csv 2009.csv | csvcut -c 9,1 | sort -n -r | head -n 5
     46897,CALIFORNIA
     40402,TEXAS
     36394,FLORIDA
     33986,ARIZONA
     21964,ILLINOIS
 
-The -n argument tells ``sort`` to sort numerically and the -r tells it to sort in descending order. In this case we have also updated csvcut to use the --skipheader option, which prevents the header from being output, thus keeping it from inteferring with the sorting.
+The -n argument tells ``sort`` to sort numerically and the -r tells it to sort in descending order.
 
 We can now see that Illinois ranks fifth for individuals claiming VA benefits, behind mostly larger states, although Arizona is a surprising name to appear in the top five, given its relative size. If we were to join this data up with a table of state population's we could see just how much of an outlier it really is. In future sections we'll present tools for doing just that, however, this specific question is left as an experiment for the reader.
 
@@ -168,7 +168,7 @@ Saving your work
 
 The complete ranking might be a useful thing to have around. Rather than computing it every time, let's use output redirection to save a copy of it::
 
-    $ in2csv 2009.csv | csvcut -c 9,1 --skipheader | sort -n -r > 2009_ranking.csv
+    $ in2csv 2009.csv | csvcut -c 9,1 | sort -n -r > 2009_ranking.csv
 
 Note that this file won't work well with the csvkit utilities as it no longer has a header, however, you can still use ``grep`` and other Unix utilities to search through it.
 

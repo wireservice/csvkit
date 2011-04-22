@@ -80,7 +80,7 @@ csvkit is comprised of a number of individual command line utilities that be loo
 
     scripts/csvlook
     scripts/csvsql
-    scripts/csvsummary
+    scripts/csvstat
 
 *Appendices*
 

@@ -1,13 +1,13 @@
-==========
-csvsummary
-==========
+=======
+csvstat
+=======
 
 Description
 ===========
 
 Prints descriptive statistics for all columns in a CSV file. Will intelligently determine the type of each column and then print analysis relevant to that type (ranges for dates, mean and median for integers, etc.)::
 
-    usage: csvsummary [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
+    usage: csvstat [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                       [-p` ESCAPECHAR] [-e ENCODING]
                       [FILE]
 
@@ -27,4 +27,4 @@ Examples
 
 Basic use::
 
-    $ csvsummary examples/testfixed_converted.csv
+    $ csvstat examples/testfixed_converted.csv

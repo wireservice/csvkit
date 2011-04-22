@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+
+import os
+import sys
+
+from csvkit import CSVKitReader, CSVKitWriter
+from csvkit import table
+from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers
+
+def main(args):
+    """
+    Command line-utility that sorts CSV files. Like unix "sort" command, but for tabular data.
+    """
+    if args.names_only:
+        rows = CSVKitReader(args.file, **extract_csv_reader_kwargs(args))
+        column_names = rows.next()
+
+        for i, c in enumerate(column_names):
+            sys.stdout.write('%3i: %s\n' % (i + 1, c))
+
+        sys.exit()
+
+    if args.file.name != '<stdin>':
+        # Use filename as table name
+        table_name = os.path.splitext(os.path.split(args.file.name)[1])[0]
+    else:
+        table_name = 'csvsql_table'
+
+    tab = table.Table.from_csv(args.file, name=table_name, **extract_csv_reader_kwargs(args))
+    column_ids = parse_column_identifiers(args.columns, tab.headers())
+
+    rows = tab.to_rows(serialize_dates=True) 
+    rows.sort(key=lambda r: [r[c] for c in column_ids], reverse=args.reverse)
+    
+    rows.insert(0, tab.headers())
+
+    output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
+
+    for row in rows:
+        output.writerow(row)
+                
+if __name__ == "__main__":
+    """
+    Process command line arguments.
+    """
+    parser = init_common_parser(description='Sort CSV files. Like unix "sort" command, but for tabular data.')
+    parser.add_argument('-n', '--names', dest='names_only', action='store_true',
+                        help='Display column names and indices from the input CSV and exit.')
+    parser.add_argument('-c', '--columns', dest='columns',
+                        help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
+    parser.add_argument('-r', '--reverse', dest='reverse', action='store_true',
+                        help='Sort in descending order.')
+
+    main(parser.parse_args())
+

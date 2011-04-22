@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from csvkit import match_column_id
+from csvkit.cli import match_column_identifier
 
 def _get_ordered_keys(rows, column_index):
     """
@@ -57,8 +57,8 @@ def inner_join(left_table, left_column_name, right_table, right_column_name):
     right_rows = right_table[1:]
 
     # Get the columns which will function as keys 
-    left_column_index = match_column_id(left_headers, left_column_name)
-    right_column_index = match_column_id(right_headers, right_column_name)
+    left_column_index = match_column_identifier(left_headers, left_column_name)
+    right_column_index = match_column_identifier(right_headers, right_column_name)
     
     # Map right rows to keys
     right_mapped_keys = _get_mapped_keys(right_rows, right_column_index)
@@ -85,8 +85,8 @@ def full_outer_join(left_table, left_column_name, right_table, right_column_name
     right_rows = right_table[1:]
 
     # Get the columns which will function as keys 
-    left_column_index = match_column_id(left_headers, left_column_name)
-    right_column_index = match_column_id(right_headers, right_column_name)
+    left_column_index = match_column_identifier(left_headers, left_column_name)
+    right_column_index = match_column_identifier(right_headers, right_column_name)
 
     # Get ordered keys
     left_ordered_keys = _get_ordered_keys(left_rows, left_column_index)
@@ -124,8 +124,8 @@ def left_outer_join(left_table, left_column_name, right_table, right_column_name
     right_rows = right_table[1:]
 
     # Get the columns which will function as keys 
-    left_column_index = match_column_id(left_headers, left_column_name)
-    right_column_index = match_column_id(right_headers, right_column_name)
+    left_column_index = match_column_identifier(left_headers, left_column_name)
+    right_column_index = match_column_identifier(right_headers, right_column_name)
 
     # Get mapped keys
     right_mapped_keys = _get_mapped_keys(right_rows, right_column_index)
@@ -154,8 +154,8 @@ def right_outer_join(left_table, left_column_name, right_table, right_column_nam
     right_rows = right_table[1:]
 
     # Get the columns which will function as keys 
-    left_column_index = match_column_id(left_headers, left_column_name)
-    right_column_index = match_column_id(right_headers, right_column_name)
+    left_column_index = match_column_identifier(left_headers, left_column_name)
+    right_column_index = match_column_identifier(right_headers, right_column_name)
 
     # Get ordered keys
     left_ordered_keys = _get_ordered_keys(left_rows, left_column_index)
