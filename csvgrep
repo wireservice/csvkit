@@ -22,8 +22,9 @@ def main(args):
     column_ids = parse_column_identifiers(args.columns, column_names)
     
     if args.regex:
-        # TODO: compile regexes
-        pass
+        pattern = re.compile(args.pattern)
+    else:
+        pattern = args.pattern
 
     output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
     output.writerow([column_names[c] for c in column_ids])
@@ -32,9 +33,14 @@ def main(args):
         matches = False
 
         for c in column_ids:
-            if args.pattern in row[c]:
-                matches = True
-                break
+            if args.regex:
+                if pattern.match(row[c]):
+                    matches = True
+                    break
+            else:
+                if pattern in row[c]:
+                    matches = True
+                    break
         
         if matches:
             output.writerow(row)
@@ -48,8 +54,8 @@ if __name__ == "__main__":
                         help='Display column names and indices from the input CSV and exit.')
     parser.add_argument('-c', '--columns', dest='columns',
                         help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
-    parser.add_argument('-r', '--regex', dest='regex',
-                        help='If specified, search patterns will be treated as regular expressions.')
+    parser.add_argument('-r', '--regex', dest='regex', action='store_true',
+                        help='If specified, the search pattern will be treated as a regular expression.')
     parser.add_argument('pattern', metavar="PATTERN",
                         help='The pattern to search for.')
 
