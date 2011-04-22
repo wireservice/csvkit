@@ -69,6 +69,9 @@ def main(args):
                 uniques.discard(None)
                 sys.stdout.write('\tSamples: %s\n' % (', '.join(['"%s"' % unicode(u) for u in random.sample(uniques, 5)])))
 
+    sys.stdout.write('\n')
+    sys.stdout.write('Row count: %s\n' % tab.count_rows())
+
 if __name__ == '__main__':
     parser = init_common_parser(description='Print descriptive statistics for all columns in a CSV file.', omitflags='l')
 
