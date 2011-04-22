@@ -1,6 +1,9 @@
 import unittest
+from cStringIO import StringIO
+import csv
 
 from csvkit.convert import fixed
+
 
 class TestFixed(unittest.TestCase):
     def test_fixed(self):
@@ -58,4 +61,56 @@ class TestFixed(unittest.TestCase):
         self.assertEqual('LABEL2',column)
         self.assertEqual(5, start)
         self.assertEqual(15, length)
+
+    def test_schematic_line_parser(self):
+        schema = """column,start,length
+foo,1,5
+bar,6,2
+baz,8,5"""
+        f = StringIO(schema)
+        parser = fixed.SchematicLineParser(f)
+        self.assertEqual('foo',parser.headers[0])
+        self.assertEqual('bar',parser.headers[1])
+        self.assertEqual('baz',parser.headers[2])
+        
+        parsed = parser.parse("111112233333")
+        self.assertEqual('11111',parsed[0])
+        self.assertEqual('22',parsed[1])
+        self.assertEqual('33333',parsed[2])
+        
+        parsed = parser.parse("    1 2    3")
+        self.assertEqual('1',parsed[0])
+        self.assertEqual('2',parsed[1])
+        self.assertEqual('3',parsed[2])
+
+        parsed = parser.parse("1  1  233  3")
+        self.assertEqual('1  1',parsed[0])
+        self.assertEqual('2',parsed[1])
+        self.assertEqual('33  3',parsed[2])
+        
+    def test_stream_convert(self):
+        schema = StringIO("""column,start,length
+foo,1,5
+bar,6,2
+baz,8,5""")
+
+        data = StringIO("""111112233333
+    1 2    3
+1  1  233  3""")
+
+        result = StringIO()
+
+        fixed.stream_convert(data, result, schema)
+
+        expected = """foo,bar,baz
+11111,22,33333
+1,2,3
+1  1,2,33  3"""
+        result.reset()
+        result_reader = csv.reader(result)
+        self.assertEqual(['foo','bar','baz'], result_reader.next())
+        self.assertEqual(['11111','22','33333'], result_reader.next())
+        self.assertEqual(['1','2','3'], result_reader.next())
+        self.assertEqual(['1  1','2','33  3'], result_reader.next())
+
         

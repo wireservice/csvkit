@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from cStringIO import StringIO
-from csvkit.unicsv import UnicodeCSVReader
+from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter
 from codecs import iterdecode
 from csvkit import table
 
@@ -22,28 +22,19 @@ def fixed2csv(f, schema, **kwargs):
     START = 1
     LENGTH = 2
 
-    one_based = None
-
-    schema_columns = []
-    schema_reader = UnicodeCSVReader(schema)
-
-    srd = SchemaRowDecoder(row=schema_reader.next())
-
-    for row in schema_reader:
-        schema_columns.append(srd(row))
-
+    parser = SchematicLineParser(schema)
     # Data is processed first into columns (rather than rows) for easier type inference
-    data_columns = [[] for c in schema_columns]
+    data_columns = [[] for h in parser.headers]
 
     for row in f:
-        for i, c in enumerate(schema_columns):
-            data_columns[i].append(row[c[START]:c[START] + c[LENGTH]].strip())
+        for i, c in enumerate(parser.parse(row)):
+            data_columns[i].append(c)
 
     tab = table.Table()
 
     # Use type-inference to normalize columns
-    for i, c in enumerate(data_columns):
-        tab.append(table.Column(0, schema_columns[i][NAME], c))
+    for name, c in zip(parser.headers, data_columns):
+        tab.append(table.Column(0, name, c))
 
     o = StringIO()
     output = tab.to_csv(o)
@@ -51,6 +42,50 @@ def fixed2csv(f, schema, **kwargs):
     o.close()
 
     return output
+
+def stream_convert(f, out, schema, **kwargs):
+    try:
+        f = iterdecode(f,kwargs['encoding'])
+    except KeyError: pass
+
+    parser = SchematicLineParser(schema)
+    try:
+        writer = UnicodeCSVWriter(out,encoding=kwargs['encoding'])
+    except KeyError:
+        writer = UnicodeCSVWriter(out)
+
+    writer.writerow(parser.headers)
+    
+    for line in f:
+        writer.writerow(parser.parse(line))
+
+
+class SchematicLineParser(object):
+    """Instantiated with a schema, able to return a sequence of trimmed strings representing fields given a fixed-length line."""
+    def __init__(self,schema):
+        self.fields = []
+        schema_reader = UnicodeCSVReader(schema)
+
+        srd = SchemaRowDecoder(row=schema_reader.next())
+
+        for row in schema_reader:
+            self.fields.append(srd(row))
+
+    def parse(self, line):
+        NAME = 0
+        START = 1
+        LENGTH = 2
+
+        values = []
+
+        for field in self.fields:
+            values.append(line[field[START]:field[START] + field[LENGTH]].strip())
+
+        return values
+        
+    @property
+    def headers(self):
+        return [x[0] for x in self.fields]
 
 class SchemaRowDecoder(object):
     """Encapsulate the process of extracting column, start, and length columns from schema rows. Once instantiated, each time the instance is called with a row, a (column,start,length) tuple will be returned based on values in that row and the constructor kwargs."""
@@ -90,4 +125,3 @@ class SchemaRowDecoder(object):
             adjusted_start = int(row[self.start])
 
         return (row[self.column],adjusted_start,int(row[self.length]))
-        

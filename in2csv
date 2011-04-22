@@ -4,6 +4,8 @@ import argparse
 import sys
 
 from csvkit import convert
+from csvkit.convert import fixed
+
 from csvkit.cli import init_common_parser, extract_csv_reader_kwargs
 
 def main(args):
@@ -28,8 +30,11 @@ def main(args):
 
     if args.schema:
         kwargs['schema'] = args.schema
-        
-    sys.stdout.write(convert.convert(args.file, format, **kwargs))
+
+    if format == 'fixed':
+        fixed.stream_convert(args.file,sys.stdout,**kwargs)
+    else:    
+        sys.stdout.write(convert.convert(args.file, format, **kwargs))
 
 if __name__ == "__main__":
     parser = init_common_parser(description='Convert common, but less awesome, tabular data formats to CSV.', epilog='Many command line flags only pertain to specific input formats.')
