@@ -27,7 +27,7 @@ def main(args):
         pattern = args.pattern
 
     output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
-    output.writerow([column_names[c] for c in column_ids])
+    output.writerow(column_names)
 
     for i, row in enumerate(rows):
         matches = False
