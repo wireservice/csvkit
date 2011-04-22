@@ -21,14 +21,6 @@ def main(args):
 
     column_ids = parse_column_identifiers(args.columns, column_names)
     
-    if len(args.patterns) > 1 and len(args.patterns) != len(column_ids):
-        sys.exit('You must specify a pattern for each column specified with -c. or a single pattern for all columns.')
-
-    patterns = args.patterns
-    
-    if len(args.patterns) == 1:
-        patterns = patterns * len(column_ids)
-
     if args.regex:
         # TODO: compile regexes
         pass
@@ -37,11 +29,11 @@ def main(args):
     output.writerow([column_names[c] for c in column_ids])
 
     for i, row in enumerate(rows):
-        matches = True
+        matches = False
 
-        for i, p in enumerate(patterns):
-            if p not in row[column_ids[i]]:
-                matches = False
+        for c in column_ids:
+            if args.pattern in row[c]:
+                matches = True
                 break
         
         if matches:
@@ -58,8 +50,8 @@ if __name__ == "__main__":
                         help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
     parser.add_argument('-r', '--regex', dest='regex',
                         help='If specified, search patterns will be treated as regular expressions.')
-    parser.add_argument('patterns', metavar="PATTERNS", nargs='+',
-                        help='A series of patterns to search one, one per column specified with -c, or one pattern for all columns.')
+    parser.add_argument('pattern', metavar="PATTERN",
+                        help='The pattern to search for.')
 
     main(parser.parse_args())
 
