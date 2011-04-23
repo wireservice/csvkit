@@ -6,6 +6,9 @@ import unittest
 from csvkit import typeinference
 
 class TestNormalizeType(unittest.TestCase):
+    def test_NAs(self):
+        self.assertEqual((None, [None, None, None, None, None]), typeinference.normalize_column_type(['n/a', 'NA', '.', 'null', 'none']))
+
     def test_nulls(self):
         self.assertEqual((None, [None, None, None]), typeinference.normalize_column_type(['', '', '']))
 
