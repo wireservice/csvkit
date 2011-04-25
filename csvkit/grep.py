@@ -28,6 +28,7 @@ class FilteringCSVReader(object):
         self.patterns = standardize_patterns(patterns)
         self.header = header
         self.any = any
+        self.inverse = inverse
 
     def __iter__(self):
         return self
@@ -45,11 +46,11 @@ class FilteringCSVReader(object):
     def passes(self,row):
         for idx, test in self.patterns.items():
             if self.any and test(row[idx]):
-                return True
+                return not self.inverse # "True"
             if not self.any and not test(row[idx]):
-                return False
+                return self.inverse # "False"
 
-        return True
+        return not self.inverse # "True"
         
 def standardize_patterns(patterns):
     """Given patterns in any of the permitted input forms, return a dict whose keys 

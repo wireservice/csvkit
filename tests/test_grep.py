@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import unittest
+import re
 
 from csvkit.grep import FilteringCSVReader
 
@@ -44,7 +45,6 @@ class TestGrep(unittest.TestCase):
 
 
     def test_regex(self):
-        import re
         pattern = re.compile(".*(Reader|Tribune).*")
         fcr = FilteringCSVReader(iter(self.tab1),patterns = { 1: pattern })
         
@@ -58,3 +58,14 @@ class TestGrep(unittest.TestCase):
         except StopIteration:
             pass
         
+    def test_inverse(self):
+        fcr = FilteringCSVReader(iter(self.tab2),patterns = ['1'], inverse=True)
+        self.assertEqual(self.tab2[0],fcr.next())
+        self.assertEqual(self.tab2[2],fcr.next())
+        self.assertEqual(self.tab2[4],fcr.next())
+        try:
+            fcr.next()
+            self.fail("Should be no more rows left.")
+        except StopIteration:
+            pass
+            
