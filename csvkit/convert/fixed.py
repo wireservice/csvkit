@@ -18,10 +18,6 @@ def fixed2csv(f, schema, **kwargs):
         f = iterdecode(f,kwargs['encoding'])
     except KeyError: pass
     
-    NAME = 0
-    START = 1
-    LENGTH = 2
-
     parser = SchematicLineParser(schema)
     # Data is processed first into columns (rather than rows) for easier type inference
     data_columns = [[] for h in parser.headers]
@@ -43,25 +39,49 @@ def fixed2csv(f, schema, **kwargs):
 
     return output
 
-def stream_convert(f, out, schema, **kwargs):
+class FixedWidthReader(object):
+    """Given a fixed-width file and a schema file, produce an analog to a csv reader that yields a row 
+    of strings for each line in the fixed-width file, preceded with a row of headers as provided in the schema.  (This might be problematic if fixed-width-files ever have header rows also, but I haven't seen that.)
+    
+    The schema_file should be in CSV format with a header row which has columns 'column', 'start', and 'length'. (Other columns will be ignored.)  Values in the 'start' column are assumed to be "zero-based" unless the first value is "1" in which case all values are assumed to be "one-based."
+    """
+    def __init__(self, f, schema_file):
+        super(FixedWidthReader, self).__init__()
+        self.parser = SchematicLineParser(schema_file)
+        self.file = f
+        self.header = True
+
+    def __iter__(self):
+        return self
+        
+    def next(self):
+        if self.header:
+            self.header = False
+            return self.parser.headers
+        return self.parser.parse(self.file.next())
+    
+
+def stream_convert(f, out, schema_file, **kwargs):
     try:
         f = iterdecode(f,kwargs['encoding'])
     except KeyError: pass
 
-    parser = SchematicLineParser(schema)
     try:
         writer = UnicodeCSVWriter(out,encoding=kwargs['encoding'])
     except KeyError:
         writer = UnicodeCSVWriter(out)
 
-    writer.writerow(parser.headers)
-    
-    for line in f:
-        writer.writerow(parser.parse(line))
+    fwr = FixedWidthReader(f, schema_file)
 
+    writer.writerows(fwr)
+    
 
 class SchematicLineParser(object):
-    """Instantiated with a schema, able to return a sequence of trimmed strings representing fields given a fixed-length line."""
+    """Instantiated with a schema, able to return a sequence of trimmed strings representing fields given a fixed-length line. Flexible about where the columns are, as long as they are headed with the literal names 'column', 'start', and 'length'.  
+    """
+    NAME = 0
+    START = 1
+    LENGTH = 2
     def __init__(self,schema):
         self.fields = []
         schema_reader = UnicodeCSVReader(schema)
@@ -72,20 +92,17 @@ class SchematicLineParser(object):
             self.fields.append(srd(row))
 
     def parse(self, line):
-        NAME = 0
-        START = 1
-        LENGTH = 2
 
         values = []
 
         for field in self.fields:
-            values.append(line[field[START]:field[START] + field[LENGTH]].strip())
+            values.append(line[field[self.START]:field[self.START] + field[self.LENGTH]].strip())
 
         return values
         
     @property
     def headers(self):
-        return [x[0] for x in self.fields]
+        return [x[self.NAME] for x in self.fields]
 
 class SchemaRowDecoder(object):
     """Encapsulate the process of extracting column, start, and length columns from schema rows. Once instantiated, each time the instance is called with a row, a (column,start,length) tuple will be returned based on values in that row and the constructor kwargs."""
