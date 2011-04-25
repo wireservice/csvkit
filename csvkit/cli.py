@@ -33,7 +33,7 @@ def init_common_parser(description='', epilog='', omitflags=''):
         parser.add_argument('-b', '--doublequote', dest='doublequote', action='store_true',
                             help='Whether or not double quotes are doubled in the input CSV file.')
     if 'p' not in omitflags:
-        parser.add_argument('-p`', '--escapechar', dest='escapechar',
+        parser.add_argument('-p', '--escapechar', dest='escapechar',
                             help='Character used to escape the delimiter if quoting is set to "Quote None" and the quotechar if doublequote is not specified.')
     if 'e' not in omitflags:
         parser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
