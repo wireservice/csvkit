@@ -22,6 +22,9 @@ def main(args):
 
         if format not in convert.SUPPORTED_FORMATS:
             sys.exit('"%s" is not a supported format' % args.format)
+
+    elif args.schema:
+        format = 'fixed'
     else:
         format = convert.guess_format(args.file.name)
 
@@ -32,7 +35,7 @@ def main(args):
         kwargs['schema'] = args.schema
 
     if format == 'fixed':
-        fixed.stream_convert(args.file,sys.stdout,**kwargs)
+        fixed.stream_convert(args.file, sys.stdout, args.schema, **kwargs)
     else:    
         sys.stdout.write(convert.convert(args.file, format, **kwargs))
 

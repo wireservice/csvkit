@@ -4,6 +4,7 @@ import re
 import sys
 
 from csvkit import CSVKitReader, CSVKitWriter
+from csvkit.grep import FilteringCSVReader
 from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers
 
 def main(args):
@@ -25,25 +26,16 @@ def main(args):
         pattern = re.compile(args.pattern)
     else:
         pattern = args.pattern
+        
+    patterns = dict((c,pattern) for c in column_ids)
 
     output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
     output.writerow(column_names)
 
-    for i, row in enumerate(rows):
-        matches = False
+    filter_reader = FilteringCSVReader(rows, header=False, patterns = patterns)
 
-        for c in column_ids:
-            if args.regex:
-                if pattern.match(row[c]):
-                    matches = True
-                    break
-            else:
-                if pattern in row[c]:
-                    matches = True
-                    break
-        
-        if matches:
-            output.writerow(row)
+    for i, row in enumerate(filter_reader):
+        output.writerow(row)
                 
 if __name__ == "__main__":
     """
