@@ -10,10 +10,18 @@ NULL_TIME = datetime.time(0, 0, 0)
 
 def normalize_column_type(l):
     """
-    Attempts to normalize a column (list) of values to booleans, integers, floats, dates, times, datetimes, or strings. Empty strings are converted to nulls.
+    Attempts to normalize a column (list) of values to booleans, integers, floats, dates, times, datetimes, or strings. NAs and missing values are converted to empty strings. Empty strings are converted to nulls.
 
     Returns a tuple of (type, normal_values).
     """
+
+    # Convert "NA", "N/A", etc. to null types.
+    for x in l:
+        if x == None:
+            continue
+        elif x.lower() in ("na", "n/a", "none", "null", "."):
+            l[l.index(x)] = ''
+
     # Are they null?
     try:
         for x in l:
