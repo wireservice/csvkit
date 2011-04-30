@@ -20,3 +20,12 @@ class TestConvert(unittest.TestCase):
     def test_invalid_format(self):
         with open('examples/dummy.csv', 'r') as f:
             self.assertRaises(ValueError, convert.convert, f, 'INVALID')
+
+    def test_guess_fixed(self):
+        self.assertEqual('fixed', convert.guess_format('testdata'))
+
+    def test_guess_xls(self):
+        self.assertEqual('xls', convert.guess_format('testdata.xls'))
+    
+    def test_guess_csv(self):
+        self.assertEqual('csv', convert.guess_format('testdata.csv'))

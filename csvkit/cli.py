@@ -117,7 +117,7 @@ def parse_column_identifiers(ids, column_names):
     columns = []
 
     for c in ids.split(','):
-        columns.append(match_column_identifier(column_names, c))
+        columns.append(match_column_identifier(column_names, c.strip()))
 
     return columns
 
