@@ -91,8 +91,8 @@ if __name__ == '__main__':
 
     parser.add_argument('files', metavar="FILES", nargs='+', type=argparse.FileType('r'),
                         help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
-    parser.add_argument('-j', '--join', dest='join',
-                        help='The column name(s) on which to join. Should be either one name or a comma-separated list with one name for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
+    parser.add_argument('-c', '--columns', dest='columns',
+                        help='The column name(s) on which to join. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
     parser.add_argument('--outer', dest='outer_join', action='store_true',
                         help='Perform a full outer join, rather than the default inner join.')
     parser.add_argument('--left', dest='left_join', action='store_true',

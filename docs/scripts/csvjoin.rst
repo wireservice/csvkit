@@ -20,12 +20,13 @@ Merges two or more CSV tables together using a method analogous to SQL JOIN oper
 
     optional arguments:
       -h, --help            show this help message and exit
-      -j JOIN, --join JOIN  The column name(s) on which to join. Should be either
-                            one name or a comma-separated list with one name for
-                            each file, in the same order that the files were
-                            specified. May also be left unspecified, in which case
-                            the two files will be joined sequentially without
-                            performing any matching.
+      -c COLUMNS, --columns COLUMNS
+                            The column name(s) on which to join. Should be either
+                            one name (or index) or a comma-separated list with one
+                            name (or index) for each file, in the same order that
+                            the files were specified. May also be left
+                            unspecified, in which case the two files will be
+                            joined sequentially without performing any matching.
       --outer               Perform a full outer join, rather than the default
                             inner join.
       --left                Perform a left outer join, rather than the default
