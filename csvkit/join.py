@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from csvkit.cli import match_column_identifier
-
 def _get_ordered_keys(rows, column_index):
     """
     Get ordered keys from rows, given the key column index.
@@ -46,7 +44,7 @@ def sequential_join(left_table, right_table):
 
     return output
 
-def inner_join(left_table, left_column_name, right_table, right_column_name):
+def inner_join(left_table, left_column_id, right_table, right_column_id):
     """
     Execute an inner join on two tables and return the combined table.
     """
@@ -55,18 +53,14 @@ def inner_join(left_table, left_column_name, right_table, right_column_name):
     right_headers = right_table[0]
     left_rows = left_table[1:]
     right_rows = right_table[1:]
-
-    # Get the columns which will function as keys 
-    left_column_index = match_column_identifier(left_headers, left_column_name)
-    right_column_index = match_column_identifier(right_headers, right_column_name)
     
     # Map right rows to keys
-    right_mapped_keys = _get_mapped_keys(right_rows, right_column_index)
+    right_mapped_keys = _get_mapped_keys(right_rows, right_column_id)
 
     output = [left_headers + right_headers]
 
     for left_row in left_rows:
-        left_key = left_row[left_column_index]
+        left_key = left_row[left_column_id]
 
         if left_key in right_mapped_keys:
             for right_row in right_mapped_keys[left_key]:
@@ -74,7 +68,7 @@ def inner_join(left_table, left_column_name, right_table, right_column_name):
 
     return output
 
-def full_outer_join(left_table, left_column_name, right_table, right_column_name):
+def full_outer_join(left_table, left_column_id, right_table, right_column_id):
     """
     Execute full outer join on two tables and return the combined table.
     """
@@ -84,20 +78,16 @@ def full_outer_join(left_table, left_column_name, right_table, right_column_name
     left_rows = left_table[1:]
     right_rows = right_table[1:]
 
-    # Get the columns which will function as keys 
-    left_column_index = match_column_identifier(left_headers, left_column_name)
-    right_column_index = match_column_identifier(right_headers, right_column_name)
-
     # Get ordered keys
-    left_ordered_keys = _get_ordered_keys(left_rows, left_column_index)
+    left_ordered_keys = _get_ordered_keys(left_rows, left_column_id)
 
     # Get mapped keys
-    right_mapped_keys = _get_mapped_keys(right_rows, right_column_index)
+    right_mapped_keys = _get_mapped_keys(right_rows, right_column_id)
 
     output = [left_headers + right_headers]
 
     for left_row in left_rows:
-        left_key = left_row[left_column_index]
+        left_key = left_row[left_column_id]
 
         if left_key in right_mapped_keys:
             for right_row in right_mapped_keys[left_key]:
@@ -106,14 +96,14 @@ def full_outer_join(left_table, left_column_name, right_table, right_column_name
             output.append(left_row + ([u''] * len(right_headers)))
 
     for right_row in right_rows:
-        right_key = right_row[right_column_index]
+        right_key = right_row[right_column_id]
 
         if right_key not in left_ordered_keys:
             output.append(([u''] * len(left_headers)) + right_row) 
 
     return output
 
-def left_outer_join(left_table, left_column_name, right_table, right_column_name):
+def left_outer_join(left_table, left_column_id, right_table, right_column_id):
     """
     Execute left outer join on two tables and return the combined table.
     """
@@ -123,17 +113,13 @@ def left_outer_join(left_table, left_column_name, right_table, right_column_name
     left_rows = left_table[1:]
     right_rows = right_table[1:]
 
-    # Get the columns which will function as keys 
-    left_column_index = match_column_identifier(left_headers, left_column_name)
-    right_column_index = match_column_identifier(right_headers, right_column_name)
-
     # Get mapped keys
-    right_mapped_keys = _get_mapped_keys(right_rows, right_column_index)
+    right_mapped_keys = _get_mapped_keys(right_rows, right_column_id)
 
     output = [left_headers + right_headers]
 
     for left_row in left_rows:
-        left_key = left_row[left_column_index]
+        left_key = left_row[left_column_id]
 
         if left_key in right_mapped_keys:
             for right_row in right_mapped_keys[left_key]:
@@ -143,7 +129,7 @@ def left_outer_join(left_table, left_column_name, right_table, right_column_name
 
     return output
 
-def right_outer_join(left_table, left_column_name, right_table, right_column_name):
+def right_outer_join(left_table, left_column_id, right_table, right_column_id):
     """
     Execute right outer join on two tables and return the combined table.
     """
@@ -153,27 +139,23 @@ def right_outer_join(left_table, left_column_name, right_table, right_column_nam
     left_rows = left_table[1:]
     right_rows = right_table[1:]
 
-    # Get the columns which will function as keys 
-    left_column_index = match_column_identifier(left_headers, left_column_name)
-    right_column_index = match_column_identifier(right_headers, right_column_name)
-
     # Get ordered keys
-    left_ordered_keys = _get_ordered_keys(left_rows, left_column_index)
+    left_ordered_keys = _get_ordered_keys(left_rows, left_column_id)
 
     # Get mapped keys
-    right_mapped_keys = _get_mapped_keys(right_rows, right_column_index)
+    right_mapped_keys = _get_mapped_keys(right_rows, right_column_id)
 
     output = [left_headers + right_headers]
 
     for left_row in left_rows:
-        left_key = left_row[left_column_index]
+        left_key = left_row[left_column_id]
 
         if left_key in right_mapped_keys:
             for right_row in right_mapped_keys[left_key]:
                 output.append(left_row + right_row)
 
     for right_row in right_rows:
-        right_key = right_row[right_column_index]
+        right_key = right_row[right_column_id]
 
         if right_key not in left_ordered_keys:
             output.append(([u''] * len(left_headers)) + right_row) 
