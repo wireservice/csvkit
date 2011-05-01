@@ -16,7 +16,7 @@ This page contains a list of common Unix utilities that csvkit works well with a
 grep
 ====
 
-Coming soon...
+Use :doc:`csvgrep` instead. 
 
 head (or tail)
 ==============
@@ -38,7 +38,7 @@ For more on sed, follow this link: http://www.grymoire.com/Unix/Sed.html
 sort
 ====
 
-Coming soon...
+Use :doc:`csvsort` instead.
 
 uniq
 ====
