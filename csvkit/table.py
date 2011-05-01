@@ -242,8 +242,5 @@ class Table(list):
         # Insert header row
         rows.insert(0, self.headers())
 
-        writer_kwargs = { 'lineterminator': '\n' }
-        writer_kwargs.update(kwargs)
-
-        writer = CSVKitWriter(output, **writer_kwargs)
+        writer = CSVKitWriter(output, **kwargs)
         writer.writerows(rows)

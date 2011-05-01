@@ -34,10 +34,11 @@ def main(args):
     if args.schema:
         kwargs['schema'] = args.schema
 
+    # Fixed width can be processed as a stream
     if format == 'fixed':
-        fixed.stream_convert(args.file, sys.stdout, args.schema, **kwargs)
-    else:    
-        sys.stdout.write(convert.convert(args.file, format, **kwargs))
+        kwargs['output'] = sys.stdout
+
+    sys.stdout.write(convert.convert(args.file, format, **kwargs))
 
 if __name__ == "__main__":
     parser = init_common_parser(description='Convert common, but less awesome, tabular data formats to CSV.', epilog='Many command line flags only pertain to specific input formats.')

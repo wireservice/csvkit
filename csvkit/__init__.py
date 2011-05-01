@@ -15,7 +15,7 @@ class CSVKitWriter(UnicodeCSVWriter):
     def __init__(self, f, encoding='utf-8', line_numbers=False, **kwargs):
         self.row_count = 0
         self.line_numbers = line_numbers
-        UnicodeCSVWriter.__init__(self, f, encoding, **kwargs)
+        UnicodeCSVWriter.__init__(self, f, encoding, lineterminator='\n', **kwargs)
 
     def _append_line_number(self, row):
         if self.row_count == 0:
