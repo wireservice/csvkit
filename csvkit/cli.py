@@ -6,6 +6,18 @@ import sys
 from csvkit import CSVKitReader
 from csvkit.exceptions import ColumnIdentifierError
 
+def install_exception_handler(verbose=False):
+    """
+    Installs a replacement for sys.excepthook, which handles pretty-printing uncaught exceptions.
+    """
+    def handler(t, value, traceback):
+        if verbose:
+            sys.__excepthook__(t, value, traceback)
+        else:
+            print value
+
+    sys.excepthook = handler
+
 def init_common_parser(description='', epilog='', omitflags=''):
     """Prepare a base argparse argument parser so that flags are consistent across different shell command tools.
        If you want to constrain which common args are present, you can pass a string for 'omitflags'. Any argument
@@ -39,6 +51,9 @@ def init_common_parser(description='', epilog='', omitflags=''):
     if 'e' not in omitflags:
         parser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
                             help='Specify the encoding the input file.')
+    if 'v' not in omitflags:
+        parser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
+                            help='Print detailed tracebacks when errors occur.')
 
     # Output
     if 'l' not in omitflags:

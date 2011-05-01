@@ -5,12 +5,14 @@ import os
 import sys
 
 from csvkit import CSVKitReader, CSVKitWriter
-from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, extract_csv_writer_kwargs
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, extract_csv_writer_kwargs, install_exception_handler
 
 def main(args):
     """
     Stack up the rows from multiple CSV files, optionally adding a grouping value.
     """
+    install_exception_handler(args.verbose)
+   
     if len(args.files) < 2:
         sys.exit('You must specify at least two files to stack.')
 

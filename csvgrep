@@ -6,12 +6,14 @@ import sys
 
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit.grep import FilteringCSVReader
-from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers, print_column_names
+from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers, print_column_names, install_exception_handler
 
 def main(args):
     """
     Like the unix "grep" command, but for tabular data.
     """
+    install_exception_handler(args.verbose)
+   
     if args.names_only:
         print_column_names(args.file, sys.stdout, **extract_csv_reader_kwargs(args))
         sys.exit()

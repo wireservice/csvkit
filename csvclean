@@ -4,7 +4,7 @@ from os.path import splitext
 import sys
 
 from csvkit import CSVKitReader, CSVKitWriter
-from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, extract_csv_writer_kwargs
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, extract_csv_writer_kwargs, install_exception_handler
 from csvkit.cleanup import RowChecker
 
 def format_error_row(e):
@@ -17,6 +17,8 @@ def main(args):
     """
     Fix errors in a CSV file.
     """
+    install_exception_handler(args.verbose)
+   
     reader = CSVKitReader(args.file, **extract_csv_reader_kwargs(args))
 
     if args.dryrun:

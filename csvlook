@@ -3,12 +3,14 @@
 import sys
 
 from csvkit import CSVKitReader
-from csvkit.cli import init_common_parser, extract_csv_reader_kwargs
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, install_exception_handler
 
 def main(args):
     """
     Display a CSV in the console using a readable, fixed-width format.
     """
+    install_exception_handler(args.verbose)
+   
     rows = CSVKitReader(args.file, **extract_csv_reader_kwargs(args))
     rows = list(rows)
 

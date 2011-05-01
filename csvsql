@@ -5,12 +5,14 @@ import sys
 
 from csvkit import sql
 from csvkit import table
-from csvkit.cli import init_common_parser, extract_csv_reader_kwargs
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, install_exception_handler
 
 def main(args):
     """
     Generate a SQL create table statement for a given CSV file.
     """
+    install_exception_handler(args.verbose)
+   
     if args.file.name != '<stdin>':
         # Use filename as table name
         table_name = os.path.splitext(os.path.split(args.file.name)[1])[0]

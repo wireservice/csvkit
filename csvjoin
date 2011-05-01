@@ -5,7 +5,7 @@ import sys
 
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit import join
-from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, extract_csv_writer_kwargs, match_column_identifier
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, extract_csv_writer_kwargs, match_column_identifier, install_exception_handler
 
 def parse_join_column_names(join_string):
     """
@@ -17,6 +17,8 @@ def main(args):
     """
     Join 2 or more CSVs on a common column.
     """
+    install_exception_handler(args.verbose)
+   
     if len(args.files) < 2:
         sys.exit('You must specify at least two files to join.')
 

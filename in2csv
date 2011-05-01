@@ -4,12 +4,14 @@ import argparse
 import sys
 
 from csvkit import convert
-from csvkit.cli import init_common_parser, extract_csv_reader_kwargs
+from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, install_exception_handler
 
 def main(args):
     """
     Command line-utility that convert tabular data formats into CSV.
     """
+    install_exception_handler(args.verbose)
+   
     kwargs = extract_csv_reader_kwargs(args)
 
     if args.file.name == '<stdin>' and not args.format:
