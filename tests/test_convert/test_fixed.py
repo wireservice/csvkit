@@ -1,6 +1,5 @@
 import unittest
 from cStringIO import StringIO
-import csv
 
 from csvkit.convert import fixed
 
@@ -23,19 +22,14 @@ class TestFixed(unittest.TestCase):
         with open('examples/testfixed_converted.csv', 'r') as f:
             self.assertEqual(f.read(), output)
 
-    def test_row_decoder_init(self):
-        rd = fixed.SchemaRowDecoder(start=1,length=2,column=3)
-        self.assertEqual(1,rd.start)
-        self.assertEqual(2,rd.length)
-        self.assertEqual(3,rd.column)
-        
-        rd = fixed.SchemaRowDecoder(row=['column','start','length'])
+    def test_schema_decoder_init(self):
+        rd = fixed.SchemaDecoder(['column', 'start', 'length'])
         self.assertEqual(1,rd.start)
         self.assertEqual(2,rd.length)
         self.assertEqual(0,rd.column)
         
-    def test_row_decoder_in_action(self):
-        rd = fixed.SchemaRowDecoder(start=1,length=2,column=3)
+    def test_schema_decoder_in_action(self):
+        rd = fixed.SchemaDecoder(['comment', 'start', 'length', 'column'])
 
         (column, start, length) = rd(['This is a comment','0','1','column_name'])
         self.assertEqual(False,rd.one_based)
@@ -56,7 +50,7 @@ class TestFixed(unittest.TestCase):
         self.assertEqual(14, length)
 
     def test_one_based_row_decoder(self):
-        rd = fixed.SchemaRowDecoder(row=['column','start','length'])
+        rd = fixed.SchemaDecoder(['column','start','length'])
 
         (column, start, length) = rd(['LABEL', '1', '5' ])
         self.assertEqual(True,rd.one_based)
@@ -75,7 +69,7 @@ foo,1,5
 bar,6,2
 baz,8,5"""
         f = StringIO(schema)
-        parser = fixed.SchematicLineParser(f)
+        parser = fixed.FixedWidthRowParser(f)
         self.assertEqual('foo',parser.headers[0])
         self.assertEqual('bar',parser.headers[1])
         self.assertEqual('baz',parser.headers[2])
