@@ -3,21 +3,16 @@
 import os
 import sys
 
-from csvkit import CSVKitReader, CSVKitWriter
+from csvkit import CSVKitWriter
 from csvkit import table
-from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers
+from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers, print_column_names
 
 def main(args):
     """
     Command line-utility that sorts CSV files. Like unix "sort" command, but for tabular data.
     """
     if args.names_only:
-        rows = CSVKitReader(args.file, **extract_csv_reader_kwargs(args))
-        column_names = rows.next()
-
-        for i, c in enumerate(column_names):
-            sys.stdout.write('%3i: %s\n' % (i + 1, c))
-
+        print_column_names(args.file, sys.stdout, **extract_csv_reader_kwargs(args))
         sys.exit()
 
     if args.file.name != '<stdin>':

@@ -3,6 +3,7 @@
 import argparse
 import sys
 
+from csvkit import CSVKitReader
 from csvkit.exceptions import ColumnIdentifierError
 
 def init_common_parser(description='', epilog='', omitflags=''):
@@ -121,3 +122,14 @@ def parse_column_identifiers(ids, column_names):
 
     return columns
 
+def print_column_names(f, output, **reader_kwargs):
+    """
+    Pretty-prints the names and indices of all columns to a file-like object (usually sys.stdout).
+    """
+    rows = CSVKitReader(f, **reader_kwargs)
+    column_names = rows.next()
+
+    for i, c in enumerate(column_names):
+        output.write('%3i: %s\n' % (i + 1, c))
+
+    sys.exit()

@@ -12,20 +12,18 @@ Used and modified with permission.
 import sys
 
 from csvkit import CSVKitReader, CSVKitWriter
-from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers
+from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers, print_column_names
 
 def main(args):
     """
     Command line-utility that filters and truncates CSV files. Like unix "cut" command, but for tabular data.
     """
+    if args.names_only:
+        print_column_names(args.file, sys.stdout, **extract_csv_reader_kwargs(args))
+        sys.exit()
+
     rows = CSVKitReader(args.file, **extract_csv_reader_kwargs(args))
     column_names = rows.next()
-
-    if args.names_only:
-        for i, c in enumerate(column_names):
-            sys.stdout.write('%3i: %s\n' % (i + 1, c))
-
-        sys.exit()
 
     column_ids = parse_column_identifiers(args.columns, column_names)
     output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
