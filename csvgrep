@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import argparse
 import re
 import sys
 
@@ -42,7 +43,7 @@ if __name__ == "__main__":
     """
     Process command line arguments.
     """
-    parser = init_common_parser(description='Like the unix "grep" command, but for tabular data.')
+    parser = init_common_parser(description='Like the unix "grep" command, but for tabular data.', omitflags='f')
     parser.add_argument('-n', '--names', dest='names_only', action='store_true',
                         help='Display column names and indices from the input CSV and exit.')
     parser.add_argument('-c', '--columns', dest='columns',
@@ -51,6 +52,8 @@ if __name__ == "__main__":
                         help='If specified, the search pattern will be treated as a regular expression.')
     parser.add_argument('pattern', metavar="PATTERN", nargs='?',
                         help='The pattern to search for.')
+    parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('rU'), default=sys.stdin,
+                        help='The CSV file to operate on. If omitted, will accept input on STDIN.')
 
     main(parser.parse_args())
 

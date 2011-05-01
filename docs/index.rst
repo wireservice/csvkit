@@ -10,17 +10,23 @@ About
 Principles
 ==========
 
-csvkit has been developed with a number of guiding principles in mind:
+csvkit is to tabular data what the standard Unix text processing suite (grep, sed, cut, sort) is to text. As such, csvkit adheres to `the Unix philosophy <http://en.wikipedia.org/wiki/Unix_philosophy>`_.
 
-* Produce compatability-oriented output. This means that quoting is done with double-quotes and only when necessary, columns are separated with commas, and lines are terminated with unix style line endings ("\n").
+#. Small is beautiful.
+#. Make each program do one thing well.
+#. Build a prototype as soon as possible.
+#. Choose portability over efficiency.
+#. Store data in flat text files.
+#. Use software leverage to your advantage.
+#. Use shell scripts to increase leverage and portability.
+#. Avoid captive user interfaces.
+#. Make every program a filter.
 
-* Stream output to STDOUT to support Unix piping. As an example, the following would display the top 10 rows, columns 1 and 3 only, of a Excel xls file that has been converted to csv::
+As there is no formally defined CSV format, csvkit encourages well-known formatting standards:
 
-    in2csv data.xls | csvcut -c 1,3 | head 10
+* Output favors compatability with the widest range of applications. This means that quoting is done with double-quotes and only when necessary, columns are separated with commas, and lines are terminated with unix style line endings ("\n").
 
-* Do not modify input data unless specifically requested by the user (i.e. conversion or error cleaning).
-
-* When modifying input data, conform to good standards. Floats should end with ".0", even if they are round, dates and times should be in ISO8601 format, etc.
+* Data that is modified or generated will prefer consistency over brevity. Floats always include at least one decimal place, even if they are round. Dates and times are written in ISO8601 format.
 
 Installation
 ============
@@ -70,10 +76,12 @@ csvkit is comprised of a number of individual command line utilities that be loo
 
     scripts/csvclean
     scripts/csvcut
+    scripts/csvgrep
     scripts/csvjoin
+    scripts/csvsort
     scripts/csvstack
 
-*Output and Analysis*
+*Output (and Analysis)*
    
 .. toctree::
     :maxdepth: 1 
@@ -88,7 +96,6 @@ csvkit is comprised of a number of individual command line utilities that be loo
     :maxdepth: 1 
 
     scripts/common_arguments
-    scripts/unix_tools
 
 Development
 ===========

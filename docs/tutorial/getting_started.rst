@@ -9,6 +9,8 @@ There is no better way to learn how to use a new tool than to see it applied in 
 
 The dataset that I've chosen to work with is recipients of United States Department of Veteran Affairs education benefits, by state and year. For those who are unfamiliar, these are individuals whom the US government is paying to attend school as a benefit of their having served in the military (or, in some case, having had a close relative who served). We will be working with `2009 <http://www.data.gov/raw/4029>`_ and `2010 <http://www.data.gov/raw/4509>`_ data.
 
+If you have never done much data processing work this tutorial should double as a reasonable introduction to that as well.
+
 Following along
 ===============
 
@@ -37,7 +39,7 @@ Let's pretend our request is coming from Google Chrome instead of wget::
 
     $ wget -O 2009.csv -U "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.205 Safari/534.16" http://www.data.gov/download/4029/csv
 
-And use the Unix utility ``head`` to check the first five lines and make sure the file looks right this time::
+And use the Unix text-processing utility ``head`` to check the first five lines and make sure the file looks right this time::
 
     $ head -n 5 2009.csv 
     State Name,State Abbreviate,Code,Montgomery GI Bill-Active Duty,Montgomery GI Bill- Selective Reserve,Dependents' Educational Assistance,Reserve Educational Assistance Program,Post-Vietnam Era Veteran's Educational Assistance Program,TOTAL,
@@ -64,7 +66,7 @@ Nothing is ever easy when you're working with government data. We've got one mor
     ALABAMA,AL,7738,5779,2075,3102,883,5,"19,582"
     ALASKA,AK,1781,561,170,164,28,1,"2,705"
 
-Bah! This file has extra lines before its header row! (I chose these files at random, I really had no idea they would be this fortuitously screwed up when I started writing the tutorial.) Now we need to modify this file to fix the issue, but as a matter of best practice let's backup our originals first::
+As you can see, this multiple header lines.  We need to modify this file to fix the issue, but as a matter of best practice let's backup our originals first::
 
     $ cp 2009.csv 2009_original.csv
     $ cp 2010_csv 2010_original.csv
@@ -75,9 +77,7 @@ With that done let's use the old hacker standby ``sed`` to kill those first two 
 
 ``sed`` is an abbreviation for "stream editor", which is a useful phrase to keep in mind if you're not used to working with these tools. csvkit and the other tools introduced in the next chapter all operate on streams of data, processing them one line at a time. The ``sed`` command we just used translates to, "Select lines 1 and 2 of the input, (d)elete them."
 
-For more on ``sed`` and other Unix utilities, see :doc:`/scripts/unix_tools`.
-
-The previous command also introduces a couple other concepts that are much more important the indiosyncrancies of ``sed``.
+The previous command also introduces a couple other concepts that are much more important than the indiosyncrancies of ``sed``.
 
 Piping
 ======
@@ -92,6 +92,6 @@ The second interesting thing is output redirection. The ``>`` character means, s
 Putting it together
 ===================
 
-So why am I talking about piping and output redirection? Because all basic unix text processing utilities work with these operations in mind and so do the csvkit utilities. The output of any utility can be piped into another and into another and then at some point down the road redirected to a file. In this way they form a data processing "pipeline" of sorts, allowing you to do non-trivial, repeatable work without creating dozens of intermediary files.
+All the csvkit utilities work with the concepts of piping and output redirection. The output of any utility can be piped into another and into another and then at some point down the road redirected to a file. In this way they form a data processing "pipeline" of sorts, allowing you to do non-trivial, repeatable work without creating dozens of intermediary files.
 
 Make sense? If you think you've got it figured out, you can move on to :doc:`examining_the_data`.
