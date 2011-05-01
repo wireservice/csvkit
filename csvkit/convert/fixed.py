@@ -31,6 +31,9 @@ def fixed2csv(f, schema, output=None, **kwargs):
     if not streaming:
         data = output.getvalue()
         return data
+    
+    # Return empty string when streaming
+    return ''
 
 class FixedWidthReader(object):
     """
