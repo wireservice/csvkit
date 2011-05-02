@@ -78,7 +78,7 @@ def extract_csv_reader_kwargs(args):
     if args.quotechar:
         kwargs['quotechar'] = args.quotechar
 
-    if args.quotechar:
+    if args.quoting:
         kwargs['quoting'] = args.quoting
 
     if args.doublequote:
