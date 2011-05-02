@@ -27,4 +27,4 @@ Examples
 
 Basic use::
 
-    $ csvstat examples/testfixed_converted.csv
+    $ csvstat examples/realdata/FY09_EDU_Recipients_by_State.csv 

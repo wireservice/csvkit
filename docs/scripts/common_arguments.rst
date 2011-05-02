@@ -36,9 +36,9 @@ Note that the output of csvkit's utilities is always formatted with "default" fo
 Examples
 ========
 
-Cut the 1st and 3rd columns from a file with pipe delimiters and latin-1 encoding::
+Convert the 2000 census geo headers file from fixed-width to CSV and from latin-1 encoding to utf8::
 
-    $ csvcut -c 1,3 -d "|" -e "iso-8859-1" my_badly_formed.csv
+    $ in2csv -e iso-8859-1 -f fixed -s examples/realdata/census_2000/census2000_geo_schema.csv examples/realdata/census_2000/usgeo_excerpt.upl > usgeo.csv
 
 Add line numbers to a file, making no other changes::
 

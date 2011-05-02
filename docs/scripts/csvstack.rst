@@ -37,4 +37,4 @@ Examples
 
 Contrived example: joining a set of homogoenous files for different years::
 
-    $ csvstack -g 1984,1985 -n year examples/testfixed_converted.csv examples/testfixed_converted.csv
+    $ csvstack -g 2009,2010 examples/realdata/FY09_EDU_Recipients_by_State.csv examples/realdata/Datagov_FY10_EDU_recp_by_State.csv

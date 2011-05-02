@@ -28,7 +28,7 @@ Filters and truncates CSV files. Like unix "cut" command, but for tabular data::
                             output. Useful when piping to grep or as a simple
                             primary key.
 
-Note that csvcut does not include row slicing or filtering, for this you should pipe data to grep. See :doc:`unix_tools`.
+Note that csvcut does not include row filtering, for this you should pipe data to :doc:`csvgrep`.
 
 Also see: :doc:`common_arguments`.
 
@@ -37,21 +37,22 @@ Examples
 
 Print the indices and names of all columns::
 
-    $ csvcut -n examples/testfixed_converted.csv
-
-      1: text
-      2: date
-      3: integer
-      4: boolean
-      5: float
-      6: time
-      7: datetime
-      8: empty_column
+    $ csvcut -n examples/realdata/FY09_EDU_Recipients_by_State.csv 
+      1: State Name
+      2: State Abbreviate
+      3: Code
+      4: Montgomery GI Bill-Active Duty
+      5: Montgomery GI Bill- Selective Reserve
+      6: Dependents' Educational Assistance
+      7: Reserve Educational Assistance Program
+      8: Post-Vietnam Era Veteran's Educational Assistance Program
+      9: TOTAL
+     10: 
 
 Extract the first and third columns::
 
-    $ csvcut -c 1,3 examples/testfixed_converted.csv
+    $ csvcut -c 1,3 examples/realdata/FY09_EDU_Recipients_by_State.csv
 
-Extract columns named "integer" and "date"::
+Extract columns named "TOTAL" and "State Name" (in that order)::
 
-    $ csvcut -c integer,date examples/testfixed_converted.csv
+    $ csvcut -c TOTAL,"State Name" examples/realdata/FY09_EDU_Recipients_by_State.csv

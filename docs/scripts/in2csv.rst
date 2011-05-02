@@ -14,7 +14,7 @@ Converting fixed width requires that you provide a schema file with the "-s" opt
     birthday,30,10
     age,40,3
 
-The header line is required and must match the example exactly::
+The header line is required though the columns may be in any order::
 
     usage: in2csv [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                   [-p` ESCAPECHAR] [-e ENCODING] [-f FORMAT] [-s SCHEMA]
@@ -41,14 +41,14 @@ Also see: :doc:`common_arguments`.
 Examples
 ========
 
-Convert a fixed-width file::
+Convert the 2000 census geo headers file from fixed-width to CSV and from latin-1 encoding to utf8::
 
-    $ in2csv -s examples/testfixed_schema.csv examples/testfixed
+    $ in2csv -e iso-8859-1 -f fixed -s examples/realdata/census_2000/census2000_geo_schema.csv examples/realdata/census_2000/usgeo_excerpt.upl > usgeo.csv
 
 Convert an xls file::
 
     $ in2csv examples/test.xls
 
-Standardize a CSV file::
+Standardize the formatting of a CSV file (quoting, line endings, etc.)::
 
-    $ in2csv examples/bad.csv
+    $ in2csv examples/realdata/FY09_EDU_Recipients_by_State.csv

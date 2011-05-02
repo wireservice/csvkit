@@ -33,5 +33,10 @@ Also see: :doc:`common_arguments`.
 Examples
 ========
 
-Grep examples coming soon...
+Search for the row relating to Illinois::
 
+    $ csvgrep -c 1 ILLINOIS examples/realdata/FY09_EDU_Recipients_by_State.csv 
+
+Search for rows relating to states with names beginning with the letter "I"::
+
+    $ csvgrep -c 1 -r "^I" examples/realdata/FY09_EDU_Recipients_by_State.csv 
