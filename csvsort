@@ -5,48 +5,43 @@ import sys
 
 from csvkit import CSVKitWriter
 from csvkit import table
-from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers, print_column_names, install_exception_handler
+from csvkit.cli import CSVKitUtility, parse_column_identifiers, print_column_names
 
-def main(args):
-    """
-    Command line-utility that sorts CSV files. Like unix "sort" command, but for tabular data.
-    """
-    install_exception_handler(args.verbose)
-   
-    if args.names_only:
-        print_column_names(args.file, sys.stdout, **extract_csv_reader_kwargs(args))
-        sys.exit()
+class CSVSort(CSVKitUtility):
+    description = 'Sort CSV files. Like unix "sort" command, but for tabular data.'
 
-    if args.file.name != '<stdin>':
-        # Use filename as table name
-        table_name = os.path.splitext(os.path.split(args.file.name)[1])[0]
-    else:
-        table_name = 'csvsql_table'
+    def add_arguments(self):
+        self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
+                            help='Display column names and indices from the input CSV and exit.')
+        self.argparser.add_argument('-c', '--columns', dest='columns',
+                            help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
+        self.argparser.add_argument('-r', '--reverse', dest='reverse', action='store_true',
+                            help='Sort in descending order.')
 
-    tab = table.Table.from_csv(args.file, name=table_name, **extract_csv_reader_kwargs(args))
-    column_ids = parse_column_identifiers(args.columns, tab.headers())
+    def main(self):
+        if self.args.names_only:
+            print_column_names(self.args.file, sys.stdout, **self.reader_kwargs)
+            sys.exit()
 
-    rows = tab.to_rows(serialize_dates=True) 
-    rows.sort(key=lambda r: [r[c] for c in column_ids], reverse=args.reverse)
-    
-    rows.insert(0, tab.headers())
+        if self.args.file.name != '<stdin>':
+            # Use filename as table name
+            table_name = os.path.splitext(os.path.split(self.args.file.name)[1])[0]
+        else:
+            table_name = 'csvsql_table'
 
-    output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
+        tab = table.Table.from_csv(self.args.file, name=table_name, **self.reader_kwargs)
+        column_ids = parse_column_identifiers(self.args.columns, tab.headers())
 
-    for row in rows:
-        output.writerow(row)
+        rows = tab.to_rows(serialize_dates=True) 
+        rows.sort(key=lambda r: [r[c] for c in column_ids], reverse=self.args.reverse)
+        
+        rows.insert(0, tab.headers())
+
+        output = CSVKitWriter(sys.stdout, **self.writer_kwargs)
+
+        for row in rows:
+            output.writerow(row)
                 
 if __name__ == "__main__":
-    """
-    Process command line arguments.
-    """
-    parser = init_common_parser(description='Sort CSV files. Like unix "sort" command, but for tabular data.')
-    parser.add_argument('-n', '--names', dest='names_only', action='store_true',
-                        help='Display column names and indices from the input CSV and exit.')
-    parser.add_argument('-c', '--columns', dest='columns',
-                        help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
-    parser.add_argument('-r', '--reverse', dest='reverse', action='store_true',
-                        help='Sort in descending order.')
-
-    main(parser.parse_args())
-
+    utility = CSVSort()
+    utility.main()

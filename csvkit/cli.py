@@ -6,96 +6,134 @@ import sys
 from csvkit import CSVKitReader
 from csvkit.exceptions import ColumnIdentifierError
 
-def install_exception_handler(verbose=False):
-    """
-    Installs a replacement for sys.excepthook, which handles pretty-printing uncaught exceptions.
-    """
-    def handler(t, value, traceback):
-        if verbose:
-            sys.__excepthook__(t, value, traceback)
-        else:
-            print value
+class CSVKitUtility(object):
+    description = ''
+    epilog = ''
+    override_flags = ''
 
-    sys.excepthook = handler
+    def __init__(self):
+        """
+        Perform argument processing and other setup for a CSVKitUtility.
+        """
+        self.argparser = self._init_common_parser()
+        self.add_arguments()
+        self.args = self.argparser.parse_args()
 
-def init_common_parser(description='', epilog='', omitflags=''):
-    """Prepare a base argparse argument parser so that flags are consistent across different shell command tools.
-       If you want to constrain which common args are present, you can pass a string for 'omitflags'. Any argument
-       whose single-letter form is contained in 'omitflags' will be left out of the configured parser.  Use 'f' for 
-       file.
-    """
-    parser = argparse.ArgumentParser(description=description, epilog=epilog)
+        self.reader_kwargs = self._extract_csv_reader_kwargs()
+        self.writer_kwargs = self._extract_csv_writer_kwargs()
 
-    # Input
-    if 'f' not in omitflags:
-        parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('rU'), default=sys.stdin,
-                            help='The CSV file to operate on. If omitted, will accept input on STDIN.')
-    if 'd' not in omitflags:
-        parser.add_argument('-d', '--delimiter', dest='delimiter',
-                            help='Delimiting character of the input CSV file.')
-    if 't' not in omitflags:
-        parser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
-                            help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
-    if 'q' not in omitflags:
-        parser.add_argument('-q', '--quotechar', dest='quotechar',
-                            help='Character used to quote strings in the input CSV file.')
-    if 'u' not in omitflags:
-        parser.add_argument('-u', '--quoting', dest='quoting', type=int, choices=[0,1,2,3],
-                            help='Quoting style used in the input CSV file. 0 = Quote Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 = Quote None.')
-    if 'b' not in omitflags:
-        parser.add_argument('-b', '--doublequote', dest='doublequote', action='store_true',
-                            help='Whether or not double quotes are doubled in the input CSV file.')
-    if 'p' not in omitflags:
-        parser.add_argument('-p', '--escapechar', dest='escapechar',
-                            help='Character used to escape the delimiter if quoting is set to "Quote None" and the quotechar if doublequote is not specified.')
-    if 'e' not in omitflags:
-        parser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
-                            help='Specify the encoding the input file.')
-    if 'v' not in omitflags:
-        parser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
-                            help='Print detailed tracebacks when errors occur.')
+        self._install_exception_handler()
 
-    # Output
-    if 'l' not in omitflags:
-        parser.add_argument('-l', '--linenumbers', dest='line_numbers', action='store_true',
-                            help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple primary key.')
+    def add_arguments(self):
+        """
+        Called upon initialization once the parser for common arguments has been constructed.
 
-    return parser
+        Should be overriden by individual utilities.
+        """
+        raise NotImplementedError('add_arguments must be provided by each subclass of CSVKitUtility.')
 
-def extract_csv_reader_kwargs(args):
-    """
-    Extracts those from the command-line arguments those would should be passed through to the CSV reader.
-    """
-    kwargs = {}
-    if args.encoding:
-        kwargs['encoding'] = args.encoding
+    def main(self):
+        """
+        Main loop of the utility.
 
-    if args.tabs:
-        kwargs['delimiter'] = '\t'
-    elif args.delimiter:
-        kwargs['delimiter'] = args.delimiter
+        Should be overriden by individual utilities and explicitly called by the executing script.
+        """
+        raise NotImplementedError(' must be provided by each subclass of CSVKitUtility.')
 
-    if args.quotechar:
-        kwargs['quotechar'] = args.quotechar
+    def _init_common_parser(self):
+        """
+        Prepare a base argparse argument parser so that flags are consistent across different shell command tools.
+        If you want to constrain which common args are present, you can pass a string for 'omitflags'. Any argument
+        whose single-letter form is contained in 'omitflags' will be left out of the configured parser. Use 'f' for 
+        file.
+        """
+        parser = argparse.ArgumentParser(description=self.description, epilog=self.epilog)
 
-    if args.quoting:
-        kwargs['quoting'] = args.quoting
+        # Input
+        if 'f' not in self.override_flags:
+            parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('rU'), default=sys.stdin,
+                                help='The CSV file to operate on. If omitted, will accept input on STDIN.')
+        if 'd' not in self.override_flags:
+            parser.add_argument('-d', '--delimiter', dest='delimiter',
+                                help='Delimiting character of the input CSV file.')
+        if 't' not in self.override_flags:
+            parser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
+                                help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
+        if 'q' not in self.override_flags:
+            parser.add_argument('-q', '--quotechar', dest='quotechar',
+                                help='Character used to quote strings in the input CSV file.')
+        if 'u' not in self.override_flags:
+            parser.add_argument('-u', '--quoting', dest='quoting', type=int, choices=[0,1,2,3],
+                                help='Quoting style used in the input CSV file. 0 = Quote Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 = Quote None.')
+        if 'b' not in self.override_flags:
+            parser.add_argument('-b', '--doublequote', dest='doublequote', action='store_true',
+                                help='Whether or not double quotes are doubled in the input CSV file.')
+        if 'p' not in self.override_flags:
+            parser.add_argument('-p', '--escapechar', dest='escapechar',
+                                help='Character used to escape the delimiter if quoting is set to "Quote None" and the quotechar if doublequote is not specified.')
+        if 'e' not in self.override_flags:
+            parser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
+                                help='Specify the encoding the input file.')
+        if 'v' not in self.override_flags:
+            parser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
+                                help='Print detailed tracebacks when errors occur.')
 
-    if args.doublequote:
-        kwargs['doublequote'] = args.doublequote
+        # Output
+        if 'l' not in self.override_flags:
+            parser.add_argument('-l', '--linenumbers', dest='line_numbers', action='store_true',
+                                help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple primary key.')
 
-    if args.escapechar:
-        kwargs['escapechar'] = args.escapechar
+        return parser
 
-    return kwargs
+    def _extract_csv_reader_kwargs(self):
+        """
+        Extracts those from the command-line arguments those would should be passed through to the input CSV reader(s).
+        """
+        kwargs = {}
+        if self.args.encoding:
+            kwargs['encoding'] = self.args.encoding
 
-def extract_csv_writer_kwargs(args):
-    kwargs = {}
+        if self.args.tabs:
+            kwargs['delimiter'] = '\t'
+        elif self.args.delimiter:
+            kwargs['delimiter'] = self.args.delimiter
 
-    if args.line_numbers:
-        kwargs['line_numbers'] = True
+        if self.args.quotechar:
+            kwargs['quotechar'] = self.args.quotechar
 
-    return kwargs
+        if self.args.quoting:
+            kwargs['quoting'] = self.args.quoting
+
+        if self.args.doublequote:
+            kwargs['doublequote'] = self.args.doublequote
+
+        if self.args.escapechar:
+            kwargs['escapechar'] = self.args.escapechar
+
+        return kwargs
+
+    def _extract_csv_writer_kwargs(self):
+        """
+        Extracts those from the command-line arguments those would should be passed through to the output CSV writer.
+        """
+        kwargs = {}
+
+        if 'l' not in self.override_flags and self.args.line_numbers:
+            kwargs['line_numbers'] = True
+
+        return kwargs
+
+    def _install_exception_handler(self):
+        """
+        Installs a replacement for sys.excepthook, which handles pretty-printing uncaught exceptions.
+        """
+        def handler(t, value, traceback):
+            if self.args.verbose:
+                sys.__excepthook__(t, value, traceback)
+            else:
+                print value
+
+        sys.excepthook = handler
 
 def match_column_identifier(column_names, c):
     """

@@ -3,48 +3,47 @@
 import sys
 
 from csvkit import CSVKitReader
-from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, install_exception_handler
+from csvkit.cli import CSVKitUtility 
 
-def main(args):
-    """
-    Display a CSV in the console using a readable, fixed-width format.
-    """
-    install_exception_handler(args.verbose)
-   
-    rows = CSVKitReader(args.file, **extract_csv_reader_kwargs(args))
-    rows = list(rows)
+class CSVLook(CSVKitUtility):
+    description = 'Render a CSV file in the console as a fixed-width table.'
+    override_flags = 'l'
 
-    widths = []
+    def add_arguments(self):
+        pass
 
-    for row in rows:
-        for i, v in enumerate(row):
-            try:
-                if len(v) > widths[i]:
-                    widths[i] = len(v)
-            except IndexError:
-                widths.append(len(v))
+    def main(self):
+        rows = CSVKitReader(self.args.file, **self.reader_kwargs)
+        rows = list(rows)
 
-    # Width of the fields, plus space between, plus fore and aft dividers 
-    divider = '-' * (sum(widths) + (3 * len(widths)) + 3)
+        widths = []
 
-    sys.stdout.write('%s\n' % divider)
+        for row in rows:
+            for i, v in enumerate(row):
+                try:
+                    if len(v) > widths[i]:
+                        widths[i] = len(v)
+                except IndexError:
+                    widths.append(len(v))
 
-    for i, row in enumerate(rows):
-        output = []
+        # Width of the fields, plus space between, plus fore and aft dividers 
+        divider = '-' * (sum(widths) + (3 * len(widths)) + 3)
 
-        for j, d in enumerate(row):
-            if d is None:
-                d = ''
-            output.append(' %s ' % unicode(d).ljust(widths[j]))
+        sys.stdout.write('%s\n' % divider)
 
-        sys.stdout.write('| %s |\n' % ('|'.join(output)))
+        for i, row in enumerate(rows):
+            output = []
 
-        if i == 0 or i == len(rows) - 1:
-            sys.stdout.write('%s\n' % divider)
+            for j, d in enumerate(row):
+                if d is None:
+                    d = ''
+                output.append(' %s ' % unicode(d).ljust(widths[j]))
+
+            sys.stdout.write('| %s |\n' % ('|'.join(output)))
+
+            if i == 0 or i == len(rows) - 1:
+                sys.stdout.write('%s\n' % divider)
 
 if __name__ == '__main__':
-    parser = init_common_parser(description='Render a CSV file in the console as a fixed-width table.')
-
-    main(parser.parse_args())
-
-
+    utility = CSVLook()
+    utility.main()

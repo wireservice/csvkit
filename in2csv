@@ -4,47 +4,47 @@ import argparse
 import sys
 
 from csvkit import convert
-from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, install_exception_handler
+from csvkit.cli import CSVKitUtility
 
-def main(args):
-    """
-    Command line-utility that convert tabular data formats into CSV.
-    """
-    install_exception_handler(args.verbose)
-   
-    kwargs = extract_csv_reader_kwargs(args)
+class In2CSV(CSVKitUtility):
+    description = 'Convert common, but less awesome, tabular data formats to CSV.'
+    epilog='Some command line flags only pertain to specific input formats.'
 
-    if args.file.name == '<stdin>' and not args.format:
-        sys.exit('You must specify a format when inputting data via STDIN (pipe).')
+    def add_arguments(self):
+        self.argparser.add_argument('-f', '--format', dest='format',
+                            help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(convert.SUPPORTED_FORMATS)))
+        self.argparser.add_argument('-s', '--schema', dest='schema', type=argparse.FileType('r'),
+                            help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
 
-    if args.format:
-        format = args.format
+    def main(self):
+        if self.args.file.name == '<stdin>' and not self.args.format:
+            sys.exit('You must specify a format when inputting data via STDIN (pipe).')
 
-        if format not in convert.SUPPORTED_FORMATS:
-            sys.exit('"%s" is not a supported format' % args.format)
+        if self.args.format:
+            format = self.args.format
 
-    elif args.schema:
-        format = 'fixed'
-    else:
-        format = convert.guess_format(args.file.name)
+            if format not in convert.SUPPORTED_FORMATS:
+                sys.exit('"%s" is not a supported format' % self.args.format)
 
-        if not format:
-            sys.exit('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
+        elif self.args.schema:
+            format = 'fixed'
+        else:
+            format = convert.guess_format(self.args.file.name)
 
-    if args.schema:
-        kwargs['schema'] = args.schema
+            if not format:
+                sys.exit('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
-    # Fixed width can be processed as a stream
-    if format == 'fixed':
-        kwargs['output'] = sys.stdout
+        kwargs = self.reader_kwargs
 
-    sys.stdout.write(convert.convert(args.file, format, **kwargs))
+        if self.args.schema:
+            kwargs['schema'] = self.args.schema
+
+        # Fixed width can be processed as a stream
+        if format == 'fixed':
+            kwargs['output'] = sys.stdout
+
+        sys.stdout.write(convert.convert(self.args.file, format, **kwargs))
 
 if __name__ == "__main__":
-    parser = init_common_parser(description='Convert common, but less awesome, tabular data formats to CSV.', epilog='Many command line flags only pertain to specific input formats.')
-    parser.add_argument('-f', '--format', dest='format',
-                        help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(convert.SUPPORTED_FORMATS)))
-    parser.add_argument('-s', '--schema', dest='schema', type=argparse.FileType('r'),
-                        help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
-
-    main(parser.parse_args())
+    utility = In2CSV()
+    utility.main()

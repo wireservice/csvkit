@@ -12,39 +12,35 @@ Used and modified with permission.
 import sys
 
 from csvkit import CSVKitReader, CSVKitWriter
-from csvkit.cli import extract_csv_reader_kwargs, extract_csv_writer_kwargs, init_common_parser, parse_column_identifiers, install_exception_handler, print_column_names
+from csvkit.cli import CSVKitUtility, parse_column_identifiers, print_column_names
 
-def main(args):
-    """
-    Command line-utility that filters and truncates CSV files. Like unix "cut" command, but for tabular data.
-    """
-    install_exception_handler(args.verbose)
-    
-    if args.names_only:
-        print_column_names(args.file, sys.stdout, **extract_csv_reader_kwargs(args))
-        sys.exit()
+class CSVCut(CSVKitUtility):
+    description = 'Filter and truncate CSV files. Like unix "cut" command, but for tabular data.'
 
-    rows = CSVKitReader(args.file, **extract_csv_reader_kwargs(args))
-    column_names = rows.next()
-
-    column_ids = parse_column_identifiers(args.columns, column_names)
-    output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
-
-    output.writerow([column_names[c] for c in column_ids])
-
-    for i, row in enumerate(rows):
-        out_row = [row[c] if c < len(row) else None for c in column_ids] 
-        
-        output.writerow(out_row)
-                
-if __name__ == "__main__":
-    """
-    Process command line arguments.
-    """
-    parser = init_common_parser(description='Filter and truncate CSV files. Like unix "cut" command, but for tabular data.')
-    parser.add_argument('-n', '--names', dest='names_only', action='store_true',
+    def add_arguments(self):
+        self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                         help='Display column names and indices from the input CSV and exit.')
-    parser.add_argument('-c', '--columns', dest='columns',
+        self.argparser.add_argument('-c', '--columns', dest='columns',
                         help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
 
-    main(parser.parse_args())
+    def main(self):
+        if self.args.names_only:
+            print_column_names(self.args.file, sys.stdout, **self.reader_kwargs)
+            sys.exit()
+
+        rows = CSVKitReader(self.args.file, **self.reader_kwargs)
+        column_names = rows.next()
+
+        column_ids = parse_column_identifiers(self.args.columns, column_names)
+        output = CSVKitWriter(sys.stdout, **self.writer_kwargs)
+
+        output.writerow([column_names[c] for c in column_ids])
+
+        for i, row in enumerate(rows):
+            out_row = [row[c] if c < len(row) else None for c in column_ids] 
+            
+            output.writerow(out_row)
+                
+if __name__ == "__main__":
+    utility = CSVCut()
+    utility.main()

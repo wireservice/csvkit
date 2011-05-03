@@ -5,35 +5,35 @@ import sys
 
 from csvkit import sql
 from csvkit import table
-from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, install_exception_handler
+from csvkit.cli import CSVKitUtility
 
-def main(args):
-    """
-    Generate a SQL create table statement for a given CSV file.
-    """
-    install_exception_handler(args.verbose)
-   
-    if args.file.name != '<stdin>':
-        # Use filename as table name
-        table_name = os.path.splitext(os.path.split(args.file.name)[1])[0]
-    else:
-        table_name = 'csvsql_table'
+class CSVSQL(CSVKitUtility):
+    description = 'Generate a SQL CREATE TABLE statement for a CSV file.'
+    override_flags = 'l'
 
-    csv_table = table.Table.from_csv(args.file, name=table_name, **extract_csv_reader_kwargs(args))
-    sql_table = sql.make_table(csv_table)
+    def add_arguments(self):
+        self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=sql.DIALECTS,
+                            help='Dialect of SQL to generate.')
+        self.argparser.add_argument('--inserts', dest='inserts', action='store_true',
+                            help='In addition to generating a CREATE TABLE statement, also generate an INSERT statement for each row of data.')
 
-    sys.stdout.write('%s\n' % sql.make_create_table_statement(sql_table, dialect=args.dialect))
+    def main(self):
+        if self.args.file.name != '<stdin>':
+            # Use filename as table name
+            table_name = os.path.splitext(os.path.split(self.args.file.name)[1])[0]
+        else:
+            table_name = 'csvsql_table'
 
-    if args.inserts:
-        sys.stdout.write('\n')
-        for row in csv_table._prepare_rows_for_serialization():
-            sys.stdout.write('%s\n' % sql.make_insert_statement(sql_table, row, dialect=args.dialect))
+        csv_table = table.Table.from_csv(self.args.file, name=table_name, **self.reader_kwargs)
+        sql_table = sql.make_table(csv_table)
+
+        sys.stdout.write('%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect))
+
+        if self.args.inserts:
+            sys.stdout.write('\n')
+            for row in csv_table._prepare_rows_for_serialization():
+                sys.stdout.write('%s\n' % sql.make_insert_statement(sql_table, row, dialect=self.args.dialect))
 
 if __name__ == '__main__':
-    parser = init_common_parser(description='Generate a SQL CREATE TABLE statement for a CSV file.', omitflags='l')
-    parser.add_argument('-i', '--dialect', dest='dialect', choices=sql.DIALECTS,
-                        help='Dialect of SQL to generate.')
-    parser.add_argument('--inserts', dest='inserts', action='store_true',
-                        help='In addition to generating a CREATE TABLE statement, also generate an INSERT statement for each row of data.')
-
-    main(parser.parse_args())
+    utility = CSVSQL()
+    utility.main()

@@ -5,106 +5,102 @@ import sys
 
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit import join
-from csvkit.cli import init_common_parser, extract_csv_reader_kwargs, extract_csv_writer_kwargs, match_column_identifier, install_exception_handler
+from csvkit.cli import CSVKitUtility, match_column_identifier
 
-def parse_join_column_names(join_string):
-    """
-    Parse a list of join columns.
-    """
-    return map(str.strip, join_string.split(','))
-
-def main(args):
-    """
-    Join 2 or more CSVs on a common column.
-    """
-    install_exception_handler(args.verbose)
-   
-    if len(args.files) < 2:
-        sys.exit('You must specify at least two files to join.')
-
-    if args.columns:
-        join_column_names = parse_join_column_names(args.columns)
-
-        if len(join_column_names) == 1:
-            join_column_names = join_column_names * len(args.files)
-
-        if len(join_column_names) != len(args.files):
-            sys.exit('The number of join column names must match the number of files, or be a single column name that exists in all files.')
-
-    if (args.left_join or args.right_join or args.outer_join) and not args.join:
-        sys.exit('You must provide join column names when performing an outer join.')
-
-    if args.left_join and args.right_join:
-         sys.exit('It is not valid to specify both a left and a right join.')
-
-    reader_kwargs = extract_csv_reader_kwargs(args)
-    tables = []
-
-    for f in args.files:
-        tables.append(list(CSVKitReader(f, **reader_kwargs)))
-
-    join_column_ids = []
+class CSVJoin(CSVKitUtility):
+    description = 'Execute a SQL-like join to merge CSV files on a specified column or columns.'
+    epilog = 'Note that the join operation requires reading all files into memory. Don\'t try this on very large files.'
+    override_flags = 'f'
     
-    for i, t in enumerate(tables):
-        join_column_ids.append(match_column_identifier(t[0], join_column_names[i]))
+    def add_arguments(self):
+        self.argparser.add_argument('files', metavar="FILES", nargs='+', type=argparse.FileType('r'),
+                            help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
+        self.argparser.add_argument('-c', '--columns', dest='columns',
+                            help='The column name(s) on which to join. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
+        self.argparser.add_argument('--outer', dest='outer_join', action='store_true',
+                            help='Perform a full outer join, rather than the default inner join.')
+        self.argparser.add_argument('--left', dest='left_join', action='store_true',
+                            help='Perform a left outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of left outer joins, starting at the left.')
+        self.argparser.add_argument('--right', dest='right_join', action='store_true',
+                            help='Perform a right outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of right outer joins, starting at the right.')
 
-    jointab = []
-    
-    if args.left_join:
-        # Left outer join
-        jointab = tables[0]
+    def main(self):
+        if len(self.args.files) < 2:
+            sys.exit('You must specify at least two files to join.')
 
-        for i, t in enumerate(tables[1:]):
-            jointab = join.left_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1])
-    elif args.right_join:
-        # Right outer join
-        jointab = tables[-1]
+        if self.args.columns:
+            join_column_names = self._parse_join_column_names(self.args.columns)
 
-        remaining_tables = tables[:-1]
-        remaining_tables.reverse()
+            if len(join_column_names) == 1:
+                join_column_names = join_column_names * len(self.args.files)
 
-        for i, t in enumerate(remaining_tables):
-            jointab = join.right_outer_join(t, join_column_ids[-(i + 2)], jointab, join_column_ids[-1])
-    elif args.outer_join:
-        # Full outer join
-        jointab = tables[0]
+            if len(join_column_names) != len(self.args.files):
+                sys.exit('The number of join column names must match the number of files, or be a single column name that exists in all files.')
 
-        for i, t in enumerate(tables[1:]):
-            jointab = join.full_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1])
-    else:
-        if args.columns:
-            # Inner join
+        if (self.args.left_join or self.args.right_join or self.args.outer_join) and not self.args.join:
+            sys.exit('You must provide join column names when performing an outer join.')
+
+        if self.args.left_join and self.args.right_join:
+             sys.exit('It is not valid to specify both a left and a right join.')
+
+        tables = []
+
+        for f in self.args.files:
+            tables.append(list(CSVKitReader(f, **self.reader_kwargs)))
+
+        join_column_ids = []
+        
+        for i, t in enumerate(tables):
+            join_column_ids.append(match_column_identifier(t[0], join_column_names[i]))
+
+        jointab = []
+        
+        if self.args.left_join:
+            # Left outer join
             jointab = tables[0]
 
             for i, t in enumerate(tables[1:]):
-                jointab = join.inner_join(jointab, join_column_ids[0], t, join_column_ids[i + 1])
-        else:
+                jointab = join.left_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1])
+        elif self.args.right_join:
+            # Right outer join
+            jointab = tables[-1]
+
+            remaining_tables = tables[:-1]
+            remaining_tables.reverse()
+
+            for i, t in enumerate(remaining_tables):
+                jointab = join.right_outer_join(t, join_column_ids[-(i + 2)], jointab, join_column_ids[-1])
+        elif self.args.outer_join:
+            # Full outer join
             jointab = tables[0]
 
-            # Sequential join
-            for t in tables[1:]:
-                jointab = join.sequential_join(jointab, t)
+            for i, t in enumerate(tables[1:]):
+                jointab = join.full_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1])
+        else:
+            if self.args.columns:
+                # Inner join
+                jointab = tables[0]
 
-    output = CSVKitWriter(sys.stdout, **extract_csv_writer_kwargs(args))
+                for i, t in enumerate(tables[1:]):
+                    jointab = join.inner_join(jointab, join_column_ids[0], t, join_column_ids[i + 1])
+            else:
+                jointab = tables[0]
 
-    for row in jointab:
-        output.writerow(row)
+                # Sequential join
+                for t in tables[1:]:
+                    jointab = join.sequential_join(jointab, t)
+
+        output = CSVKitWriter(sys.stdout, **self.writer_kwargs)
+
+        for row in jointab:
+            output.writerow(row)
+
+    def _parse_join_column_names(join_string):
+        """
+        Parse a list of join columns.
+        """
+        return map(str.strip, join_string.split(','))
     
 if __name__ == '__main__':
-    """
-    Parse command line arguments.
-    """
-    parser = init_common_parser(description='Execute a SQL-like join to merge CSV files on a specified column or columns.', epilog="Note that the join operation requires reading all files into memory. Don't try this on very large files.", omitflags='f')
-
-    parser.add_argument('files', metavar="FILES", nargs='+', type=argparse.FileType('r'),
-                        help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
-    parser.add_argument('-c', '--columns', dest='columns',
-                        help='The column name(s) on which to join. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
-    parser.add_argument('--outer', dest='outer_join', action='store_true',
-                        help='Perform a full outer join, rather than the default inner join.')
-    parser.add_argument('--left', dest='left_join', action='store_true',
-                        help='Perform a left outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of left outer joins, starting at the left.')
-    parser.add_argument('--right', dest='right_join', action='store_true',
-                        help='Perform a right outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of right outer joins, starting at the right.')
-
-    main(parser.parse_args())
+    utility = CSVJoin()
+    utility.main()
