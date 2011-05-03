@@ -31,7 +31,7 @@ class CSVSQL(CSVKitUtility):
 
         if self.args.inserts:
             sys.stdout.write('\n')
-            for row in csv_table._prepare_rows_for_serialization():
+            for row in csv_table.to_rows(serialize_dates=True):
                 sys.stdout.write('%s\n' % sql.make_insert_statement(sql_table, row, dialect=self.args.dialect))
 
 if __name__ == '__main__':
