@@ -9,16 +9,19 @@ from csvkit.cli import CSVKitUtility
 class In2CSV(CSVKitUtility):
     description = 'Convert common, but less awesome, tabular data formats to CSV.'
     epilog='Some command line flags only pertain to specific input formats.'
+    override_flags = 'f'
 
     def add_arguments(self):
+        self.argparser.add_argument('file', metavar="FILE", nargs='?', default=sys.stdin,
+                            help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-f', '--format', dest='format',
                             help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(convert.SUPPORTED_FORMATS)))
-        self.argparser.add_argument('-s', '--schema', dest='schema', type=argparse.FileType('r'),
+        self.argparser.add_argument('-s', '--schema', dest='schema', type=argparse.FileType('rU'),
                             help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
 
     def main(self):
-        if self.args.file.name == '<stdin>' and not self.args.format:
-            sys.exit('You must specify a format when inputting data via STDIN (pipe).')
+        if self.args.file == '<stdin>' and not self.args.format:
+            sys.exit('You must specify a format when providing data via STDIN (pipe).')
 
         if self.args.format:
             format = self.args.format
@@ -29,10 +32,15 @@ class In2CSV(CSVKitUtility):
         elif self.args.schema:
             format = 'fixed'
         else:
-            format = convert.guess_format(self.args.file.name)
+            format = convert.guess_format(self.args.file)
 
             if not format:
                 sys.exit('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
+
+        if format == 'xls':
+            f = open(self.args.file, 'rb')
+        else:
+            f = open(self.args.file, 'rU')
 
         kwargs = self.reader_kwargs
 
@@ -43,7 +51,7 @@ class In2CSV(CSVKitUtility):
         if format == 'fixed':
             kwargs['output'] = sys.stdout
 
-        sys.stdout.write(convert.convert(self.args.file, format, **kwargs))
+        sys.stdout.write(convert.convert(f, format, **kwargs))
 
 if __name__ == "__main__":
     utility = In2CSV()

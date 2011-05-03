@@ -15,7 +15,7 @@ class CSVKitUtility(object):
         """
         Perform argument processing and other setup for a CSVKitUtility.
         """
-        self.argparser = self._init_common_parser()
+        self._init_common_parser()
         self.add_arguments()
         self.args = self.argparser.parse_args()
 
@@ -47,43 +47,41 @@ class CSVKitUtility(object):
         whose single-letter form is contained in 'omitflags' will be left out of the configured parser. Use 'f' for 
         file.
         """
-        parser = argparse.ArgumentParser(description=self.description, epilog=self.epilog)
+        self.argparser = argparse.ArgumentParser(description=self.description, epilog=self.epilog)
 
         # Input
         if 'f' not in self.override_flags:
-            parser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('rU'), default=sys.stdin,
+            self.argparser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('rU'), default=sys.stdin,
                                 help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         if 'd' not in self.override_flags:
-            parser.add_argument('-d', '--delimiter', dest='delimiter',
+            self.argparser.add_argument('-d', '--delimiter', dest='delimiter',
                                 help='Delimiting character of the input CSV file.')
         if 't' not in self.override_flags:
-            parser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
+            self.argparser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
                                 help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
         if 'q' not in self.override_flags:
-            parser.add_argument('-q', '--quotechar', dest='quotechar',
+            self.argparser.add_argument('-q', '--quotechar', dest='quotechar',
                                 help='Character used to quote strings in the input CSV file.')
         if 'u' not in self.override_flags:
-            parser.add_argument('-u', '--quoting', dest='quoting', type=int, choices=[0,1,2,3],
+            self.argparser.add_argument('-u', '--quoting', dest='quoting', type=int, choices=[0,1,2,3],
                                 help='Quoting style used in the input CSV file. 0 = Quote Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 = Quote None.')
         if 'b' not in self.override_flags:
-            parser.add_argument('-b', '--doublequote', dest='doublequote', action='store_true',
+            self.argparser.add_argument('-b', '--doublequote', dest='doublequote', action='store_true',
                                 help='Whether or not double quotes are doubled in the input CSV file.')
         if 'p' not in self.override_flags:
-            parser.add_argument('-p', '--escapechar', dest='escapechar',
+            self.argparser.add_argument('-p', '--escapechar', dest='escapechar',
                                 help='Character used to escape the delimiter if quoting is set to "Quote None" and the quotechar if doublequote is not specified.')
         if 'e' not in self.override_flags:
-            parser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
+            self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
                                 help='Specify the encoding the input file.')
         if 'v' not in self.override_flags:
-            parser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
+            self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
                                 help='Print detailed tracebacks when errors occur.')
 
         # Output
         if 'l' not in self.override_flags:
-            parser.add_argument('-l', '--linenumbers', dest='line_numbers', action='store_true',
+            self.argparser.add_argument('-l', '--linenumbers', dest='line_numbers', action='store_true',
                                 help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple primary key.')
-
-        return parser
 
     def _extract_csv_reader_kwargs(self):
         """
