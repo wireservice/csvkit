@@ -24,6 +24,7 @@ All utilities which accept CSV as input share a set of common command-line argum
                         set to "Quote None" and the quotechar if doublequote
                         is not specified.
   -e ENCODING, --encoding ENCODING
+  -v, --verbose         Print detailed tracebacks when errors occur.
                         Specify the encoding the input file.
   -l, --linenumbers     Insert a column of line numbers at the front of the
                         output. Useful when piping to grep or as a simple

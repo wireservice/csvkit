@@ -34,7 +34,9 @@ The header line is required though the columns may be in any order::
                             fixed, xls.
       -s SCHEMA, --schema SCHEMA
                             Specifies a CSV-formatted schema file for converting
-                            fixed-width files. See documentation for details..
+                            fixed-width files. See documentation for details.
+      -k KEY, --key KEY     Specifies a top-level key to use look within for a
+                            list of objects to be converted when processing JSON.
 
 Also see: :doc:`common_arguments`.
 
@@ -52,3 +54,7 @@ Convert an xls file::
 Standardize the formatting of a CSV file (quoting, line endings, etc.)::
 
     $ in2csv examples/realdata/FY09_EDU_Recipients_by_State.csv
+
+Fetch csvkit's open issues from the Github API, convert the JSON response into a CSV, and write it to a file::
+
+    $ curl http://github.com/api/v2/json/issues/list/onyxfish/csvkit/open | in2csv -v -k issues > issues.csv 
