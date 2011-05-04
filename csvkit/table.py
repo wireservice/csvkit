@@ -44,7 +44,7 @@ class Column(list):
         """
         Stringify a description of this column.
         """
-        return '%3i: %s (%s)' % (self.order, self.name, self.type)
+        return u'%3i: %s (%s)' % (self.order, self.name, self.type)
 
     def __getitem__(self, key):
         """
@@ -98,7 +98,7 @@ class Table(list):
         """
         Stringify a description of all columns in this table.
         """
-        return '\n'.join([unicode(c) for c in self])
+        return u'\n'.join([unicode(c) for c in self])
 
     def _reindex_columns(self):
         """

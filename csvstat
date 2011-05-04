@@ -23,7 +23,7 @@ class CSVStat(CSVKitUtility):
             values = sorted(filter(null_excluder, c))
             uniques = set(c)
 
-            sys.stdout.write(u'%3i. %s\n' % (c.order + 1, c.name))
+            sys.stdout.write((u'%3i. %s\n' % (c.order + 1, c.name)).encode('utf-8'))
 
             if c.type == None:
                 sys.stdout.write(u'\tEmpty column\n')
@@ -33,7 +33,7 @@ class CSVStat(CSVKitUtility):
             sys.stdout.write(u'\tNulls: %s\n' % (u'Yes' if c.nullable else u'No'))
             
             if len(uniques) <= 5:
-                sys.stdout.write(u'\tValues: %s\n' % ', '.join(list(uniques)))
+                sys.stdout.write((u'\tValues: %s\n' % ', '.join(list(uniques))).encode('utf-8'))
             else:
                 # Skip min/max for strings and bools
                 if c.type not in [unicode, bool]:
@@ -58,7 +58,7 @@ class CSVStat(CSVKitUtility):
                     sys.stdout.write(u'\tMax length: %i\n' % c.max_length)
                     
                     uniques.discard(None)
-                    sys.stdout.write(u'\tSamples: %s\n' % (u', '.join(list(random.sample(uniques, 5)))))
+                    sys.stdout.write((u'\tSamples: %s\n' % u', '.join(random.sample(uniques, 5))).encode('utf-8'))
 
         sys.stdout.write(u'\n')
         sys.stdout.write(u'Row count: %s\n' % tab.count_rows())
