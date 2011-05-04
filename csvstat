@@ -22,6 +22,7 @@ class CSVStat(CSVKitUtility):
         for c in tab:
             values = sorted(filter(null_excluder, c))
             uniques = set(c)
+            uniques.discard(None)
 
             sys.stdout.write((u'%3i. %s\n' % (c.order + 1, c.name)).encode('utf-8'))
 
@@ -57,7 +58,6 @@ class CSVStat(CSVKitUtility):
                 if c.type == unicode:
                     sys.stdout.write(u'\tMax length: %i\n' % c.max_length)
                     
-                    uniques.discard(None)
                     sys.stdout.write((u'\tSamples: %s\n' % u', '.join(random.sample(uniques, 5))).encode('utf-8'))
 
         sys.stdout.write(u'\n')
