@@ -79,8 +79,6 @@ def median(l):
         b = l[length / 2]
     return (float(a + b)) / 2  
 
-<<<<<<< HEAD
-=======
 def freq(l):
     """
     Count the number of times each value occurs in a column.
@@ -101,7 +99,6 @@ def freq(l):
 
     return top
 
->>>>>>> 5f42466... Added frequency count to csvstat; issue #42.
 if __name__ == '__main__':
     utility = CSVStat()
     utility.main()
