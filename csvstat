@@ -54,6 +54,9 @@ class CSVStat(CSVKitUtility):
                         sys.stdout.write(u'\tMedian: %s\n' % median(values))
 
                 sys.stdout.write(u'\tUnique values: %i\n' % len(uniques))
+                sys.stdout.write(u'\t5 most frequent values:\n')
+                for top in freq(values):
+                    sys.stdout.write(u'\t%s:\t%s' % (top[0], top[1]))
 
                 if c.type == unicode:
                     sys.stdout.write(u'\tMax length: %i\n' % c.max_length)
@@ -76,6 +79,29 @@ def median(l):
         b = l[length / 2]
     return (float(a + b)) / 2  
 
+<<<<<<< HEAD
+=======
+def freq(l):
+    """
+    Count the number of times each value occurs in a column.
+    """
+    count = {}
+    n = 5
+
+    for x in l:
+        s = str(x)
+        if count.has_key(s):
+            count[s] += 1
+        else:
+            count[s] = 1
+
+    # This will iterate through dictionary, return N highest
+    # values as (key, value) tuples.
+    top = nlargest(n, count.iteritems(), itemgetter(1))
+
+    return top
+
+>>>>>>> 5f42466... Added frequency count to csvstat; issue #42.
 if __name__ == '__main__':
     utility = CSVStat()
     utility.main()
