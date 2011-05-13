@@ -6,6 +6,8 @@ import sys
 
 from csvkit import table
 from csvkit.cli import CSVKitUtility 
+from heapq import nlargest
+from operator import itemgetter
 
 class CSVStat(CSVKitUtility):
     description = 'Print descriptive statistics for each column in a CSV file.'
@@ -56,7 +58,7 @@ class CSVStat(CSVKitUtility):
                 sys.stdout.write(u'\tUnique values: %i\n' % len(uniques))
                 sys.stdout.write(u'\t5 most frequent values:\n')
                 for top in freq(values):
-                    sys.stdout.write(u'\t%s:\t%s' % (top[0], top[1]))
+                    sys.stdout.write(u'\t\t%s:\t%s\n' % (top[0], top[1]))
 
                 if c.type == unicode:
                     sys.stdout.write(u'\tMax length: %i\n' % c.max_length)
