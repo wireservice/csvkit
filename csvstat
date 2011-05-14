@@ -56,14 +56,14 @@ class CSVStat(CSVKitUtility):
                         sys.stdout.write(u'\tMedian: %s\n' % median(values))
 
                 sys.stdout.write(u'\tUnique values: %i\n' % len(uniques))
-                sys.stdout.write(u'\t5 most frequent values:\n')
-                for top in freq(values):
-                    sys.stdout.write(u'\t\t%s:\t%s\n' % (top[0], top[1]))
+
+                if len(uniques) != len(values):
+                    sys.stdout.write(u'\t5 most frequent values:\n')
+                    for top in freq(values):
+                        sys.stdout.write(u'\t\t%s:\t%s\n' % (top[0], top[1]))
 
                 if c.type == unicode:
                     sys.stdout.write(u'\tMax length: %i\n' % c.max_length)
-                    
-                    sys.stdout.write((u'\tSamples: %s\n' % u', '.join(random.sample(uniques, 5))).encode('utf-8'))
 
         sys.stdout.write(u'\n')
         sys.stdout.write(u'Row count: %s\n' % tab.count_rows())
