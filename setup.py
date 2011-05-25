@@ -41,7 +41,6 @@ setup(
         'csvstack',
         'csvsort',
         'csvgrep',
-        'csvjson'
     ],
     install_requires = [
         'argparse==1.2.1',
