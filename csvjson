@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+import json
+import sys
+
+from csvkit import CSVKitReader
+from csvkit.cli import CSVKitUtility
+
+class CSVJSON(CSVKitUtility):
+    """
+    Convert CSV into JSON.
+    """
+    def add_arguments(self):
+        self.argparser.add_argument('-i', '--indent', dest='indent', type=int, default=None,
+            help='Indent the output JSON this many spaces. Disabled by default.')
+
+    def main(self):
+        """
+        Convert CSV to JSON. 
+        """
+        rows = CSVKitReader(self.args.file, **self.reader_kwargs)
+        column_names = rows.next()
+
+        output = []
+
+        for row in rows:
+            output.append(dict(zip(column_names, row)))
+
+        sys.stdout.write(json.dumps(output, indent=self.args.indent))
+
+if __name__ == "__main__":
+    utility = CSVJSON()
+    utility.main()
+
