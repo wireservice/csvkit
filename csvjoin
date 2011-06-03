@@ -95,7 +95,7 @@ class CSVJoin(CSVKitUtility):
         for row in jointab:
             output.writerow(row)
 
-    def _parse_join_column_names(join_string):
+    def _parse_join_column_names(self, join_string):
         """
         Parse a list of join columns.
         """
