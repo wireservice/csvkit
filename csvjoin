@@ -37,7 +37,7 @@ class CSVJoin(CSVKitUtility):
             if len(join_column_names) != len(self.args.files):
                 sys.exit('The number of join column names must match the number of files, or be a single column name that exists in all files.')
 
-        if (self.args.left_join or self.args.right_join or self.args.outer_join) and not self.args.join:
+        if (self.args.left_join or self.args.right_join or self.args.outer_join) and not self.args.columns:
             sys.exit('You must provide join column names when performing an outer join.')
 
         if self.args.left_join and self.args.right_join:
@@ -95,7 +95,7 @@ class CSVJoin(CSVKitUtility):
         for row in jointab:
             output.writerow(row)
 
-    def _parse_join_column_names(self,join_string):
+    def _parse_join_column_names(self, join_string):
         """
         Parse a list of join columns.
         """

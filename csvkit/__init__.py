@@ -30,6 +30,9 @@ class CSVKitWriter(UnicodeCSVWriter):
             row = list(row)
             self._append_line_number(row)
 
+        # Convert embedded Mac line endings to unix style line endings so they get quoted
+        row = [i.replace('\r', '\n') for i in row]
+
         UnicodeCSVWriter.writerow(self, row)
 
     def writerows(self, rows):
