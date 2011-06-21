@@ -23,9 +23,8 @@ def fixed2csv(f, schema, output=None, **kwargs):
 
     if 'encoding' in kwargs and kwargs['encoding']:
         f = iterdecode(f, kwargs['encoding'])
-        writer = CSVKitWriter(output, encoding=kwargs['encoding'])
-    else:
-        writer = CSVKitWriter(output)
+        
+    writer = CSVKitWriter(output)
 
     reader = FixedWidthReader(f, schema)
     writer.writerows(reader)
