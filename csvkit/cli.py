@@ -10,7 +10,8 @@ class CSVKitUtility(object):
     description = ''
     epilog = ''
     override_flags = ''
-
+    _input_line_number = None
+    
     def __init__(self):
         """
         Perform argument processing and other setup for a CSVKitUtility.
@@ -126,12 +127,28 @@ class CSVKitUtility(object):
         Installs a replacement for sys.excepthook, which handles pretty-printing uncaught exceptions.
         """
         def handler(t, value, traceback):
+            try:
+                sys.stderr.write("Error reading input file at line %i\n" % self.input_line_number)
+            except ValueError: pass
             if self.args.verbose:
                 sys.__excepthook__(t, value, traceback)
             else:
                 sys.stderr.write("%s\n" % (value))
 
         sys.excepthook = handler
+
+    def input_line_number():
+        doc = "Utilities which wish to track the line number of an input file can use this property. Useful for error reporting."
+        def fget(self):
+            if self._input_line_number is None:
+                raise ValueError("Input line number has not been initialized.")
+            return self._input_line_number
+        def fset(self, value):
+            self._input_line_number = value
+        def fdel(self):
+            del self._input_line_number
+        return locals()
+    input_line_number = property(**input_line_number())
 
 def match_column_identifier(column_names, c):
     """

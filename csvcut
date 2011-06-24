@@ -37,6 +37,7 @@ class CSVCut(CSVKitUtility):
         output.writerow([column_names[c] for c in column_ids])
 
         for i, row in enumerate(rows):
+            self.input_line_number = i + 1
             out_row = [row[c] if c < len(row) else None for c in column_ids] 
             
             output.writerow(out_row)

@@ -23,7 +23,8 @@ class CSVJSON(CSVKitUtility):
 
         output = []
 
-        for row in rows:
+        for i,row in enumerate(rows):
+            self.input_line_number = i + 1
             output.append(dict(zip(column_names, row)))
 
         sys.stdout.write(json.dumps(output, indent=self.args.indent))
