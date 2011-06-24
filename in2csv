@@ -22,9 +22,6 @@ class In2CSV(CSVKitUtility):
                             help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
 
     def main(self):
-        if self.args.file == '<stdin>' and not self.args.format:
-            sys.exit('You must specify a format when providing data via STDIN (pipe).')
-
         if self.args.format:
             format = self.args.format
 
@@ -36,6 +33,9 @@ class In2CSV(CSVKitUtility):
         elif self.args.key:
             format = 'js'
         else:
+            if self.args.file == '<stdin>':
+                sys.exit('You must specify a format when providing data via STDIN (pipe).')
+
             format = convert.guess_format(self.args.file)
 
             if not format:
