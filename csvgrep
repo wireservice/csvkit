@@ -5,8 +5,8 @@ import re
 import sys
 
 from csvkit import CSVKitReader, CSVKitWriter
-from csvkit.grep import FilteringCSVReader
 from csvkit.cli import CSVKitUtility, parse_column_identifiers, print_column_names
+from csvkit.grep import FilteringCSVReader
 
 class CSVGrep(CSVKitUtility):
     description = 'Search CSV files. Like the unix "grep" command, but for tabular data.'
@@ -42,12 +42,12 @@ class CSVGrep(CSVKitUtility):
         else:
             pattern = self.args.pattern
             
-        patterns = dict((c,pattern) for c in column_ids)
+        patterns = dict((c, pattern) for c in column_ids)
 
         output = CSVKitWriter(sys.stdout, **self.writer_kwargs)
         output.writerow(column_names)
 
-        filter_reader = FilteringCSVReader(rows, header=False, patterns = patterns)
+        filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns)
 
         for i, row in enumerate(filter_reader):
             output.writerow(row)
@@ -55,3 +55,4 @@ class CSVGrep(CSVKitUtility):
 if __name__ == "__main__":
     utility = CSVGrep()
     utility.main()
+
