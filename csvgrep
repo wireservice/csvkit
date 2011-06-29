@@ -19,6 +19,8 @@ class CSVGrep(CSVKitUtility):
                         help='A comma separated list of column indices or names to be searched.')
         self.argparser.add_argument('-r', '--regex', dest='regex', action='store_true',
                         help='If specified, the search pattern will be treated as a regular expression.')
+        self.argparser.add_argument('-i', '--invert-match', dest='inverse', action='store_true',
+                        help='If specified, select non-matching instead of matching rows.')
         self.argparser.add_argument('pattern', metavar="PATTERN", nargs='?',
                         help='The pattern to search for.')
         self.argparser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('rU'), default=sys.stdin,
@@ -47,7 +49,7 @@ class CSVGrep(CSVKitUtility):
         output = CSVKitWriter(sys.stdout, **self.writer_kwargs)
         output.writerow(column_names)
 
-        filter_reader = FilteringCSVReader(rows, header=False, patterns = patterns)
+        filter_reader = FilteringCSVReader(rows, header=False, patterns = patterns, inverse = self.args.inverse)
 
         for i, row in enumerate(filter_reader):
             output.writerow(row)
