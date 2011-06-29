@@ -21,7 +21,6 @@ class TestGrep(unittest.TestCase):
             [u'1', u'second', u'0'],
             [u'2', u'only', u'0', u'0']] # Note extra value in this column
 
-
     def test_pattern(self):
         fcr = FilteringCSVReader(iter(self.tab1),patterns=['1'])
         self.assertEqual(self.tab1[0],fcr.next())
@@ -42,7 +41,6 @@ class TestGrep(unittest.TestCase):
             self.fail("Should be no more rows left.")
         except StopIteration:
             pass
-
 
     def test_regex(self):
         pattern = re.compile(".*(Reader|Tribune).*")
