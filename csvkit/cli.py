@@ -3,6 +3,7 @@
 import argparse
 import sys
 import os.path
+import bz2
 import gzip
 
 from csvkit import CSVKitReader
@@ -37,6 +38,8 @@ class CSVFileType(object):
 
             if extension == ".gz":
                 return gzip.open(path, self._mode)
+            if extension == ".bz2":
+                return bz2.BZ2File(path, self._mode)
             else:
                 return open(path, self._mode)
 
