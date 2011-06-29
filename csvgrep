@@ -18,7 +18,7 @@ class CSVGrep(CSVKitUtility):
         self.argparser.add_argument('-c', '--columns', dest='columns',
                         help='A comma separated list of column indices or names to be searched.')
         self.argparser.add_argument('-r', '--regex', dest='regex', action='store_true',
-                        help='If specified, the search pattern will be treated as a regular expression.')
+                        help='If specified, the search pattern will be treated as a Python regular expression.')
         self.argparser.add_argument('pattern', metavar="PATTERN", nargs='?',
                         help='The pattern to search for.')
         self.argparser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('rU'), default=sys.stdin,
