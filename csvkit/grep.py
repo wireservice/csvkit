@@ -44,12 +44,12 @@ class FilteringCSVReader(object):
 
         while True:
             row = self.reader.next()
-            if self.passes(row):
+            if self.test_row(row):
                 return row
 
         raise StopIteration()
         
-    def passes(self,row):
+    def test_row(self, row):
         for idx, test in self.patterns.items():
             if self.any_match and test(row[idx]):
                 return not self.inverse # True
