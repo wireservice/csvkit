@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-import argparse
 import re
 import sys
 
 from csvkit import CSVKitReader, CSVKitWriter
-from csvkit.cli import CSVKitUtility, parse_column_identifiers, print_column_names
+from csvkit.cli import CSVKitUtility, CSVFileType, parse_column_identifiers, print_column_names
 from csvkit.grep import FilteringCSVReader
 
 class CSVGrep(CSVKitUtility):
@@ -23,7 +22,7 @@ class CSVGrep(CSVKitUtility):
                         help='If specified, select non-matching instead of matching rows.')
         self.argparser.add_argument('pattern', metavar="PATTERN", nargs='?',
                         help='The pattern to search for.')
-        self.argparser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('rU'), default=sys.stdin,
+        self.argparser.add_argument('file', metavar="FILE", nargs='?', type=CSVFileType(), default=sys.stdin,
                         help='The CSV file to operate on. If omitted, will accept input on STDIN.')
 
     def main(self):
