@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 import argparse
-import sys
-import os.path
 import bz2
 import gzip
+import os.path
+import sys
 
 from csvkit import CSVKitReader
 from csvkit.exceptions import ColumnIdentifierError
@@ -18,14 +18,12 @@ class CSVFileType(object):
         """
         Initialize the factory.
         """
-
         self._mode = mode
 
     def __call__(self, path):
         """
         Build a file-like object from the specified path.
         """
-
         if path == "-":
             if "r" in self._mode:
                 return sys.stdin
