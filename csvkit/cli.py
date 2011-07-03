@@ -2,9 +2,46 @@
 
 import argparse
 import sys
+import os.path
+import bz2
+import gzip
 
 from csvkit import CSVKitReader
 from csvkit.exceptions import ColumnIdentifierError
+
+class CSVFileType(object):
+    """
+    An argument factory like argparse.FileType with compression support.
+    """
+
+    def __init__(self, mode = "rb"):
+        """
+        Initialize the factory.
+        """
+
+        self._mode = mode
+
+    def __call__(self, path):
+        """
+        Build a file-like object from the specified path.
+        """
+
+        if path == "-":
+            if "r" in self._mode:
+                return sys.stdin
+            elif "w" in self._mode:
+                return sys.stdout
+            else:
+                raise ValueError("invalid path \"-\" with mode {0}".format(self._mode))
+        else:
+            (_, extension) = os.path.splitext(path)
+
+            if extension == ".gz":
+                return gzip.open(path, self._mode)
+            if extension == ".bz2":
+                return bz2.BZ2File(path, self._mode)
+            else:
+                return open(path, self._mode)
 
 class CSVKitUtility(object):
     description = ''
@@ -51,7 +88,7 @@ class CSVKitUtility(object):
 
         # Input
         if 'f' not in self.override_flags:
-            self.argparser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('rU'), default=sys.stdin,
+            self.argparser.add_argument('file', metavar="FILE", nargs='?', type=CSVFileType(), default=sys.stdin,
                                 help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         if 'd' not in self.override_flags:
             self.argparser.add_argument('-d', '--delimiter', dest='delimiter',

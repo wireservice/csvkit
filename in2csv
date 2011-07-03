@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
-import argparse
 import sys
 
 from csvkit import convert
-from csvkit.cli import CSVKitUtility
+from csvkit.cli import CSVFileType, CSVKitUtility
 
 class In2CSV(CSVKitUtility):
     description = 'Convert common, but less awesome, tabular data formats to CSV.'
@@ -16,7 +15,7 @@ class In2CSV(CSVKitUtility):
                             help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-f', '--format', dest='format',
                             help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(convert.SUPPORTED_FORMATS)))
-        self.argparser.add_argument('-s', '--schema', dest='schema', type=argparse.FileType('rU'),
+        self.argparser.add_argument('-s', '--schema', dest='schema', type=CSVFileType(),
                             help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
         self.argparser.add_argument('-k', '--key', dest='key',
                             help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
