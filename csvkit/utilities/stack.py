@@ -38,13 +38,13 @@ class CSVStack(CSVKitUtility):
             headers = rows.next()
 
             if i == 0:
-                if self.args.groups:
+                if groups:
                     headers.insert(0, group_name)
                 
                 output.writerow(headers)
 
             for row in rows:
-                if self.args.groups:
+                if groups:
                     row.insert(0, groups[i])
 
                 output.writerow(row)
