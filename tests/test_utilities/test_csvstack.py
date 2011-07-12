@@ -36,7 +36,7 @@ class TestCSVStack(unittest.TestCase):
         input_file = StringIO.StringIO(output_file.getvalue())
         reader = CSVKitReader(input_file)
 
-        self.assertEqual(reader.next(), ["foo", "a", "b", "c"])
-        self.assertEqual(reader.next()[0], "asd")
-        self.assertEqual(reader.next()[0], "sdf")
+        self.assertEqual(reader.next(), ["path", "a", "b", "c"])
+        self.assertEqual(reader.next()[0], "dummy.csv")
+        self.assertEqual(reader.next()[0], "dummy2.csv")
 
