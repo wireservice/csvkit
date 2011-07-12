@@ -31,7 +31,7 @@ class CSVStack(CSVKitUtility):
                 
         group_name = self.args.group_name if self.args.group_name else 'group'
 
-        output = CSVKitWriter(sys.stdout, **self.writer_kwargs)
+        output = CSVKitWriter(self.output_file, **self.writer_kwargs)
 
         for i, f in enumerate(self.args.files):
             rows = CSVKitReader(f, **self.reader_kwargs)
