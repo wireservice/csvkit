@@ -35,7 +35,7 @@ class CSVStat(CSVKitUtility):
             sys.stdout.write(u'\t%s\n' % c.type)
             sys.stdout.write(u'\tNulls: %s\n' % (u'Yes' if c.nullable else u'No'))
             
-            if len(uniques) <= 5:
+            if len(uniques) <= 5 and c.type is not bool:
                 sys.stdout.write((u'\tValues: %s\n' % ', '.join(list(uniques))).encode('utf-8'))
             else:
                 # Skip min/max for strings and bools
