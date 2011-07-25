@@ -46,7 +46,7 @@ class CSVKitUtility(object):
     epilog = ''
     override_flags = ''
 
-    def __init__(self, args = None, output_file = None):
+    def __init__(self, args=None, output_file=None):
         """
         Perform argument processing and other setup for a CSVKitUtility.
         """
