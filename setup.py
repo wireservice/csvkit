@@ -28,7 +28,8 @@ setup(
     ],
     packages=[
         'csvkit', 
-        'csvkit.convert'
+        'csvkit.convert',
+        'csvkit.utilities'
     ],
     scripts = [
         'in2csv',
