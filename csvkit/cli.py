@@ -46,18 +46,23 @@ class CSVKitUtility(object):
     epilog = ''
     override_flags = ''
 
-    def __init__(self):
+    def __init__(self, args = None, output_file = None):
         """
         Perform argument processing and other setup for a CSVKitUtility.
         """
         self._init_common_parser()
         self.add_arguments()
-        self.args = self.argparser.parse_args()
+        self.args = self.argparser.parse_args(args)
 
         self.reader_kwargs = self._extract_csv_reader_kwargs()
         self.writer_kwargs = self._extract_csv_writer_kwargs()
 
         self._install_exception_handler()
+
+        if output_file is None:
+            self.output_file = sys.stdout
+        else:
+            self.output_file = output_file
 
     def add_arguments(self):
         """
