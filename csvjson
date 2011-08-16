@@ -2,6 +2,7 @@
 
 import json
 import sys
+import codecs
 
 from csvkit import CSVKitReader
 from csvkit.cli import CSVKitUtility
@@ -21,12 +22,11 @@ class CSVJSON(CSVKitUtility):
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         column_names = rows.next()
 
-        output = []
+	stream = codecs.getwriter('utf8')(sys.stdout)
 
-        for row in rows:
-            output.append(dict(zip(column_names, row)))
+        output = [dict(zip(column_names, row)) for row in rows]
 
-        sys.stdout.write(json.dumps(output, indent=self.args.indent))
+        json.dump(output, stream, ensure_ascii=False, indent=self.args.indent, encoding='utf-8')
 
 if __name__ == "__main__":
     utility = CSVJSON()
