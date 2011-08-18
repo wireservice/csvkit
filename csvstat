@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import datetime
-import random
 import sys 
 
 from csvkit import table
@@ -36,7 +35,8 @@ class CSVStat(CSVKitUtility):
             sys.stdout.write(u'\tNulls: %s\n' % (u'Yes' if c.nullable else u'No'))
             
             if len(uniques) <= 5 and c.type is not bool:
-                sys.stdout.write((u'\tValues: %s\n' % ', '.join(list(uniques))).encode('utf-8'))
+                uniques = [unicode(u) for u in list(uniques)]
+                sys.stdout.write((u'\tValues: %s\n' % ', '.join(uniques)).encode('utf-8'))
             else:
                 # Skip min/max for strings and bools
                 if c.type not in [unicode, bool]:
@@ -59,8 +59,8 @@ class CSVStat(CSVKitUtility):
 
                 if len(uniques) != len(values):
                     sys.stdout.write(u'\t5 most frequent values:\n')
-                    for top in freq(values):
-                        sys.stdout.write(u'\t\t%s:\t%s\n' % (top[0], top[1]))
+                    for value, count in freq(values):
+                        sys.stdout.write((u'\t\t%s:\t%s\n' % (unicode(value), count)).encode('utf-8'))
 
                 if c.type == unicode:
                     sys.stdout.write(u'\tMax length: %i\n' % c.max_length)
