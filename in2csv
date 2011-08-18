@@ -33,7 +33,7 @@ class In2CSV(CSVKitUtility):
         elif self.args.schema:
             format = 'fixed'
         elif self.args.key:
-            format = 'js'
+            format = 'json'
         else:
             format = convert.guess_format(self.args.file)
 
