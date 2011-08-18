@@ -169,7 +169,7 @@ class CSVKitUtility(object):
             if self.args.verbose:
                 sys.__excepthook__(t, value, traceback)
             else:
-                print value
+                sys.stderr.write('%s\n' % value)
 
         sys.excepthook = handler
 

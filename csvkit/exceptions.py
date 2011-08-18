@@ -1,20 +1,30 @@
 #!/usr/bin/env python
 
-class ColumnIdentifierError(Exception):
+class CustomException(Exception):
+    """
+    A base exception that handles pretty-printing.
+    """
+    def __unicode__(self):
+        return self.msg
+
+    def __str__(self):
+        return self.msg
+
+class ColumnIdentifierError(CustomException):
     """
     Exception raised when the user supplies an invalid column identifier.
     """
     def __init__(self, msg):
         self.msg = msg
 
-class XLSDataError(Exception):
+class XLSDataError(CustomException):
     """
     Exception raised when there is a problem converting XLS data.
     """
     def __init__(self, msg):
         self.msg = msg
 
-class CSVTestException(Exception):
+class CSVTestException(CustomException):
     """
     Superclass for all row-test-failed exceptions. 
     All must have a line number, the problematic row, and a text explanation.

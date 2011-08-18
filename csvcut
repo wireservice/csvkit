@@ -10,7 +10,6 @@ Used and modified with permission.
 """
 
 import sys
-import itertools
 
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit.cli import CSVKitUtility, parse_column_identifiers, print_column_names
