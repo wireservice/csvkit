@@ -3,6 +3,7 @@
 import StringIO
 import unittest
 
+from csvkit.exceptions import NonUniqueKeyColumnException
 from csvkit.utilities.csvjson import CSVJSON
 
 class TestCSVStack(unittest.TestCase):
@@ -33,3 +34,10 @@ class TestCSVStack(unittest.TestCase):
 
         self.assertEqual(output_file.getvalue(), '{"1": {"a": "1", "c": "3", "b": "2"}}')
 
+    def test_duplicate_keys(self):
+        args = ['-k', 'a', 'examples/dummy3.csv']
+        output_file = StringIO.StringIO()
+        
+        utility = CSVJSON(args, output_file)
+
+        self.assertRaises(NonUniqueKeyColumnException, utility.main)

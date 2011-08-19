@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 import json
-import sys
 import codecs
 
 from csvkit import CSVKitReader
 from csvkit.cli import CSVKitUtility
+from csvkit.exceptions import NonUniqueKeyColumnException
 
 class CSVJSON(CSVKitUtility):
     description = 'Convert a CSV file into JSON.'
@@ -33,7 +33,7 @@ class CSVJSON(CSVKitUtility):
                 k = row_dict[self.args.key]
 
                 if k in output:
-                    sys.exit('Value %s is not unique in the key column.' % k)
+                    raise NonUniqueKeyColumnException('Value %s is not unique in the key column.' % unicode(k))
 
                 output[k] = row_dict
         else:
