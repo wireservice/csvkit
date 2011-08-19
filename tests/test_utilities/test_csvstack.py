@@ -4,7 +4,7 @@ import StringIO
 import unittest
 
 from csvkit import CSVKitReader
-from csvkit.utilities.stack import CSVStack
+from csvkit.utilities.csvstack import CSVStack
 
 class TestCSVStack(unittest.TestCase):
     def test_explicit_grouping(self):
