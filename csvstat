@@ -89,7 +89,7 @@ def freq(l):
     n = 5
 
     for x in l:
-        s = str(x)
+        s = unicode(x)
         if count.has_key(s):
             count[s] += 1
         else:
