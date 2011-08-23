@@ -188,7 +188,7 @@ class Table(list):
         contents = f.read()
 
         sample = contents
-        dialect = sniffer.sniff_dialect(sample)
+        dialect = sniffer.sniff_dialect(sample, **kwargs)
 
         f = StringIO(contents) 
         reader = CSVKitReader(f, dialect=dialect, **kwargs)
