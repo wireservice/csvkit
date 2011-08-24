@@ -26,6 +26,7 @@ class CSVDiff(CSVKitUtility):
             sys.exit('You must specify exactly two files to diff.')
 
         if self.args.columns:
+            sys.exit('Not yet implemented')
             join_column_names = self._parse_join_column_names(self.args.columns)
 
             if len(join_column_names) == 1:
@@ -55,6 +56,7 @@ class CSVDiff(CSVKitUtility):
         longest = eval('file1' if file1 >= file2 else 'file2')
         len_longest = len(longest)
 
+	# TODO refactor. don't increment both files simultaneously
         for n in xrange(len_longest):
             # get nth line of each file or ''
             s1 = nth(file1, n, '')
