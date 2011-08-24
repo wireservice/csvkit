@@ -1,0 +1,117 @@
+#!/usr/bin/env python
+# vim: ai ts=4 sts=4 et sw=4 coding=utf-8
+
+import re
+import os
+import sys
+import imp
+import itertools
+from types import UnicodeType
+import difflib
+
+from csvkit import CSVKitReader, CSVKitWriter
+from csvkit.cli import CSVFileType, CSVKitUtility, match_column_identifier
+
+class CSVDiff(CSVKitUtility):
+    description = 'Diff two csv files'
+    override_flags = 'f'
+
+    def add_arguments(self):
+        self.argparser.add_argument('files', metavar="FILES", nargs='+', type=CSVFileType(),
+                            help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
+        self.argparser.add_argument('-c', '--columns', dest='columns',
+                            help='The column name(s) on which to join. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
+    def main(self):
+        if len(self.args.files) != 2:
+            sys.exit('You must specify exactly two files to diff.')
+
+        if self.args.columns:
+            join_column_names = self._parse_join_column_names(self.args.columns)
+
+            if len(join_column_names) == 1:
+                join_column_names = join_column_names * len(self.args.files)
+
+            if len(join_column_names) != len(self.args.files):
+                sys.exit('The number of diff column names must match the number of files, or be a single column name that exists in all files.')
+
+        output = CSVKitWriter(sys.stdout, **self.writer_kwargs)
+
+        def nth(iterable, n, default=None):
+            "Returns the nth item or a default value"
+            return next(itertools.islice(iterable, n, None), default)
+
+        reader1 = CSVKitReader(self.args.files[0], **self.reader_kwargs)
+        reader2 = CSVKitReader(self.args.files[1], **self.reader_kwargs)
+
+        # pop column names
+        column_names1 = reader1.next()
+        column_names1 = reader2.next()
+
+        # read lines
+        file1 = [r for r in reader1]
+        file2 = [r for r in reader2]
+
+        # identify longest file
+        longest = eval('file1' if file1 >= file2 else 'file2')
+        len_longest = len(longest)
+
+        for n in xrange(len_longest):
+            # get nth line of each file or ''
+            s1 = nth(file1, n, '')
+            s2 = nth(file2, n, '')
+            if s1 == s2:
+                # skip lines if they are equal
+                continue
+            else:
+                # see if they are equal, but out of order
+                if s1 in file2:
+                    s2 = file2.pop(file2.index(s1))
+                    continue
+                # TODO remove this, because this ignores
+                # rows that are absent in file2, but present
+                # in file1
+                elif s2 in file1:
+                    s1 = file1.pop(file1.index(s2))
+                    continue
+
+            matcher = difflib.SequenceMatcher(None, s1, s2)
+            # lists to hold cell comparison results
+            s1res = []
+            s2res = []
+            for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+                if tag == 'delete':
+                    for c in s1[i1:i2]:
+                        s1res.append(c)
+                        s2res.append('')
+
+                elif tag == 'equal':
+                    for c in s1[i1:i2]:
+                        s1res.append('')
+                    for c in s2[j1:j2]:
+                        s2res.append('')
+
+                elif tag == 'insert':
+                    for c in s2[j1:j2]:
+                        s1res.append('')
+                        s2res.append(c)
+
+                elif tag == 'replace':
+                    for c in s1[i1:i2]:
+                        s1res.append(c)
+                    for c in s2[j1:j2]:
+                        s2res.append(c)
+
+            output.writerow([n, self.args.files[0].name] + s1res)
+            output.writerow([n, self.args.files[1].name] + s2res)
+
+        """
+        print type(file1[0])
+        print type(file2[0])
+        result = list(d.compare('\n'.join(file1), '\n'.join(file2)))
+        for l in result:
+            output.writerow(l)
+        """
+
+if __name__ == "__main__":
+    utility = CSVDiff()
+    utility.main()
