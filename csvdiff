@@ -35,6 +35,8 @@ class CSVDiff(CSVKitUtility):
                         help='For rows that are different, only show cells with values that are NOT common to both rows.')
         self.argparser.add_argument('-i', '--ignorediff', dest='only_equal', action='store_true', default=False,
                         help='Only show identical rows common to both files.')
+        self.argparser.add_argument('-m', '--colnames', dest='colnames', action='store_true', default=False,
+                        help='Include column names from both files.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
                             help='The column name(s) on which to decide row difference and similarity. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
 
@@ -73,6 +75,10 @@ class CSVDiff(CSVKitUtility):
         file1_column_names = file1[0]
         file2_column_names = file2[0]
 
+        if self.args.colnames:
+            output.writerow(['  ', '', self.args.files[0].name] + file1_column_names)
+            output.writerow(['  ', '', self.args.files[1].name] + file2_column_names)
+
         # identify longest file
         longest = 'file1' if len(file1) >= len(file2) else 'file2'
         len_longest = len(eval(longest))
@@ -88,7 +94,11 @@ class CSVDiff(CSVKitUtility):
         def only_target_cells(row1, row2):
             i1 = file1_column_names.index(join_column_names[0])
             i2 = file2_column_names.index(join_column_names[1])
-            return [row1[i1]], [row2[i2]]
+            i1lead = ['' for i in xrange(i1)]
+            i1tail = ['' for i in xrange(i1, len(row1))]
+            i2lead = ['' for i in xrange(i2)]
+            i2tail = ['' for i in xrange(i2, len(row2))]
+            return i1lead + [row1[i1]] + i1tail, i2lead + [row2[i2]] + i2tail
 
 	# TODO make sure this will never stop short
 	# because of line deletions or inserts
@@ -102,8 +112,8 @@ class CSVDiff(CSVKitUtility):
                         if self.args.only_equal:
                             output.writerow(s1)
                         else:
-                            output.writerow(['  ', n2, self.args.files[1].name] + s2)
                             output.writerow(['  ', n1, self.args.files[0].name] + s1)
+                            output.writerow(['  ', n2, self.args.files[1].name] + s2)
                 # increment both line counters
 		n1 = r1.next()
 		n2 = r2.next()
@@ -176,19 +186,24 @@ class CSVDiff(CSVKitUtility):
                     # handle equal, out-of-order rows separately
                     if not self.args.no_equal or self.args.only_equal:
                         if self.args.only_equal:
+                            # write one original row (without diff info)
                             output.writerow(s1res)
                         else:
+                            # write both rows (with diff info)
                             output.writerow(['  ', n1, self.args.files[0].name] + s1res)
                             output.writerow(['  ', n2, self.args.files[1].name] + s2res)
             else:
                 if self.args.columns:
+                    # get cells in target columns
                     s1resc, s2resc = only_target_cells(s1res, s2res)
                     if s1resc and s2resc:
                         if s1resc != s2resc:
                             if self.args.only_diff:
+                                # write only target cells for only_diff option (padded with empty cells)
                                 output.writerow(['? ', n1, self.args.files[0].name] + s1resc)
                                 output.writerow(['? ', n2, self.args.files[1].name] + s2resc)
                             else:
+                                # otherwise write entire rows
                                 output.writerow(['? ', n1, self.args.files[0].name] + s1res)
                                 output.writerow(['? ', n2, self.args.files[1].name] + s2res)
                 else:
