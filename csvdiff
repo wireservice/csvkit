@@ -20,7 +20,10 @@ class CSVDiff(CSVKitUtility):
 	    '- '    row unique to file 1
 	    '+ '    row unique to file 2
 	    '  '    row common to both files
-	    '? '    row different in both files, only different cell values are shown"""
+	    '? '    row different in both files, only different cell values are shown
+    Followed by the filename of the row and the cell values.
+    Note: when called with --ignorediff, a single row is given for each pair of
+          matching rows, without line numbers or file information"""
     override_flags = 'f'
 
     def add_arguments(self):
@@ -28,8 +31,10 @@ class CSVDiff(CSVKitUtility):
                             help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
         self.argparser.add_argument('-n', '--noequal', dest='no_equal', action='store_true', default=False,
                         help='Do not show identical rows common to both files.')
-        self.argparser.add_argument('-o', '--onlydiff', dest='only_diff', action='store_true', default=False,
+        self.argparser.add_argument('-o', '--onlydiffcells', dest='only_diff', action='store_true', default=False,
                         help='For rows that are different, do not show cells with values that are common to both rows.')
+        self.argparser.add_argument('-i', '--ignorediff', dest='only_equal', action='store_true', default=False,
+                        help='Only show identical rows common to both files.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
                             help='The column name(s) on which to join. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
     def main(self):
@@ -82,10 +87,13 @@ class CSVDiff(CSVKitUtility):
             s1 = nth(file1, n1, [])
             s2 = nth(file2, n2, [])
             if s1 == s2:
-                if not self.args.no_equal:
+                if not self.args.no_equal or self.args.only_equal:
                     if s1 and s2:
-                        output.writerow(['  ', n2, self.args.files[1].name] + s2)
-                        output.writerow(['  ', n1, self.args.files[0].name] + s1)
+                        if self.args.only_equal:
+                            output.writerow(s1)
+                        else:
+                            output.writerow(['  ', n2, self.args.files[1].name] + s2)
+                            output.writerow(['  ', n1, self.args.files[0].name] + s1)
                 # increment both line counters
 		n1 = r1.next()
 		n2 = r2.next()
@@ -95,7 +103,8 @@ class CSVDiff(CSVKitUtility):
                 if s1 in file2:
                     # s1 is present in file2 on a differnt line,
                     # so write the line in file2 that is on the same line as s1
-                    output.writerow(['+ ', n2, self.args.files[1].name] + s2)
+                    if not self.args.only_equal:
+                        output.writerow(['+ ', n2, self.args.files[1].name] + s2)
                     # increment ONE line counter
                     x2 = r2.next()
                     # get line number of match from file2
@@ -109,7 +118,8 @@ class CSVDiff(CSVKitUtility):
                 elif s2 in file1:
                     # s2 is present in file1 on a differnt line,
                     # so write the line in file1 that is on the same line as s2
-                    output.writerow(['- ', n1, self.args.files[0].name] + s1)
+                    if not self.args.only_equal:
+                        output.writerow(['- ', n1, self.args.files[0].name] + s1)
                     # increment ONE line counter
                     x1 = r1.next()
                     # get line number of match from file1
@@ -153,12 +163,16 @@ class CSVDiff(CSVKitUtility):
 
             if s1res == s2res:
                 # handle equal, out-of-order rows separately
-                if not self.args.no_equal:
-                    output.writerow(['  ', n1, self.args.files[0].name] + s1res)
-                    output.writerow(['  ', n2, self.args.files[1].name] + s2res)
+                if not self.args.no_equal or self.args.only_equal:
+                    if self.args.only_equal:
+                        output.writerow(s1res)
+                    else:
+                        output.writerow(['  ', n1, self.args.files[0].name] + s1res)
+                        output.writerow(['  ', n2, self.args.files[1].name] + s2res)
             else:
-                output.writerow(['? ', n1, self.args.files[0].name] + s1res)
-                output.writerow(['? ', n2, self.args.files[1].name] + s2res)
+                if not self.args.only_equal:
+                    output.writerow(['? ', n1, self.args.files[0].name] + s1res)
+                    output.writerow(['? ', n2, self.args.files[1].name] + s2res)
             # increment both line counters
             n1 = r1.next()
             n2 = r2.next()
