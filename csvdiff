@@ -30,19 +30,25 @@ class CSVDiff(CSVKitUtility):
         self.argparser.add_argument('files', metavar="FILES", nargs='+', type=CSVFileType(),
                             help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
         self.argparser.add_argument('-n', '--noequal', dest='no_equal', action='store_true', default=False,
-                        help='Do not show identical rows common to both files.')
+                        help='Exclude identical rows common to both files.')
         self.argparser.add_argument('-o', '--onlydiffcells', dest='only_diff', action='store_true', default=False,
-                        help='For rows that are different, do not show cells with values that are common to both rows.')
+                        help='For rows that are different, only show cells with values that are NOT common to both rows.')
         self.argparser.add_argument('-i', '--ignorediff', dest='only_equal', action='store_true', default=False,
                         help='Only show identical rows common to both files.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
-                            help='The column name(s) on which to join. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
+                            help='The column name(s) on which to decide row difference and similarity. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
+
+    def _parse_join_column_names(self, join_string):
+        """
+        Parse a list of join columns.
+        """
+        return map(str.strip, join_string.split(','))
+
     def main(self):
         if len(self.args.files) != 2:
             sys.exit('You must specify exactly two files to diff.')
 
         if self.args.columns:
-            sys.exit('Not yet implemented')
             join_column_names = self._parse_join_column_names(self.args.columns)
 
             if len(join_column_names) == 1:
@@ -60,13 +66,12 @@ class CSVDiff(CSVKitUtility):
         reader1 = CSVKitReader(self.args.files[0], **self.reader_kwargs)
         reader2 = CSVKitReader(self.args.files[1], **self.reader_kwargs)
 
-        # pop column names
-        column_names1 = reader1.next()
-        column_names1 = reader2.next()
-
         # read lines
         file1 = [r for r in reader1]
         file2 = [r for r in reader2]
+
+        file1_column_names = file1[0]
+        file2_column_names = file2[0]
 
         # identify longest file
         longest = 'file1' if len(file1) >= len(file2) else 'file2'
@@ -76,9 +81,14 @@ class CSVDiff(CSVKitUtility):
 	# up to the last line of the longest file
         r1, r2 = itertools.tee((l for l in xrange(len_longest)), 2)
 
-	# get the first line from both files
+	# get the first line number for both files
         n1 = r1.next()
         n2 = r2.next()
+
+        def only_target_cells(row1, row2):
+            i1 = file1_column_names.index(join_column_names[0])
+            i2 = file2_column_names.index(join_column_names[1])
+            return [row1[i1]], [row2[i2]]
 
 	# TODO make sure this will never stop short
 	# because of line deletions or inserts
@@ -162,17 +172,29 @@ class CSVDiff(CSVKitUtility):
                         s2res.append(c)
 
             if s1res == s2res:
-                # handle equal, out-of-order rows separately
-                if not self.args.no_equal or self.args.only_equal:
-                    if self.args.only_equal:
-                        output.writerow(s1res)
-                    else:
-                        output.writerow(['  ', n1, self.args.files[0].name] + s1res)
-                        output.writerow(['  ', n2, self.args.files[1].name] + s2res)
+                if s1res and s2res:
+                    # handle equal, out-of-order rows separately
+                    if not self.args.no_equal or self.args.only_equal:
+                        if self.args.only_equal:
+                            output.writerow(s1res)
+                        else:
+                            output.writerow(['  ', n1, self.args.files[0].name] + s1res)
+                            output.writerow(['  ', n2, self.args.files[1].name] + s2res)
             else:
-                if not self.args.only_equal:
-                    output.writerow(['? ', n1, self.args.files[0].name] + s1res)
-                    output.writerow(['? ', n2, self.args.files[1].name] + s2res)
+                if self.args.columns:
+                    s1resc, s2resc = only_target_cells(s1res, s2res)
+                    if s1resc and s2resc:
+                        if s1resc != s2resc:
+                            if self.args.only_diff:
+                                output.writerow(['? ', n1, self.args.files[0].name] + s1resc)
+                                output.writerow(['? ', n2, self.args.files[1].name] + s2resc)
+                            else:
+                                output.writerow(['? ', n1, self.args.files[0].name] + s1res)
+                                output.writerow(['? ', n2, self.args.files[1].name] + s2res)
+                else:
+                    if not self.args.only_equal:
+                        output.writerow(['? ', n1, self.args.files[0].name] + s1res)
+                        output.writerow(['? ', n2, self.args.files[1].name] + s2res)
             # increment both line counters
             n1 = r1.next()
             n2 = r2.next()
