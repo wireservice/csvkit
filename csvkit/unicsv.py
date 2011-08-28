@@ -26,7 +26,14 @@ class UnicodeCSVReader(object):
     """
     def __init__(self, f, encoding='utf-8', **kwargs):
         f = UTF8Recoder(f, encoding)
-        self.reader = csv.reader(f, **kwargs)
+        #kwargs_fixed will contain only kwargs that can be handled by csv.reader()
+        #which are all class attributes on csv.Dialect, so we find them with dir()
+        kwargs_fixed = {} 
+        dialect_set = set(dir(csv.Dialect))        
+        for key, value in kwargs.iteritems():
+            if key in dialect_set:
+                kwargs_fixed[key] = value
+        self.reader = csv.reader(f, **kwargs_fixed)
 
     def next(self):
         row = self.reader.next()
