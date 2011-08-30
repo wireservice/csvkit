@@ -169,7 +169,12 @@ class CSVKitUtility(object):
             if self.args.verbose:
                 sys.__excepthook__(t, value, traceback)
             else:
-                sys.stderr.write('%s\n' % unicode(value).encode('utf-8'))
+                # Special case handling for Unicode errors, which behave very strangely
+                # when cast with unicode()
+                if t == UnicodeDecodeError:
+                    sys.stderr.write('%s\n' % value)
+                else:
+                    sys.stderr.write('%s\n' % unicode(value).encode('utf-8'))
 
         sys.excepthook = handler
 
