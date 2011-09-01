@@ -5,7 +5,7 @@ from fixed import fixed2csv
 from js import json2csv
 from xls import xls2csv
 
-SUPPORTED_FORMATS = ['fixed', 'xls', 'csv']
+SUPPORTED_FORMATS = ['fixed', 'xls', 'csv', 'json']
 
 def convert(f, format, schema=None, key=None, **kwargs):
     """
@@ -24,7 +24,7 @@ def convert(f, format, schema=None, key=None, **kwargs):
         return fixed2csv(f, schema, **kwargs)
     elif format == 'xls':
         return xls2csv(f, **kwargs)
-    elif format == 'js':
+    elif format == 'json':
         return json2csv(f, key, **kwargs)
     elif format == 'csv':
         return csv2csv(f, **kwargs)
@@ -46,7 +46,7 @@ def guess_format(filename):
     if extension == 'xls':
         return extension
     elif extension in ['json', 'js']:
-        return 'js' 
+        return 'json' 
     elif extension == 'csv':
         return extension
     elif extension == 'fixed':

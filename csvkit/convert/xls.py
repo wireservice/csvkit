@@ -18,7 +18,7 @@ def normalize_text(values):
     """
     Normalize a column of text cells.
     """
-    return unicode, [v if v else None for v in values]
+    return unicode, [unicode(v) if v else None for v in values]
 
 def normalize_numbers(values):
     """
@@ -111,8 +111,9 @@ def determine_column_type(types):
     types_set = set(types)
     types_set.discard(xlrd.biffh.XL_CELL_EMPTY)
 
+    # Normalize mixed types to text
     if len(types_set) > 1:
-        raise XLSDataError('Column contains multiple data types: %s' % unicode(types_set)) 
+        return xlrd.biffh.XL_CELL_TEXT
 
     try:
         return types_set.pop()
@@ -139,17 +140,13 @@ def xls2csv(f, **kwargs):
         values = sheet.col_values(i)[1:]
         types = sheet.col_types(i)[1:]
 
-        try:
-            column_type = determine_column_type(types)
+        column_type = determine_column_type(types)
 
-            # This is terrible code. TKTK
-            if column_type == xlrd.biffh.XL_CELL_DATE:
-                t, normal_values = NORMALIZERS[column_type](values, book.datemode)
-            else:
-                t, normal_values = NORMALIZERS[column_type](values)
-        except XLSDataError, e:
-            e.msg = 'Error in column %i, "%s": %s' % (i, column_name, e.msg)
-            raise e
+        # This is terrible code. TKTK
+        if column_type == xlrd.biffh.XL_CELL_DATE:
+            t, normal_values = NORMALIZERS[column_type](values, book.datemode)
+        else:
+            t, normal_values = NORMALIZERS[column_type](values)
 
         column = table.Column(i, column_name, normal_values, normal_type=t)
         tab.append(column)

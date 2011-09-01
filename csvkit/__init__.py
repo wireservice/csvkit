@@ -31,7 +31,7 @@ class CSVKitWriter(UnicodeCSVWriter):
             self._append_line_number(row)
 
         # Convert embedded Mac line endings to unix style line endings so they get quoted
-        row = [i.replace('\r', '\n') for i in row]
+        row = [i.replace('\r', '\n') if isinstance(i, basestring) else i for i in row]
 
         UnicodeCSVWriter.writerow(self, row)
 

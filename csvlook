@@ -40,7 +40,7 @@ class CSVLook(CSVKitUtility):
                     d = ''
                 output.append(' %s ' % unicode(d).ljust(widths[j]))
 
-            sys.stdout.write('| %s |\n' % ('|'.join(output)))
+            sys.stdout.write(('| %s |\n' % ('|'.join(output))).encode('utf-8'))
 
             if i == 0 or i == len(rows) - 1:
                 sys.stdout.write('%s\n' % divider)

@@ -1,29 +1,68 @@
 #!/usr/bin/env python
 
 import argparse
+import bz2
+import gzip
+import os.path
 import sys
 
 from csvkit import CSVKitReader
 from csvkit.exceptions import ColumnIdentifierError
 
+class CSVFileType(object):
+    """
+    An argument factory like argparse.FileType with compression support.
+    """
+
+    def __init__(self, mode = "rb"):
+        """
+        Initialize the factory.
+        """
+        self._mode = mode
+
+    def __call__(self, path):
+        """
+        Build a file-like object from the specified path.
+        """
+        if path == "-":
+            if "r" in self._mode:
+                return sys.stdin
+            elif "w" in self._mode:
+                return sys.stdout
+            else:
+                raise ValueError("invalid path \"-\" with mode {0}".format(self._mode))
+        else:
+            (_, extension) = os.path.splitext(path)
+
+            if extension == ".gz":
+                return gzip.open(path, self._mode)
+            if extension == ".bz2":
+                return bz2.BZ2File(path, self._mode)
+            else:
+                return open(path, self._mode)
+
 class CSVKitUtility(object):
     description = ''
     epilog = ''
     override_flags = ''
-    _input_line_number = None
-    
-    def __init__(self):
+
+    def __init__(self, args=None, output_file=None):
         """
         Perform argument processing and other setup for a CSVKitUtility.
         """
         self._init_common_parser()
         self.add_arguments()
-        self.args = self.argparser.parse_args()
+        self.args = self.argparser.parse_args(args)
 
         self.reader_kwargs = self._extract_csv_reader_kwargs()
         self.writer_kwargs = self._extract_csv_writer_kwargs()
 
         self._install_exception_handler()
+
+        if output_file is None:
+            self.output_file = sys.stdout
+        else:
+            self.output_file = output_file
 
     def add_arguments(self):
         """
@@ -52,7 +91,7 @@ class CSVKitUtility(object):
 
         # Input
         if 'f' not in self.override_flags:
-            self.argparser.add_argument('file', metavar="FILE", nargs='?', type=argparse.FileType('rU'), default=sys.stdin,
+            self.argparser.add_argument('file', metavar="FILE", nargs='?', type=CSVFileType(), default=sys.stdin,
                                 help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         if 'd' not in self.override_flags:
             self.argparser.add_argument('-d', '--delimiter', dest='delimiter',
@@ -72,9 +111,12 @@ class CSVKitUtility(object):
         if 'p' not in self.override_flags:
             self.argparser.add_argument('-p', '--escapechar', dest='escapechar',
                                 help='Character used to escape the delimiter if quoting is set to "Quote None" and the quotechar if doublequote is not specified.')
+        if 'z' not in self.override_flags:
+            self.argparser.add_argument('-z', '--maxfieldsize', dest='maxfieldsize', type=int,
+                                help='Maximum length of a single field in the input CSV file.')
         if 'e' not in self.override_flags:
             self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
-                                help='Specify the encoding the input file.')
+                                help='Specify the encoding the input CSV file.')
         if 'v' not in self.override_flags:
             self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
                                 help='Print detailed tracebacks when errors occur.')
@@ -109,6 +151,9 @@ class CSVKitUtility(object):
         if self.args.escapechar:
             kwargs['escapechar'] = self.args.escapechar
 
+        if self.args.maxfieldsize:
+            kwargs['maxfieldsize'] = self.args.maxfieldsize
+
         return kwargs
 
     def _extract_csv_writer_kwargs(self):
@@ -127,36 +172,23 @@ class CSVKitUtility(object):
         Installs a replacement for sys.excepthook, which handles pretty-printing uncaught exceptions.
         """
         def handler(t, value, traceback):
-            try:
-                sys.stderr.write("Error reading input file at line %i\n" % self.input_line_number)
-            except ValueError: pass
             if self.args.verbose:
                 sys.__excepthook__(t, value, traceback)
             else:
-                sys.stderr.write("%s\n" % (value))
+                # Special case handling for Unicode errors, which behave very strangely
+                # when cast with unicode()
+                if t == UnicodeDecodeError:
+                    sys.stderr.write('%s\n' % value)
+                else:
+                    sys.stderr.write('%s\n' % unicode(value).encode('utf-8'))
 
         sys.excepthook = handler
-
-    def input_line_number():
-        doc = "Utilities which wish to track the line number of an input file can use this property. Useful for error reporting."
-        def fget(self):
-            if self._input_line_number is None:
-                raise ValueError("Input line number has not been initialized.")
-            return self._input_line_number
-        def fset(self, value):
-            self._input_line_number = value
-        def fdel(self):
-            del self._input_line_number
-        return locals()
-    input_line_number = property(**input_line_number())
 
 def match_column_identifier(column_names, c):
     """
     Determine what column a single column id (name or index) matches in a series of column names.
-    Note that integer values are *always* treated as positional identifiers. If you happen to have
-    column names which are also integers, you must specify them using a positional index.
     """
-    if isinstance(c, basestring) and not c.isdigit() and c in column_names:
+    if c in column_names:
         return column_names.index(c)
     else:
         try:

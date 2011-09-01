@@ -22,6 +22,8 @@ class CSVCut(CSVKitUtility):
                         help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
                         help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
+        self.argparser.add_argument('-x', '--delete-empty-rows', dest='delete_empty', action='store_true',
+                        help='After cutting, delete rows which are completely empty.')
 
     def main(self):
         if self.args.names_only:
@@ -39,6 +41,10 @@ class CSVCut(CSVKitUtility):
         for i, row in enumerate(rows):
             self.input_line_number = i + 1
             out_row = [row[c] if c < len(row) else None for c in column_ids] 
+
+            if self.args.delete_empty:
+                if ''.join(out_row) == '':
+                    continue
             
             output.writerow(out_row)
                 
