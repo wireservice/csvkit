@@ -16,7 +16,6 @@ Filter tabular data to only those rows where certain columns contain a given val
     positional arguments:
       FILE                  The CSV file to operate on. If omitted, will accept
                             input on STDIN.
-      PATTERN               The pattern to search for.
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -25,18 +24,31 @@ Filter tabular data to only those rows where certain columns contain a given val
       -c COLUMNS, --columns COLUMNS
                             A comma separated list of column indices or names to
                             be searched.
-      -r, --regex           If specified, the search pattern will be treated as a
-                            regular expression.
+      -m PATTERN, --match PATTERN
+                            The string to search for.
+      -r REGEX, --regex REGEX
+                            If specified, must be followed by a regular expression
+                            which will be tested against the specified columns.
+      -f MATCHFILE, --file MATCHFILE
+                            If specified, must be the path to a file. For each
+                            tested row, if any line in the file (stripped of line
+                            separators) is an exact match for the cell value, the
+                            row will pass.
+      -i, --invert-match    If specified, select non-matching instead of matching
+                            rows.
 
 Also see: :doc:`common_arguments`.
+
+NOTE: Even though '-m', '-r', and '-f' are listed as "optional" arguments, you must specify one of them.
 
 Examples
 ========
 
 Search for the row relating to Illinois::
 
-    $ csvgrep -c 1 ILLINOIS examples/realdata/FY09_EDU_Recipients_by_State.csv 
+    $ csvgrep -c 1 -m ILLINOIS examples/realdata/FY09_EDU_Recipients_by_State.csv 
 
 Search for rows relating to states with names beginning with the letter "I"::
 
     $ csvgrep -c 1 -r "^I" examples/realdata/FY09_EDU_Recipients_by_State.csv 
+
