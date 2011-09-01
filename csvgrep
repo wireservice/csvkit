@@ -2,6 +2,7 @@
 
 import re
 import sys
+from argparse import FileType
 
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit.cli import CSVKitUtility, CSVFileType, parse_column_identifiers, print_column_names
@@ -18,6 +19,8 @@ class CSVGrep(CSVKitUtility):
                         help='A comma separated list of column indices or names to be searched.')
         self.argparser.add_argument('-r', '--regex', dest='regex', action='store',
                         help='If specified, must be followed by a regular expression which will be tested against the specified columns.')
+        self.argparser.add_argument('-f', '--file', dest='matchfile', type=FileType('r'), action='store',
+                        help="""If specified, must be the path to a file. For each tested row, if any line in the file (stripped of line separators) is an exact match for the cell value, the row will pass.""")
         self.argparser.add_argument('-i', '--invert-match', dest='inverse', action='store_true',
                         help='If specified, select non-matching instead of matching rows.')
         self.argparser.add_argument('-m','--match', dest="pattern", action='store',
@@ -40,6 +43,9 @@ class CSVGrep(CSVKitUtility):
         
         if self.args.regex:
             pattern = re.compile(self.args.regex)
+        elif self.args.matchfile:
+            lines = [line.rstrip() for line in self.args.matchfile]
+            pattern = lambda x: x in lines
         else:
             pattern = self.args.pattern
             
