@@ -16,12 +16,12 @@ class CSVGrep(CSVKitUtility):
                         help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
                         help='A comma separated list of column indices or names to be searched.')
-        self.argparser.add_argument('-r', '--regex', dest='regex', action='store_true',
-                        help='If specified, the search pattern will be treated as a Python regular expression.')
+        self.argparser.add_argument('-r', '--regex', dest='regex', action='store',
+                        help='If specified, must be followed by a regular expression which will be tested against the specified columns.')
         self.argparser.add_argument('-i', '--invert-match', dest='inverse', action='store_true',
                         help='If specified, select non-matching instead of matching rows.')
-        self.argparser.add_argument('pattern', metavar="PATTERN", nargs='?',
-                        help='The pattern to search for.')
+        self.argparser.add_argument('-m','--match', dest="pattern", action='store',
+                        help='The string to search for.')
         self.argparser.add_argument('file', metavar="FILE", nargs='?', type=CSVFileType(), default=sys.stdin,
                         help='The CSV file to operate on. If omitted, will accept input on STDIN.')
 
@@ -30,8 +30,8 @@ class CSVGrep(CSVKitUtility):
             print_column_names(self.args.file, sys.stdout, **self.reader_kwargs)
             sys.exit()
 
-        if not self.args.pattern:
-            sys.exit('A pattern must be specified unless using the -n option.')
+        if not self.args.regex and not self.args.pattern and not self.args.file:
+            sys.exit("One of -r or -m must be used to specify how to match rows, unless using the -n option.")
 
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         column_names = rows.next()
@@ -39,7 +39,7 @@ class CSVGrep(CSVKitUtility):
         column_ids = parse_column_identifiers(self.args.columns, column_names)
         
         if self.args.regex:
-            pattern = re.compile(self.args.pattern)
+            pattern = re.compile(self.args.regex)
         else:
             pattern = self.args.pattern
             
