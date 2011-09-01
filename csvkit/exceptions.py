@@ -13,6 +13,14 @@ class CustomException(Exception):
     def __str__(self):
         return self.msg
 
+class FieldSizeLimitError(CustomException):
+    """
+    Exception raised when a field in the CSV file exceeds the default max
+    or one provided by the user.
+    """
+    def __init__(self, limit):
+        self.msg = 'CSV contains fields longer than maximum length of %i characters. Try raising the maximum with the --maxfieldsize flag.' % limit
+
 class ColumnIdentifierError(CustomException):
     """
     Exception raised when the user supplies an invalid column identifier.

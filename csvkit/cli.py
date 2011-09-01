@@ -111,9 +111,12 @@ class CSVKitUtility(object):
         if 'p' not in self.override_flags:
             self.argparser.add_argument('-p', '--escapechar', dest='escapechar',
                                 help='Character used to escape the delimiter if quoting is set to "Quote None" and the quotechar if doublequote is not specified.')
+        if 'z' not in self.override_flags:
+            self.argparser.add_argument('-z', '--maxfieldsize', dest='maxfieldsize', type=int,
+                                help='Maximum length of a single field in the input CSV file.')
         if 'e' not in self.override_flags:
             self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
-                                help='Specify the encoding the input file.')
+                                help='Specify the encoding the input CSV file.')
         if 'v' not in self.override_flags:
             self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
                                 help='Print detailed tracebacks when errors occur.')
@@ -147,6 +150,9 @@ class CSVKitUtility(object):
 
         if self.args.escapechar:
             kwargs['escapechar'] = self.args.escapechar
+
+        if self.args.maxfieldsize:
+            kwargs['maxfieldsize'] = self.args.maxfieldsize
 
         return kwargs
 
