@@ -187,7 +187,8 @@ class CSVKitUtility(object):
 def match_column_identifier(column_names, c):
     """
     Determine what column a single column id (name or index) matches in a series of column names.
-    """
+    Note that integer values are *always* treated as positional identifiers. If you happen to have
+    column names which are also integers, you must specify them using a positional index."""
     if isinstance(c, basestring) and not c.isdigit() and c in column_names:
         return column_names.index(c)
     else:
