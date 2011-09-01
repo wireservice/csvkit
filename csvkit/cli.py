@@ -188,7 +188,7 @@ def match_column_identifier(column_names, c):
     """
     Determine what column a single column id (name or index) matches in a series of column names.
     """
-    if c in column_names:
+    if isinstance(c, basestring) and not c.isdigit() and c in column_names:
         return column_names.index(c)
     else:
         try:
