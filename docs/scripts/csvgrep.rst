@@ -24,6 +24,8 @@ Filter tabular data to only those rows where certain columns contain a given val
       -c COLUMNS, --columns COLUMNS
                             A comma separated list of column indices or names to
                             be searched.
+      -m PATTERN, --match PATTERN
+                            The string to search for.
       -r REGEX, --regex REGEX
                             If specified, must be followed by a regular expression
                             which will be tested against the specified columns.
@@ -34,8 +36,6 @@ Filter tabular data to only those rows where certain columns contain a given val
                             row will pass.
       -i, --invert-match    If specified, select non-matching instead of matching
                             rows.
-      -m PATTERN, --match PATTERN
-                            The string to search for.
 
 Also see: :doc:`common_arguments`.
 
