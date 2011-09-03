@@ -5,4 +5,3 @@ from csvkit.utilities.csvcut import CSVCut
 if __name__ == '__main__':
     CSVCut().main()
 
-

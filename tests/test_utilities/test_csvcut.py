@@ -32,3 +32,4 @@ class TestCSVCut(unittest.TestCase):
         self.assertEqual(input_file.next(), '  1: a\n')
         self.assertEqual(input_file.next(), '  2: b\n')
         self.assertEqual(input_file.next(), '  3: c\n')
+
