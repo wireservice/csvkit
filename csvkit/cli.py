@@ -117,6 +117,10 @@ class CSVKitUtility(object):
         if 'v' not in self.override_flags:
             self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
                                 help='Print detailed tracebacks when errors occur.')
+        if 's' not in self.override_flags:
+            self.argparser.add_argument('-s', '--snifflimit', dest='snifflimit', type=int,
+                                help='Limit csv dialect sniffing to the specified number of bytes.')
+
 
         # Output
         if 'l' not in self.override_flags:
@@ -148,6 +152,9 @@ class CSVKitUtility(object):
         if self.args.escapechar:
             kwargs['escapechar'] = self.args.escapechar
 
+        if self.args.snifflimit:
+            kwargs['snifflimit'] = self.args.snifflimit
+            
         return kwargs
 
     def _extract_csv_writer_kwargs(self):
