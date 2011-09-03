@@ -22,8 +22,8 @@ class CSVSort(CSVKitUtility):
 
     def main(self):
         if self.args.names_only:
-            print_column_names(self.args.file, sys.stdout, **self.reader_kwargs)
-            sys.exit()
+            print_column_names(self.args.file, self.output_file, **self.reader_kwargs)
+            return
 
         if self.args.file.name != '<stdin>':
             # Use filename as table name
@@ -39,7 +39,7 @@ class CSVSort(CSVKitUtility):
         
         rows.insert(0, tab.headers())
 
-        output = CSVKitWriter(sys.stdout, **self.writer_kwargs)
+        output = CSVKitWriter(self.output_file, **self.writer_kwargs)
 
         for row in rows:
             output.writerow(row)

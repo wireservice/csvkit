@@ -89,7 +89,7 @@ class CSVJoin(CSVKitUtility):
                 for t in tables[1:]:
                     jointab = join.sequential_join(jointab, t)
 
-        output = CSVKitWriter(sys.stdout, **self.writer_kwargs)
+        output = CSVKitWriter(self.output_file, **self.writer_kwargs)
 
         for row in jointab:
             output.writerow(row)

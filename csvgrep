@@ -30,8 +30,8 @@ class CSVGrep(CSVKitUtility):
 
     def main(self):
         if self.args.names_only:
-            print_column_names(self.args.file, sys.stdout, **self.reader_kwargs)
-            sys.exit()
+            print_column_names(self.args.file, self.output_file, **self.reader_kwargs)
+            return
 
         if not self.args.regex and not self.args.pattern and not self.args.file:
             sys.exit("One of -r or -m must be used to specify how to match rows, unless using the -n option.")
@@ -51,7 +51,7 @@ class CSVGrep(CSVKitUtility):
             
         patterns = dict((c, pattern) for c in column_ids)
 
-        output = CSVKitWriter(sys.stdout, **self.writer_kwargs)
+        output = CSVKitWriter(self.output_file, **self.writer_kwargs)
         output.writerow(column_names)
 
         filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse = self.args.inverse)

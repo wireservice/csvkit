@@ -237,4 +237,3 @@ def print_column_names(f, output, **reader_kwargs):
     for i, c in enumerate(column_names):
         output.write('%3i: %s\n' % (i + 1, c))
 
-    sys.exit()
