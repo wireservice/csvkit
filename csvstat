@@ -26,18 +26,18 @@ class CSVStat(CSVKitUtility):
             uniques = set(c)
             uniques.discard(None)
 
-            sys.stdout.write((u'%3i. %s\n' % (c.order + 1, c.name)).encode('utf-8'))
+            self.output_file.write((u'%3i. %s\n' % (c.order + 1, c.name)).encode('utf-8'))
 
             if c.type == None:
-                sys.stdout.write(u'\tEmpty column\n')
+                self.output_file.write(u'\tEmpty column\n')
                 continue
                 
-            sys.stdout.write(u'\t%s\n' % c.type)
-            sys.stdout.write(u'\tNulls: %s\n' % (u'Yes' if c.nullable else u'No'))
+            self.output_file.write(u'\t%s\n' % c.type)
+            self.output_file.write(u'\tNulls: %s\n' % (u'Yes' if c.nullable else u'No'))
             
             if len(uniques) <= 5 and c.type is not bool:
                 uniques = [unicode(u) for u in list(uniques)]
-                sys.stdout.write((u'\tValues: %s\n' % ', '.join(uniques)).encode('utf-8'))
+                self.output_file.write((u'\tValues: %s\n' % ', '.join(uniques)).encode('utf-8'))
             else:
                 # Skip min/max for strings and bools
                 if c.type not in [unicode, bool]:
@@ -48,26 +48,26 @@ class CSVStat(CSVKitUtility):
                         minval = minval.isoformat()
                         maxval = maxval.isoformat()
 
-                    sys.stdout.write(u'\tMin: %s\n' % min(values))
-                    sys.stdout.write(u'\tMax: %s\n' % max(values))
+                    self.output_file.write(u'\tMin: %s\n' % min(values))
+                    self.output_file.write(u'\tMax: %s\n' % max(values))
 
                     if c.type in [int, float]:
-                        sys.stdout.write(u'\tSum: %s\n' % sum(values))
-                        sys.stdout.write(u'\tMean: %s\n' % (sum(values) / len(values)))
-                        sys.stdout.write(u'\tMedian: %s\n' % median(values))
+                        self.output_file.write(u'\tSum: %s\n' % sum(values))
+                        self.output_file.write(u'\tMean: %s\n' % (sum(values) / len(values)))
+                        self.output_file.write(u'\tMedian: %s\n' % median(values))
 
-                sys.stdout.write(u'\tUnique values: %i\n' % len(uniques))
+                self.output_file.write(u'\tUnique values: %i\n' % len(uniques))
 
                 if len(uniques) != len(values):
-                    sys.stdout.write(u'\t5 most frequent values:\n')
+                    self.output_file.write(u'\t5 most frequent values:\n')
                     for value, count in freq(values):
-                        sys.stdout.write((u'\t\t%s:\t%s\n' % (unicode(value), count)).encode('utf-8'))
+                        self.output_file.write((u'\t\t%s:\t%s\n' % (unicode(value), count)).encode('utf-8'))
 
                 if c.type == unicode:
-                    sys.stdout.write(u'\tMax length: %i\n' % c.max_length)
+                    self.output_file.write(u'\tMax length: %i\n' % c.max_length)
 
-        sys.stdout.write(u'\n')
-        sys.stdout.write(u'Row count: %s\n' % tab.count_rows())
+        self.output_file.write(u'\n')
+        self.output_file.write(u'Row count: %s\n' % tab.count_rows())
 
 def median(l):
     """

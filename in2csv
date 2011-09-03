@@ -63,9 +63,9 @@ class In2CSV(CSVKitUtility):
 
         # Fixed width can be processed as a stream
         if format == 'fixed':
-            kwargs['output'] = sys.stdout
+            kwargs['output'] = self.output_file
 
-        sys.stdout.write(convert.convert(f, format, **kwargs))
+        self.output_file.write(convert.convert(f, format, **kwargs))
 
 if __name__ == "__main__":
     utility = In2CSV()

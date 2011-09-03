@@ -29,12 +29,12 @@ class CSVSQL(CSVKitUtility):
         csv_table = table.Table.from_csv(self.args.file, name=table_name, snifflimit=self.args.snifflimit, **self.reader_kwargs)
         sql_table = sql.make_table(csv_table)
 
-        sys.stdout.write((u'%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect)).encode('utf-8'))
+        self.output_file.write((u'%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect)).encode('utf-8'))
 
         if self.args.inserts:
-            sys.stdout.write('\n')
+            self.output_file.write('\n')
             for row in csv_table.to_rows(serialize_dates=True):
-                sys.stdout.write((u'%s\n' % sql.make_insert_statement(sql_table, row, dialect=self.args.dialect)).encode('utf-8'))
+                self.output_file.write((u'%s\n' % sql.make_insert_statement(sql_table, row, dialect=self.args.dialect)).encode('utf-8'))
 
 if __name__ == '__main__':
     utility = CSVSQL()

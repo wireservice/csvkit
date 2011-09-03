@@ -23,11 +23,11 @@ class CSVClean(CSVKitUtility):
                 pass
             if checker.errs:
                 for e in checker.errs:
-                    sys.stdout.write("Line %i: %s\n" % (e.line_number,e.msg))
+                    self.output_file.write("Line %i: %s\n" % (e.line_number,e.msg))
             else:
-                sys.stdout.write("No errors.\n")
+                self.output_file.write("No errors.\n")
             if checker.joins:
-                sys.stdout.write("%i rows would have been joined/reduced to %i rows after eliminating expected internal line breaks.\n" % (checker.rows_joined, checker.joins))
+                self.output_file.write("%i rows would have been joined/reduced to %i rows after eliminating expected internal line breaks.\n" % (checker.rows_joined, checker.joins))
         else:
             base,ext = splitext(self.args.file.name)
             # should we preserve delimiters and other dialect args from CLI?
@@ -48,12 +48,12 @@ class CSVClean(CSVKitUtility):
                 for e in checker.errs:
                     err_file.writerow(self._format_error_row(e))
                     err_count = len(checker.errs)
-                sys.stdout.write("%i error%s logged to %s\n" % (err_count,"" if err_count == 1 else "s", err_filename))
+                self.output_file.write("%i error%s logged to %s\n" % (err_count,"" if err_count == 1 else "s", err_filename))
             else:
-                sys.stdout.write("No errors.\n")
+                self.output_file.write("No errors.\n")
 
             if checker.joins:
-                sys.stdout.write("%i rows were joined/reduced to %i rows after eliminating expected internal line breaks.\n" % (checker.rows_joined, checker.joins))
+                self.output_file.write("%i rows were joined/reduced to %i rows after eliminating expected internal line breaks.\n" % (checker.rows_joined, checker.joins))
 
     def _format_error_row(self, e):
         """Format a row for """
