@@ -19,6 +19,9 @@ Sort CSV files. Like unix "sort" command, but for tabular data::
 
     optional arguments:
       -h, --help            show this help message and exit
+      -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
+                            Limit CSV dialect sniffing to the specified number of
+                            bytes.
                             Specify the encoding the input file.
       -n, --names           Display column names and indices from the input CSV
                             and exit.

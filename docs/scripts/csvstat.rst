@@ -19,6 +19,9 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
 
     optional arguments:
       -h, --help            show this help message and exit
+      -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
+                            Limit CSV dialect sniffing to the specified number of
+                            bytes.
 
 Also see: :doc:`common_arguments`.
 

@@ -19,11 +19,11 @@ class In2CSV(CSVKitUtility):
                             help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
         self.argparser.add_argument('-k', '--key', dest='key',
                             help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
+        self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
+                            help='Limit CSV dialect sniffing to the specified number of bytes.')
+
 
     def main(self):
-        if self.args.file == '<stdin>' and not self.args.format:
-            sys.exit('You must specify a format when providing data via STDIN (pipe).')
-
         if self.args.format:
             format = self.args.format
 
@@ -35,6 +35,9 @@ class In2CSV(CSVKitUtility):
         elif self.args.key:
             format = 'json'
         else:
+            if self.args.file == '<stdin>':
+                sys.exit('You must specify a format when providing data via STDIN (pipe).')
+
             format = convert.guess_format(self.args.file)
 
             if not format:
@@ -54,6 +57,9 @@ class In2CSV(CSVKitUtility):
 
         if self.args.key:
             kwargs['key'] = self.args.key
+
+        if self.args.snifflimit:
+            kwargs['snifflimit'] = self.args.snifflimit
 
         # Fixed width can be processed as a stream
         if format == 'fixed':

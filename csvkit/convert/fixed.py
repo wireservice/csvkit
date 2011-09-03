@@ -80,7 +80,12 @@ class FixedWidthRowParser(object):
             values.append(line[field.start:field.start + field.length].strip())
 
         return values
-        
+
+
+    def parse_dict(self, line):
+        """Convenience method returns a dict. Equivalent to dict(zip(self.headers,self.parse(line)))."""
+        return dict(zip(self.headers,self.parse(line)))
+
     @property
     def headers(self):
         return [field.name for field in self.fields]

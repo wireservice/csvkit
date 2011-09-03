@@ -10,13 +10,15 @@ from csvkit.cli import CSVKitUtility, parse_column_identifiers, print_column_nam
 class CSVSort(CSVKitUtility):
     description = 'Sort CSV files. Like unix "sort" command, but for tabular data.'
 
-    def add_arguments(self):
+    def add_arguments(self):        
+        self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
+                            help='Limit CSV dialect sniffing to the specified number of bytes.')
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                             help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
                             help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
         self.argparser.add_argument('-r', '--reverse', dest='reverse', action='store_true',
-                            help='Sort in descending order.')
+                help='Sort in descending order.')
 
     def main(self):
         if self.args.names_only:
@@ -29,7 +31,7 @@ class CSVSort(CSVKitUtility):
         else:
             table_name = 'csvsql_table'
 
-        tab = table.Table.from_csv(self.args.file, name=table_name, **self.reader_kwargs)
+        tab = table.Table.from_csv(self.args.file, name=table_name, snifflimit=self.args.snifflimit, **self.reader_kwargs)
         column_ids = parse_column_identifiers(self.args.columns, tab.headers())
 
         rows = tab.to_rows(serialize_dates=True) 

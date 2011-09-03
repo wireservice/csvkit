@@ -179,7 +179,7 @@ class Table(list):
         return row_data
 
     @classmethod
-    def from_csv(cls, f, name='from_csv_table', **kwargs):
+    def from_csv(cls, f, name='from_csv_table', snifflimit=None, **kwargs):
         """
         Creates a new Table from a file-like object containing CSV data.
         """
@@ -187,8 +187,12 @@ class Table(list):
         # which are not seekable and thus must be buffered
         contents = f.read()
 
-        sample = contents
-        dialect = sniffer.sniff_dialect(sample, **kwargs)
+        if snifflimit:
+            sample = contents[:snifflimit]
+        else:
+            sample = contents
+
+        dialect = sniffer.sniff_dialect(sample)
 
         f = StringIO(contents) 
         reader = CSVKitReader(f, dialect=dialect, **kwargs)

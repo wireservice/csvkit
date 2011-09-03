@@ -111,16 +111,15 @@ class CSVKitUtility(object):
         if 'p' not in self.override_flags:
             self.argparser.add_argument('-p', '--escapechar', dest='escapechar',
                                 help='Character used to escape the delimiter if quoting is set to "Quote None" and the quotechar if doublequote is not specified.')
+        if 'z' not in self.override_flags:
+            self.argparser.add_argument('-z', '--maxfieldsize', dest='maxfieldsize', type=int,
+                                help='Maximum length of a single field in the input CSV file.')
         if 'e' not in self.override_flags:
             self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
-                                help='Specify the encoding the input file.')
+                                help='Specify the encoding the input CSV file.')
         if 'v' not in self.override_flags:
             self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
                                 help='Print detailed tracebacks when errors occur.')
-        if 's' not in self.override_flags:
-            self.argparser.add_argument('-s', '--snifflimit', dest='snifflimit', type=int,
-                                help='Limit csv dialect sniffing to the specified number of bytes.')
-
 
         # Output
         if 'l' not in self.override_flags:
@@ -132,6 +131,7 @@ class CSVKitUtility(object):
         Extracts those from the command-line arguments those would should be passed through to the input CSV reader(s).
         """
         kwargs = {}
+
         if self.args.encoding:
             kwargs['encoding'] = self.args.encoding
 
@@ -152,9 +152,9 @@ class CSVKitUtility(object):
         if self.args.escapechar:
             kwargs['escapechar'] = self.args.escapechar
 
-        if self.args.snifflimit:
-            kwargs['snifflimit'] = self.args.snifflimit
-            
+        if self.args.maxfieldsize:
+            kwargs['maxfieldsize'] = self.args.maxfieldsize
+
         return kwargs
 
     def _extract_csv_writer_kwargs(self):
@@ -188,8 +188,10 @@ class CSVKitUtility(object):
 def match_column_identifier(column_names, c):
     """
     Determine what column a single column id (name or index) matches in a series of column names.
+    Note that integer values are *always* treated as positional identifiers. If you happen to have
+    column names which are also integers, you must specify them using a positional index.
     """
-    if c in column_names:
+    if isinstance(c, basestring) and not c.isdigit() and c in column_names:
         return column_names.index(c)
     else:
         try:

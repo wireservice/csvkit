@@ -23,6 +23,9 @@ All utilities which accept CSV as input share a set of common command-line argum
                         Character used to escape the delimiter if quoting is
                         set to "Quote None" and the quotechar if doublequote
                         is not specified.
+  -z MAXFIELDSIZE, --maxfieldsize MAXFIELDSIZE
+                        Maximum length of a single field in the input CSV
+                        file.
   -e ENCODING, --encoding ENCODING
   -v, --verbose         Print detailed tracebacks when errors occur.
                         Specify the encoding the input file.
@@ -44,3 +47,4 @@ Convert the 2000 census geo headers file from fixed-width to CSV and from latin-
 Add line numbers to a file, making no other changes::
 
     $ csvcut -l examples/realdata/FY09_EDU_Recipients_by_State.csv
+

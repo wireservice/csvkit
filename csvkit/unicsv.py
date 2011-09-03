@@ -2,6 +2,8 @@ import codecs
 import csv
 from cStringIO import StringIO
 
+from csvkit.exceptions import FieldSizeLimitError
+
 """
 The following classes are adapted from the CSV module documentation.
 """
@@ -24,19 +26,24 @@ class UnicodeCSVReader(object):
     A CSV reader which will iterate over lines in the CSV file "f",
     which is encoded in the given encoding.
     """
-    def __init__(self, f, encoding='utf-8', **kwargs):
+    def __init__(self, f, encoding='utf-8', maxfieldsize=None, **kwargs):
         f = UTF8Recoder(f, encoding)
-        #kwargs_fixed will contain only kwargs that can be handled by csv.reader()
-        #which are all class attributes on csv.Dialect, so we find them with dir()
-        kwargs_fixed = {} 
-        dialect_set = set(dir(csv.Dialect))        
-        for key, value in kwargs.iteritems():
-            if key in dialect_set:
-                kwargs_fixed[key] = value
-        self.reader = csv.reader(f, **kwargs_fixed)
+        
+        self.reader = csv.reader(f, **kwargs)
+
+        if maxfieldsize:
+            csv.field_size_limit(maxfieldsize)
 
     def next(self):
-        row = self.reader.next()
+        try:
+            row = self.reader.next()
+        except csv.Error, e:
+            # Terrible way to test for this exception, but there is no subclass
+            if 'field larger than field limit' in str(e):
+                raise FieldSizeLimitError(csv.field_size_limit())
+            else:
+                raise e
+
         return [unicode(s, 'utf-8') for s in row]
 
     def __iter__(self):

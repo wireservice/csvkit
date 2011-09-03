@@ -37,6 +37,9 @@ The header line is required though the columns may be in any order::
                             fixed-width files. See documentation for details.
       -k KEY, --key KEY     Specifies a top-level key to use look within for a
                             list of objects to be converted when processing JSON.
+      -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
+                            Limit CSV dialect sniffing to the specified number of
+                            bytes.
 
 Also see: :doc:`common_arguments`.
 

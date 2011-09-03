@@ -20,6 +20,9 @@ Generates a SQL "CREATE TABLE" statement for a given CSV file. Supports a variet
 
     optional arguments:
       -h, --help            show this help message and exit
+      -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
+                            Limit CSV dialect sniffing to the specified number of
+                            bytes.
       -i {access,sybase,sqlite,informix,firebird,mysql,oracle,maxdb,postgresql,mssql}, --dialect {access,sybase,sqlite,informix,firebird,mysql,oracle,maxdb,postgresql,mssql}
                             Dialect of SQL to generate.
       --inserts             In additional to generating a CREATE TABLE statement,
