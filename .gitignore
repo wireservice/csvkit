@@ -7,3 +7,4 @@ reference
 dist
 *.swo
 docs/_build
+.coverage
