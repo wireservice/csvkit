@@ -108,7 +108,7 @@ class SchemaDecoder(object):
         for p in self.REQUIRED_COLUMNS:
             try:
                 setattr(self, p, header.index(p))
-            except IndexError:
+            except ValueError:
                 raise ValueError('A column named "%s" must exist in the schema file.' % (p))
 
     def __call__(self, row):
