@@ -70,8 +70,11 @@ class FixedWidthRowParser(object):
         schema_reader = CSVKitReader(schema)
         schema_decoder = SchemaDecoder(schema_reader.next())
 
-        for row in schema_reader:
-            self.fields.append(schema_decoder(row))
+        for i,row in enumerate(schema_reader):
+            try:
+                self.fields.append(schema_decoder(row))
+            except Exception,e:
+                raise ValueError("Error reading schema at line %i: %s" % (i + 2,e))
 
     def parse(self, line):
         values = []
@@ -108,7 +111,7 @@ class SchemaDecoder(object):
         for p in self.REQUIRED_COLUMNS:
             try:
                 setattr(self, p, header.index(p))
-            except IndexError:
+            except ValueError:
                 raise ValueError('A column named "%s" must exist in the schema file.' % (p))
 
     def __call__(self, row):
