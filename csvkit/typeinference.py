@@ -4,6 +4,19 @@ import datetime
 
 from dateutil.parser import parse
 
+VALID_TYPE_SETS = (
+        (set([]), None),
+        (set([bool]), bool),
+        (set([int]), int),
+        (set([float]), float),
+        (set([datetime.datetime]), datetime.datetime),
+        (set([datetime.date]), datetime.date),
+        (set([datetime.time]), datetime.time),
+        (set([datetime.datetime, datetime.date]), datetime.datetime),
+        (set([datetime.datetime, datetime.time]), unicode),
+        (set([datetime.date, datetime.time]), unicode)
+    )
+
 DEFAULT_DATETIME = datetime.datetime(9999, 12, 31, 0, 0, 0)
 NULL_DATE = datetime.date(9999, 12, 31)
 NULL_TIME = datetime.time(0, 0, 0)
@@ -149,3 +162,94 @@ def normalize_table(rows, column_count):
         normal_columns.append(c)
     
     return normal_types, normal_columns
+
+def infer_type_from_value(v):
+    """
+    Infers the proper type of a stringified value.
+    """
+    # No value?
+    if v == None:
+        return None
+    
+    # Convert "NA", "N/A", etc. to null types.
+    if v.lower() in ("na", "n/a", "none", "null", "."):
+        v = ''
+
+    # Is it null?
+    if v == '':
+        return None
+
+    # Is it boolean?
+    if v.lower() in ('1', 'yes', 'y', 'true', 't', '0', 'no', 'n', 'false', 'f'):
+        return bool
+
+    # Is it an integer?
+    try:
+        x = v.replace(',', '')
+        
+        int_x = int(x)
+
+        # Zero-padding
+        if x[0] == '0' and int_x != 0:
+            return unicode
+
+        return int
+    except ValueError:
+        pass
+
+    # Is it a float?
+    try:
+        float(v.replace(',', ''))
+
+        return float
+    except ValueError:
+        pass
+
+    # Is it a datetime?
+    try:
+        d = parse(x, default=DEFAULT_DATETIME)
+
+        # Is it only a time?
+        if d.date() == NULL_DATE:
+            return datetime.time
+        # Is it only a date?
+        elif d.time() == NULL_TIME:
+            return datetime.date
+        # It must be a date and time
+        else:
+            return datetime.datetime
+    except ValueError:
+        pass       
+
+    # Don't know what it is, so it's a string
+    return unicode 
+
+def infer_types_iteratively(rows):
+    """
+    Iteratates over the given rows and infer's the type that best matches their contents.
+
+    Does not keep rows in memory, but return only types, not normalized values. 
+    """
+    detected_types = []
+
+    for row in rows:
+        for i, v in enumerate(row):
+            if i == len(detected_types):
+                detected_types.append(set())
+
+            detected_types[i].add(infer_type_from_value(v))
+
+    normal_types = []
+
+    for s in detected_types:
+        s.discard(None)
+
+        for type_set, final_type in VALID_TYPE_SETS:
+            if s == type_set:
+                normal_types.append(final_type)
+                break
+
+            normal_types.append(unicode)
+
+    return normal_types
+        

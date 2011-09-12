@@ -82,4 +82,40 @@ class TestNormalizeType(unittest.TestCase):
                 else:
                     self.assertEqual(t(row[i]),normalized)
 
-                
+class TestInferTypesIteratively(unittest.TestCase):
+    def test_NA(self):
+        self.assertEqual(None, typeinference.infer_type_from_value('n/a'))
+
+    def test_null(self):
+        self.assertEqual(None, typeinference.infer_type_from_value(''))
+
+    def test_int(self): 
+        self.assertEqual(int, typeinference.infer_type_from_value('-87'))
+
+    def test_padded_int(self):
+        self.assertEqual(unicode, typeinference.infer_type_from_value('0997'))
+
+    def test_comma_int(self):
+        self.assertEqual(int, typeinference.infer_type_from_value('418,000,000'))
+    
+    def test_float(self):
+        self.assertEqual(float, typeinference.infer_type_from_value('-87.413'))
+        
+    def test_comma_float(self):
+        self.assertEqual(float, typeinference.infer_type_from_value('418,000,000.0'))
+
+    def test_string(self):
+        self.assertEqual(unicode, typeinference.infer_type_from_value(u'Chicago Tribune'))
+
+    def test_booleans(self):
+        self.assertEqual(bool, typeinference.infer_type_from_value('False'))
+
+    def test_datetimes(self):
+        self.assertEqual(datetime.datetime, typeinference.infer_type_from_value(u'Jan 1, 2008 at 4:40 AM'))
+
+    def test_dates(self):
+        self.assertEqual(datetime.date, typeinference.infer_type_from_value('Jan 1, 2008'))
+
+    def test_times(self):
+        self.assertEqual(datetime.time, typeinference.infer_type_from_value('4:40 AM'))
+
