@@ -119,3 +119,20 @@ class TestInferTypesIteratively(unittest.TestCase):
     def test_times(self):
         self.assertEqual(datetime.time, typeinference.infer_type_from_value('4:40 AM'))
 
+    def test_infer_types_simple(self):
+        expected_types = [
+            (unicode, set([unicode])),
+            (int, set([int])),
+            (float, set([float])),
+            (None, set([None]))
+        ]
+
+        rows = [
+            ['a','1','2.1', ''],
+            ['b', '5', '4.1', ''],
+            ['c', '100', '100.9999', ''],
+            ['d', '2', '5.3', '']
+        ]
+
+        self.assertEqual(expected_types, typeinference.infer_types_iteratively(rows))
+

@@ -4,18 +4,18 @@ import datetime
 
 from dateutil.parser import parse
 
-VALID_TYPE_SETS = (
-        (set([]), None),
-        (set([bool]), bool),
-        (set([int]), int),
-        (set([float]), float),
-        (set([datetime.datetime]), datetime.datetime),
-        (set([datetime.date]), datetime.date),
-        (set([datetime.time]), datetime.time),
-        (set([datetime.datetime, datetime.date]), datetime.datetime),
-        (set([datetime.datetime, datetime.time]), unicode),
-        (set([datetime.date, datetime.time]), unicode)
-    )
+VALID_TYPE_SETS = {
+        frozenset([]): None,
+        frozenset([bool]): bool,
+        frozenset([int]): int,
+        frozenset([float]): float,
+        frozenset([datetime.datetime]): datetime.datetime,
+        frozenset([datetime.date]): datetime.date,
+        frozenset([datetime.time]): datetime.time,
+        frozenset([datetime.datetime, datetime.date]): datetime.datetime,
+        frozenset([datetime.datetime, datetime.time]): unicode,
+        frozenset([datetime.date, datetime.time]): unicode
+    }
 
 DEFAULT_DATETIME = datetime.datetime(9999, 12, 31, 0, 0, 0)
 NULL_DATE = datetime.date(9999, 12, 31)
@@ -180,7 +180,7 @@ def infer_type_from_value(v):
         return None
 
     # Is it boolean?
-    if v.lower() in ('1', 'yes', 'y', 'true', 't', '0', 'no', 'n', 'false', 'f'):
+    if v.lower() in ('yes', 'y', 'true', 't', 'no', 'n', 'false', 'f'):
         return bool
 
     # Is it an integer?
@@ -207,9 +207,11 @@ def infer_type_from_value(v):
 
     # Is it a datetime?
     try:
-        d = parse(x, default=DEFAULT_DATETIME)
+        d = parse(v, default=DEFAULT_DATETIME)
 
         # Is it only a time?
+        if d.date() == NULL_DATE and d.time() == NULL_TIME:
+            raise ValueError('Not a valid date or time.')
         if d.date() == NULL_DATE:
             return datetime.time
         # Is it only a date?
@@ -224,11 +226,23 @@ def infer_type_from_value(v):
     # Don't know what it is, so it's a string
     return unicode 
 
+def infer_type_from_types(types):
+    """
+    Infer a generic type from a list of inferred types.
+    """
+    types_without_nulls = set(types)
+    types_without_nulls.discard(None)
+
+    try:
+        return VALID_TYPE_SETS[frozenset(types_without_nulls)]
+    except KeyError:
+        return unicode
+
 def infer_types_iteratively(rows):
     """
-    Iteratates over the given rows and infer's the type that best matches their contents.
+    Iterates over the given rows and infer's the type that best matches their contents. Does not keep rows in memory.
 
-    Does not keep rows in memory, but return only types, not normalized values. 
+    Returns a tuple of the form: (inferred_type, [all, types, seen]).
     """
     detected_types = []
 
@@ -242,14 +256,7 @@ def infer_types_iteratively(rows):
     normal_types = []
 
     for s in detected_types:
-        s.discard(None)
-
-        for type_set, final_type in VALID_TYPE_SETS:
-            if s == type_set:
-                normal_types.append(final_type)
-                break
-
-            normal_types.append(unicode)
+        normal_types.append((infer_type_from_types(s), s))
 
     return normal_types
         
