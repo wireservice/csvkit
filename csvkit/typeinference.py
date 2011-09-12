@@ -9,6 +9,7 @@ VALID_TYPE_SETS = {
         frozenset([bool]): bool,
         frozenset([int]): int,
         frozenset([float]): float,
+        frozenset([int, float]): float,
         frozenset([datetime.datetime]): datetime.datetime,
         frozenset([datetime.date]): datetime.date,
         frozenset([datetime.time]): datetime.time,
