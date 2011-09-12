@@ -1,0 +1,10 @@
+Working
+-------
+
+* Added iterative type inference algorithm.
+* Type inference will no longer treat "0" and "1" as boolean values.
+
+Version 3.0
+-----------
+
+Initial changelog.

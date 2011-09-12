@@ -18,6 +18,10 @@ VALID_TYPE_SETS = {
         frozenset([datetime.date, datetime.time]): unicode
     }
 
+NULL_VALUES = ('na', 'n/a', 'none', 'null', '.')
+TRUE_VALUES = ('yes', 'y', 'true', 't')
+FALSE_VALUES = ('no', 'n', 'false', 'f')
+
 DEFAULT_DATETIME = datetime.datetime(9999, 12, 31, 0, 0, 0)
 NULL_DATE = datetime.date(9999, 12, 31)
 NULL_TIME = datetime.time(0, 0, 0)
@@ -33,7 +37,7 @@ def normalize_column_type(l):
     for x in l:
         if x == None:
             continue
-        elif x.lower() in ("na", "n/a", "none", "null", "."):
+        elif x.lower() in NULL_VALUES:
             l[l.index(x)] = ''
 
     # Are they null?
@@ -53,9 +57,9 @@ def normalize_column_type(l):
         for x in l:
             if x == '':
                 normal_values.append(None)
-            elif x.lower() in ('1', 'yes', 'y', 'true', 't'):
+            elif x.lower() in TRUE_VALUES:
                 normal_values.append(True)
-            elif x.lower() in ('0', 'no', 'n', 'false', 'f'):
+            elif x.lower() in FALSE_VALUES:
                 normal_values.append(False)
             else:
                 raise ValueError('Not boolean')
@@ -173,7 +177,7 @@ def infer_type_from_value(v):
         return None
     
     # Convert "NA", "N/A", etc. to null types.
-    if v.lower() in ("na", "n/a", "none", "null", "."):
+    if v.lower() in NULL_VALUES:
         v = ''
 
     # Is it null?
@@ -181,7 +185,7 @@ def infer_type_from_value(v):
         return None
 
     # Is it boolean?
-    if v.lower() in ('yes', 'y', 'true', 't', 'no', 'n', 'false', 'f'):
+    if v.lower() in TRUE_VALUES or v.lower() in FALSE_VALUES:
         return bool
 
     # Is it an integer?
@@ -241,7 +245,12 @@ def infer_type_from_types(types):
 
 def infer_types_iteratively(rows):
     """
-    Iterates over the given rows and infer's the type that best matches their contents. Does not keep rows in memory.
+    Iterates over the given rows and infer's the type that best matches their contents.
+    Does not keep rows in memory or normalize values.
+
+    Useful for "guessing" the types of columns based on a limited number of rows.
+    When processing complete datasets it is better to use normalize_table() which will
+    normalize values is optimized for processing entire columns.
 
     Returns a tuple of the form: (inferred_type, [all, types, seen]).
     """

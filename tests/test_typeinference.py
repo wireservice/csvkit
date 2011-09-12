@@ -37,7 +37,7 @@ class TestNormalizeType(unittest.TestCase):
         self.assertEqual((unicode, [u'Chicago Tribune', u'-87.413', u'418000000', None]), typeinference.normalize_column_type(['Chicago Tribune', '-87.413', '418000000', '']))
 
     def test_booleans(self):
-        self.assertEqual((bool, [True, False, True, False, False, True, None]), typeinference.normalize_column_type(['1', 'False', 'TRUE', 'FALSE', '0', 'yes', '']))
+        self.assertEqual((bool, [False, True, False, True, None]), typeinference.normalize_column_type(['False', 'TRUE', 'FALSE', 'yes', '']))
 
     def test_datetimes(self):
         self.assertEqual((datetime.datetime, [datetime.datetime(2008, 1, 1, 4, 40, 0), datetime.datetime(2010, 1, 27, 3, 45, 0), datetime.datetime(2008, 3, 1, 16, 14, 45), None]), typeinference.normalize_column_type([u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '']))
