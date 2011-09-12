@@ -136,3 +136,20 @@ class TestInferTypesIteratively(unittest.TestCase):
 
         self.assertEqual(expected_types, typeinference.infer_types_iteratively(rows))
 
+    def test_infer_types_complex(self):
+        expected_types = [
+            (unicode, set([unicode, None])),
+            (bool, set([bool, None])),
+            (float, set([None, float, int])),
+            (datetime.datetime, set([None, datetime.datetime]))
+        ]
+
+        rows = [
+            ['a','True','', ''],
+            ['b', 'False', '4.1', 'N/A'],
+            ['', 'T', '100', ''],
+            ['d', 'n/a', '5,475,123', 'Jan 1, 2008 at 4:40 AM']
+        ]
+
+        self.assertEqual(expected_types, typeinference.infer_types_iteratively(rows))
+
