@@ -131,55 +131,56 @@ def normalize_column_type(l):
 
     # Are they null?
     try:
-        return None, map(csvkit.normalizers.normalize_null, l)
+        return None, [csvkit.normalizers.normalize_null(x) for x in l]
     except ValueError:
         pass
 
     # Are they boolean?
     try:
-        return bool, map(csvkit.normalizers.normalize_bool, l) 
+        return bool, [csvkit.normalizers.normalize_bool(x) for x in l]
     except ValueError:
         pass
 
     # Are they integers?
     try:
-        return int, map(csvkit.normalizers.normalize_int, l) 
+        return int, [csvkit.normalizers.normalize_int(x) for x in l]
     except TypeError:
-        return unicode, map(csvkit.normalizers.normalize_unicode, l) 
+        return unicode, [csvkit.normalizers.normalize_unicode(x) for x in l]
     except ValueError:
         pass
 
     # Are they floats?
     try:
-        return float, map(csvkit.normalizers.normalize_float, l)
+        return float, [csvkit.normalizers.normalize_float(x) for x in l]
     except ValueError:
         pass
 
     try:
         lx = [parse(v, default=csvkit.normalizers.DEFAULT_DATETIME) if v != None else None for v in l]
+        pairs = zip(l, lx)
 
         # Are they times?
         try:
-            return datetime.time, map(csvkit.normalizers.normalize_time, l, lx) 
+            return datetime.time, [csvkit.normalizers.normalize_time(v, d) for v, d in pairs] 
         except ValueError:
             pass
 
         # Are they dates?
         try:
-            return datetime.date, map(csvkit.normalizers.normalize_date, l, lx) 
+            return datetime.date, [csvkit.normalizers.normalize_date(v, d) for v, d in pairs] 
         except ValueError:
             pass
 
         # Are they datetimes?
         try:
-            return datetime.datetime, map(csvkit.normalizers.normalize_datetime, l, lx) 
+            return datetime.datetime, [csvkit.normalizers.normalize_datetime(v, d) for v, d in pairs] 
         except ValueError:
             pass
     except ValueError:
         pass
 
     # Don't know what they are, so they must just be strings 
-    return unicode, map(csvkit.normalizers.normalize_unicode, l) 
+    return unicode, [csvkit.normalizers.normalize_unicode(x) for x in l] 
 
 def normalize_table(rows, column_count):
     """
