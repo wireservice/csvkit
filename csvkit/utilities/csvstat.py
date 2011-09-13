@@ -4,7 +4,7 @@ import datetime
 import sys 
 
 from csvkit import table
-from csvkit.cli import CSVKitUtility 
+from csvkit.cli import CSVKitUtility
 from heapq import nlargest
 from operator import itemgetter
 
@@ -15,9 +15,12 @@ class CSVStat(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
                             help='Limit CSV dialect sniffing to the specified number of bytes.')
+        self.argparser.add_argument('-c', '--columns', dest='columns',
+                        help='A comma separated list of column indices or names to be examined. Defaults to all columns.')
 
     def main(self):
-        tab = table.Table.from_csv(self.args.file, snifflimit=self.args.snifflimit, **self.reader_kwargs)
+        tab = table.Table.from_csv(self.args.file, snifflimit=self.args.snifflimit, column_ids=self.args.columns, **self.reader_kwargs)
+        #tab = table.Table.from_csv(self.args.file, snifflimit=self.args.snifflimit, **self.reader_kwargs)
 
         null_excluder = lambda i: i is not None
 
