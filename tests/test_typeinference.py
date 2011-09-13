@@ -105,10 +105,10 @@ class TestNormalizeType(unittest.TestCase):
 
     def test_datetimes_coerce_fail(self):
         with self.assertRaises(InvalidValueForTypeException) as e:
-            typeinference.normalize_column_type([u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '42'], normal_type=datetime.datetime)
+            typeinference.normalize_column_type([u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '4:45 AM'], normal_type=datetime.datetime)
 
         self.assertEqual(e.exception.index, 3)
-        self.assertEqual(e.exception.value, '42')
+        self.assertEqual(e.exception.value, '4:45 AM')
         self.assertEqual(e.exception.normal_type, datetime.datetime)
 
     def test_dates(self):
@@ -119,10 +119,10 @@ class TestNormalizeType(unittest.TestCase):
 
     def test_dates_coerce_fail(self):
         with self.assertRaises(InvalidValueForTypeException) as e:
-            typeinference.normalize_column_type([u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '42'], normal_type=datetime.datetime)
+            typeinference.normalize_column_type([u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '4:45 AM'], normal_type=datetime.datetime)
 
         self.assertEqual(e.exception.index, 3)
-        self.assertEqual(e.exception.value, '42')
+        self.assertEqual(e.exception.value, '4:45 AM')
         self.assertEqual(e.exception.normal_type, datetime.datetime)
 
     def test_times(self):

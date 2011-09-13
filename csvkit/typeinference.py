@@ -128,7 +128,7 @@ def normalize_column_type(l, normal_type=None):
                     normal_types_set.add(datetime.time)
                 # Is it only a date?
                 elif d.time() == NULL_TIME:
-                    if normal_type and normal_type != datetime.date:
+                    if normal_type and normal_type not in [datetime.date, datetime.datetime]:
                         raise InvalidValueForTypeException(i, x, normal_type) 
 
                     d = d.date()
