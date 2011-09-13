@@ -1,124 +1,25 @@
 #!/usr/bin/env python
 
 import datetime
+from types import NoneType
 
 from dateutil.parser import parse
 
-import csvkit.normalizers
+from exceptions import InvalidValueForTypeException
 
-VALID_TYPE_SETS = {
-        frozenset([]): None,
-        frozenset([bool]): bool,
-        frozenset([int]): int,
-        frozenset([float]): float,
-        frozenset([int, float]): float,
-        frozenset([datetime.datetime]): datetime.datetime,
-        frozenset([datetime.date]): datetime.date,
-        frozenset([datetime.time]): datetime.time,
-        frozenset([datetime.datetime, datetime.date]): datetime.datetime,
-        frozenset([datetime.datetime, datetime.time]): unicode,
-        frozenset([datetime.date, datetime.time]): unicode
-    }
+NULL_VALUES = ('na', 'n/a', 'none', 'null', '.')
+TRUE_VALUES = ('yes', 'y', 'true', 't')
+FALSE_VALUES = ('no', 'n', 'false', 'f')
 
-def infer_type_from_value(v):
+DEFAULT_DATETIME = datetime.datetime(9999, 12, 31, 0, 0, 0)
+NULL_DATE = datetime.date(9999, 12, 31)
+NULL_TIME = datetime.time(0, 0, 0)
+
+def normalize_column_type(l, normal_type=None):
     """
-    Infers the proper type of a stringified value.
-    """
-    try:
-        csvkit.normalizers.normalize_null(v)
-        return None
-    except ValueError:
-        pass
+    Attempts to normalize a list (column) of string values to booleans, integers, floats, dates, times, datetimes, or strings. NAs and missing values are converted to empty strings. Empty strings are converted to nulls.
 
-    try:
-        csvkit.normalizers.normalize_bool(v)
-        return bool
-    except ValueError:
-        pass
-
-    try:
-        csvkit.normalizers.normalize_int(v)
-        return int
-    except TypeError:
-        return unicode
-    except ValueError:
-        pass
-
-    try:
-        csvkit.normalizers.normalize_float(v)
-        return float
-    except TypeError:
-        return unicode
-    except ValueError:
-        pass
-
-    try:
-        d = parse(v, default=csvkit.normalizers.DEFAULT_DATETIME)
-
-        try:
-            csvkit.normalizers.normalize_time(v, d)
-            return datetime.time
-        except ValueError:
-            pass
-
-        try:
-            csvkit.normalizers.normalize_date(v, d)
-            return datetime.date
-        except ValueError:
-            pass
-
-        try:
-            csvkit.normalizers.normalize_datetime(v, d)
-            return datetime.datetime
-        except ValueError:
-            pass
-    except ValueError:
-        pass
-
-    return unicode 
-
-def infer_type_from_types(types):
-    """
-    Infer a generic type from a list of inferred types.
-    """
-    types_without_nulls = set(types)
-    types_without_nulls.discard(None)
-
-    try:
-        return VALID_TYPE_SETS[frozenset(types_without_nulls)]
-    except KeyError:
-        return unicode
-
-def infer_types_iteratively(rows):
-    """
-    Iterates over the given rows and infer's the type that best matches their contents.
-    Does not keep rows in memory or normalize values.
-
-    Useful for "guessing" the types of columns based on a limited number of rows.
-    When processing complete datasets it is better to use normalize_table() which will
-    normalize values is optimized for processing entire columns.
-
-    Returns a tuple of the form: (inferred_type, [all, types, seen]).
-    """
-    detected_types = []
-
-    for row in rows:
-        for i, v in enumerate(row):
-            if i == len(detected_types):
-                detected_types.append(set())
-
-            detected_types[i].add(infer_type_from_value(v))
-
-    normal_types = []
-
-    for s in detected_types:
-        normal_types.append((infer_type_from_types(s), s))
-
-    return normal_types
-        
-def normalize_column_type(l):
-    """
-    Attempts to normalize a column (list) of values to booleans, integers, floats, dates, times, datetimes, or strings. NAs and missing values are converted to empty strings. Empty strings are converted to nulls.
+    Optional accepts a "normal_type" argument which specifies a type that the values must conform to (rather than inferring). Will raise InvalidValueForTypeException if a value is not coercable.
 
     Returns a tuple of (type, normal_values).
     """
@@ -126,61 +27,132 @@ def normalize_column_type(l):
     for x in l:
         if x == None:
             continue
-        elif x.lower() in csvkit.normalizers.NULL_VALUES:
-            l[l.index(x)] = None
+        elif x.lower() in NULL_VALUES:
+            l[l.index(x)] = ''
 
     # Are they null?
-    try:
-        return None, [csvkit.normalizers.normalize_null(x) for x in l]
-    except ValueError:
-        pass
+    if not normal_type or normal_type == NoneType:
+        try:
+            for x in l:
+                if x != '':
+                    raise ValueError('Not null')
+
+            return NoneType, [None] * len(l)
+        except ValueError:
+            if normal_type == NoneType:
+                raise InvalidValueForTypeException()
 
     # Are they boolean?
-    try:
-        return bool, [csvkit.normalizers.normalize_bool(x) for x in l]
-    except ValueError:
-        pass
+    if not normal_type or normal_type == bool:
+        try:
+            normal_values = []
+
+            for x in l:
+                if x == '':
+                    normal_values.append(None)
+                elif x.lower() in TRUE_VALUES:
+                    normal_values.append(True)
+                elif x.lower() in FALSE_VALUES:
+                    normal_values.append(False)
+                else:
+                    raise ValueError('Not boolean')
+
+            return bool, normal_values
+        except ValueError:
+            if normal_type == bool:
+                raise InvalidValueForTypeException() 
 
     # Are they integers?
-    try:
-        return int, [csvkit.normalizers.normalize_int(x) for x in l]
-    except TypeError:
-        return unicode, [csvkit.normalizers.normalize_unicode(x) for x in l]
-    except ValueError:
-        pass
+    if not normal_type or normal_type == int:
+        try:
+            normal_values = []
+
+            for x in l:
+                if x == '':
+                    normal_values.append(None)
+                    continue
+
+                x = x.replace(',', '')
+                
+                int_x = int(x)
+
+                if x[0] == '0' and int(x) != 0:
+                    raise TypeError('Integer is padded with 0s, so treat it as a string instead.')
+                
+                normal_values.append(int_x)
+
+            return int, normal_values
+        except TypeError:
+            return unicode, [x if x != '' else None for x in l]
+        except ValueError:
+            if normal_type == int:
+                raise InvalidValueForTypeException() 
 
     # Are they floats?
-    try:
-        return float, [csvkit.normalizers.normalize_float(x) for x in l]
-    except ValueError:
-        pass
-
-    try:
-        lx = [parse(v, default=csvkit.normalizers.DEFAULT_DATETIME) if v != None else None for v in l]
-        pairs = zip(l, lx)
-
-        # Are they times?
+    if not normal_type or normal_type == float:
         try:
-            return datetime.time, [csvkit.normalizers.normalize_time(v, d) for v, d in pairs] 
+            return float, [float(x.replace(',', '')) if x != '' else None for x in l]
         except ValueError:
-            pass
+            if normal_type == float:
+                raise InvalidValueForTypeException() 
 
-        # Are they dates?
+    # Are they datetimes?
+    if not normal_type or normal_type in [datetime.time, datetime.date, datetime.datetime]:
         try:
-            return datetime.date, [csvkit.normalizers.normalize_date(v, d) for v, d in pairs] 
-        except ValueError:
-            pass
+            normal_values = []
+            normal_types_set = set()
 
-        # Are they datetimes?
-        try:
-            return datetime.datetime, [csvkit.normalizers.normalize_datetime(v, d) for v, d in pairs] 
+            for x in l:
+                if x == '':
+                    normal_values.append(None)
+                    continue
+
+                d = parse(x, default=DEFAULT_DATETIME)
+
+                # Is it only a time?
+                if d.date() == NULL_DATE:
+                    d = d.time()
+                    normal_types_set.add(datetime.time)
+                # Is it only a date?
+                elif d.time() == NULL_TIME:
+                    d = d.date()
+                    normal_types_set.add(datetime.date)
+                # It must be a date and time
+                else:
+                    normal_types_set.add(datetime.datetime)
+                
+                normal_values.append(d)
+
+            # No special handling if column contains only one type
+            if len(normal_types_set) == 1:
+                pass
+            # If a mix of dates and datetimes, up-convert dates to datetimes
+            elif normal_types_set == set([datetime.datetime, datetime.date]):
+                for i, v in enumerate(normal_values):
+                    if v.__class__ == datetime.date:
+                        normal_values[i] = datetime.datetime.combine(v, NULL_TIME)
+
+                normal_types_set.discard(datetime.date)
+            # Datetimes and times don't mix -- fallback to using strings
+            elif normal_types_set == set([datetime.datetime, datetime.time]):
+                raise ValueError('Cant\'t coherently mix datetimes and times in a single column.') 
+            # Dates and times don't mix -- fallback to using strings
+            elif normal_types_set == set([datetime.date, datetime.time]):
+                raise ValueError('Can\'t coherently mix dates and times in a single column.')
+
+            normal_type = normal_types_set.pop()
+
+            if normal_type:
+                if normal_type != normal_type:
+                    raise InvalidValueForTypeException() 
+
+            return normal_type, normal_values 
         except ValueError:
-            pass
-    except ValueError:
-        pass
+            if normal_type in [datetime.time, datetime.date, datetime.datetime]:
+                raise InvalidValueForTypeException() 
 
     # Don't know what they are, so they must just be strings 
-    return unicode, [csvkit.normalizers.normalize_unicode(x) for x in l] 
+    return unicode, [x if x != '' else None for x in l]
 
 def normalize_table(rows, column_count):
     """

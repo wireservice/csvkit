@@ -2,6 +2,7 @@
 
 import datetime
 import re
+from types import NoneType
 
 from sqlalchemy import Column, MetaData, Table
 from sqlalchemy import Boolean, Date, DateTime, Float, Integer, String, Time
@@ -36,12 +37,12 @@ def make_column(column):
         datetime.datetime: DateTime,
         datetime.date: Date,
         datetime.time: Time,
-        None: String,
+        NoneType: String,
         unicode: String
         }
 
     max_lengths = {
-        None: NULL_COLUMN_MAX_LENGTH,
+        NoneType: NULL_COLUMN_MAX_LENGTH,
         unicode: column.max_length
         }
 

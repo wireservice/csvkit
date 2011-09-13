@@ -63,3 +63,10 @@ class CSVJSONException(CustomException):
 
 class NonUniqueKeyColumnException(CSVJSONException):
     pass
+
+class InvalidValueForTypeException(CustomException):
+    """
+    Exception raised when a value can not be normalized to a specified type.
+    """
+    def __init__(self, msg):
+        super(InvalidValueForTypeException, self).__init__(msg)
