@@ -24,30 +24,28 @@ def normalize_column_type(l, normal_type=None):
     Returns a tuple of (type, normal_values).
     """
     # Convert "NA", "N/A", etc. to null types.
-    for x in l:
-        if x == None:
-            continue
-        elif x.lower() in NULL_VALUES:
-            l[l.index(x)] = ''
+    for i, x in enumerate(l):
+        if x is None or x.lower() in NULL_VALUES:
+            l[i] = ''
 
     # Are they null?
     if not normal_type or normal_type == NoneType:
         try:
-            for x in l:
+            for i, x in enumerate(l):
                 if x != '':
                     raise ValueError('Not null')
 
             return NoneType, [None] * len(l)
         except ValueError:
-            if normal_type == NoneType:
-                raise InvalidValueForTypeException()
+            if normal_type:
+                raise InvalidValueForTypeException(i, x, normal_type)
 
     # Are they boolean?
     if not normal_type or normal_type == bool:
         try:
             normal_values = []
 
-            for x in l:
+            for i, x in enumerate(l):
                 if x == '':
                     normal_values.append(None)
                 elif x.lower() in TRUE_VALUES:
@@ -59,22 +57,20 @@ def normalize_column_type(l, normal_type=None):
 
             return bool, normal_values
         except ValueError:
-            if normal_type == bool:
-                raise InvalidValueForTypeException() 
+            if normal_type:
+                raise InvalidValueForTypeException(i, x, normal_type) 
 
     # Are they integers?
     if not normal_type or normal_type == int:
         try:
             normal_values = []
 
-            for x in l:
+            for i, x in enumerate(l):
                 if x == '':
                     normal_values.append(None)
                     continue
-
-                x = x.replace(',', '')
                 
-                int_x = int(x)
+                int_x = int(x.replace(',', ''))
 
                 if x[0] == '0' and int(x) != 0:
                     raise TypeError('Integer is padded with 0s, so treat it as a string instead.')
@@ -83,18 +79,32 @@ def normalize_column_type(l, normal_type=None):
 
             return int, normal_values
         except TypeError:
+            if normal_type == int:
+                raise InvalidValueForTypeException(i, x, int) 
+
             return unicode, [x if x != '' else None for x in l]
         except ValueError:
-            if normal_type == int:
-                raise InvalidValueForTypeException() 
+            if normal_type:
+                raise InvalidValueForTypeException(i, x, normal_type) 
 
     # Are they floats?
     if not normal_type or normal_type == float:
         try:
-            return float, [float(x.replace(',', '')) if x != '' else None for x in l]
+            normal_values = []
+
+            for i, x in enumerate(l):
+                if x == '':
+                    normal_values.append(None)
+                    continue
+
+                float_x  = float(x.replace(',', ''))
+
+                normal_values.append(float_x)
+
+            return float, normal_values 
         except ValueError:
-            if normal_type == float:
-                raise InvalidValueForTypeException() 
+            if normal_type:
+                raise InvalidValueForTypeException(i, x, normal_type) 
 
     # Are they datetimes?
     if not normal_type or normal_type in [datetime.time, datetime.date, datetime.datetime]:
@@ -102,7 +112,7 @@ def normalize_column_type(l, normal_type=None):
             normal_values = []
             normal_types_set = set()
 
-            for x in l:
+            for i, x in enumerate(l):
                 if x == '':
                     normal_values.append(None)
                     continue
@@ -111,14 +121,23 @@ def normalize_column_type(l, normal_type=None):
 
                 # Is it only a time?
                 if d.date() == NULL_DATE:
+                    if normal_type and normal_type != datetime.time:
+                        raise InvalidValueForTypeException(i, x, normal_type) 
+
                     d = d.time()
                     normal_types_set.add(datetime.time)
                 # Is it only a date?
                 elif d.time() == NULL_TIME:
+                    if normal_type and normal_type != datetime.date:
+                        raise InvalidValueForTypeException(i, x, normal_type) 
+
                     d = d.date()
                     normal_types_set.add(datetime.date)
                 # It must be a date and time
                 else:
+                    if normal_type and normal_type != datetime.datetime:
+                        raise InvalidValueForTypeException(i, x, normal_type) 
+
                     normal_types_set.add(datetime.datetime)
                 
                 normal_values.append(d)
@@ -140,16 +159,10 @@ def normalize_column_type(l, normal_type=None):
             elif normal_types_set == set([datetime.date, datetime.time]):
                 raise ValueError('Can\'t coherently mix dates and times in a single column.')
 
-            normal_type = normal_types_set.pop()
-
-            if normal_type:
-                if normal_type != normal_type:
-                    raise InvalidValueForTypeException() 
-
-            return normal_type, normal_values 
+            return normal_types_set.pop(), normal_values 
         except ValueError:
-            if normal_type in [datetime.time, datetime.date, datetime.datetime]:
-                raise InvalidValueForTypeException() 
+            if normal_type:
+                raise InvalidValueForTypeException(i, x, normal_type) 
 
     # Don't know what they are, so they must just be strings 
     return unicode, [x if x != '' else None for x in l]

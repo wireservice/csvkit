@@ -48,7 +48,7 @@ class LengthMismatchError(CSVTestException):
     Encapsulate information about a row which as the wrong length.
     """
     def __init__(self, line_number, row, expected_length):
-        msg = "Expected %i columns, found %i columns" % (expected_length, len(row))
+        msg = 'Expected %i columns, found %i columns' % (expected_length, len(row))
         super(LengthMismatchError, self).__init__(line_number, row, msg)
     
     @property
@@ -68,5 +68,9 @@ class InvalidValueForTypeException(CustomException):
     """
     Exception raised when a value can not be normalized to a specified type.
     """
-    def __init__(self, msg):
+    def __init__(self, index, value, normal_type):
+        self.index = index
+        self.value = value
+        self.normal_type = normal_type
+        msg = 'Unable to convert "%s" to type %s (row %i)' % (value, normal_type, index)
         super(InvalidValueForTypeException, self).__init__(msg)
