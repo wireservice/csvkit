@@ -20,7 +20,6 @@ class CSVStat(CSVKitUtility):
 
     def main(self):
         tab = table.Table.from_csv(self.args.file, snifflimit=self.args.snifflimit, column_ids=self.args.columns, **self.reader_kwargs)
-        #tab = table.Table.from_csv(self.args.file, snifflimit=self.args.snifflimit, **self.reader_kwargs)
 
         null_excluder = lambda i: i is not None
 
