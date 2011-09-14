@@ -12,7 +12,7 @@ class FilteringCSVReader(object):
     dictionary may be strings, regular expressions, or functions.  For each row in the wrapped iterator, 
     these values will be used as tests, and the row will only be yielded by the filter if all values pass 
     their corresponding tests.  This behavior can be toggled so that all rows which pass any of the tests
-    will be yielded by specifying "any=True" in the constructor.
+    will be yielded by specifying "any_match=True" in the constructor.
        
     Empty values (the blank string or None) not be tested; the value in that position will not affect whether
     or not the filterint reader yields a prospective row.  To test for explicitly blank, use a regular

@@ -54,7 +54,7 @@ class CSVGrep(CSVKitUtility):
         output = CSVKitWriter(self.output_file, **self.writer_kwargs)
         output.writerow(column_names)
 
-        filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse = self.args.inverse)
+        filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse=self.args.inverse)
 
         for i, row in enumerate(filter_reader):
             self.input_line_number = i + 1
