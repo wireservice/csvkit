@@ -15,7 +15,7 @@ class FilteringCSVReader(object):
     will be yielded by specifying "any=True" in the constructor.
        
     Empty values (the blank string or None) not be tested; the value in that position will not affect whether
-    or not the filterint reader yields a prospective row.  To test for explicitly blank, use a regular
+    or not the filtering reader yields a prospective row.  To test for explicitly blank, use a regular
     expression such as "^$" or "^\s*$"
        
     If patterns is a dictionary, the keys should be integers identifying indices in the input rows. (It might 
