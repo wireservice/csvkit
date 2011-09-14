@@ -1,7 +1,7 @@
 Working
 -------
 
-* Added iterative type inference algorithm.
+* Refactored how type inference and normalization works. It is now possible to specify a type that a column must coerce to. This shouldn't affect the results of any tools.
 * Type inference will no longer treat "0" and "1" as boolean values.
 
 Version 3.0
