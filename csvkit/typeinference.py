@@ -17,9 +17,13 @@ NULL_TIME = datetime.time(0, 0, 0)
 
 def normalize_column_type(l, normal_type=None):
     """
-    Attempts to normalize a list (column) of string values to booleans, integers, floats, dates, times, datetimes, or strings. NAs and missing values are converted to empty strings. Empty strings are converted to nulls.
+    Attempts to normalize a list (column) of string values to booleans, integers,
+    floats, dates, times, datetimes, or strings. NAs and missing values are converted 
+    to empty strings. Empty strings are converted to nulls.
 
-    Optional accepts a "normal_type" argument which specifies a type that the values must conform to (rather than inferring). Will raise InvalidValueForTypeException if a value is not coercable.
+    Optional accepts a "normal_type" argument which specifies a type that the values
+    must conform to (rather than inferring). Will raise InvalidValueForTypeException
+    if a value is not coercable.
 
     Returns a tuple of (type, normal_values).
     """
