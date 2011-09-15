@@ -33,8 +33,8 @@ class CSVGrep(CSVKitUtility):
             print_column_names(self.args.file, self.output_file, **self.reader_kwargs)
             return
 
-        if not self.args.regex and not self.args.pattern:
-            self.argparser.error("One of -r or -m must be specified, unless using the -n option.")
+        if not self.args.regex and not self.args.pattern and not self.args.matchfile:
+            self.argparser.error("One of -r, -m or -f must be specified, unless using the -n option.")
 
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         column_names = rows.next()
