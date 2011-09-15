@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import datetime
-import sys 
 
 from csvkit import table
 from csvkit.cli import CSVKitUtility 

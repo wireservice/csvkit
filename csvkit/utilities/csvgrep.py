@@ -34,7 +34,7 @@ class CSVGrep(CSVKitUtility):
             return
 
         if not self.args.regex and not self.args.pattern:
-            sys.exit("One of -r or -m must be specified, unless using the -n option.")
+            self.argparser.error("One of -r or -m must be specified, unless using the -n option.")
 
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         column_names = rows.next()

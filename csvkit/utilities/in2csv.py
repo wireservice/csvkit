@@ -28,7 +28,7 @@ class In2CSV(CSVKitUtility):
             format = self.args.format
 
             if format not in convert.SUPPORTED_FORMATS:
-                sys.exit('"%s" is not a supported format' % self.args.format)
+                self.argparser.error('"%s" is not a supported format' % self.args.format)
 
         elif self.args.schema:
             format = 'fixed'
@@ -36,12 +36,12 @@ class In2CSV(CSVKitUtility):
             format = 'json'
         else:
             if self.args.file == '<stdin>':
-                sys.exit('You must specify a format when providing data via STDIN (pipe).')
+                self.argparser.error('You must specify a format when providing data via STDIN (pipe).')
 
             format = convert.guess_format(self.args.file)
 
             if not format:
-                sys.exit('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
+                self.argparser.error('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
         if isinstance(self.args.file, file):
             f = self.args.file

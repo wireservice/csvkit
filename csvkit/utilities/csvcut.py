@@ -9,8 +9,6 @@ https://gist.github.com/561347/9846ebf8d0a69b06681da9255ffe3d3f59ec2c97
 Used and modified with permission.
 """
 
-import sys
-
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit.cli import CSVKitUtility, parse_column_identifiers, print_column_names
 

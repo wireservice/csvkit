@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from os.path import splitext
-import sys
 
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit.cli import CSVKitUtility 

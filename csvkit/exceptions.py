@@ -72,5 +72,5 @@ class InvalidValueForTypeException(CustomException):
         self.index = index
         self.value = value
         self.normal_type = normal_type
-        msg = 'Unable to convert "%s" to type %s (row %i)' % (value, normal_type, index)
+        msg = 'Unable to convert "%s" to type %s (at index %i)' % (value, normal_type, index)
         super(InvalidValueForTypeException, self).__init__(msg)

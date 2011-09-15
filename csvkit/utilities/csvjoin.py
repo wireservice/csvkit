@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import sys
-
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit import join
 from csvkit.cli import CSVFileType, CSVKitUtility, match_column_identifier
@@ -25,7 +23,7 @@ class CSVJoin(CSVKitUtility):
 
     def main(self):
         if len(self.args.files) < 2:
-            sys.exit('You must specify at least two files to join.')
+            self.argparser.error('You must specify at least two files to join.')
 
         if self.args.columns:
             join_column_names = self._parse_join_column_names(self.args.columns)
@@ -34,13 +32,13 @@ class CSVJoin(CSVKitUtility):
                 join_column_names = join_column_names * len(self.args.files)
 
             if len(join_column_names) != len(self.args.files):
-                sys.exit('The number of join column names must match the number of files, or be a single column name that exists in all files.')
+                self.argparser.error('The number of join column names must match the number of files, or be a single column name that exists in all files.')
 
         if (self.args.left_join or self.args.right_join or self.args.outer_join) and not self.args.columns:
-            sys.exit('You must provide join column names when performing an outer join.')
+            self.argparser.error('You must provide join column names when performing an outer join.')
 
         if self.args.left_join and self.args.right_join:
-             sys.exit('It is not valid to specify both a left and a right join.')
+             self.argparser.error('It is not valid to specify both a left and a right join.')
 
         tables = []
 

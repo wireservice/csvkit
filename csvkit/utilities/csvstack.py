@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import os
-import sys
 
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit.cli import CSVFileType, CSVKitUtility
@@ -21,7 +20,7 @@ class CSVStack(CSVKitUtility):
 
     def main(self):
         if len(self.args.files) < 2:
-            sys.exit('You must specify at least two files to stack.')
+            self.argparser.error('You must specify at least two files to stack.')
 
         if self.args.group_by_filenames:
             groups = [os.path.split(f.name)[1] for f in self.args.files] 
@@ -29,7 +28,7 @@ class CSVStack(CSVKitUtility):
             groups = self.args.groups.split(',')
 
             if len(groups) != len(self.args.files):
-                sys.exit('The number of grouping values must be equal to the number of CSV files being stacked.')
+                self.argparser.error('The number of grouping values must be equal to the number of CSV files being stacked.')
         else:
             groups = None
                 
