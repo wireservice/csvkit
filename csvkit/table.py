@@ -195,23 +195,24 @@ class Table(list):
 
         dialect = sniffer.sniff_dialect(sample)
 
-        f = StringIO(contents) 
+        f = StringIO(contents)
         reader = CSVKitReader(f, dialect=dialect, **kwargs)
 
         headers = reader.next()
-        
-        # Prepare the proper number of containers
+
+        # Prep the right list of columns
         if column_ids:
             column_ids = parse_column_identifiers(column_ids, headers)
-            # Spin off list of chosen column names
-            headers_copy = list(headers)
-            for i, c in enumerate(column_ids):
-                headers[i] = headers_copy[c]
-            data_columns = [[] for c in column_ids]
         else:
             column_ids = [i for i in range(len(headers))]
-            data_columns = [[] for c in headers]
-
+            
+        # Create list of header id/name pairs [column_id, column_name]
+        data_headers = []
+        for c in column_ids:
+            data_headers.append([c,headers[c]])
+        
+        # Set up and fill data containers for proper number of columns
+        data_columns = [[] for c in column_ids]
         for row in reader:
             for i, d in enumerate(row):
                 try:
@@ -220,10 +221,10 @@ class Table(list):
                     # Non-rectangular data is truncated
                     break
 
+        # Put everything in its right place, display expected column number
         columns = []
-
         for i, c in enumerate(data_columns):
-            columns.append(Column(i, headers[i], c))
+            columns.append(Column(data_headers[i][0], data_headers[i][1], c))
 
         return Table(columns, name=name)
 
