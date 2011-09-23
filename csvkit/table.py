@@ -183,6 +183,11 @@ class Table(list):
     def from_csv(cls, f, name='from_csv_table', snifflimit=None, column_ids=None, **kwargs):
         """
         Creates a new Table from a file-like object containing CSV data.
+
+        Note: the column_ids argument will cause only those columns with a matching identifier
+        to be parsed, type inferred, etc. However, their order/index property will reflect the
+        original data (e.g. column 8 will still be "order" 7, even if it's the third column
+        in the resulting Table.
         """
         # This bit of nonsense is to deal with "files" from stdin,
         # which are not seekable and thus must be buffered
@@ -200,17 +205,13 @@ class Table(list):
 
         headers = reader.next()
         
-        # Prepare the proper number of containers
         if column_ids:
             column_ids = parse_column_identifiers(column_ids, headers)
-            # Spin off list of chosen column names
-            headers_copy = list(headers)
-            for i, c in enumerate(column_ids):
-                headers[i] = headers_copy[c]
-            data_columns = [[] for c in column_ids]
+            headers = [headers[c] for c in column_ids]
         else:
-            column_ids = [i for i in range(len(headers))]
-            data_columns = [[] for c in headers]
+            column_ids = range(len(headers))
+        
+        data_columns = [[] for c in headers]
 
         for row in reader:
             for i, d in enumerate(row):
@@ -223,7 +224,7 @@ class Table(list):
         columns = []
 
         for i, c in enumerate(data_columns):
-            columns.append(Column(i, headers[i], c))
+            columns.append(Column(column_ids[i], headers[i], c))
 
         return Table(columns, name=name)
 
@@ -259,3 +260,4 @@ class Table(list):
 
         writer = CSVKitWriter(output, **kwargs)
         writer.writerows(rows)
+
