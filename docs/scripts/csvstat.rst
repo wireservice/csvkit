@@ -22,6 +22,9 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
       -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
                             Limit CSV dialect sniffing to the specified number of
                             bytes.
+      -c COLUMNS, --columns COLUMNS
+                            A comma separated list of column indices or names to
+                            be examined. Defaults to all columns.
 
 Also see: :doc:`common_arguments`.
 
@@ -31,3 +34,4 @@ Examples
 Basic use::
 
     $ csvstat examples/realdata/FY09_EDU_Recipients_by_State.csv 
+
