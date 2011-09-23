@@ -78,7 +78,7 @@ Searching for rows with csvgrep
 
 After reviewing the summary statistics you might wonder where your home state falls in the order. To get a simple answer to the question we can use :doc:`/scripts/csvgrep` to search for the state's name amongst the rows. Let's also use csvcut to just look at the columns we care about::
 
-    $ csvcut -c 1,"TOTAL" 2009.csv | csvgrep -c 1 ILLINOIS
+    $ csvcut -c 1,"TOTAL" 2009.csv | csvgrep -c 1 -m ILLINOIS
     State Name,TOTAL
     ILLINOIS,"21,964"
 
@@ -117,7 +117,6 @@ Now we can use :doc:`/scripts/csvsort` to sort the rows by the first column::
     40402,TEXAS
     36394,FLORIDA
     33986,ARIZONA
-    21964,ILLINOIS
 
 The -r tells ``csvsort`` to sort in descending order.
 

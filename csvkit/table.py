@@ -6,6 +6,7 @@ from cStringIO import StringIO
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit import sniffer
 from csvkit import typeinference
+from csvkit.cli import parse_column_identifiers
 
 class InvalidType(object):
     """
@@ -179,7 +180,7 @@ class Table(list):
         return row_data
 
     @classmethod
-    def from_csv(cls, f, name='from_csv_table', snifflimit=None, **kwargs):
+    def from_csv(cls, f, name='from_csv_table', snifflimit=None, column_ids=None, **kwargs):
         """
         Creates a new Table from a file-like object containing CSV data.
         """
@@ -198,20 +199,30 @@ class Table(list):
         reader = CSVKitReader(f, dialect=dialect, **kwargs)
 
         headers = reader.next()
-
-        data_columns = [[] for c in headers] 
+        
+        # Prepare the proper number of containers
+        if column_ids:
+            column_ids = parse_column_identifiers(column_ids, headers)
+            # Spin off list of chosen column names
+            headers_copy = list(headers)
+            for i, c in enumerate(column_ids):
+                headers[i] = headers_copy[c]
+            data_columns = [[] for c in column_ids]
+        else:
+            column_ids = [i for i in range(len(headers))]
+            data_columns = [[] for c in headers]
 
         for row in reader:
             for i, d in enumerate(row):
                 try:
-                    data_columns[i].append(d.strip())
+                    data_columns[i].append(row[column_ids[i]].strip())
                 except IndexError:
                     # Non-rectangular data is truncated
                     break
 
         columns = []
 
-        for i, c in enumerate(data_columns): 
+        for i, c in enumerate(data_columns):
             columns.append(Column(i, headers[i], c))
 
         return Table(columns, name=name)
