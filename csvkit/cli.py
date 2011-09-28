@@ -198,11 +198,11 @@ def match_column_identifier(column_names, c):
             c = int(c) - 1
         # Fail out if neither a column name nor an integer
         except:
-            raise ColumnIdentifierError('Column identifier "%s" is neither a index, nor a existing column\'s name.' % c)
+            raise ColumnIdentifierError('Column identifier "%s" is neither an integer, nor a existing column\'s name.' % c)
 
         # Fail out if index is 0-based
         if c < 0:
-            raise ColumnIdentifierError('Columns 0 is not valid; columns are 1-based.')
+            raise ColumnIdentifierError('Column 0 is not valid; columns are 1-based.')
 
         # Fail out if index is out of range
         if c >= len(column_names):
@@ -213,8 +213,9 @@ def match_column_identifier(column_names, c):
 def parse_column_identifiers(ids, column_names):
     """
     Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
-
-    Note: Column indices are 1-based.
+    Ranges of integers can be specified with two integers separated by a '-' or ':' character. Ranges of 
+    non-integers (e.g. column names) are not supported.
+    Note: Column indices are 1-based. 
     """
     # If not specified, return all columns 
     if not ids:
@@ -223,7 +224,24 @@ def parse_column_identifiers(ids, column_names):
     columns = []
 
     for c in ids.split(','):
-        columns.append(match_column_identifier(column_names, c.strip()))
+        c = c.strip()
+        try:
+            columns.append(match_column_identifier(column_names, c))
+        except ColumnIdentifierError:
+            if '-' in c:
+                a,b = c.split('-',1)
+            elif ':' in c:
+                a,b = c.split(':',1)
+            else: raise
+            
+            try:
+                a = int(a)
+                b = int(b) + 1
+            except ValueError:
+                raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
+            
+            for x in range(a,b):
+                columns.append(match_column_identifier(column_names, x))
 
     return columns
 
