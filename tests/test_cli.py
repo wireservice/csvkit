@@ -6,7 +6,7 @@ from csvkit.cli import match_column_identifier, parse_column_identifiers
 
 class TestCli(unittest.TestCase):
     def setUp(self):
-        self.headers = ['id', 'name', 'i_work_here', '1']
+        self.headers = ['id', 'name', 'i_work_here', '1', 'more-header-values', 'stuff', 'blueberry']
 
     def test_match_column_identifier_string(self):
         self.assertEqual(2, match_column_identifier(self.headers, 'i_work_here'))
@@ -23,5 +23,11 @@ class TestCli(unittest.TestCase):
     def test_range_notation(self):
         self.assertEqual([0,1,2], parse_column_identifiers('1:3', self.headers))
         self.assertEqual([1,2,3], parse_column_identifiers('2-4', self.headers))        
-        self.assertEqual([5,2,4], parse_column_identifiers('min-or-max,3,bob', ['foo','bar','baz','qux','bob','min-or-max']))
+        self.assertEqual([0,1,2,3], parse_column_identifiers('1,2:4', self.headers))        
+        self.assertEqual([4,2,5], parse_column_identifiers('more-header-values,3,stuff', self.headers))
 
+    def test_range_notation_open_ended(self):
+        self.assertEqual([0,1,2], parse_column_identifiers(':3', self.headers))
+        target = range(3,len(self.headers) - 1) # protect against devs adding to self.headers
+        target.insert(0,0)
+        self.assertEqual(target, parse_column_identifiers('1,4:', self.headers))        

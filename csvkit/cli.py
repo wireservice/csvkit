@@ -228,15 +228,22 @@ def parse_column_identifiers(ids, column_names):
         try:
             columns.append(match_column_identifier(column_names, c))
         except ColumnIdentifierError:
-            if '-' in c:
-                a,b = c.split('-',1)
-            elif ':' in c:
+            if ':' in c:
                 a,b = c.split(':',1)
+            elif '-' in c:
+                a,b = c.split('-',1)
             else: raise
             
             try:
-                a = int(a)
-                b = int(b) + 1
+                if a:
+                    a = int(a)
+                else:
+                    a = 1
+                if b:
+                    b = int(b) + 1
+                else:
+                    b = len(column_names)
+                    
             except ValueError:
                 raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
             
