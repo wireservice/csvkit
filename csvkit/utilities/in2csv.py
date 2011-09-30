@@ -35,7 +35,7 @@ class In2CSV(CSVKitUtility):
         elif self.args.key:
             format = 'json'
         else:
-            if self.args.file == '<stdin>':
+            if self.args.file == sys.stdin:
                 self.argparser.error('You must specify a format when providing data via STDIN (pipe).')
 
             format = convert.guess_format(self.args.file)
