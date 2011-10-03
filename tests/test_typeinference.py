@@ -6,7 +6,7 @@ import unittest
 
 from csvkit import typeinference
 
-from csvkit.exceptions import InvalidValueForTypeException
+from csvkit.exceptions import InvalidValueForTypeException, InvalidValueForTypeListException
 
 class TestNormalizeType(unittest.TestCase):
     def test_nulls(self):
@@ -151,20 +151,18 @@ class TestNormalizeType(unittest.TestCase):
     def test_datetimes_and_times(self):
         self.assertEqual((unicode, ['Jan 1, 2008 at 4:40 AM', '2010-01-27T03:45:00', '16:14:45', None]), typeinference.normalize_column_type(['Jan 1, 2008 at 4:40 AM', '2010-01-27T03:45:00', '16:14:45', '']))
 
-
     def test_normalize_table(self):
         expected_types = [unicode, int, float, NoneType]
         data = [
             ['a','1','2.1', ''],
-            ['b', '5', '4.1', ''],
+            ['b', '5', '4.1'],
             ['c', '100', '100.9999', ''],
             ['d', '2', '5.3', '']
         ]
-        column_count = len(expected_types)
-        types, columns = typeinference.normalize_table(data, column_count)
+        types, columns = typeinference.normalize_table(data)
 
-        self.assertEqual(column_count, len(types))
-        self.assertEqual(column_count, len(columns))
+        self.assertEqual(4, len(types))
+        self.assertEqual(4, len(columns))
 
         for i, tup in enumerate(zip(columns, types, expected_types)):
             c, t, et = tup
@@ -172,7 +170,49 @@ class TestNormalizeType(unittest.TestCase):
             for row, normalized in zip(data, c):
                 if t is NoneType:
                     self.assertTrue(normalized is None)
-                    self.assertEqual('', row[i])
                 else:
                     self.assertEqual(t(row[i]), normalized)
+
+    def test_normalize_table_known_types(self):
+        normal_types = [unicode, int, float, NoneType]
+        data = [
+            ['a','1','2.1', ''],
+            ['b', '5', '4.1'],
+            ['c', '100', '100.9999', ''],
+            ['d', '2', '5.3', '']
+        ]
+        types, columns = typeinference.normalize_table(data, normal_types)
+
+        self.assertEqual(4, len(types))
+        self.assertEqual(4, len(columns))
+
+        for i, tup in enumerate(zip(columns, types, normal_types)):
+            c, t, et = tup
+            self.assertEqual(et, t)
+            for row, normalized in zip(data, c):
+                if t is NoneType:
+                    self.assertTrue(normalized is None)
+                else:
+                    self.assertEqual(t(row[i]), normalized)
+
+    def test_normalize_table_known_types_invalid(self):
+        normal_types = [bool, int, int, NoneType]
+        data = [
+            ['a','1','2.1', ''],
+            ['b', '5', '4.1'],
+            ['c', '100', '100.9999', ''],
+            ['d', '2', '5.3', '']
+        ]
+        
+        try:
+            typeinference.normalize_table(data, normal_types, accumulate_errors=True)
+            self.assertEqual(True, False)
+        except InvalidValueForTypeListException, e:
+            self.assertEqual(len(e.errors), 2)
+            self.assertEqual(e.errors[0].index, 0)
+            self.assertEqual(e.errors[0].value, 'a')
+            self.assertEqual(e.errors[0].normal_type, bool)
+            self.assertEqual(e.errors[2].index, 0)
+            self.assertEqual(e.errors[2].value, '2.1')
+            self.assertEqual(e.errors[2].normal_type, int)
 

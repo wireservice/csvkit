@@ -5,7 +5,7 @@ from types import NoneType
 
 from dateutil.parser import parse
 
-from exceptions import InvalidValueForTypeException
+from exceptions import InvalidValueForTypeException, InvalidValueForTypeListException
 
 NULL_VALUES = ('na', 'n/a', 'none', 'null', '.')
 TRUE_VALUES = ('yes', 'y', 'true', 't')
@@ -171,23 +171,48 @@ def normalize_column_type(l, normal_type=None):
     # Don't know what they are, so they must just be strings 
     return unicode, [x if x != '' else None for x in l]
 
-def normalize_table(rows, column_count):
+def normalize_table(rows, normal_types=None, accumulate_errors=False):
     """
     Given a sequence of sequences, normalize the lot.
+
+    Optionally accepts a normal_types parameter which is a list of
+    types that the columns must normalize to.
     """
-    data_columns = [[] for x in range(column_count)]
+    data_columns = []
+    column_count = 0
+    row_count = 0
 
     for row in rows:
+        while column_count < len(row):
+            data_columns.append([None] * row_count)
+            column_count += 1
+
         for data_column, value in zip(data_columns, row):
             data_column.append(value)
 
-    normal_types = []
-    normal_columns= []
+        row_count += 1
 
-    for column in data_columns:
-        t, c = normalize_column_type(column)
-        normal_types.append(t)
-        normal_columns.append(c)
+    new_normal_types = []
+    new_normal_columns= []
+    errors = {}
+
+    for i, column in enumerate(data_columns):
+        try:
+            if normal_types:
+                t, c = normalize_column_type(column, normal_types[i])
+            else:
+                t, c = normalize_column_type(column)
+
+            new_normal_types.append(t)
+            new_normal_columns.append(c)
+        except InvalidValueForTypeException, e:
+            if not accumulate_errors:
+                raise                
+        
+            errors[i] = e
     
-    return normal_types, normal_columns
+    if errors:
+        raise InvalidValueForTypeListException(errors)
+
+    return new_normal_types, new_normal_columns
 
