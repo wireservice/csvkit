@@ -104,9 +104,9 @@ def de_parameterize_insert_query(statement, values, dialect=None):
         elif type(v) == bool:
             return unicode(v).upper()
         elif type(v) == unicode:
-            return u'\'%s\'' % v 
+            return repr(v)[1:]
         else:
-            return unicode(v)
+            return unicode(repr(v))
 
     # ':column_name' syntax
     if dialect in ['access', 'firebird', 'maxdb', 'mssql', 'oracle', 'sybase', None]:
