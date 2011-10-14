@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
 import unittest
 
@@ -10,10 +11,10 @@ from sqlalchemy import Boolean, Date, DateTime, Float, Integer, String, Time
 class TestSQL(unittest.TestCase):
     def setUp(self):
         self.csv_table = table.Table([
-            table.Column(0, u'text', [u'Chicago Reader', u'Chicago Sun-Times', u'Chicago Tribune', u'Row with blanks']),
-            table.Column(1, u'integer', [u'40', u'63', u'164', u'']),
-            table.Column(2, u'datetime', [u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '']),
-            table.Column(3, u'empty_column', [u'', u'', u'', u''])],
+            table.Column(0, u'text', [u'Chicago Reader', u'Chicago Sun-Times', u'Chicago Tribune', u'Row with blanks', u'O\'Reilly', u'"Jeff"', u'áéíóú']),
+            table.Column(1, u'integer', [u'40', u'63', u'164', u'', u'', u'', u'']),
+            table.Column(2, u'datetime', [u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', '', u'', u'', u'']),
+            table.Column(3, u'empty_column', [u'', u'', u'', u'', u'', u'', u''])],
             name='test_table')
 
     def test_make_column_name(self):
@@ -81,8 +82,23 @@ u"""CREATE TABLE test_table (
 \tempty_column VARCHAR(32)
 );""")
 
-    def make_insert_statement(self):
+    def test_make_insert_statement(self):
         sql_table = sql.make_table(self.csv_table, 'csvsql')
-        statement = sql.make_insert_statement(sql_table, self.csv_table._prepare_rows_for_serialization()[0])
+        statement = sql.make_insert_statement(sql_table, self.csv_table.to_rows(serialize_dates=True)[0])
         self.assertEqual(statement, u'INSERT INTO test_table (text, integer, datetime, empty_column) VALUES (\'Chicago Reader\', 40, \'2008-01-01T04:40:00\', NULL);')
+
+    def test_make_insert_statement_with_single_quote(self):
+        sql_table = sql.make_table(self.csv_table, 'csvsql')
+        statement = sql.make_insert_statement(sql_table, self.csv_table.to_rows(serialize_dates=True)[4])
+        self.assertEqual(statement, u'INSERT INTO test_table (text, integer, datetime, empty_column) VALUES ("O\'Reilly", NULL, NULL, NULL);')
+
+    def test_make_insert_statement_with_double_quotes(self):
+        sql_table = sql.make_table(self.csv_table, 'csvsql')
+        statement = sql.make_insert_statement(sql_table, self.csv_table.to_rows(serialize_dates=True)[5])
+        self.assertEqual(statement, u'INSERT INTO test_table (text, integer, datetime, empty_column) VALUES (\'"Jeff"\', NULL, NULL, NULL);')
+
+    def test_make_insert_statement_with_utf8(self):
+        sql_table = sql.make_table(self.csv_table, 'csvsql')
+        statement = sql.make_insert_statement(sql_table, self.csv_table.to_rows(serialize_dates=True)[6])
+        self.assertEqual(statement, u'INSERT INTO test_table (text, integer, datetime, empty_column) VALUES (\'áéíóú\', NULL, NULL, NULL);')
 

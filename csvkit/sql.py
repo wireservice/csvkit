@@ -112,7 +112,11 @@ def de_parameterize_insert_query(statement, values, dialect=None):
         elif type(v) == bool:
             return unicode(v).upper()
         elif type(v) == unicode:
-            return u'\'%s\'' % v 
+            has_single_quote = '\'' in v
+            if not has_single_quote:
+                return '\'%s\'' % v
+            else:
+                return '"%s"' % v
         else:
             return unicode(v)
 
