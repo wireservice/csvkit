@@ -4,7 +4,6 @@ import unittest
 import StringIO
 
 from csvkit.utilities.in2csv import In2CSV
-from csvkit.utilities.csvstat import CSVStat
 
 class TestIn2CSV(unittest.TestCase):
     def test_convert_xls(self):
