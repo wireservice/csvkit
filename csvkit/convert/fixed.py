@@ -97,7 +97,7 @@ class SchemaDecoder(object):
     """
     Extracts column, start, and length columns from schema rows. Once instantiated, each time the instance is called with a row, a (column,start,length) tuple will be returned based on values in that row and the constructor kwargs.
     """
-    REQUIRED_COLUMNS = ['column', 'start', 'length']
+    REQUIRED_COLUMNS = [('column', None), ('start', int), ('length', int)]
 
     start = None
     length = None
@@ -108,9 +108,12 @@ class SchemaDecoder(object):
         """
         Constructs a schema row decoder. 
         """
-        for p in self.REQUIRED_COLUMNS:
+        for p, val_type in self.REQUIRED_COLUMNS:
             try:
-                setattr(self, p, header.index(p))
+                if val_type:
+                    setattr(self, p, val_type(header.index(p)))
+                else:
+                    setattr(self, p, header.index(p))
             except ValueError:
                 raise ValueError('A column named "%s" must exist in the schema file.' % (p))
 
