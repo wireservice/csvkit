@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 import os
+import sys
 
 from csvkit import sql
 from csvkit import table
 from csvkit.cli import CSVKitUtility
 
 class CSVSQL(CSVKitUtility):
-    description = 'Generate a SQL CREATE TABLE statement for a CSV file.'
+    description = 'Generate SQL statements for a CSV file or create execute those statements directly on a database.'
     override_flags = 'l'
 
     def add_arguments(self):
@@ -19,13 +20,17 @@ class CSVSQL(CSVKitUtility):
                             help='If present, a sqlalchemy connection string to use to directly execute generated SQL on a database.')
         self.argparser.add_argument('--insert', dest='insert', action='store_true',
                             help='In addition to creating the table, also insert the data into the table. Only valid when --db is specified.')
+        self.argparser.add_argument('--table', dest='table_name',
+                            help='Specify a name for the table to be created. If omitted, the filename (minus extension) will be used.')
 
     def main(self):
-        if self.args.file.name != '<stdin>':
+        if self.args.table_name:
+            table_name = self.args.table_name
+        elif self.args.file != sys.stdin:
             # Use filename as table name
             table_name = os.path.splitext(os.path.split(self.args.file.name)[1])[0]
         else:
-            table_name = 'csvsql_table'
+            self.argparser.error('The --table argument is required when providing data over STDIN.')
 
         if self.args.dialect and self.args.connection_string:
             self.argparser.error('The --dialect option is only valid when --db is not specified.')
@@ -60,3 +65,4 @@ class CSVSQL(CSVKitUtility):
 if __name__ == '__main__':
     utility = CSVSQL()
     utility.main()
+
