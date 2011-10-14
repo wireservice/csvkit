@@ -4,7 +4,7 @@ import datetime
 import re
 from types import NoneType
 
-from sqlalchemy import Column, MetaData, Table
+from sqlalchemy import Column, MetaData, Table, create_engine
 from sqlalchemy import Boolean, Date, DateTime, Float, Integer, String, Time
 from sqlalchemy.schema import CreateTable
 
@@ -58,11 +58,19 @@ def make_column(column):
 
     return Column(column.name, sql_column_type(**sql_type_kwargs), **sql_column_kwargs)
 
-def make_table(csv_table, name='table_name'):
+def get_connection(connection_string):
+    engine = create_engine(connection_string)
+    metadata = MetaData(engine)
+
+    return engine, metadata
+
+def make_table(csv_table, name='table_name', metadata=None):
     """
     Creates a sqlalchemy table from a csvkit Table.
     """
-    metadata = MetaData()
+    if not metadata:
+        metadata = MetaData()
+
     sql_table = Table(csv_table.name, metadata)
 
     for column in csv_table:
@@ -135,6 +143,6 @@ def make_insert_statement(sql_table, values, dialect=None):
 
     insert = unicode(sql_table.insert().compile(dialect=sql_dialect))
     statement = de_parameterize_insert_query(insert, values, dialect=dialect)
-
+    return statement.strip() + ';'
     return statement.strip() + ';'
 

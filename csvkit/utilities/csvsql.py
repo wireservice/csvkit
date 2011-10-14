@@ -14,9 +14,11 @@ class CSVSQL(CSVKitUtility):
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
                             help='Limit CSV dialect sniffing to the specified number of bytes.')
         self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=sql.DIALECTS,
-                            help='Dialect of SQL to generate.')
-        self.argparser.add_argument('--inserts', dest='inserts', action='store_true',
-                            help='In addition to generating a CREATE TABLE statement, also generate an INSERT statement for each row of data.')
+                            help='Dialect of SQL to generate. Only valid when --db is not specified.')
+        self.argparser.add_argument('--db', dest='connection_string',
+                            help='If present, a sqlalchemy connection string to use to directly execute generated SQL on a database.')
+        self.argparser.add_argument('--insert', dest='insert', action='store_true',
+                            help='In addition to creating the table, also insert the data into the table. Only valid when --db is specified.')
 
     def main(self):
         if self.args.file.name != '<stdin>':
@@ -25,15 +27,35 @@ class CSVSQL(CSVKitUtility):
         else:
             table_name = 'csvsql_table'
 
+        if self.args.dialect and self.args.connection_string:
+            self.argparser.error('The --dialect option is only valid when --db is not specified.')
+
+        if self.args.insert and not self.args.connection_string:
+            self.argparser.error('The --insert option is only valid when --db is also specified.')
+
         csv_table = table.Table.from_csv(self.args.file, name=table_name, snifflimit=self.args.snifflimit, **self.reader_kwargs)
-        sql_table = sql.make_table(csv_table)
 
-        self.output_file.write((u'%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect)).encode('utf-8'))
+        # Direct connections to database
+        if self.args.connection_string:
+            try:
+                engine, metadata = sql.get_connection(self.args.connection_string)
+            except ImportError:
+                raise ImportError('You don\'t appear to have the necessary database backend installed for connection string you\'re trying to use.. Available backends include:\n\nPostgresql:\tpip install psycopg2\nMySQL:\t\tpip install MySQL-python\n\nFor details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at: \n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n')
 
-        if self.args.inserts:
-            self.output_file.write('\n')
-            for row in csv_table.to_rows(serialize_dates=True):
-                self.output_file.write((u'%s\n' % sql.make_insert_statement(sql_table, row, dialect=self.args.dialect)).encode('utf-8'))
+            sql_table = sql.make_table(csv_table, table_name, metadata)
+            sql_table.create()
+
+            if self.args.insert:
+                insert = sql_table.insert()
+                headers = csv_table.headers()
+
+                for row in csv_table.to_rows(serialize_dates=True):
+                    engine.execute(insert, [dict(zip(headers, row)), ]) 
+
+        # Writing to file
+        else:
+            sql_table = sql.make_table(csv_table, table_name)
+            self.output_file.write((u'%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect)).encode('utf-8'))
 
 if __name__ == '__main__':
     utility = CSVSQL()
