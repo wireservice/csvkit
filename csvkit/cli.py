@@ -225,6 +225,7 @@ def parse_column_identifiers(ids, column_names):
 
     for c in ids.split(','):
         c = c.strip()
+
         try:
             columns.append(match_column_identifier(column_names, c))
         except ColumnIdentifierError:
@@ -232,7 +233,8 @@ def parse_column_identifiers(ids, column_names):
                 a,b = c.split(':',1)
             elif '-' in c:
                 a,b = c.split('-',1)
-            else: raise
+            else:
+                raise
             
             try:
                 if a:
