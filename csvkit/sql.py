@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import datetime
-import re
 from types import NoneType
 
 from sqlalchemy import Column, MetaData, Table, create_engine

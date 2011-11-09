@@ -55,3 +55,4 @@ Create a table and import data from the CSV directly into Postgres::
 
     $ createdb test
     $ csvsql --db postgresql:///test --name fy09 --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
+
