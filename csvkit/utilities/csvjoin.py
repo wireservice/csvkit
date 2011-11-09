@@ -11,15 +11,15 @@ class CSVJoin(CSVKitUtility):
     
     def add_arguments(self):
         self.argparser.add_argument('files', metavar="FILES", nargs='+', type=CSVFileType(),
-                            help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
+            help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
-                            help='The column name(s) on which to join. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
+            help='The column name(s) on which to join. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
         self.argparser.add_argument('--outer', dest='outer_join', action='store_true',
-                            help='Perform a full outer join, rather than the default inner join.')
+            help='Perform a full outer join, rather than the default inner join.')
         self.argparser.add_argument('--left', dest='left_join', action='store_true',
-                            help='Perform a left outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of left outer joins, starting at the left.')
+            help='Perform a left outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of left outer joins, starting at the left.')
         self.argparser.add_argument('--right', dest='right_join', action='store_true',
-                            help='Perform a right outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of right outer joins, starting at the right.')
+            help='Perform a right outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of right outer joins, starting at the right.')
 
     def main(self):
         if len(self.args.files) < 2:
@@ -47,8 +47,9 @@ class CSVJoin(CSVKitUtility):
 
         join_column_ids = []
         
-        for i, t in enumerate(tables):
-            join_column_ids.append(match_column_identifier(t[0], join_column_names[i]))
+        if self.args.columns:
+            for i, t in enumerate(tables):
+                join_column_ids.append(match_column_identifier(t[0], join_column_names[i]))
 
         jointab = []
         
