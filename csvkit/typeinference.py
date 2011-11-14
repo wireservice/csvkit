@@ -167,6 +167,9 @@ def normalize_column_type(l, normal_type=None):
         except ValueError:
             if normal_type:
                 raise InvalidValueForTypeException(i, x, normal_type) 
+        except OverflowError:
+            if normal_type:
+                raise InvalidValueForTypeException(i, x, normal_type) 
 
     # Don't know what they are, so they must just be strings 
     return unicode, [x if x != '' else None for x in l]

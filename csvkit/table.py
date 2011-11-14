@@ -22,7 +22,7 @@ class Column(list):
         """
         Construct a column from a sequence of values.
         
-        If normal_type is not None, inference will be skipped and values assumed to have already been normalized.
+        If normal_type is not InvalidType, inference will be skipped and values assumed to have already been normalized.
         """
         if normal_type != InvalidType:
             t = normal_type

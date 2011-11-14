@@ -20,10 +20,7 @@ class CSVStat(CSVKitUtility):
     def main(self):
         tab = table.Table.from_csv(self.args.file, snifflimit=self.args.snifflimit, column_ids=self.args.columns, **self.reader_kwargs)
 
-        null_excluder = lambda i: i is not None
-
         for c in tab:
-            values = sorted(filter(null_excluder, c))
             uniques = set(c)
             uniques.discard(None)
 
@@ -40,6 +37,8 @@ class CSVStat(CSVKitUtility):
                 uniques = [unicode(u) for u in list(uniques)]
                 self.output_file.write((u'\tValues: %s\n' % ', '.join(uniques)).encode('utf-8'))
             else:
+                values = sorted(filter(lambda i: i is not None, c))
+                
                 # Skip min/max for strings and bools
                 if c.type not in [unicode, bool]:
                     minval = min(values)
