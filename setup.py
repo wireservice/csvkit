@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='csvkit',
-    version='0.3.0',
+    version='0.4.1',
     description='A library of utilities for working with CSV, the king of tabular file formats.',
     long_description=open('README').read(),
     author='Christopher Groskopf',
