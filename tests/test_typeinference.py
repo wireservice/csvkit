@@ -216,3 +216,82 @@ class TestNormalizeType(unittest.TestCase):
             self.assertEqual(e.errors[2].value, '2.1')
             self.assertEqual(e.errors[2].normal_type, int)
 
+    def test_can_be_bool(self):
+        for val in ['yes', 'y', 'true', 't', 'True', 'TRUE', 'YES', 'no', 'n', 'false', 'f', 'NO', 'False']:
+            self.assertTrue(typeinference.can_be_bool(val), val + " should be a valid boolean string")
+        for val in ['1', '0', 'bob', 'nyet', 'si']:
+            self.assertFalse(typeinference.can_be_bool(val), val + " should not be a valid boolean string")
+
+    def test_can_be_int(self):
+        for val in ['1', '100', '1,000', '5215', '5,235,125']:
+            self.assertTrue(typeinference.can_be_int(val), val + " should be a valid int string")
+        for val in ['bob', 'nyet', '01010', '(312) 555-1212', 'palindrome', '3.14', '1.21']:
+            self.assertFalse(typeinference.can_be_int(val), val + " should not be a valid int string")            
+            
+    def test_can_be_float(self):
+        for val in ['1', '100', '1,000', '5215', '5,235,125', '1.0', '3.14', '1.21', '0.19', '01010']:
+            self.assertTrue(typeinference.can_be_float(val), val + " should be a valid float string")
+        for val in ['bob', 'nyet', '(312) 555-1212', 'palindrome']:
+            self.assertFalse(typeinference.can_be_float(val), val + " should not be a valid float string")            
+
+    def test_can_be_date(self):
+        for val in ['12/25/2011', 'July 6, 1971', '1941-12-07']:
+            self.assertTrue(typeinference.can_be_date(val), val + " should be a valid date string")            
+        for val in ['12/25/2011 5:00 pm', '1941-12-07 4:32am', '5:00 pm', '12am', '4:32am']:
+            self.assertFalse(typeinference.can_be_date(val), val + " should not be a valid date string")            
+    
+    def test_can_be_time(self):
+        for val in ['5:00 pm', '12am', '4:32am']:
+            self.assertTrue(typeinference.can_be_time(val), val + " should be a valid time string")            
+        for val in ['12/25/2011 5:00 pm', 'July 6, 1971 12am', '1941-12-07 4:32am', '12/25/2011', 'July 6, 1971', '1941-12-07']:
+            self.assertFalse(typeinference.can_be_time(val), val + " should be a valid time string")            
+
+    def test_can_be_datetime(self):
+        for val in ['12/25/2011 5:00 pm', 'July 6, 1971 12:01am', '1941-12-07 4:32am']:
+            self.assertTrue(typeinference.can_be_datetime(val), val + " should be a valid datetime string")            
+        for val in ['5:00 pm', '12am', '4:32am', '12/25/2011', 'July 6, 1971', '1941-12-07']:
+            self.assertFalse(typeinference.can_be_datetime(val), val + " should not be a valid datetime string")            
+    
+    def test_assess_row(self):
+        rows = [
+            ['5', '1', 'bob', 'true', '1/1/2001', '1/1/2002 5:00pm'],
+            ['4', '2.0', 'more strings', 'false', '12-31-2009', '1/1/2002'],
+            ['4', '', 'more strings', '', '4/1/2010', ''],
+        ]
+        
+        limits = typeinference.assess_row(rows[0])
+        self.assert_assessments(limits[0], (int, float, datetime.date, unicode))
+        self.assert_assessments(limits[1], (int, float, datetime.date, unicode))
+        self.assert_assessments(limits[2], (unicode,))
+        self.assert_assessments(limits[3], (bool, unicode))
+        self.assert_assessments(limits[4], (datetime.date,unicode))
+        self.assert_assessments(limits[5], (datetime.datetime,unicode))
+
+        limits = typeinference.assess_row(rows[1], limits)
+        self.assert_assessments(limits[0], (int, float, datetime.date, unicode))
+        self.assert_assessments(limits[1], (float, datetime.date, unicode))
+        self.assert_assessments(limits[2], (unicode,))
+        self.assert_assessments(limits[3], (bool, unicode))
+        self.assert_assessments(limits[4], (datetime.date,unicode))
+        self.assert_assessments(limits[5], (datetime.date,unicode))
+
+        limits = typeinference.assess_row(rows[2], limits)
+        self.assert_assessments(limits[0], (int, float, datetime.date, unicode))
+        self.assert_assessments(limits[1], (float, datetime.date, unicode))
+        self.assert_assessments(limits[2], (unicode,))
+        self.assert_assessments(limits[3], (bool, unicode))
+        self.assert_assessments(limits[4], (datetime.date,unicode))
+        self.assert_assessments(limits[5], (datetime.date,unicode))
+
+        limits = typeinference.reduce_assessment(limits)
+        self.assertEqual(int,limits[0])
+        self.assertEqual(float,limits[1])
+        self.assertEqual(unicode,limits[2])
+        self.assertEqual(bool,limits[3])
+        
+    def assert_assessments(self, assessment, allowed):
+        self.assertEqual(len(assessment),len(allowed), "len of assessment should be %i, not %i [%s]" % (len(allowed),len(assessment),assessment))
+        for item in allowed:
+            self.assertTrue(item in assessment, 'expected %s' % item)
+        
+        
