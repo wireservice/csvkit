@@ -4,8 +4,9 @@ from csvitself import csv2csv
 from fixed import fixed2csv
 from js import json2csv
 from xls import xls2csv
+from xlsx import xlsx2csv
 
-SUPPORTED_FORMATS = ['fixed', 'xls', 'csv', 'json']
+SUPPORTED_FORMATS = ['fixed', 'xls', 'xlsx', 'csv', 'json']
 
 def convert(f, format, schema=None, key=None, **kwargs):
     """
@@ -24,6 +25,8 @@ def convert(f, format, schema=None, key=None, **kwargs):
         return fixed2csv(f, schema, **kwargs)
     elif format == 'xls':
         return xls2csv(f, **kwargs)
+    elif format == 'xlsx':
+        return xlsx2csv(f, **kwargs)
     elif format == 'json':
         return json2csv(f, key, **kwargs)
     elif format == 'csv':
@@ -44,6 +47,8 @@ def guess_format(filename):
     extension = filename[last_period + 1:]
 
     if extension == 'xls':
+        return extension
+    elif extension == 'xlsx':
         return extension
     elif extension in ['json', 'js']:
         return 'json' 

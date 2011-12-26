@@ -45,7 +45,7 @@ class In2CSV(CSVKitUtility):
 
         if isinstance(self.args.file, file):
             f = self.args.file
-        elif format == 'xls':
+        elif format in ('xls', 'xlsx'):
             f = open(self.args.file, 'rb')
         else:
             f = open(self.args.file, 'rU')
