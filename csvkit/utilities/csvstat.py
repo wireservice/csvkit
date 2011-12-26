@@ -39,7 +39,7 @@ class CSVStat(CSVKitUtility):
         self.argparser.add_argument('--unique', dest='unique_only', action='store_true',
             help='Only output unique values.')
         self.argparser.add_argument('--freq', dest='freq_only', action='store_true',
-            help='Only output frequenty values.')
+            help='Only output frequent values.')
         self.argparser.add_argument('--len', dest='len_only', action='store_true',
             help='Only output max value length.')
 
@@ -71,7 +71,7 @@ class CSVStat(CSVKitUtility):
                 if len(tab) == 1:
                     self.output_file.write(unicode(stat))
                 else:
-                    self.output_file.write(u'%s: %s\n' % (c.name, stat))
+                    self.output_file.write(u'%3i. %s: %s\n' % (c.order + 1, c.name, stat))
             # Output all stats
             else:
                 for op in OPERATIONS:
