@@ -56,3 +56,4 @@ Extract the first and third columns::
 Extract columns named "TOTAL" and "State Name" (in that order)::
 
     $ csvcut -c TOTAL,"State Name" examples/realdata/FY09_EDU_Recipients_by_State.csv
+

@@ -49,7 +49,20 @@ When an statistic name is passed, only that stat will be printed::
 
     $ csvstat --freq examples/realdata/FY09_EDU_Recipients_by_State.csv
 
+      1. State Name: None
+      2. State Abbreviate: None
+      3. Code: None
+      4. Montgomery GI Bill-Active Duty: 3548.0
+      5. Montgomery GI Bill- Selective Reserve: 1019.0
+      6. Dependents' Educational Assistance: 1261.0
+      7. Reserve Educational Assistance Program: 715.0
+      8. Post-Vietnam Era Veteran's Educational Assistance Program: 6.0
+      9. TOTAL: 6520.0
+     10. _unnamed: None
+ 
 If a single stat *and* a single column are requested, only a value will be returned::
 
-    $ csvstat -c 3 --freq examples/realdata/FY09_EDU_Recipients_by_State.csv
+    $ csvstat -c 4 --freq examples/realdata/FY09_EDU_Recipients_by_State.csv
+
+    3548.0
 
