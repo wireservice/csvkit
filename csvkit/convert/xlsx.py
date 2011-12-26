@@ -7,6 +7,7 @@ from types import NoneType
 from openpyxl.reader.excel import load_workbook
 
 from csvkit import table
+from csvkit.typeinference import NULL_TIME
 
 def normalize_empty(values, **kwargs):
     """
@@ -30,12 +31,22 @@ def normalize_floats(values, **kwargs):
     """
     Normalize a column of float cells.
     """
-    return float, [float(v) for v in values]
+    return float, [float(v) if v is not None else None for v in values]
 
 def normalize_datetimes(values, **kwargs):
     """
     Normalize a column of datetime cells.
     """
+    just_dates = True
+
+    for v in values:
+        if v and v.time() != NULL_TIME:
+            just_dates = False
+            break
+
+    if just_dates:
+        return datetime.date, [v.date() if v else None for v in values]
+    
     return datetime.datetime, values
 
 def normalize_dates(values, **kwargs):
@@ -43,6 +54,12 @@ def normalize_dates(values, **kwargs):
     Normalize a column of date cells.
     """
     return datetime.date, values 
+
+def normalize_times(values, **kwargs):
+    """
+    Normalize a column of date cells.
+    """
+    return datetime.time, values 
 
 def normalize_booleans(values, **kwargs):
     """
@@ -55,6 +72,7 @@ NORMALIZERS = {
     unicode: normalize_unicode,
     datetime.datetime: normalize_datetimes,
     datetime.date: normalize_dates,
+    datetime.time: normalize_times,
     bool: normalize_booleans,
     int: normalize_ints,
     float: normalize_floats,
