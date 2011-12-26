@@ -229,6 +229,7 @@ def normalize_table(rows, normal_types=None, accumulate_errors=False):
     return new_normal_types, new_normal_columns
 
 AVAILABLE_TYPES = (bool, int, float, datetime.time, datetime.date, datetime.datetime, unicode)
+BOOL_VALUES = TRUE_VALUES + FALSE_VALUES
 
 def can_be_null(val):
     if not val:
@@ -236,12 +237,12 @@ def can_be_null(val):
     return val.lower() in NULL_VALUES
     
 def can_be_bool(val):
-    return val.lower() in TRUE_VALUES or val.lower() in FALSE_VALUES
+    return val.lower() in BOOL_VALUES
 
 def can_be_int(val):
     try:
         int_val = int(val.replace(',', ''))
-        if val[0] == '0' and int(val) != 0:
+        if val[0] == '0' and int_val != 0:
             return False
         return True
     except ValueError:
@@ -271,7 +272,7 @@ def can_be_date(val):
 def can_be_datetime(val):
     try:
         d = parse(val, default=DEFAULT_DATETIME)
-        return not can_be_date(val) and not can_be_time(val) and d != DEFAULT_DATETIME
+        return d.date() != NULL_DATE and d != DEFAULT_DATETIME
     except:
         return False
     
@@ -285,55 +286,118 @@ can_be = {
     unicode: lambda x: True,
 }
 
-def assess_row(row,limitations=None):
-    """Given a row of data, return a sequence whose members are lists of types which could possibly apply to values in the given row. 
+def assess_row(row, limitations=[]):
+    """
+    Given a row of data, return a sequence whose members are lists of types which could possibly apply to values in the given row. 
     If limitations is not None, it should be a sequence of the same length as 'row', and the return value will not include any types which 
     were not in the input limitations. The expected usage model would be to iteratively call this for each row, passing
     back the return as the limitations for the next row. 
     
     If 'limitations' is a sequence of all 'unicode' (the "widest" data type) then this call will return 
     the same list immediately. To short circuit iterative calls to this function after that equilibrium has
-    been reached, consider testing before calling using 'all_unicode' defined elsewhere in this module."""
+    been reached, consider testing before calling using 'all_unicode' defined elsewhere in this module.
+    """
     if limitations:
-        if all_unicode(limitations): return limitations
+        # All resolved? (TODO: bail out with exception?)
+        if all([len(limit) == 1 for limit in limitations]):
+            return limitations
     else:
-        limitations = [list(AVAILABLE_TYPES) for item in row]
+        # Everything is possible
+        limitations = [set(AVAILABLE_TYPES) for item in row]
     
     result = []
-    for value, column_limits in zip(row,limitations):
-        new_column_limits = []
+
+    for value, column_limits in zip(row, limitations):
+        new_column_limits = set()
+
         for limit in column_limits:
             if not value or can_be_null(value) or can_be[limit](value):
-                new_column_limits.append(limit)
+                new_column_limits.add(limit)
+        
         result.append(new_column_limits)
 
     return result
 
 def reduce_assessment(limitations):
-    """In some cases, an entire dataset might be reviewed and assess_row might not have boiled it down to unique values.
-       And in any case, we want our list of lists to be a list of singular values.
+    """
+    In some cases, an entire dataset might be reviewed and assess_row might not have boiled it down to unique values.
+    And in any case, we want our list of lists to be a list of singular values.
     """
     result = []
-    for item in limitations:
-        if len(item) > 1:
-            item.remove(unicode)
-        if datetime.datetime in item and datetime.date in item:
-            item.remove(datetime.date)
-        if len(item) == 1:
-            result.append(item[0])
-        elif int in item:
+
+    for limits in limitations:
+        # Unicode is always in the list
+        if len(limits) == 1:
+            result.append(unicode)
+            continue
+
+        limits.remove(unicode)
+
+        # Only one match other than unicode then it's exact
+        if len(limits) == 1:
+            result.append(limits.pop())
+        # Dates may be represented as datetimes
+        elif limits == set([datetime.datetime, datetime.date]):
+            result.append(datetime.date)
+        # Bool can be misidentified as float, int, datetime, date 
+        elif bool in limits:
+            result.append(bool)
+        # Int can be misidentified as float or date
+        elif int in limits:
             result.append(int)
-        elif float in item:
+        # Float can be misidentified as date
+        elif float in limits:
             result.append(float)
+        # If all else fails, it's unicode
         else:
-            raise Exception("Don't know how to reduce [%s]" % item)
+            result.append(unicode)
 
     return result
 
-def all_unicode(seq):
-    if seq:
-        for item in seq:
-            if item != unicode:
-                return False
-        return True
-    return False
+def generate_type_hypothesis(rows, sample_size=50):
+    """
+    Use type-guessing to generate a hypothesis about columns types based on a 
+    sample of rows.
+    """
+    limits = []
+
+    for row in rows[:sample_size]:
+        limits = assess_row(row, limits)
+
+    return reduce_assessment(limits)
+
+def fast_normalize_table(rows):
+    """
+    Normalizes a table using type guessing.
+    """
+    data_columns = []
+    column_count = 0
+    row_count = 0
+
+    for row in rows:
+        while column_count < len(row):
+            data_columns.append([None] * row_count)
+            column_count += 1
+
+        for i, value in enumerate(row):
+            data_columns[i].append(value)
+
+        row_count += 1
+
+    normal_types = generate_type_hypothesis(rows)
+
+    new_normal_columns= []
+
+    for i, column in enumerate(data_columns):
+        try:
+            if normal_types:
+                t, c = normalize_column_type(column, normal_types[i])
+            else:
+                t, c = normalize_column_type(column)
+
+            new_normal_columns.append(c)
+        except InvalidValueForTypeException:
+            raise                
+    
+    return normal_types, new_normal_columns
+

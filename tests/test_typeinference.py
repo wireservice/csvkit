@@ -247,51 +247,65 @@ class TestNormalizeType(unittest.TestCase):
             self.assertFalse(typeinference.can_be_time(val), val + " should be a valid time string")            
 
     def test_can_be_datetime(self):
-        for val in ['12/25/2011 5:00 pm', 'July 6, 1971 12:01am', '1941-12-07 4:32am']:
+        for val in ['12/25/2011 5:00 pm', 'July 6, 1971 12:01am', '1941-12-07 4:32am', '1941-12-07', '12/25/2011', 'July 6, 1971']:
             self.assertTrue(typeinference.can_be_datetime(val), val + " should be a valid datetime string")            
-        for val in ['5:00 pm', '12am', '4:32am', '12/25/2011', 'July 6, 1971', '1941-12-07']:
+
+        for val in ['5:00 pm', '12am', '4:32am']:
             self.assertFalse(typeinference.can_be_datetime(val), val + " should not be a valid datetime string")            
     
     def test_assess_row(self):
         rows = [
-            ['5', '1', 'bob', 'true', '1/1/2001', '1/1/2002 5:00pm'],
+            ['5', '1',   'bob',          'true',  '1/1/2001',   '1/1/2002 5:00pm'],
             ['4', '2.0', 'more strings', 'false', '12-31-2009', '1/1/2002'],
-            ['4', '', 'more strings', '', '4/1/2010', ''],
+            ['4', '',    'more strings', '',      '4/1/2010',   ''],
         ]
         
         limits = typeinference.assess_row(rows[0])
-        self.assert_assessments(limits[0], (int, float, datetime.date, unicode))
-        self.assert_assessments(limits[1], (int, float, datetime.date, unicode))
+        self.assert_assessments(limits[0], (int, float, datetime.datetime, datetime.date, unicode))
+        self.assert_assessments(limits[1], (int, float, datetime.datetime, datetime.date, unicode))
         self.assert_assessments(limits[2], (unicode,))
         self.assert_assessments(limits[3], (bool, unicode))
-        self.assert_assessments(limits[4], (datetime.date,unicode))
-        self.assert_assessments(limits[5], (datetime.datetime,unicode))
+        self.assert_assessments(limits[4], (datetime.datetime, datetime.date, unicode))
+        self.assert_assessments(limits[5], (datetime.datetime, unicode))
 
         limits = typeinference.assess_row(rows[1], limits)
-        self.assert_assessments(limits[0], (int, float, datetime.date, unicode))
-        self.assert_assessments(limits[1], (float, datetime.date, unicode))
+        self.assert_assessments(limits[0], (int, float, datetime.datetime, datetime.date, unicode))
+        self.assert_assessments(limits[1], (float, datetime.datetime, datetime.date, unicode))
         self.assert_assessments(limits[2], (unicode,))
         self.assert_assessments(limits[3], (bool, unicode))
-        self.assert_assessments(limits[4], (datetime.date,unicode))
-        self.assert_assessments(limits[5], (datetime.date,unicode))
+        self.assert_assessments(limits[4], (datetime.datetime, datetime.date, unicode))
+        self.assert_assessments(limits[5], (datetime.datetime, unicode))
 
         limits = typeinference.assess_row(rows[2], limits)
-        self.assert_assessments(limits[0], (int, float, datetime.date, unicode))
-        self.assert_assessments(limits[1], (float, datetime.date, unicode))
+        self.assert_assessments(limits[0], (int, float, datetime.datetime, datetime.date, unicode))
+        self.assert_assessments(limits[1], (float, datetime.datetime, datetime.date, unicode))
         self.assert_assessments(limits[2], (unicode,))
         self.assert_assessments(limits[3], (bool, unicode))
-        self.assert_assessments(limits[4], (datetime.date,unicode))
-        self.assert_assessments(limits[5], (datetime.date,unicode))
+        self.assert_assessments(limits[4], (datetime.datetime, datetime.date, unicode))
+        self.assert_assessments(limits[5], (datetime.datetime, unicode))
 
         limits = typeinference.reduce_assessment(limits)
-        self.assertEqual(int,limits[0])
-        self.assertEqual(float,limits[1])
-        self.assertEqual(unicode,limits[2])
-        self.assertEqual(bool,limits[3])
+        self.assertEqual(int, limits[0])
+        self.assertEqual(float, limits[1])
+        self.assertEqual(unicode, limits[2])
+        self.assertEqual(bool, limits[3])
+        self.assertEqual(datetime.date, limits[4])
+        self.assertEqual(datetime.datetime, limits[5])
         
     def assert_assessments(self, assessment, allowed):
-        self.assertEqual(len(assessment),len(allowed), "len of assessment should be %i, not %i [%s]" % (len(allowed),len(assessment),assessment))
+        self.assertEqual(len(assessment), len(allowed), "len of assessment should be %i, not %i %s" % (len(allowed), len(assessment), assessment))
+
         for item in allowed:
             self.assertTrue(item in assessment, 'expected %s' % item)
+        
+    def test_reduce_assessment(self):
+        reducify = typeinference.reduce_assessment
+        self.assertEqual(reducify([set([unicode])]), [unicode])
+        self.assertEqual(reducify([set([unicode, int])]), [int])
+        self.assertEqual(reducify([set([unicode, datetime.datetime, datetime.date])]), [datetime.date])
+        self.assertEqual(reducify([set([unicode, datetime.datetime, datetime.time])]), [unicode])
+        self.assertEqual(reducify([set([unicode, float, int])]), [int])
+        self.assertEqual(reducify([set([unicode, bool, int])]), [bool])
+        self.assertEqual(reducify([set([unicode, bool, int, float])]), [bool])
         
         
