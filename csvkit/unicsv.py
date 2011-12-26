@@ -49,6 +49,10 @@ class UnicodeCSVReader(object):
     def __iter__(self):
         return self
 
+    @property
+    def line_num(self):
+        return self.reader.line_num
+
 class UnicodeCSVWriter(object):
     """
     A CSV writer which will write rows to CSV file "f",
@@ -76,3 +80,31 @@ class UnicodeCSVWriter(object):
     def writerows(self, rows):
         for row in rows:
             self.writerow(row)
+
+class UnicodeCSVDictReader(csv.DictReader):
+    """Defer almost all implementation to csv.DictReader, but wrapping our unicode reader instead
+       of csv.reader
+    """
+    def __init__(self, f, fieldnames=None, restkey=None, restval=None, *args, **kwds):
+        self._fieldnames = fieldnames   # list of keys for the dict
+        self.restkey = restkey          # key to catch long rows
+        self.restval = restval          # default value for short rows
+        self.reader = UnicodeCSVReader(f, *args, **kwds)
+        self.line_num = 0
+
+
+class UnicodeCSVDictWriter(csv.DictWriter):
+    """Defer almost all implementation to csv.DictReader, but wrapping our unicode reader instead
+       of csv.reader
+    """
+    def __init__(self, f, fieldnames, writeheader=False, restval="", extrasaction="raise", *args, **kwds):
+        self.fieldnames = fieldnames    # list of keys for the dict
+        self.restval = restval          # for writing short dicts
+        if extrasaction.lower() not in ("raise", "ignore"):
+            raise ValueError, \
+                  ("extrasaction (%s) must be 'raise' or 'ignore'" %
+                   extrasaction)
+        self.extrasaction = extrasaction
+        self.writer = UnicodeCSVWriter(f, *args, **kwds)
+        if writeheader:
+            self.writerow(dict(zip(self.fieldnames,self.fieldnames)))
