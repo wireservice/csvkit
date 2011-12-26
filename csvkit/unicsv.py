@@ -109,5 +109,5 @@ class UnicodeCSVDictWriter(csv.DictWriter):
         self.writer = UnicodeCSVWriter(f, *args, **kwds)
 
         if writeheader:
-            self.writerow(dict(zip(self.fieldnames,self.fieldnames)))
+            self.writerow(dict(zip(self.fieldnames, self.fieldnames)))
 
