@@ -228,3 +228,112 @@ def normalize_table(rows, normal_types=None, accumulate_errors=False):
 
     return new_normal_types, new_normal_columns
 
+AVAILABLE_TYPES = (bool, int, float, datetime.time, datetime.date, datetime.datetime, unicode)
+
+def can_be_null(val):
+    if not val:
+        return True
+    return val.lower() in NULL_VALUES
+    
+def can_be_bool(val):
+    return val.lower() in TRUE_VALUES or val.lower() in FALSE_VALUES
+
+def can_be_int(val):
+    try:
+        int_val = int(val.replace(',', ''))
+        if val[0] == '0' and int(val) != 0:
+            return False
+        return True
+    except ValueError:
+        return False
+
+def can_be_float(val):
+    try:
+        float_val = float(val.replace(',',''))
+        return True
+    except ValueError:
+        return False
+
+def can_be_time(val):
+    try:
+        d = parse(val, default=DEFAULT_DATETIME)
+        return d.date() == NULL_DATE
+    except:
+        return False
+
+def can_be_date(val):
+    try:
+        d = parse(val, default=DEFAULT_DATETIME)
+        return d.time() == NULL_TIME and d.date() != NULL_DATE
+    except:
+        return False
+
+def can_be_datetime(val):
+    try:
+        d = parse(val, default=DEFAULT_DATETIME)
+        return not can_be_date(val) and not can_be_time(val) and d != DEFAULT_DATETIME
+    except:
+        return False
+    
+can_be = {
+    bool: can_be_bool,
+    int: can_be_int,
+    float: can_be_float,
+    datetime.time: can_be_time, 
+    datetime.date: can_be_date, 
+    datetime.datetime: can_be_datetime, 
+    unicode: lambda x: True,
+}
+
+def assess_row(row,limitations=None):
+    """Given a row of data, return a sequence whose members are lists of types which could possibly apply to values in the given row. 
+    If limitations is not None, it should be a sequence of the same length as 'row', and the return value will not include any types which 
+    were not in the input limitations. The expected usage model would be to iteratively call this for each row, passing
+    back the return as the limitations for the next row. 
+    
+    If 'limitations' is a sequence of all 'unicode' (the "widest" data type) then this call will return 
+    the same list immediately. To short circuit iterative calls to this function after that equilibrium has
+    been reached, consider testing before calling using 'all_unicode' defined elsewhere in this module."""
+    if limitations:
+        if all_unicode(limitations): return limitations
+    else:
+        limitations = [list(AVAILABLE_TYPES) for item in row]
+    
+    result = []
+    for value, column_limits in zip(row,limitations):
+        new_column_limits = []
+        for limit in column_limits:
+            if not value or can_be_null(value) or can_be[limit](value):
+                new_column_limits.append(limit)
+        result.append(new_column_limits)
+
+    return result
+
+def reduce_assessment(limitations):
+    """In some cases, an entire dataset might be reviewed and assess_row might not have boiled it down to unique values.
+       And in any case, we want our list of lists to be a list of singular values.
+    """
+    result = []
+    for item in limitations:
+        if len(item) > 1:
+            item.remove(unicode)
+        if datetime.datetime in item and datetime.date in item:
+            item.remove(datetime.date)
+        if len(item) == 1:
+            result.append(item[0])
+        elif int in item:
+            result.append(int)
+        elif float in item:
+            result.append(float)
+        else:
+            raise Exception("Don't know how to reduce [%s]" % item)
+
+    return result
+
+def all_unicode(seq):
+    if seq:
+        for item in seq:
+            if item != unicode:
+                return False
+        return True
+    return False
