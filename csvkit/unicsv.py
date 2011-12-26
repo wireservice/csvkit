@@ -82,29 +82,32 @@ class UnicodeCSVWriter(object):
             self.writerow(row)
 
 class UnicodeCSVDictReader(csv.DictReader):
-    """Defer almost all implementation to csv.DictReader, but wrapping our unicode reader instead
-       of csv.reader
     """
-    def __init__(self, f, fieldnames=None, restkey=None, restval=None, *args, **kwds):
-        self._fieldnames = fieldnames   # list of keys for the dict
-        self.restkey = restkey          # key to catch long rows
-        self.restval = restval          # default value for short rows
-        self.reader = UnicodeCSVReader(f, *args, **kwds)
-        self.line_num = 0
-
+    Defer almost all implementation to csv.DictReader, but wrapping our unicode reader instead
+    of csv.reader.
+    """
+    def __init__(self, f, fieldnames=None, restkey=None, restval=None, *args, **kwargs):
+        csv.DictReader.__init__(self, f, fieldnames, restkey, restval, *args, **kwargs)
+        self.reader = UnicodeCSVReader(f, *args, **kwargs)
 
 class UnicodeCSVDictWriter(csv.DictWriter):
-    """Defer almost all implementation to csv.DictReader, but wrapping our unicode reader instead
-       of csv.reader
+    """
+    Defer almost all implementation to csv.DictWriter, but wrapping our unicode reader instead
+    of csv.reader
     """
     def __init__(self, f, fieldnames, writeheader=False, restval="", extrasaction="raise", *args, **kwds):
-        self.fieldnames = fieldnames    # list of keys for the dict
-        self.restval = restval          # for writing short dicts
+        self.fieldnames = fieldnames 
+        self.restval = restval
+
         if extrasaction.lower() not in ("raise", "ignore"):
             raise ValueError, \
                   ("extrasaction (%s) must be 'raise' or 'ignore'" %
                    extrasaction)
+
         self.extrasaction = extrasaction
+
         self.writer = UnicodeCSVWriter(f, *args, **kwds)
+
         if writeheader:
             self.writerow(dict(zip(self.fieldnames,self.fieldnames)))
+
