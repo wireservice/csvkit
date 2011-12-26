@@ -126,7 +126,7 @@ class TestTable(unittest.TestCase):
     def test_table_count_rows(self):
         c = table.Column(0, u'test', [u'test', u'column', u''])
         c_short = table.Column(0, u'test', [u'test'])
-        c_long = table.Column(0, u'test', ['', '', '', ''])
+        c_long = table.Column(0, u'test', [u'', u'', u'', u''])
         t = table.Table()
         self.assertEqual(t.count_rows(), 0)
         t.append(c)

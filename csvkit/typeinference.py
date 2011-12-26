@@ -27,9 +27,13 @@ def normalize_column_type(l, normal_type=None):
 
     Returns a tuple of (type, normal_values).
     """
+    # Optimizations
+    lower = unicode.lower
+    replace = unicode.replace
+
     # Convert "NA", "N/A", etc. to null types.
     for i, x in enumerate(l):
-        if x is None or x.lower() in NULL_VALUES:
+        if x is None or lower(x) in NULL_VALUES:
             l[i] = ''
 
     # Are they null?
@@ -48,14 +52,15 @@ def normalize_column_type(l, normal_type=None):
     if not normal_type or normal_type == bool:
         try:
             normal_values = []
+            append = normal_values.append
 
             for i, x in enumerate(l):
                 if x == '':
-                    normal_values.append(None)
+                    append(None)
                 elif x.lower() in TRUE_VALUES:
-                    normal_values.append(True)
+                    append(True)
                 elif x.lower() in FALSE_VALUES:
-                    normal_values.append(False)
+                    append(False)
                 else:
                     raise ValueError('Not boolean')
 
@@ -68,18 +73,19 @@ def normalize_column_type(l, normal_type=None):
     if not normal_type or normal_type == int:
         try:
             normal_values = []
+            append = normal_values.append
 
             for i, x in enumerate(l):
                 if x == '':
-                    normal_values.append(None)
+                    append(None)
                     continue
                 
-                int_x = int(x.replace(',', ''))
+                int_x = int(replace(x, ',', ''))
 
                 if x[0] == '0' and int(x) != 0:
                     raise TypeError('Integer is padded with 0s, so treat it as a string instead.')
                 
-                normal_values.append(int_x)
+                append(int_x)
 
             return int, normal_values
         except TypeError:
@@ -95,15 +101,16 @@ def normalize_column_type(l, normal_type=None):
     if not normal_type or normal_type == float:
         try:
             normal_values = []
+            append = normal_values.append
 
             for i, x in enumerate(l):
                 if x == '':
-                    normal_values.append(None)
+                    append(None)
                     continue
 
-                float_x  = float(x.replace(',', ''))
+                float_x  = float(replace(x, ',', ''))
 
-                normal_values.append(float_x)
+                append(float_x)
 
             return float, normal_values 
         except ValueError:
@@ -114,11 +121,13 @@ def normalize_column_type(l, normal_type=None):
     if not normal_type or normal_type in [datetime.time, datetime.date, datetime.datetime]:
         try:
             normal_values = []
+            append = normal_values.append
             normal_types_set = set()
+            add = normal_types_set.add
 
             for i, x in enumerate(l):
                 if x == '':
-                    normal_values.append(None)
+                    append(None)
                     continue
 
                 d = parse(x, default=DEFAULT_DATETIME)
@@ -129,22 +138,22 @@ def normalize_column_type(l, normal_type=None):
                         raise InvalidValueForTypeException(i, x, normal_type) 
 
                     d = d.time()
-                    normal_types_set.add(datetime.time)
+                    add(datetime.time)
                 # Is it only a date?
                 elif d.time() == NULL_TIME:
                     if normal_type and normal_type not in [datetime.date, datetime.datetime]:
                         raise InvalidValueForTypeException(i, x, normal_type) 
 
                     d = d.date()
-                    normal_types_set.add(datetime.date)
+                    add(datetime.date)
                 # It must be a date and time
                 else:
                     if normal_type and normal_type != datetime.datetime:
                         raise InvalidValueForTypeException(i, x, normal_type) 
 
-                    normal_types_set.add(datetime.datetime)
+                    add(datetime.datetime)
                 
-                normal_values.append(d)
+                append(d)
 
             # No special handling if column contains only one type
             if len(normal_types_set) == 1:
