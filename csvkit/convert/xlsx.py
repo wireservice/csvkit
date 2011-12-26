@@ -24,7 +24,19 @@ def normalize_unicode(values, **kwargs):
 def normalize_ints(values, **kwargs):
     """
     Normalize a column of integer cells.
+
+    May also be a column of booleans represented as 0 and 1.
     """
+    is_boolean = True
+
+    for v in values:
+        if v not in (0, 1, None):
+            is_boolean = False
+            break
+
+    if is_boolean:
+        return bool, [bool(v) if v is not None else None for v in values]
+
     return int, values 
 
 def normalize_floats(values, **kwargs):
@@ -36,6 +48,8 @@ def normalize_floats(values, **kwargs):
 def normalize_datetimes(values, **kwargs):
     """
     Normalize a column of datetime cells.
+
+    May also be a column of dates with "0 time".
     """
     just_dates = True
 
@@ -47,7 +61,34 @@ def normalize_datetimes(values, **kwargs):
     if just_dates:
         return datetime.date, [v.date() if v else None for v in values]
     
-    return datetime.datetime, values
+    # Datetimes get errant microseconds attached, have to clean them up
+    #return datetime.datetime, [v.replace(microsecond=0) if v else None for v in values]
+
+    out_values = []
+
+    for v in values:
+        if not v:
+            out_values.append(None)
+            continue
+
+        if v.microsecond == 0:
+            out_values.append(v)
+            continue
+
+        ms = v.microsecond
+
+        print ms
+
+        if ms < 1000:
+            v = v.replace(microsecond=0)
+        elif ms > 999000:
+            v = v.replace(second=v.second + 1, microsecond=0)
+
+        out_values.append(v)
+
+    print out_values
+
+    return datetime.datetime, out_values
 
 def normalize_dates(values, **kwargs):
     """
@@ -67,7 +108,6 @@ def normalize_booleans(values, **kwargs):
     """
     return bool, [bool(v) if v != '' else None for v in values] 
 
-# TODO
 NORMALIZERS = {
     unicode: normalize_unicode,
     datetime.datetime: normalize_datetimes,
