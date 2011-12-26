@@ -205,20 +205,20 @@ class Table(list):
         else:
             column_ids = range(len(headers))
         
-        data_columns = [[] for c in headers]
+        #for row in reader:
+        #    for i, d in enumerate(row):
+        #        try:
+        #            data_columns[i].append(row[column_ids[i]].strip())
+        #        except IndexError:
+        #            # Non-rectangular data is truncated
+        #            break
 
-        for row in reader:
-            for i, d in enumerate(row):
-                try:
-                    data_columns[i].append(row[column_ids[i]].strip())
-                except IndexError:
-                    # Non-rectangular data is truncated
-                    break
+        types, data_columns = typeinference.fast_normalize_table(reader, column_ids, 50) 
 
         columns = []
 
         for i, c in enumerate(data_columns):
-            columns.append(Column(column_ids[i], headers[i], c))
+            columns.append(Column(column_ids[i], headers[i], c, normal_type=types[i]))
 
         return Table(columns, name=name)
 

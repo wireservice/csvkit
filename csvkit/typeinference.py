@@ -354,46 +354,46 @@ def reduce_assessment(limitations):
 
     return result
 
-def generate_type_hypothesis(rows, sample_size=50):
+def generate_type_hypothesis(sample_rows):
     """
     Use type-guessing to generate a hypothesis about columns types based on a 
     sample of rows.
     """
     limits = []
 
-    for row in rows[:sample_size]:
+    for row in sample_rows:
         limits = assess_row(row, limits)
 
     return reduce_assessment(limits)
 
-def fast_normalize_table(rows):
+def fast_normalize_table(rows, column_ids, sample_size):
     """
     Normalizes a table using type guessing.
     """
-    data_columns = []
-    column_count = 0
+    data_columns = [[] for c in column_ids]
     row_count = 0
+    sample_rows = []
 
     for row in rows:
-        while column_count < len(row):
-            data_columns.append([None] * row_count)
-            column_count += 1
+        if row_count < sample_size:
+            sample_rows.append(row)
 
         for i, value in enumerate(row):
-            data_columns[i].append(value)
+            try:
+                data_columns[i].append(row[column_ids[i]].strip())
+            except IndexError:
+                # Non-rectangular data is truncated
+                break
 
         row_count += 1
 
-    normal_types = generate_type_hypothesis(rows)
+    normal_types = generate_type_hypothesis(sample_rows)
 
-    new_normal_columns= []
+    new_normal_columns = []
 
     for i, column in enumerate(data_columns):
         try:
-            if normal_types:
-                t, c = normalize_column_type(column, normal_types[i])
-            else:
-                t, c = normalize_column_type(column)
+            t, c = normalize_column_type(column, normal_types[i])
 
             new_normal_columns.append(c)
         except InvalidValueForTypeException:
