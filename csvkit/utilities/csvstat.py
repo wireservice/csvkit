@@ -23,25 +23,25 @@ class CSVStat(CSVKitUtility):
         self.argparser.add_argument('-c', '--columns', dest='columns',
             help='A comma separated list of column indices or names to be examined. Defaults to all columns.')
         self.argparser.add_argument('--max', dest='max_only', action='store_true',
-            help='Output will contain only max, unless there are multiple columns, in which case each value is prefixed with the column name')
+            help='Only output max.')
         self.argparser.add_argument('--min', dest='min_only', action='store_true',
-            help='Output will contain only min, unless there are multiple columns, in which case each value is prefixed with the column name')
+            help='Only output min.')
         self.argparser.add_argument('--sum', dest='sum_only', action='store_true',
-            help='Output will contain only sum, unless there are multiple columns, in which case each value is prefixed with the column name')
+            help='Only output sum.')
         self.argparser.add_argument('--mean', dest='mean_only', action='store_true',
-            help='Output will contain only mean, unless there are multiple columns, in which case each value is prefixed with the column name')
+            help='Only output mean.')
         self.argparser.add_argument('--median', dest='median_only', action='store_true',
-            help='Output will contain only median, unless there are multiple columns, in which case each value is prefixed with the column name')
+            help='Only output median.')
         self.argparser.add_argument('--stdev', dest='stdev_only', action='store_true',
-            help='Output will contain only standard deviation, unless there are multiple columns, in which case each value is prefixed with the column name')
+            help='Only output standard deviation.')
         self.argparser.add_argument('--nulls', dest='nulls_only', action='store_true',
-            help='Output will contain only whether nulls exist, unless there are multiple columns, in which case each value is prefixed with the column name')
+            help='Only output whether column contains nulls.')
         self.argparser.add_argument('--unique', dest='unique_only', action='store_true',
-            help='Output will contain only unique values, unless there are multiple columns, in which case each value is prefixed with the column name')
+            help='Only output unique values.')
         self.argparser.add_argument('--freq', dest='freq_only', action='store_true',
-            help='Output will contain only frequent values, unless there are multiple columns, in which case each value is prefixed with the column name')
+            help='Only output frequenty values.')
         self.argparser.add_argument('--len', dest='len_only', action='store_true',
-            help='Output will contain only max length, unless there are multiple columns, in which case each value is prefixed with the column name')
+            help='Only output max value length.')
 
     def main(self):
         tab = table.Table.from_csv(self.args.file, snifflimit=self.args.snifflimit, column_ids=self.args.columns, **self.reader_kwargs)
@@ -63,8 +63,7 @@ class CSVStat(CSVKitUtility):
 
                 # Formatting
                 if op == 'unique':
-                    stat = [unicode(u) for u in list(stat)]
-                    stat = u', '.join(stat).encode('utf-8')
+                    stat = len(stat)
                 elif op == 'freq':
                     stat = ', '.join([(u'"%s": %s' % (unicode(k), count)).encode('utf-8') for k, count in stat])
                     stat = '{ %s }' % stat
