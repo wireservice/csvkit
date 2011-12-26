@@ -8,19 +8,19 @@ import xlrd
 from csvkit import table
 from csvkit.exceptions import XLSDataError
 
-def normalize_empty(values):
+def normalize_empty(values, **kwargs):
     """
     Normalize a column which contains only empty cells.
     """
     return None, [None] * len(values)
 
-def normalize_text(values):
+def normalize_text(values, **kwargs):
     """
     Normalize a column of text cells.
     """
     return unicode, [unicode(v) if v else None for v in values]
 
-def normalize_numbers(values):
+def normalize_numbers(values, **kwargs):
     """
     Normalize a column of numeric cells.
     """
@@ -38,7 +38,7 @@ def normalize_numbers(values):
         # Convert blanks to None
         return float, [v if v else None for v in values]
 
-def normalize_dates(values, datemode):
+def normalize_dates(values, datemode=0, **kwargs):
     """
     Normalize a column of date cells.
     """
@@ -90,7 +90,7 @@ def normalize_dates(values, datemode):
     # Natural serialization of dates and times by csv.writer is insufficent so they get converted back to strings at this point
     return normal_types_set.pop(), normal_values
 
-def normalize_booleans(values):
+def normalize_booleans(values, **kwargs):
     """
     Normalize a column of boolean cells.
     """
@@ -141,12 +141,7 @@ def xls2csv(f, **kwargs):
         types = sheet.col_types(i)[1:]
 
         column_type = determine_column_type(types)
-
-        # This is terrible code. TKTK
-        if column_type == xlrd.biffh.XL_CELL_DATE:
-            t, normal_values = NORMALIZERS[column_type](values, book.datemode)
-        else:
-            t, normal_values = NORMALIZERS[column_type](values)
+        t, normal_values = NORMALIZERS[column_type](values, datemode=book.datemode)
 
         column = table.Column(i, column_name, normal_values, normal_type=t)
         tab.append(column)
@@ -157,3 +152,4 @@ def xls2csv(f, **kwargs):
     o.close()
 
     return output 
+

@@ -57,13 +57,13 @@ class TestSQL(unittest.TestCase):
         c = sql.make_column(table.Column(0, 'test', ['this', 'is', 'test', 'data', 'that', 'is', 'awesome']))
         self.assertEqual(c.type.length, 7)
     
-    def test_column_nullable(self):
+    def test_column_has_nulls(self):
         c = sql.make_column(table.Column(0, 'test', ['1', '-87', '418000000', '']))
         self.assertEqual(c.key, 'test')
         self.assertEqual(type(c.type), Integer)
         self.assertEqual(c.nullable, True)
 
-    def test_column_not_nullable(self):
+    def test_column_no_nulls(self):
         c = sql.make_column(table.Column(0, 'test', ['1', '-87', '418000000']))
         self.assertEqual(c.key, 'test')
         self.assertEqual(type(c.type), Integer)

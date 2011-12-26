@@ -31,7 +31,7 @@ class CSVStat(CSVKitUtility):
                 continue
                 
             self.output_file.write(u'\t%s\n' % c.type)
-            self.output_file.write(u'\tNulls: %s\n' % (u'Yes' if c.nullable else u'No'))
+            self.output_file.write(u'\tNulls: %s\n' % (u'Yes' if c.has_nulls() else u'No'))
             
             if len(uniques) <= 5 and c.type is not bool:
                 uniques = [unicode(u) for u in list(uniques)]
@@ -64,14 +64,14 @@ class CSVStat(CSVKitUtility):
                         self.output_file.write((u'\t\t%s:\t%s\n' % (unicode(value), count)).encode('utf-8'))
 
                 if c.type == unicode:
-                    self.output_file.write(u'\tMax length: %i\n' % c.max_length)
+                    self.output_file.write(u'\tMax length: %i\n' % c.max_length())
 
         self.output_file.write(u'\n')
         self.output_file.write(u'Row count: %s\n' % tab.count_rows())
 
 def median(l):
     """
-    compute the median of a list.
+    Compute the median of a list.
     """
     length = len(l)
 

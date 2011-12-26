@@ -35,9 +35,6 @@ class Column(list):
         self.name = name or '_unnamed' # empty column names don't make sense 
         self.type = t
         
-        self._compute_nullable() 
-        self._compute_max_length()
-
     def __str__(self):
         return str(self.__unicode__())
 
@@ -56,30 +53,27 @@ class Column(list):
 
         return list.__getitem__(self, key)
 
-    def _compute_nullable(self):
-        self.nullable = True if None in self else False
+    def has_nulls(self):
+        """
+        Check if this column contains nulls.
+        """
+        return True if None in self else False
 
-    def _compute_max_length(self):
+    def max_length(self):
         """
-        Compute maximum length this column occupies when rendered as a string.
+        Compute maximum length of data in this column.
+        
+        Returns 0 if the column does not of type ``unicode``.
         """
-        if len(self) == 0:
-            self.max_length = 0
-            return
+        l = 0
 
         if self.type == unicode:
-            self.max_length = max([len(d) if d else 0 for d in self])
-        elif self.type in [int, float]:
-            self.max_length = max([len(unicode(d)) if d else 0 for d in self])
-        elif self.type in [datetime.datetime, datetime.date, datetime.time]:
-            self.max_length = max([len(d.isoformat()) if d else 0 for d in self]) 
-        elif self.type == bool:
-            self.max_length = 5 # "False"
-        else:
-            self.max_length = 0 
+            l = max([len(d) if d else 0 for d in self])
 
-        if self.nullable:
-            self.max_length = max(self.max_length, 4) # "None"
+            if self.has_nulls():
+                l = max(l, 4) # "None"
+
+        return l
 
 class Table(list):
     """

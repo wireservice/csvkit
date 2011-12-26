@@ -26,7 +26,7 @@ def make_column(column):
     """
     Creates a sqlalchemy column from a csvkit Column.
     """
-    sql_column_kwargs = {'nullable': False}
+    sql_column_kwargs = {}
     sql_type_kwargs = {}
 
     column_types = {
@@ -40,20 +40,17 @@ def make_column(column):
         unicode: String
         }
 
-    max_lengths = {
-        NoneType: NULL_COLUMN_MAX_LENGTH,
-        unicode: column.max_length
-        }
-
     if column.type in column_types:
         sql_column_type = column_types[column.type]
     else:
         raise ValueError('Unexpected normalized column type: %s' % column.type)
 
-    if column.type in max_lengths:
-        sql_type_kwargs['length'] = max_lengths[column.type]
+    if column.type is NoneType:
+        sql_type_kwargs['length'] = NULL_COLUMN_MAX_LENGTH
+    elif column.type is unicode:
+        sql_type_kwargs['length'] = column.max_length()
 
-    sql_column_kwargs['nullable'] = column.nullable
+    sql_column_kwargs['nullable'] = column.has_nulls()
 
     return Column(column.name, sql_column_type(**sql_type_kwargs), **sql_column_kwargs)
 
