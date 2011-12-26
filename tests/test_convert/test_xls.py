@@ -72,7 +72,8 @@ class TestXLS(unittest.TestCase):
         self.assertEquals(column_type, xlrd.biffh.XL_CELL_NUMBER)
 
     def test_determine_column_type_multiple(self):
-        self.assertRaises(XLSDataError, xls.determine_column_type, [xlrd.biffh.XL_CELL_NUMBER, xlrd.biffh.XL_CELL_TEXT, xlrd.biffh.XL_CELL_EMPTY]) 
+        column_type = xls.determine_column_type([xlrd.biffh.XL_CELL_NUMBER, xlrd.biffh.XL_CELL_TEXT, xlrd.biffh.XL_CELL_EMPTY])
+        self.assertEquals(column_type, xlrd.biffh.XL_CELL_TEXT) 
 
     def test_determine_column_type_empty(self):
         column_type = xls.determine_column_type([xlrd.biffh.XL_CELL_EMPTY, xlrd.biffh.XL_CELL_EMPTY, xlrd.biffh.XL_CELL_EMPTY])
