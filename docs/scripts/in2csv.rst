@@ -31,7 +31,7 @@ The header line is required though the columns may be in any order::
       -f FORMAT, --format FORMAT
                             The format of the input file. If not specified will be
                             inferred from the filename. Supported formats: csv,
-                            fixed, json, xls.
+                            fixed, json, xls, xlsx.
       -s SCHEMA, --schema SCHEMA
                             Specifies a CSV-formatted schema file for converting
                             fixed-width files. See documentation for details.
@@ -50,7 +50,7 @@ Convert the 2000 census geo headers file from fixed-width to CSV and from latin-
 
     $ in2csv -e iso-8859-1 -f fixed -s examples/realdata/census_2000/census2000_geo_schema.csv examples/realdata/census_2000/usgeo_excerpt.upl > usgeo.csv
 
-Convert an xls file::
+Convert an Excel .xls file::
 
     $ in2csv examples/test.xls
 

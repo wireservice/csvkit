@@ -61,9 +61,9 @@ def normalize_datetimes(values, **kwargs):
     if just_dates:
         return datetime.date, [v.date() if v else None for v in values]
     
-    # Datetimes get errant microseconds attached, have to clean them up
-    #return datetime.datetime, [v.replace(microsecond=0) if v else None for v in values]
-
+    # What follows is really messy, but apparently deserialization of 
+    # datetimes suffers from floating point inaccuracy. In order not
+    # to cruft when they are stringified with have to fix them.
     out_values = []
 
     for v in values:
@@ -77,16 +77,12 @@ def normalize_datetimes(values, **kwargs):
 
         ms = v.microsecond
 
-        print ms
-
         if ms < 1000:
             v = v.replace(microsecond=0)
         elif ms > 999000:
             v = v.replace(second=v.second + 1, microsecond=0)
 
         out_values.append(v)
-
-    print out_values
 
     return datetime.datetime, out_values
 
