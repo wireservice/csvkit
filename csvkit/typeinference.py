@@ -199,8 +199,8 @@ def normalize_table(rows, normal_types=None, accumulate_errors=False):
             data_columns.append([None] * row_count)
             column_count += 1
 
-        for data_column, value in zip(data_columns, row):
-            data_column.append(value)
+        for i, value in enumerate(row):
+            data_columns[i].append(value)
 
         row_count += 1
 
