@@ -133,10 +133,6 @@ def xls2csv(f, **kwargs):
         # Trim headers
         column_name = sheet.col_values(i)[0]
 
-        # Empty column name? Truncate remaining data
-        if not column_name:
-            break
-
         values = sheet.col_values(i)[1:]
         types = sheet.col_types(i)[1:]
 

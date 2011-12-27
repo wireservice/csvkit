@@ -2,171 +2,72 @@
 
 from cStringIO import StringIO
 import datetime
-from types import NoneType
 
 from openpyxl.reader.excel import load_workbook
 
-from csvkit import table
+from csvkit import CSVKitWriter 
 from csvkit.typeinference import NULL_TIME
 
-def normalize_empty(values, **kwargs):
-    """
-    Normalize a column which contains only empty cells.
-    """
-    return None, [None] * len(values)
+def normalize_datetime(dt):
+    if dt.microsecond == 0:
+        return dt
 
-def normalize_unicode(values, **kwargs):
-    """
-    Normalize a column of text cells.
-    """
-    return unicode, [unicode(v) if v else None for v in values]
+    ms = dt.microsecond
 
-def normalize_ints(values, **kwargs):
-    """
-    Normalize a column of integer cells.
+    if ms < 1000:
+        return dt.replace(microsecond=0)
+    elif ms > 999000:
+        return dt.replace(second=dt.second + 1, microsecond=0)
 
-    May also be a column of booleans represented as 0 and 1.
-    """
-    is_boolean = True
+    return dt
 
-    for v in values:
-        if v not in (0, 1, None):
-            is_boolean = False
-            break
-
-    if is_boolean:
-        return bool, [bool(v) if v is not None else None for v in values]
-
-    return int, values 
-
-def normalize_floats(values, **kwargs):
-    """
-    Normalize a column of float cells.
-    """
-    return float, [float(v) if v is not None else None for v in values]
-
-def normalize_datetimes(values, **kwargs):
-    """
-    Normalize a column of datetime cells.
-
-    May also be a column of dates with "0 time".
-    """
-    just_dates = True
-
-    for v in values:
-        if v and v.time() != NULL_TIME:
-            just_dates = False
-            break
-
-    if just_dates:
-        return datetime.date, [v.date() if v else None for v in values]
-    
-    # What follows is really messy, but apparently deserialization of 
-    # datetimes suffers from floating point inaccuracy. In order not
-    # to cruft when they are stringified with have to fix them.
-    out_values = []
-
-    for v in values:
-        if not v:
-            out_values.append(None)
-            continue
-
-        if v.microsecond == 0:
-            out_values.append(v)
-            continue
-
-        ms = v.microsecond
-
-        if ms < 1000:
-            v = v.replace(microsecond=0)
-        elif ms > 999000:
-            v = v.replace(second=v.second + 1, microsecond=0)
-
-        out_values.append(v)
-
-    return datetime.datetime, out_values
-
-def normalize_dates(values, **kwargs):
-    """
-    Normalize a column of date cells.
-    """
-    return datetime.date, values 
-
-def normalize_times(values, **kwargs):
-    """
-    Normalize a column of date cells.
-    """
-    return datetime.time, values 
-
-def normalize_booleans(values, **kwargs):
-    """
-    Normalize a column of boolean cells.
-    """
-    return bool, [bool(v) if v != '' else None for v in values] 
-
-NORMALIZERS = {
-    unicode: normalize_unicode,
-    datetime.datetime: normalize_datetimes,
-    datetime.date: normalize_dates,
-    datetime.time: normalize_times,
-    bool: normalize_booleans,
-    int: normalize_ints,
-    float: normalize_floats,
-    NoneType: normalize_empty
-}
-
-def determine_column_type(types):
-    """
-    Determine the correct type for a column from a list of cell types.
-    """
-    types_set = set(types)
-    types_set.discard(NoneType)
-
-    if len(types_set) == 2:
-        if types_set == set([int, float]):
-            return float
-        elif types_set == set([datetime.datetime, datetime.date]):
-            return datetime.datetime
-
-    # Normalize mixed types to text
-    if len(types_set) > 1:
-        return unicode
-
-    try:
-        return types_set.pop()
-    except KeyError:
-        return NoneType 
-
-def xlsx2csv(f, **kwargs):
+def xlsx2csv(f, output=None, **kwargs):
     """
     Convert an Excel .xlsx file to csv.
+
+    Note: Unlike other convertor's, this one allows output columns to contain mixed data types.
+    Blank headers are also possible.
     """
-    book = load_workbook(f)
+    streaming = True if output else False
+
+    if not streaming:
+        output = StringIO()
+
+    writer = CSVKitWriter(output)
+
+    book = load_workbook(f, use_iterators=True)
     sheet = book.get_active_sheet()
 
-    tab = table.Table() 
+    for i, row in enumerate(sheet.iter_rows()):
+        if i == 0:
+            writer.writerow([c.internal_value for c in row]) 
+            continue
 
-    for i, column in enumerate(sheet.columns):
-        # Trim headers
-        column_name = column[0].value
+        out_row = []
 
-        # Empty column name? Truncate remaining data
-        if not column_name:
-            break
+        for c in row:
+            value = c.internal_value
 
-        values = [c.value for c in column[1:]]
-        types = [type(v) for v in values]
+            if value.__class__ is datetime.datetime:
+                if value.time() != NULL_TIME:
+                    value = normalize_datetime(value)
+                else:
+                    value = value.date()
+            elif value.__class__ is float:
+                if value % 1 == 0:
+                    value = int(value)
 
-        column_type = determine_column_type(types)
-        t, normal_values = NORMALIZERS[column_type](values)
+            if value.__class__ in (datetime.datetime, datetime.date, datetime.time):
+                value = value.isoformat()
 
-        column = table.Column(i, column_name, normal_values, normal_type=t)
-        tab.append(column)
+            out_row.append(value)
 
-    o = StringIO()
-    output = tab.to_csv(o)
-    output = o.getvalue()
-    o.close()
+        writer.writerow(out_row)
 
-    return output 
+    if not streaming:
+        data = output.getvalue()
+        return data
+
+    # Return empty string when streaming
+    return ''
 

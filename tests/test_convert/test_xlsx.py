@@ -9,6 +9,6 @@ class TestXLSX(unittest.TestCase):
         with open('examples/test.xlsx', 'rb') as f:
             output = xlsx.xlsx2csv(f)
 
-        with open('examples/testxls_converted.csv', 'r') as f:
+        with open('examples/testxlsx_converted.csv', 'r') as f:
             self.assertEquals(f.read(), output)
 
