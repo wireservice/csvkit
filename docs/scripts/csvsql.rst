@@ -39,6 +39,8 @@ Generate SQL statements for a CSV file or create execute those statements direct
                             specified.
       --table TABLE_NAME    Specify a name for the table to be created. If
                             omitted, the filename (minus extension) will be used.
+      --loosey              Generate a schema without limits or null checks.
+                            Useful for big tables.
 
 Also see: :doc:`common_arguments`.
 
