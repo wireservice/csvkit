@@ -22,6 +22,8 @@ class CSVSQL(CSVKitUtility):
                             help='In addition to creating the table, also insert the data into the table. Only valid when --db is specified.')
         self.argparser.add_argument('--table', dest='table_name',
                             help='Specify a name for the table to be created. If omitted, the filename (minus extension) will be used.')
+        self.argparser.add_argument('--loosey', dest='loosey', action='store_true',
+                            help='Generate a schema without limits or null checks. Useful for big tables.')
 
     def main(self):
         if self.args.table_name:
@@ -31,6 +33,9 @@ class CSVSQL(CSVKitUtility):
             table_name = os.path.splitext(os.path.split(self.args.file.name)[1])[0]
         else:
             self.argparser.error('The --table argument is required when providing data over STDIN.')
+
+        if self.args.loosey:
+            loosey = True
 
         if self.args.dialect and self.args.connection_string:
             self.argparser.error('The --dialect option is only valid when --db is not specified.')
@@ -47,7 +52,7 @@ class CSVSQL(CSVKitUtility):
             except ImportError:
                 raise ImportError('You don\'t appear to have the necessary database backend installed for connection string you\'re trying to use.. Available backends include:\n\nPostgresql:\tpip install psycopg2\nMySQL:\t\tpip install MySQL-python\n\nFor details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at: \n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n')
 
-            sql_table = sql.make_table(csv_table, table_name, metadata)
+            sql_table = sql.make_table(csv_table, table_name, loosey, metadata)
             sql_table.create()
 
             if self.args.insert:
@@ -55,11 +60,11 @@ class CSVSQL(CSVKitUtility):
                 headers = csv_table.headers()
 
                 for row in csv_table.to_rows(serialize_dates=True):
-                    engine.execute(insert, [dict(zip(headers, row)), ]) 
+                    engine.execute(insert, [dict(zip(headers, row)), ])
 
         # Writing to file
         else:
-            sql_table = sql.make_table(csv_table, table_name)
+            sql_table = sql.make_table(csv_table, table_name, loosey)
             self.output_file.write((u'%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect)).encode('utf-8'))
 
 if __name__ == '__main__':
