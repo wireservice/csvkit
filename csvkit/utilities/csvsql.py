@@ -54,7 +54,7 @@ class CSVSQL(CSVKitUtility):
                 insert = sql_table.insert()
                 headers = csv_table.headers()
 
-                for row in csv_table.to_rows(serialize_dates=True):
+                for row in csv_table.to_rows():
                     engine.execute(insert, [dict(zip(headers, row)), ]) 
 
         # Writing to file
