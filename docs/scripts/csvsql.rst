@@ -39,8 +39,8 @@ Generate SQL statements for a CSV file or create execute those statements direct
                             specified.
       --table TABLE_NAME    Specify a name for the table to be created. If
                             omitted, the filename (minus extension) will be used.
-      --loosey              Generate a schema without limits or null checks.
-                            Useful for big tables.
+      --no-constraints      Generate a schema without length limits or null
+                            checks. Useful when sampling big tables.
 
 Also see: :doc:`common_arguments`.
 
@@ -56,5 +56,9 @@ Generate a statement in the PostgreSQL dialect::
 Create a table and import data from the CSV directly into Postgres::
 
     $ createdb test
-    $ csvsql --db postgresql:///test --name fy09 --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
+    $ csvsql --db postgresql:///test --table fy09 --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
+
+For large tables it may not be practical to process the entire table. One solution to this is to analyze a sample of the table. In this case it can be useful to turn off length limits and null checks with the ``no-constraints`` option::
+    
+    $ head -n 20 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsql --no-constraints --table fy09
 

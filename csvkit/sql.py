@@ -22,7 +22,7 @@ DIALECTS = {
 
 NULL_COLUMN_MAX_LENGTH = 32
 
-def make_column(column, loosey=False):
+def make_column(column, no_constraints=False):
     """
     Creates a sqlalchemy column from a csvkit Column.
     """
@@ -45,7 +45,7 @@ def make_column(column, loosey=False):
     else:
         raise ValueError('Unexpected normalized column type: %s' % column.type)
 
-    if loosey is False:
+    if no_constraints is False:
         if column.type is NoneType:
             sql_type_kwargs['length'] = NULL_COLUMN_MAX_LENGTH
         elif column.type is unicode:
@@ -61,7 +61,7 @@ def get_connection(connection_string):
 
     return engine, metadata
 
-def make_table(csv_table, name='table_name', loosey=False, metadata=None):
+def make_table(csv_table, name='table_name', no_constraints=False, metadata=None):
     """
     Creates a sqlalchemy table from a csvkit Table.
     """
@@ -71,7 +71,7 @@ def make_table(csv_table, name='table_name', loosey=False, metadata=None):
     sql_table = Table(csv_table.name, metadata)
 
     for column in csv_table:
-        sql_table.append_column(make_column(column, loosey))
+        sql_table.append_column(make_column(column, no_constraints))
 
     return sql_table
 
