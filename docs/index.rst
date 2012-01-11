@@ -101,7 +101,7 @@ csvkit is comprised of a number of individual command line utilities that be loo
 Development
 ===========
 
-csvkit is designed to augment or supercede much of Python's `standard library csv module <http://docs.python.org/library/csv.html>`_. Important parts of the API are documented here:
+csvkit is designed to augment or supercede much of Python's :mod:`csv` module. Important parts of the API are documented here:
 
 .. toctree::
     :maxdepth: 1

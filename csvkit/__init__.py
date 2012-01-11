@@ -3,7 +3,7 @@
 """
 This module contains csvkit's superpowered reader and writer. The most improvement over the standard library versions is that these versions are completely unicode aware and can support any encoding by simply passing in the its name at the time they are created.
 
-We recommend you use these as a drop-in replacement for ``csv.reader`` and ``csv.writer``.
+We recommend you use these as a replacement for :func:`csv.reader` and :func:`csv.writer`.
 """
 
 from csvkit import unicsv 

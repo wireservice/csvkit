@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-This module contains unicode aware versions of ``csv.reader`` and ``csv.writer``. The implementations are largely copied from `examples in the csv module documentation <http://docs.python.org/library/csv.html#examples>`_.
+This module contains unicode aware replacements for :func:`csv.reader` and :func:`csv.writer`. The implementations are largely copied from `examples in the csv module documentation <http://docs.python.org/library/csv.html#examples>`_.
 """
 
 import codecs
@@ -83,8 +83,8 @@ class UnicodeCSVWriter(object):
 
 class UnicodeCSVDictReader(csv.DictReader):
     """
-    Defer almost all implementation to ``csv.DictReader``, but wraps our unicode reader instead
-    of ``csv.reader``.
+    Defer almost all implementation to :class:`csv.DictReader`, but wraps our unicode reader instead
+    of :func:`csv.reader`.
     """
     def __init__(self, f, fieldnames=None, restkey=None, restval=None, *args, **kwargs):
         csv.DictReader.__init__(self, f, fieldnames, restkey, restval, *args, **kwargs)
@@ -92,8 +92,8 @@ class UnicodeCSVDictReader(csv.DictReader):
 
 class UnicodeCSVDictWriter(csv.DictWriter):
     """
-    Defer almost all implementation to ``csv.DictWriter``, but wraps our unicode writer instead
-    of ``csv.writer``.
+    Defer almost all implementation to :class:`csv.DictWriter`, but wraps our unicode writer instead
+    of :func:`csv.writer`.
     """
     def __init__(self, f, fieldnames, writeheader=False, restval="", extrasaction="raise", *args, **kwds):
         self.fieldnames = fieldnames 
