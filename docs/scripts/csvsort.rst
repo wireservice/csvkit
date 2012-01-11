@@ -33,7 +33,7 @@ Sort CSV files. Like unix "sort" command, but for tabular data::
 Also see: :doc:`common_arguments`.
 
 Examples
-=======
+========
 
 Sort the veteran's education benefits table by the "TOTAL" column::
 
