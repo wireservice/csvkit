@@ -4,7 +4,7 @@ import datetime
 from types import NoneType
 
 from sqlalchemy import Column, MetaData, Table, create_engine
-from sqlalchemy import Boolean, Date, DateTime, Float, Integer, String, Time
+from sqlalchemy import BigInteger, Boolean, Date, DateTime, Float, Integer, String, Time
 from sqlalchemy.schema import CreateTable
 
 DIALECTS = {
@@ -21,6 +21,8 @@ DIALECTS = {
 }
 
 NULL_COLUMN_MAX_LENGTH = 32
+SQL_INTEGER_MAX = 2147483647
+SQL_INTEGER_MIN = -2147483647
 
 def make_column(column, no_constraints=False):
     """
@@ -31,7 +33,7 @@ def make_column(column, no_constraints=False):
 
     column_types = {
         bool: Boolean,
-        int: Integer,
+        #int: Integer, see special case below
         float: Float,
         datetime.datetime: DateTime,
         datetime.date: Date,
@@ -42,6 +44,14 @@ def make_column(column, no_constraints=False):
 
     if column.type in column_types:
         sql_column_type = column_types[column.type]
+    elif column.type is int:
+        column_max = max([v for v in column if v is not None])
+        column_min = min([v for v in column if v is not None])
+
+        if column_max > SQL_INTEGER_MAX or column_min < SQL_INTEGER_MIN:
+            sql_column_type = BigInteger 
+        else:
+            sql_column_type = Integer
     else:
         raise ValueError('Unexpected normalized column type: %s' % column.type)
 

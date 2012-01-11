@@ -5,7 +5,7 @@ import unittest
 from csvkit import sql
 from csvkit import table
 
-from sqlalchemy import Boolean, Date, DateTime, Float, Integer, String, Time
+from sqlalchemy import BigInteger, Boolean, Date, DateTime, Float, Integer, String, Time
 
 class TestSQL(unittest.TestCase):
     def setUp(self):
@@ -28,6 +28,11 @@ class TestSQL(unittest.TestCase):
         c = sql.make_column(table.Column(0, 'test', [u'1', u'-87', u'418000000', u'']))
         self.assertEqual(c.key, 'test')
         self.assertEqual(type(c.type), Integer)
+
+    def test_make_column_big_int(self):
+        c = sql.make_column(table.Column(0, 'test', [u'1', u'-87', u'418000000', u'2147483648']))
+        self.assertEqual(c.key, 'test')
+        self.assertEqual(type(c.type), BigInteger)
 
     def test_make_column_float(self):
         c = sql.make_column(table.Column(0, 'test', [u'1.01', u'-87.34', u'418000000.0', u'']))
