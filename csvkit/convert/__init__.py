@@ -58,3 +58,4 @@ def guess_format(filename):
         return extension
 
     return None
+

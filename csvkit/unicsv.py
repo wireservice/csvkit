@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 
+"""
+This module contains unicode aware versions of ``csv.reader`` and ``csv.writer``. The implementations are largely copied from `examples in the csv module documentation <http://docs.python.org/library/csv.html#examples>`_.
+"""
+
 import codecs
 import csv
 from cStringIO import StringIO
 
 from csvkit.exceptions import FieldSizeLimitError
 
-"""
-The following classes are adapted from the CSV module documentation.
-"""
-
 class UTF8Recoder(object):
     """
-    Iterator that reads an encoded stream and reencodes the input to UTF-8
+    Iterator that reads an encoded stream and reencodes the input to UTF-8.
     """
     def __init__(self, f, encoding):
         self.reader = codecs.getreader(encoding)(f)
@@ -25,8 +25,7 @@ class UTF8Recoder(object):
 
 class UnicodeCSVReader(object):
     """
-    A CSV reader which will iterate over lines in the CSV file "f",
-    which is encoded in the given encoding.
+    A CSV reader which will read rows from a file in a given encoding.
     """
     def __init__(self, f, encoding='utf-8', maxfieldsize=None, **kwargs):
         f = UTF8Recoder(f, encoding)
@@ -57,8 +56,7 @@ class UnicodeCSVReader(object):
 
 class UnicodeCSVWriter(object):
     """
-    A CSV writer which will write rows to CSV file "f",
-    which is encoded in the given encoding.
+    A CSV writer which will write rows to a file in the specified encoding.
     """
     def __init__(self, f, encoding='utf-8', **kwargs):
         # Redirect output to a queue
@@ -85,8 +83,8 @@ class UnicodeCSVWriter(object):
 
 class UnicodeCSVDictReader(csv.DictReader):
     """
-    Defer almost all implementation to csv.DictReader, but wrapping our unicode reader instead
-    of csv.reader.
+    Defer almost all implementation to ``csv.DictReader``, but wraps our unicode reader instead
+    of ``csv.reader``.
     """
     def __init__(self, f, fieldnames=None, restkey=None, restval=None, *args, **kwargs):
         csv.DictReader.__init__(self, f, fieldnames, restkey, restval, *args, **kwargs)
@@ -94,8 +92,8 @@ class UnicodeCSVDictReader(csv.DictReader):
 
 class UnicodeCSVDictWriter(csv.DictWriter):
     """
-    Defer almost all implementation to csv.DictWriter, but wrapping our unicode reader instead
-    of csv.reader
+    Defer almost all implementation to ``csv.DictWriter``, but wraps our unicode writer instead
+    of ``csv.writer``.
     """
     def __init__(self, f, fieldnames, writeheader=False, restval="", extrasaction="raise", *args, **kwds):
         self.fieldnames = fieldnames 

@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 
+"""
+This module contains csvkit's superpowered reader and writer. The most improvement over the standard library versions is that these versions are completely unicode aware and can support any encoding by simply passing in the its name at the time they are created.
+
+We recommend you use these as a drop-in replacement for ``csv.reader`` and ``csv.writer``.
+"""
+
 from csvkit import unicsv 
 
 class CSVKitReader(unicsv.UnicodeCSVReader):
     """
-    A unicode-aware CSV reader. Currently adds nothing to ``UnicodeCSVReader``, but might
+    A unicode-aware CSV reader. Currently adds nothing to :class:`csvkit.unicsv.UnicodeCSVReader`, but might
     someday.
     """
     pass
@@ -42,7 +48,7 @@ class CSVKitWriter(unicsv.UnicodeCSVWriter):
 
 class CSVKitDictReader(unicsv.UnicodeCSVDictReader):
     """
-    A unicode-aware CSV DictReader. Currently adds nothing to ``UnicodeCSVDictReader``, but might
+    A unicode-aware CSV DictReader. Currently adds nothing to :class:`csvkit.unicsv.UnicodeCSVWriter`, but might
     someday.
     """
     pass

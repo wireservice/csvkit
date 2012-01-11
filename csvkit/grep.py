@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import re
-
 class FilteringCSVReader(object):
     """
     Given any row iterator, only return rows which pass the filter.
@@ -88,4 +86,5 @@ class regex_callable(object):
         self.pattern = pattern
         
     def __call__(self, arg):
-        return self.pattern.match(arg)        
+        return self.pattern.match(arg)
+
