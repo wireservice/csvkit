@@ -18,14 +18,16 @@ class CSVCut(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                         help='Display column names and indices from the input CSV and exit.')
+        self.argparser.add_argument('--zero', dest='zero_based_names_only', action='store_true',
+                        help='Display column names and zero-based indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
                         help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
         self.argparser.add_argument('-x', '--delete-empty-rows', dest='delete_empty', action='store_true',
                         help='After cutting, delete rows which are completely empty.')
 
     def main(self):
-        if self.args.names_only:
-            print_column_names(self.args.file, self.output_file, **self.reader_kwargs)
+        if self.args.names_only or self.args.zero_based_names_only:
+            print_column_names(self.args.file, self.output_file, zero_based=self.args.zero_based_names_only, **self.reader_kwargs)
             return
 
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)

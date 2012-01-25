@@ -254,7 +254,7 @@ def parse_column_identifiers(ids, column_names):
 
     return columns
 
-def print_column_names(f, output, **reader_kwargs):
+def print_column_names(f, output, zero_based=False, **reader_kwargs):
     """
     Pretty-prints the names and indices of all columns to a file-like object (usually sys.stdout).
     """
@@ -262,5 +262,7 @@ def print_column_names(f, output, **reader_kwargs):
     column_names = rows.next()
 
     for i, c in enumerate(column_names):
-        output.write('%3i: %s\n' % (i + 1, c))
+        if not zero_based:
+            i += 1
+        output.write('%3i: %s\n' % (i, c))
 
