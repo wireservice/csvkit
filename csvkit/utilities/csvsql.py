@@ -56,8 +56,12 @@ class CSVSQL(CSVKitUtility):
                 insert = sql_table.insert()
                 headers = csv_table.headers()
 
+                conn = engine.connect()
+                trans = conn.begin()
                 for row in csv_table.to_rows():
-                    engine.execute(insert, [dict(zip(headers, row)), ])
+                    conn.execute(insert, [dict(zip(headers, row)), ])
+                trans.commit()
+                conn.close()
 
         # Writing to file
         else:

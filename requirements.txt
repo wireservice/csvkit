@@ -5,4 +5,4 @@ python-dateutil==1.5
 sqlalchemy==0.6.6
 sphinx==1.0.7
 coverage==3.5.1b1
-hg+https://bitbucket.org/ericgazoni/openpyxl#egg=openpyxl
+openpyxl==1.5.7
