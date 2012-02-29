@@ -151,6 +151,12 @@ class TestNormalizeType(unittest.TestCase):
     def test_datetimes_and_times(self):
         self.assertEqual((unicode, [u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'16:14:45', None]), typeinference.normalize_column_type([u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'16:14:45', u'']))
 
+    def test_jeremy_singer_vine_datetimes(self):
+        """
+        This obscure test named after Jeremy Singer-Vine, who discovered it.
+        """
+        self.assertEqual((unicode, [u'P', u'H', u'H']), typeinference.normalize_column_type([u'P', u'H', u'H']))
+
     def test_normalize_table(self):
         expected_types = [unicode, int, float, NoneType]
         data = [
