@@ -1,10 +1,13 @@
-Working
--------
+0.4.4
+-----
 
-* Refactored how type inference and normalization works. It is now possible to specify a type that a column must coerce to. This shouldn't affect the results of any tools.
-* Type inference will no longer treat "0" and "1" as boolean values.
+* Add multi-file (glob) support to csvsql. (#146)
+* Add Gregory Temchenko to AUTHORS.
+* Add --no-create option to csvsql. (#148)
+* Add Anton Ian Sipos to AUTHORS.
+* Fix broken pipe errors. (#150) 
 
-Version 3.0
------------
+0.4.3
+-----
 
-Initial changelog.
+* Begin CHANGELOG (a bit late, I'll admit).
