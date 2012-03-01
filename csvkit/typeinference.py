@@ -15,12 +15,14 @@ DEFAULT_DATETIME = datetime.datetime(9999, 12, 31, 0, 0, 0)
 NULL_DATE = datetime.date(9999, 12, 31)
 NULL_TIME = datetime.time(0, 0, 0)
 
-def normalize_column_type(l, normal_type=None):
+def normalize_column_type(l, normal_type=None, blanks_as_nulls=True):
     """
     Attempts to normalize a list (column) of string values to booleans, integers,
     floats, dates, times, datetimes, or strings. NAs and missing values are converted 
-    to empty strings. Empty strings are converted to nulls.
-
+    to empty strings. Empty strings are converted to nulls in the case of non-string
+    types. For string types (unicode), empty strings are converted to nulls unless
+    blanks_as_nulls is false.
+    
     Optional accepts a "normal_type" argument which specifies a type that the values
     must conform to (rather than inferring). Will raise InvalidValueForTypeException
     if a value is not coercable.
@@ -33,14 +35,14 @@ def normalize_column_type(l, normal_type=None):
 
     # Convert "NA", "N/A", etc. to null types.
     for i, x in enumerate(l):
-        if x is None or lower(x) in NULL_VALUES:
+        if x is not None and lower(x) in NULL_VALUES:
             l[i] = ''
 
     # Are they null?
     if not normal_type or normal_type == NoneType:
         try:
             for i, x in enumerate(l):
-                if x != '':
+                if x != '' and x is not None:
                     raise ValueError('Not null')
 
             return NoneType, [None] * len(l)
@@ -55,7 +57,7 @@ def normalize_column_type(l, normal_type=None):
             append = normal_values.append
 
             for i, x in enumerate(l):
-                if x == '':
+                if x == '' or x is None:
                     append(None)
                 elif x.lower() in TRUE_VALUES:
                     append(True)
@@ -76,7 +78,7 @@ def normalize_column_type(l, normal_type=None):
             append = normal_values.append
 
             for i, x in enumerate(l):
-                if x == '':
+                if x == '' or x is None:
                     append(None)
                     continue
                 
@@ -92,7 +94,10 @@ def normalize_column_type(l, normal_type=None):
             if normal_type == int:
                 raise InvalidValueForTypeException(i, x, int) 
 
-            return unicode, [x if x != '' else None for x in l]
+            if blanks_as_nulls:
+                return unicode, [x if x != '' else None for x in l]
+            else:
+                return unicode, l 
         except ValueError:
             if normal_type:
                 raise InvalidValueForTypeException(i, x, normal_type) 
@@ -104,7 +109,7 @@ def normalize_column_type(l, normal_type=None):
             append = normal_values.append
 
             for i, x in enumerate(l):
-                if x == '':
+                if x == '' or x is None:
                     append(None)
                     continue
 
@@ -126,7 +131,7 @@ def normalize_column_type(l, normal_type=None):
             add = normal_types_set.add
 
             for i, x in enumerate(l):
-                if x == '':
+                if x == '' or x is None:
                     append(None)
                     continue
 
@@ -184,9 +189,12 @@ def normalize_column_type(l, normal_type=None):
                 raise InvalidValueForTypeException(i, x, normal_type) 
 
     # Don't know what they are, so they must just be strings 
-    return unicode, [x if x != '' else None for x in l]
+    if blanks_as_nulls:
+        return unicode, [x if x != '' else None for x in l]
+    else:
+        return unicode, l 
 
-def normalize_table(rows, normal_types=None, accumulate_errors=False):
+def normalize_table(rows, normal_types=None, accumulate_errors=False, blanks_as_nulls=True):
     """
     Given a sequence of sequences, normalize the lot.
 
@@ -214,9 +222,9 @@ def normalize_table(rows, normal_types=None, accumulate_errors=False):
     for i, column in enumerate(data_columns):
         try:
             if normal_types:
-                t, c = normalize_column_type(column, normal_types[i])
+                t, c = normalize_column_type(column, normal_types[i], blanks_as_nulls=blanks_as_nulls)
             else:
-                t, c = normalize_column_type(column)
+                t, c = normalize_column_type(column, blanks_as_nulls=blanks_as_nulls)
 
             new_normal_types.append(t)
             new_normal_columns.append(c)

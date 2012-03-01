@@ -28,6 +28,8 @@ class CSVSQL(CSVKitUtility):
             help='Generate a schema without length limits or null checks. Useful when sampling big tables.')
         self.argparser.add_argument('--no-create', dest='no_create', action='store_true',
             help='Skip creating a table. Only valid when --insert is specified.')
+        self.argparser.add_argument('--blanks', dest='blanks', action='store_true',
+            help='Do not coerce empty strings to NULL values.')
 
     def main(self):
         for f in self.args.files:
@@ -48,7 +50,7 @@ class CSVSQL(CSVKitUtility):
             if self.args.no_create and not self.args.insert:
                 self.argparser.error('The --no-create option is only valid --insert is also specified.')
 
-            csv_table = table.Table.from_csv(f, name=table_name, snifflimit=self.args.snifflimit, **self.reader_kwargs)
+            csv_table = table.Table.from_csv(f, name=table_name, snifflimit=self.args.snifflimit, blanks_as_nulls=(not self.args.blanks), **self.reader_kwargs)
 
             # Direct connections to database
             if self.args.connection_string:

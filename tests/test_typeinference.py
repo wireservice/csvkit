@@ -82,6 +82,12 @@ class TestNormalizeType(unittest.TestCase):
     def test_strings(self):
         self.assertEqual((unicode, [u'Chicago Tribune', u'435 N Michigan ave', u'Chicago, IL', None]), typeinference.normalize_column_type([u'Chicago Tribune', u'435 N Michigan ave', u'Chicago, IL', u'']))
 
+    def test_strings_with_nulls(self):
+        self.assertEqual((unicode, [u'A', None, u'C', None]), typeinference.normalize_column_type([u'A', u'', u'C', None], blanks_as_nulls=True))
+
+    def test_strings_with_blanks(self):
+        self.assertEqual((unicode, [u'A', u'', u'C', None]), typeinference.normalize_column_type([u'A', u'', u'C', None], blanks_as_nulls=False))
+
     def test_strings_coerce(self):
         self.assertEqual((unicode, [u'Chicago Tribune', u'435 N Michigan ave', u'Chicago, IL', None]), typeinference.normalize_column_type([u'Chicago Tribune', u'435 N Michigan ave', u'Chicago, IL', u''], normal_type=unicode))
 
