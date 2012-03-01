@@ -64,6 +64,16 @@ class CSVKitUtility(object):
         else:
             self.output_file = output_file
 
+        # Ensure SIGPIPE doesn't throw an exception
+        # Prevents [Errno 32] Broken pipe errors, e.g. when piping to 'head'
+        try:
+            import signal
+            signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+        except ImportError:
+            #Do nothing on platforms that don't have signals
+            pass
+
+
     def add_arguments(self):
         """
         Called upon initialization once the parser for common arguments has been constructed.
