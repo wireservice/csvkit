@@ -1,6 +1,7 @@
 0.4.4
 -----
 
+* Support mixing nulls and blanks in string columns.
 * Add --blanks option to csvsql. (#149)
 * Add multi-file (glob) support to csvsql. (#146)
 * Add Gregory Temchenko to AUTHORS.
