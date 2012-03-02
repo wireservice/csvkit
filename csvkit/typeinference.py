@@ -133,6 +133,7 @@ def normalize_column_type(l, normal_type=None, blanks_as_nulls=True):
             for i, x in enumerate(l):
                 if x == '' or x is None:
                     append(None)
+                    add(NoneType)
                     continue
 
                 d = parse(x, default=DEFAULT_DATETIME)
@@ -160,11 +161,15 @@ def normalize_column_type(l, normal_type=None, blanks_as_nulls=True):
                 
                 append(d)
 
-            # No special handling if column contains only one type
             if len(normal_types_set) == 1:
-                pass
+                # This case can only happen if normal_type was specified and the column contained all nulls
+                if normal_types_set == set([NoneType]):
+                    raise ValueError('Column contained all null values.')
+
+            normal_types_set.discard(NoneType)
+
             # If a mix of dates and datetimes, up-convert dates to datetimes
-            elif normal_types_set == set([datetime.datetime, datetime.date]):
+            if normal_types_set == set([datetime.datetime, datetime.date]):
                 for i, v in enumerate(normal_values):
                     if v.__class__ == datetime.date:
                         normal_values[i] = datetime.datetime.combine(v, NULL_TIME)
