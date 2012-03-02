@@ -161,25 +161,25 @@ def normalize_column_type(l, normal_type=None, blanks_as_nulls=True):
                 
                 append(d)
 
-            if len(normal_types_set) == 1:
-                # This case can only happen if normal_type was specified and the column contained all nulls
-                if normal_types_set == set([NoneType]):
-                    raise ValueError('Column contained all null values.')
+            # This case can only happen if normal_type was specified and the column contained all nulls
+            if normal_type and normal_types_set == set([NoneType]):
+                return normal_type, normal_values
 
             normal_types_set.discard(NoneType)
 
             # If a mix of dates and datetimes, up-convert dates to datetimes
-            if normal_types_set == set([datetime.datetime, datetime.date]):
+            if normal_types_set == set([datetime.datetime, datetime.date]) or (normal_types_set == set([datetime.date]) and normal_type is datetime.datetime):
                 for i, v in enumerate(normal_values):
                     if v.__class__ == datetime.date:
                         normal_values[i] = datetime.datetime.combine(v, NULL_TIME)
 
-                normal_types_set.discard(datetime.date)
+                if datetime.datetime in normal_types_set:
+                    normal_types_set.discard(datetime.date)
             # Datetimes and times don't mix -- fallback to using strings
-            elif normal_types_set == set([datetime.datetime, datetime.time]):
+            elif normal_types_set == set([datetime.datetime, datetime.time]) or (normal_types_set == set([datetime.time]) and normal_type is datetime.datetime):
                 raise ValueError('Cant\'t coherently mix datetimes and times in a single column.') 
             # Dates and times don't mix -- fallback to using strings
-            elif normal_types_set == set([datetime.date, datetime.time]):
+            elif normal_types_set == set([datetime.date, datetime.time]) or (normal_types_set == set([datetime.time]) and normal_type is datetime.date) or (normal_types_set == set([datetime.date]) and normal_type is datetime.time):
                 raise ValueError('Can\'t coherently mix dates and times in a single column.')
 
             return normal_types_set.pop(), normal_values 
