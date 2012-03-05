@@ -32,6 +32,10 @@ class CSVSQL(CSVKitUtility):
             help='Do not coerce empty strings to NULL values.')
 
     def main(self):
+        # Ensure we're handling a list, even if it's just one file
+        if not isinstance(self.args.files, list):
+            self.args.files = [self.args.files]
+
         for f in self.args.files:
             if self.args.table_name:
                 table_name = self.args.table_name
