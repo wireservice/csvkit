@@ -73,7 +73,7 @@ As you can see, this multiple header lines.  We need to modify this file to fix 
 
 With that done let's use the old hacker standby ``sed`` to kill those first two header lines::
 
-    $ cat 2010.csv | sed 1,2d > 2010.csv
+    $ cat 2010_original.csv | sed "1,2d" > 2010.csv
 
 ``sed`` is an abbreviation for "stream editor", which is a useful phrase to keep in mind if you're not used to working with these tools. csvkit and the other tools introduced in the next chapter all operate on streams of data, processing them one line at a time. The ``sed`` command we just used translates to, "Select lines 1 and 2 of the input, (d)elete them."
 
