@@ -60,8 +60,12 @@ class TestMaxFieldSize(unittest.TestCase):
         # Testing --maxfieldsize for failure. Creating data using str * int.
         with open('dummy.csv', 'r') as f:
             c = unicsv.UnicodeCSVReader(f, maxfieldsize=9)
-            with self.assertRaises(unicsv.FieldSizeLimitError):
+            try:
                 c.next()
+            except unicsv.FieldSizeLimitError:
+                pass
+            else:
+                raise AssertionError('Expected unicsv.FieldSizeLimitError')
 
         # Now testing higher --maxfieldsize.
         with open('dummy.csv', 'r') as f:

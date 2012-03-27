@@ -50,6 +50,12 @@ Convert the 2000 census geo headers file from fixed-width to CSV and from latin-
 
     $ in2csv -e iso-8859-1 -f fixed -s examples/realdata/census_2000/census2000_geo_schema.csv examples/realdata/census_2000/usgeo_excerpt.upl > usgeo.csv
 
+.. note::
+
+    A library of fixed-width schemas is maintained in the ``ffs`` project:
+
+    https://github.com/onyxfish/ffs
+
 Convert an Excel .xls file::
 
     $ in2csv examples/test.xls
