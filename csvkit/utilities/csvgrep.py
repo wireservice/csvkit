@@ -39,7 +39,7 @@ class CSVGrep(CSVKitUtility):
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         column_names = rows.next()
 
-        column_ids = parse_column_identifiers(self.args.columns, column_names)
+        column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based)
         
         if self.args.regex:
             pattern = re.compile(self.args.regex)

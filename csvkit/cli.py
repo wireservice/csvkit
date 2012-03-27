@@ -227,7 +227,7 @@ class CSVKitUtility(object):
             output.write('%3i: %s\n' % (i, c))
 
 
-def match_column_identifier(column_names, c):
+def match_column_identifier(column_names, c, zero_based=False):
     """
     Determine what column a single column id (name or index) matches in a series of column names.
     Note that integer values are *always* treated as positional identifiers. If you happen to have
@@ -237,7 +237,9 @@ def match_column_identifier(column_names, c):
         return column_names.index(c)
     else:
         try:
-            c = int(c) - 1
+            c = int(c)
+            if not zero_based:
+                c -= 1
         # Fail out if neither a column name nor an integer
         except:
             raise ColumnIdentifierError('Column identifier "%s" is neither an integer, nor a existing column\'s name.' % c)
@@ -269,7 +271,7 @@ def parse_column_identifiers(ids, column_names,zero_based=False):
         c = c.strip()
 
         try:
-            columns.append(match_column_identifier(column_names, c))
+            columns.append(match_column_identifier(column_names, c, zero_based))
         except ColumnIdentifierError:
             if ':' in c:
                 a,b = c.split(':',1)
@@ -292,7 +294,7 @@ def parse_column_identifiers(ids, column_names,zero_based=False):
                 raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
             
             for x in range(a,b):
-                columns.append(match_column_identifier(column_names, x))
+                columns.append(match_column_identifier(column_names, x, zero_based))
 
     return columns
 

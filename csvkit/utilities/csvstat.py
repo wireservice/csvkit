@@ -44,7 +44,7 @@ class CSVStat(CSVKitUtility):
             help='Only output max value length.')
 
     def main(self):
-        tab = table.Table.from_csv(self.args.file, snifflimit=self.args.snifflimit, column_ids=self.args.columns, **self.reader_kwargs)
+        tab = table.Table.from_csv(self.args.file, snifflimit=self.args.snifflimit, column_ids=self.args.columns,zero_based=self.zero_based, **self.reader_kwargs)
 
         operations = [op for op in OPERATIONS if getattr(self.args, op + '_only')]
 
