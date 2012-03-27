@@ -4,7 +4,7 @@ import os
 
 from csvkit import CSVKitWriter
 from csvkit import table
-from csvkit.cli import CSVKitUtility, parse_column_identifiers, print_column_names
+from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
 class CSVSort(CSVKitUtility):
     description = 'Sort CSV files. Like unix "sort" command, but for tabular data.'
@@ -21,7 +21,7 @@ class CSVSort(CSVKitUtility):
 
     def main(self):
         if self.args.names_only:
-            print_column_names(self.args.file, self.output_file, **self.reader_kwargs)
+            self.print_column_names()
             return
 
         if self.args.file.name != '<stdin>':

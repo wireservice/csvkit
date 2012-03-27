@@ -142,6 +142,12 @@ class CSVKitUtility(object):
             self.argparser.add_argument('-l', '--linenumbers', dest='line_numbers', action='store_true',
                                 help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple primary key.')
 
+        # Input/Output
+        if 'zero' not in self.override_flags:
+            self.argparser.add_argument('--zero', dest='zero_based', action='store_true',
+                            help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
+        
+
     def _extract_csv_reader_kwargs(self):
         """
         Extracts those from the command-line arguments those would should be passed through to the input CSV reader(s).
@@ -201,6 +207,26 @@ class CSVKitUtility(object):
 
         sys.excepthook = handler
 
+    def print_column_names(self):
+        """
+        Pretty-prints the names and indices of all columns to a file-like object (usually sys.stdout).
+        """
+        f = self.args.file
+        output = self.output_file
+        try:
+            zero_based=self.args.zero_based
+        except:
+            zero_based=False
+
+        rows = CSVKitReader(f, **self.reader_kwargs)
+        column_names = rows.next()
+
+        for i, c in enumerate(column_names):
+            if not zero_based:
+                i += 1
+            output.write('%3i: %s\n' % (i, c))
+
+
 def match_column_identifier(column_names, c):
     """
     Determine what column a single column id (name or index) matches in a series of column names.
@@ -226,7 +252,7 @@ def match_column_identifier(column_names, c):
 
     return c
 
-def parse_column_identifiers(ids, column_names):
+def parse_column_identifiers(ids, column_names,zero_based=False):
     """
     Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
     Ranges of integers can be specified with two integers separated by a '-' or ':' character. Ranges of 
@@ -269,16 +295,4 @@ def parse_column_identifiers(ids, column_names):
                 columns.append(match_column_identifier(column_names, x))
 
     return columns
-
-def print_column_names(f, output, zero_based=False, **reader_kwargs):
-    """
-    Pretty-prints the names and indices of all columns to a file-like object (usually sys.stdout).
-    """
-    rows = CSVKitReader(f, **reader_kwargs)
-    column_names = rows.next()
-
-    for i, c in enumerate(column_names):
-        if not zero_based:
-            i += 1
-        output.write('%3i: %s\n' % (i, c))
 
