@@ -130,6 +130,11 @@ License
 
 .. include:: ../COPYING
 
+Changelog
+=========
+
+.. include:: ../CHANGELOG
+
 Indices and tables
 ==================
 

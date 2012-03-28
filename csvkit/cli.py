@@ -64,6 +64,22 @@ class CSVKitUtility(object):
         else:
             self.output_file = output_file
 
+        # Ensure SIGPIPE doesn't throw an exception
+        # Prevents [Errno 32] Broken pipe errors, e.g. when piping to 'head'
+        # To test from the shell:
+        #  python -c "for i in range(5000): print 'a,b,c'" | csvlook | head
+        # Without this fix you will see at the end:
+        #  [Errno 32] Broken pipe
+        # With this fix, there should be no error
+        # For details on Python and SIGPIPE, see http://bugs.python.org/issue1652
+        try:
+            import signal
+            signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+        except (ImportError, AttributeError):
+            #Do nothing on platforms that don't have signals or don't have SIGPIPE
+            pass
+
+
     def add_arguments(self):
         """
         Called upon initialization once the parser for common arguments has been constructed.

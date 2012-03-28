@@ -6,3 +6,4 @@ sqlalchemy==0.6.6
 sphinx==1.0.7
 coverage==3.5.1b1
 openpyxl==1.5.7
+tox==1.3
