@@ -2,19 +2,18 @@
 
 from cStringIO import StringIO
 
-#import dbf
-#TODO Remove one of these, add references in requirements.txt etc
-from dbfpy import dbf
+import dbf
 
 from csvkit import table
 
 def dbf2csv(f, **kwargs):
     """
     Convert a dBASE .dbf file to csv.
-    """
-    db = dbf.Dbf(f.name)
 
-    headers = db.fieldNames
+    """
+    db = dbf.Table(f.name)
+
+    headers = db.field_names
 
     column_ids = range(len(headers))
 
@@ -32,7 +31,6 @@ def dbf2csv(f, **kwargs):
 
     for i, c in enumerate(data_columns):
         columns.append(table.Column(column_ids[i], headers[i], c))
-#TODO Make sure these fields are normalized
 
     tab = table.Table(columns=columns) 
 
