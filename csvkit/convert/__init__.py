@@ -5,8 +5,9 @@ from fixed import fixed2csv
 from js import json2csv
 from xls import xls2csv
 from xlsx import xlsx2csv
+from dbase import dbf2csv
 
-SUPPORTED_FORMATS = ['fixed', 'xls', 'xlsx', 'csv', 'json']
+SUPPORTED_FORMATS = ['fixed', 'xls', 'xlsx', 'csv', 'json', 'dbf']
 
 def convert(f, format, schema=None, key=None, **kwargs):
     """
@@ -31,6 +32,8 @@ def convert(f, format, schema=None, key=None, **kwargs):
         return json2csv(f, key, **kwargs)
     elif format == 'csv':
         return csv2csv(f, **kwargs)
+    elif format == 'dbf':
+        return dbf2csv(f, **kwargs)
     else:
         raise ValueError('format "%s" is not supported' % format)
 
@@ -55,6 +58,8 @@ def guess_format(filename):
     elif extension == 'csv':
         return extension
     elif extension == 'fixed':
+        return extension
+    elif extension == 'dbf':
         return extension
 
     return None
