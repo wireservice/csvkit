@@ -174,7 +174,7 @@ class Table(list):
         return row_data
 
     @classmethod
-    def from_csv(cls, f, name='from_csv_table', snifflimit=None, column_ids=None, blanks_as_nulls=True, **kwargs):
+    def from_csv(cls, f, name='from_csv_table', snifflimit=None, column_ids=None, blanks_as_nulls=True, zero_based=False, **kwargs):
         """
         Creates a new Table from a file-like object containing CSV data.
 
@@ -200,7 +200,7 @@ class Table(list):
         headers = reader.next()
         
         if column_ids:
-            column_ids = parse_column_identifiers(column_ids, headers)
+            column_ids = parse_column_identifiers(column_ids, headers, zero_based)
             headers = [headers[c] for c in column_ids]
         else:
             column_ids = range(len(headers))
