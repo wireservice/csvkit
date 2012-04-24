@@ -10,7 +10,7 @@ Used and modified with permission.
 """
 
 from csvkit import CSVKitReader, CSVKitWriter
-from csvkit.cli import CSVKitUtility, parse_column_identifiers, print_column_names
+from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
 class CSVCut(CSVKitUtility):
     description = 'Filter and truncate CSV files. Like unix "cut" command, but for tabular data.'
@@ -25,13 +25,13 @@ class CSVCut(CSVKitUtility):
 
     def main(self):
         if self.args.names_only:
-            print_column_names(self.args.file, self.output_file, **self.reader_kwargs)
+            self.print_column_names()
             return
 
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         column_names = rows.next()
 
-        column_ids = parse_column_identifiers(self.args.columns, column_names)
+        column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based)
         output = CSVKitWriter(self.output_file, **self.writer_kwargs)
 
         output.writerow([column_names[c] for c in column_ids])
