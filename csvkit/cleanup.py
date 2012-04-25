@@ -3,7 +3,10 @@
 from csvkit.exceptions import CSVTestException, LengthMismatchError
 
 def join_rows(rows,joiner=' '):
-    """Given a series of rows, return them as a single row where the inner edge cells are merged. By default joins with a single space character, but you can specify new-line, empty string, or anything else with the 'joiner' kwarg."""
+    """Given a series of rows, return them as a single row where the inner edge cells are merged.
+       By default joins with a single space character, but you can specify new-line, empty string, 
+       or anything else with the 'joiner' kwarg.
+    """
     rows = list(rows)
     fixed_row = rows[0][:]
     for row in rows[1:]:
