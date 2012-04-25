@@ -20,6 +20,8 @@ class CSVCut(CSVKitUtility):
                         help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
                         help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
+        self.argparser.add_argument('-C', '--not-columns', dest='not_columns',
+                        help='A comma separated list of column indices or names to be excluded. Defaults to no columns.')
         self.argparser.add_argument('-x', '--delete-empty-rows', dest='delete_empty', action='store_true',
                         help='After cutting, delete rows which are completely empty.')
 
@@ -31,7 +33,7 @@ class CSVCut(CSVKitUtility):
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         column_names = rows.next()
 
-        column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based)
+        column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based, self.args.not_columns)
         output = CSVKitWriter(self.output_file, **self.writer_kwargs)
 
         output.writerow([column_names[c] for c in column_ids])
