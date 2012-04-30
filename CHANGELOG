@@ -1,6 +1,9 @@
 0.4.4
 -----
 
+* Add Kevin Schaul to AUTHORS.
+* Add DBF support to in2csv. (#11, #160)
+* Support --zero option for zero-based column indexing. (#144)
 * Support mixing nulls and blanks in string columns.
 * Add --blanks option to csvsql. (#149)
 * Add multi-file (glob) support to csvsql. (#146)
