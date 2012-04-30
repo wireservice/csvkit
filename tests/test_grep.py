@@ -4,6 +4,7 @@ import unittest
 import re
 
 from csvkit.grep import FilteringCSVReader
+from csvkit.exceptions import ColumnIdentifierError
 
 class TestGrep(unittest.TestCase):
     def setUp(self):
@@ -67,3 +68,31 @@ class TestGrep(unittest.TestCase):
         except StopIteration:
             pass
             
+    def test_column_names_in_patterns(self):
+        fcr = FilteringCSVReader(iter(self.tab2),patterns = {'age': 'only'})
+        self.assertEqual(self.tab2[0],fcr.next())
+        self.assertEqual(self.tab2[2],fcr.next())
+        self.assertEqual(self.tab2[4],fcr.next())
+        try:
+            fcr.next()
+            self.fail("Should be no more rows left.")
+        except StopIteration:
+            pass
+
+    def test_mixed_indices_and_column_names_in_patterns(self):
+        fcr = FilteringCSVReader(iter(self.tab2),patterns = {'age': 'only', 0: '2'})
+        self.assertEqual(self.tab2[0],fcr.next())
+        self.assertEqual(self.tab2[4],fcr.next())
+        try:
+            fcr.next()
+            self.fail("Should be no more rows left.")
+        except StopIteration:
+            pass
+
+    def test_duplicate_column_ids_in_patterns(self):
+        try:
+            fcr = FilteringCSVReader(iter(self.tab2),patterns = {'age': 'only', 1: 'second'})
+            self.fail("Should be an exception.")
+        except ColumnIdentifierError:
+            pass
+
