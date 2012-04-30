@@ -10,7 +10,7 @@ Used and modified with permission.
 """
 
 from csvkit import CSVKitReader, CSVKitWriter
-from csvkit.cli import CSVKitUtility, parse_column_identifiers, print_column_names
+from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
 class CSVCut(CSVKitUtility):
     description = 'Filter and truncate CSV files. Like unix "cut" command, but for tabular data.'
@@ -18,22 +18,20 @@ class CSVCut(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                         help='Display column names and indices from the input CSV and exit.')
-        self.argparser.add_argument('--zero', dest='zero_based_names_only', action='store_true',
-                        help='Display column names and zero-based indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
                         help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
         self.argparser.add_argument('-x', '--delete-empty-rows', dest='delete_empty', action='store_true',
                         help='After cutting, delete rows which are completely empty.')
 
     def main(self):
-        if self.args.names_only or self.args.zero_based_names_only:
-            print_column_names(self.args.file, self.output_file, zero_based=self.args.zero_based_names_only, **self.reader_kwargs)
+        if self.args.names_only:
+            self.print_column_names()
             return
 
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         column_names = rows.next()
 
-        column_ids = parse_column_identifiers(self.args.columns, column_names)
+        column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based)
         output = CSVKitWriter(self.output_file, **self.writer_kwargs)
 
         output.writerow([column_names[c] for c in column_ids])

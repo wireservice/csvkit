@@ -5,7 +5,7 @@ import sys
 from argparse import FileType
 
 from csvkit import CSVKitReader, CSVKitWriter
-from csvkit.cli import CSVKitUtility, CSVFileType, parse_column_identifiers, print_column_names
+from csvkit.cli import CSVKitUtility, CSVFileType, parse_column_identifiers
 from csvkit.grep import FilteringCSVReader
 
 class CSVGrep(CSVKitUtility):
@@ -30,7 +30,7 @@ class CSVGrep(CSVKitUtility):
 
     def main(self):
         if self.args.names_only:
-            print_column_names(self.args.file, self.output_file, **self.reader_kwargs)
+            self.print_column_names()
             return
 
         if not self.args.regex and not self.args.pattern and not self.args.matchfile:
@@ -39,7 +39,7 @@ class CSVGrep(CSVKitUtility):
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         column_names = rows.next()
 
-        column_ids = parse_column_identifiers(self.args.columns, column_names)
+        column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based)
         
         if self.args.regex:
             pattern = re.compile(self.args.regex)
