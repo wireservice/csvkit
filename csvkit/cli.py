@@ -145,8 +145,11 @@ class CSVKitUtility(object):
         # Input/Output
         if 'zero' not in self.override_flags:
             self.argparser.add_argument('--zero', dest='zero_based', action='store_true',
-                            help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
+                                help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
         
+        if 'number' not in self.override_flags:
+            self.argparser.add_argument('--number-columns', dest='number_columns', action='store_true',
+                                help='Do not use first row as headers for csv file')
 
     def _extract_csv_reader_kwargs(self):
         """
@@ -224,6 +227,8 @@ class CSVKitUtility(object):
         for i, c in enumerate(column_names):
             if not zero_based:
                 i += 1
+            if self.args.number_columns:
+                c = 'col%d' % i
             output.write('%3i: %s\n' % (i, c))
 
 
@@ -254,47 +259,83 @@ def match_column_identifier(column_names, c, zero_based=False):
 
     return c
 
-def parse_column_identifiers(ids, column_names,zero_based=False):
+def parse_column_identifiers(ids, column_names, zero_based=False, excludeIds=None):
     """
     Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
     Ranges of integers can be specified with two integers separated by a '-' or ':' character. Ranges of 
     non-integers (e.g. column names) are not supported.
     Note: Column indices are 1-based. 
     """
-    # If not specified, return all columns 
-    if not ids:
-        return range(len(column_names))
-
     columns = []
 
-    for c in ids.split(','):
-        c = c.strip()
+    # If not specified, start with all columns 
+    if not ids:
+        columns = range(len(column_names))        
 
-        try:
-            columns.append(match_column_identifier(column_names, c, zero_based))
-        except ColumnIdentifierError:
-            if ':' in c:
-                a,b = c.split(':',1)
-            elif '-' in c:
-                a,b = c.split('-',1)
-            else:
-                raise
-            
+    if columns and not excludeIds:
+        return columns
+
+    if( not columns ):
+        for c in ids.split(','):
+            c = c.strip()
+
             try:
-                if a:
-                    a = int(a)
+                columns.append(match_column_identifier(column_names, c, zero_based))
+            except ColumnIdentifierError:
+                if ':' in c:
+                    a,b = c.split(':',1)
+                elif '-' in c:
+                    a,b = c.split('-',1)
                 else:
-                    a = 1
-                if b:
-                    b = int(b) + 1
-                else:
-                    b = len(column_names)
-                    
-            except ValueError:
-                raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
-            
-            for x in range(a,b):
-                columns.append(match_column_identifier(column_names, x, zero_based))
+                    raise
+                
+                try:
+                    if a:
+                        a = int(a)
+                    else:
+                        a = 1
+                    if b:
+                        b = int(b) + 1
+                    else:
+                        b = len(column_names)
+                        
+                except ValueError:
+                    raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
+                
+                for x in range(a,b):
+                    columns.append(match_column_identifier(column_names, x, zero_based))
 
-    return columns
+    excludes = []
+    
+    if( excludeIds ):
+        for c in excludeIds.split(','):
+            c = c.strip()
+
+            try:
+                excludes.append(match_column_identifier(column_names, c, zero_based))
+            except ColumnIdentifierError:
+                if ':' in c:
+                    a,b = c.split(':',1)
+                elif '-' in c:
+                    a,b = c.split('-',1)
+                else:
+                    raise
+                
+                try:
+                    if a:
+                        a = int(a)
+                    else:
+                        a = 1
+                    if b:
+                        b = int(b) + 1
+                    else:
+                        b = len(column_names)
+                        
+                except ValueError:
+                    raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
+                
+                for x in range(a,b):
+                    excludes.append(match_column_identifier(column_names, x, zero_based))
+
+    return [ c for c in columns if c not in excludes ]
 

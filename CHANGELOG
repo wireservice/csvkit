@@ -6,6 +6,8 @@
 0.4.4
 -----
 
+* Support --not-columns for excluding columns. (#137)
+* Add Derek Wilson to AUTHORS.
 * Add Kevin Schaul to AUTHORS.
 * Add DBF support to in2csv. (#11, #160)
 * Support --zero option for zero-based column indexing. (#144)

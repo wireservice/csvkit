@@ -14,6 +14,8 @@ class CSVLook(CSVKitUtility):
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         rows = list(rows)
 
+        if self.args.number_columns:
+            rows.insert( 0, [ 'col%d' % (i+1) for i in range(len(rows[0])) ] )
         widths = []
 
         for row in rows:

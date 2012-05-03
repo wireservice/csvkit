@@ -3,7 +3,10 @@
 from csvkit.exceptions import CSVTestException, LengthMismatchError
 
 def join_rows(rows,joiner=' '):
-    """Given a series of rows, return them as a single row where the inner edge cells are merged. By default joins with a single space character, but you can specify new-line, empty string, or anything else with the 'joiner' kwarg."""
+    """Given a series of rows, return them as a single row where the inner edge cells are merged.
+       By default joins with a single space character, but you can specify new-line, empty string, 
+       or anything else with the 'joiner' kwarg.
+    """
     rows = list(rows)
     fixed_row = rows[0][:]
     for row in rows[1:]:
@@ -47,10 +50,14 @@ def extract_joinable_row_errors(errs):
 
 class RowChecker(object):
     """When created with a reader, can yield clean rows from the reader and expose some information about what wasn't clean."""
-    def __init__(self, reader):
+    def __init__(self, reader, number_columns=False):
         super(RowChecker, self).__init__()
         self.reader = reader
-        self.column_names = reader.next()
+        self.first_row = reader.next()
+        if not number_columns:
+            self.column_names = self.first_row
+        else:
+            self.column_names = [ 'col%d' % (c + 1) for c in range(len(self.first_row)) ]
         self.input_rows = 1 
         self.errs = []
         self.rows_joined = 0
