@@ -32,8 +32,8 @@ class CSVClean(CSVKitUtility):
             # should we preserve delimiters and other dialect args from CLI?
             cleaned_file = CSVKitWriter(open("%s_out.csv" % base,"w"), **self.writer_kwargs)
 
-            checker = RowChecker(reader)
-            cleaned_file.writerow(checker.column_names)
+            checker = RowChecker(reader, number_columns=self.args.number_columns)
+            cleaned_file.writerow(checker.first_row)
             for row in checker.checked_rows():
                 cleaned_file.writerow(row)
             
@@ -41,8 +41,7 @@ class CSVClean(CSVKitUtility):
                 # should we preserve delimiters and other dialect args from CLI?
                 err_filename = "%s_err.csv" % base
                 err_file = CSVKitWriter(open(err_filename, "w"), **self.writer_kwargs)
-                err_header = ['line_number','msg']
-                err_header.extend(checker.column_names)
+                err_header = ['line_number','msg'] + checker.column_names
                 err_file.writerow(err_header)
                 for e in checker.errs:
                     err_file.writerow(self._format_error_row(e))

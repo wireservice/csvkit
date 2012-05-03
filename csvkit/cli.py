@@ -145,8 +145,11 @@ class CSVKitUtility(object):
         # Input/Output
         if 'zero' not in self.override_flags:
             self.argparser.add_argument('--zero', dest='zero_based', action='store_true',
-                            help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
+                                help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
         
+        if 'number' not in self.override_flags:
+            self.argparser.add_argument('--number-columns', dest='number_columns', action='store_true',
+                                help='Do not use first row as headers for csv file')
 
     def _extract_csv_reader_kwargs(self):
         """
@@ -224,6 +227,8 @@ class CSVKitUtility(object):
         for i, c in enumerate(column_names):
             if not zero_based:
                 i += 1
+            if self.args.number_columns:
+                c = 'col%d' % i
             output.write('%3i: %s\n' % (i, c))
 
 
