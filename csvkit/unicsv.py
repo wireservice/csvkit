@@ -6,6 +6,7 @@ This module contains unicode aware replacements for :func:`csv.reader` and :func
 
 import codecs
 import csv
+import fnmatch
 from cStringIO import StringIO
 
 from csvkit.exceptions import FieldSizeLimitError
@@ -40,7 +41,7 @@ class UnicodeCSVReader(object):
             row = self.reader.next()
         except csv.Error, e:
             # Terrible way to test for this exception, but there is no subclass
-            if 'field larger than field limit' in str(e):
+            if fnmatch.fnmatch(str(e), 'field large[rt] than field limit *'):
                 raise FieldSizeLimitError(csv.field_size_limit())
             else:
                 raise e
