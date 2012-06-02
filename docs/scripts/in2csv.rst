@@ -31,7 +31,7 @@ The header line is required though the columns may be in any order::
       -f FORMAT, --format FORMAT
                             The format of the input file. If not specified will be
                             inferred from the filename. Supported formats: csv,
-                            fixed, json, xls, xlsx.
+                            dbf, fixed, json, xls, xlsx.
       -s SCHEMA, --schema SCHEMA
                             Specifies a CSV-formatted schema file for converting
                             fixed-width files. See documentation for details.
@@ -67,4 +67,8 @@ Standardize the formatting of a CSV file (quoting, line endings, etc.)::
 Fetch csvkit's open issues from the Github API, convert the JSON response into a CSV, and write it to a file::
 
     $ curl http://github.com/api/v2/json/issues/list/onyxfish/csvkit/open | in2csv -v -k issues > issues.csv 
+
+Convert a DBase DBF file to an equivalent CSV::
+
+    $ in2csv examples/testdbf.dbf > testdbf_converted.csv
 
