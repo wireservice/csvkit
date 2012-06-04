@@ -21,12 +21,14 @@ def fixed2csv(f, schema, output=None, **kwargs):
     if not streaming:
         output = StringIO()
 
-    if 'encoding' in kwargs and kwargs['encoding']:
-        f = iterdecode(f, kwargs['encoding'])
-        
+    try:
+        encoding = kwargs['encoding']
+    except KeyError:
+        encoding = None
+
     writer = CSVKitWriter(output)
 
-    reader = FixedWidthReader(f, schema)
+    reader = FixedWidthReader(f, schema, encoding=encoding)
     writer.writerows(reader)
 
     if not streaming:
@@ -43,7 +45,9 @@ class FixedWidthReader(object):
     
     The schema_file should be in CSV format with a header row which has columns 'column', 'start', and 'length'. (Other columns will be ignored.)  Values in the 'start' column are assumed to be "zero-based" unless the first value is "1" in which case all values are assumed to be "one-based."
     """
-    def __init__(self, f, schema):
+    def __init__(self, f, schema, encoding=None):
+        if encoding is not None:
+            f = iterdecode(f, encoding)
         self.file = f
         self.parser = FixedWidthRowParser(schema)
         self.header = True
