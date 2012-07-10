@@ -1,7 +1,0 @@
-#!/usr/bin/env python
-
-from csvkit.utilities.csvjoin import CSVJoin
-
-if __name__ == '__main__':
-    CSVJoin().main()
-
