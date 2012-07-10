@@ -59,8 +59,11 @@ class CSVGrep(CSVKitUtility):
         for i, row in enumerate(filter_reader):
             self.input_line_number = i + 1
             output.writerow(row)
-                
-if __name__ == "__main__":
+
+def launch_new_instance():
+    """Create and run csvgrep"""
     utility = CSVGrep()
     utility.main()
-
+    
+if __name__ == "__main__":
+    launch_new_instance()

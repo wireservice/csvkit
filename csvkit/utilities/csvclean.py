@@ -60,6 +60,10 @@ class CSVClean(CSVKitUtility):
         err_row.extend(e.row)
         return err_row
 
-if __name__ == '__main__':
+def launch_new_instance():
+    """Create and run csvclean"""
     utility = CSVClean()
     utility.main()
+    
+if __name__ == "__main__":
+    launch_new_instance()

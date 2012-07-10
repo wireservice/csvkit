@@ -213,7 +213,11 @@ def freq(l, n=MAX_FREQ):
 
     return top
 
-if __name__ == '__main__':
+
+def launch_new_instance():
+    """Create and run csvstat"""
     utility = CSVStat()
     utility.main()
-
+    
+if __name__ == "__main__":
+    launch_new_instance()
