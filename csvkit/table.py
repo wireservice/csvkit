@@ -71,7 +71,7 @@ class Column(list):
             if self.has_nulls():
                 l = max(l, 4) # "None"
 
-        if self.type == int:
+        if self.type == int or self.type == datetime.date:
             l = max([len(str(d)) if d else 0 for d in self])
 
         return l
