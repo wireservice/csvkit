@@ -176,9 +176,6 @@ class CSVStat(CSVKitUtility):
         return freq(values) 
 
     def get_len(self, c, values, stats):
-        if c.type != unicode:
-            return None
-
         return c.max_length()
 
 def median(l):
