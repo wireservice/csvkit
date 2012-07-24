@@ -3,7 +3,6 @@
 import StringIO
 import unittest
 
-from csvkit import CSVKitReader
 from csvkit.utilities.csvlook import CSVLook
 
 class TestCSVLook(unittest.TestCase):

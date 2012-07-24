@@ -40,3 +40,4 @@ def dbf2csv(f, **kwargs):
     o.close()
 
     return output
+
