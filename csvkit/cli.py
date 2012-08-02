@@ -9,6 +9,47 @@ import sys
 from csvkit import CSVKitReader
 from csvkit.exceptions import ColumnIdentifierError
 
+def lazy_opener(fn):
+    def wrapped(self, *args, **kwargs):
+        self._lazy_open()
+        fn(*args, **kwargs)
+    return wrapped
+
+class LazyFile(object):
+    """
+    A proxy for a File object that delays opening it until
+    a read method is called.
+
+    Currently this implements only the minimum methods to be useful,
+    but it could easily be expanded.
+    """
+    def __init__(self, init, *args, **kwargs):
+        self.init = init
+        self.f = None
+        self._is_lazy_opened = False
+
+        self._lazy_args = args
+        self._lazy_kwargs = kwargs
+
+    def __getattr__(self, name):
+        if not self._is_lazy_opened:
+            self.f = self.init(*self._lazy_args, **self._lazy_kwargs)
+            self._is_lazy_opened = True
+
+        return getattr(self.f, name)
+
+    def close(self):
+        self.f.close()
+        self.f = None
+        self._is_lazy_opened = False
+
+    def next(self):
+        if not self._is_lazy_opened:
+            self.f = self.init(*self._lazy_args, **self._lazy_kwargs)
+            self._is_lazy_opened = True
+
+        return self.f.next()
+
 class CSVFileType(object):
     """
     An argument factory like argparse.FileType with compression support.
@@ -35,11 +76,13 @@ class CSVFileType(object):
             (_, extension) = os.path.splitext(path)
 
             if extension == ".gz":
-                return gzip.open(path, self._mode)
+                #return gzip.open(path, self._mode)
+                return LazyFile(gzip.open, path, self._mode)
             if extension == ".bz2":
-                return bz2.BZ2File(path, self._mode)
+                return LazyFile(bz2.BZ2File, path, self._mode)
+                #return bz2.BZ2File(path, self._mode)
             else:
-                return open(path, self._mode)
+                return LazyFile(open, path, self._mode)
 
 class CSVKitUtility(object):
     description = ''

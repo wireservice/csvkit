@@ -1,7 +1,8 @@
 0.4.5
 -----
 
-8 Added Noah Hoffman to AUTHORS.
+* csvjoin, csvsql and csvstack will no longer hold open all files. (#178)
+* Added Noah Hoffman to AUTHORS.
 * Make csvlook output compatible with emacs table markup. (#174)
 
 0.4.4

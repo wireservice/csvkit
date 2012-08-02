@@ -56,6 +56,8 @@ class CSVSQL(CSVKitUtility):
 
             csv_table = table.Table.from_csv(f, name=table_name, snifflimit=self.args.snifflimit, blanks_as_nulls=(not self.args.blanks), **self.reader_kwargs)
 
+            f.close()
+
             # Direct connections to database
             if self.args.connection_string:
                 try:
