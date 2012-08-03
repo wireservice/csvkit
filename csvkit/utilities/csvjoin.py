@@ -44,6 +44,7 @@ class CSVJoin(CSVKitUtility):
 
         for f in self.args.files:
             tables.append(list(CSVKitReader(f, **self.reader_kwargs)))
+            f.close()
 
         join_column_ids = []
         

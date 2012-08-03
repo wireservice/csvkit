@@ -24,8 +24,9 @@ class CSVLook(CSVKitUtility):
                 except IndexError:
                     widths.append(len(v))
 
-        # Width of the fields, plus space between, plus fore and aft dividers 
-        divider = '-' * (sum(widths) + (3 * len(widths)) + 3)
+        # Dashes span each width with '+' character at intersection of
+        # horizontal and vertical dividers.
+        divider = '|--' + '-+-'.join('-'* w for w in widths) + '--|'
 
         self.output_file.write('%s\n' % divider)
 
