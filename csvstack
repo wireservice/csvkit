@@ -1,7 +1,0 @@
-#!/usr/bin/env python
-
-from csvkit.utilities.csvstack import CSVStack
-
-if __name__ == '__main__':
-    CSVStack().main()
-

@@ -44,6 +44,10 @@ class CSVLook(CSVKitUtility):
             if i == 0 or i == len(rows) - 1:
                 self.output_file.write('%s\n' % divider)
 
-if __name__ == '__main__':
+def launch_new_instance():
+    """Create and run csvlook"""
     utility = CSVLook()
     utility.main()
+    
+if __name__ == "__main__":
+    launch_new_instance()

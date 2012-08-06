@@ -99,7 +99,12 @@ class CSVJoin(CSVKitUtility):
         Parse a list of join columns.
         """
         return map(str.strip, join_string.split(','))
-    
-if __name__ == '__main__':
+
+
+def launch_new_instance():
+    """Create and run csvjoin"""
     utility = CSVJoin()
     utility.main()
+    
+if __name__ == "__main__":
+    launch_new_instance()

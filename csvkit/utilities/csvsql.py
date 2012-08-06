@@ -86,7 +86,11 @@ class CSVSQL(CSVKitUtility):
                 sql_table = sql.make_table(csv_table, table_name, self.args.no_constraints)
                 self.output_file.write((u'%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect)).encode('utf-8'))
 
-if __name__ == '__main__':
+
+def launch_new_instance():
+    """Create and run csvsql"""
     utility = CSVSQL()
     utility.main()
-
+    
+if __name__ == "__main__":
+    launch_new_instance()

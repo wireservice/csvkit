@@ -42,7 +42,11 @@ class CSVSort(CSVKitUtility):
 
         for row in rows:
             output.writerow(row)
-                
-if __name__ == "__main__":
+
+def launch_new_instance():
+    """Create and run csvsort"""
     utility = CSVSort()
     utility.main()
+    
+if __name__ == "__main__":
+    launch_new_instance()

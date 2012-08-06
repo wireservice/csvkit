@@ -1,7 +1,0 @@
-#!/usr/bin/env python
-
-from csvkit.utilities.in2csv import In2CSV 
-
-if __name__ == '__main__':
-    In2CSV().main()
-

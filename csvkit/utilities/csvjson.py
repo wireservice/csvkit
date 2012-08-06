@@ -41,6 +41,11 @@ class CSVJSON(CSVKitUtility):
 
         json.dump(output, stream, ensure_ascii=False, indent=self.args.indent, encoding='utf-8')
 
-if __name__ == "__main__":
-    CSVJSON().main()
 
+def launch_new_instance():
+    """Create and run csvjson"""
+    utility = CSVJSON()
+    utility.main()
+    
+if __name__ == "__main__":
+    launch_new_instance()

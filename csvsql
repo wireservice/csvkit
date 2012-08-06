@@ -1,7 +1,0 @@
-#!/usr/bin/env python
-
-from csvkit.utilities.csvsql import CSVSQL
-
-if __name__ == '__main__':
-    CSVSQL().main()
-
