@@ -51,6 +51,7 @@ class CSVStack(CSVKitUtility):
                     row.insert(0, groups[i])
 
                 output.writerow(row)
+            f.close()
 
 def launch_new_instance():
     """Create and run csvstack"""
