@@ -92,6 +92,7 @@ csvkit is comprised of a number of individual command line utilities that be loo
 
     scripts/csvjson
     scripts/csvlook
+    scripts/csvpy
     scripts/csvsql
     scripts/csvstat
 
