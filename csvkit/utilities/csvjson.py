@@ -43,7 +43,6 @@ class CSVJSON(CSVKitUtility):
 
 
 def launch_new_instance():
-    """Create and run csvjson"""
     utility = CSVJSON()
     utility.main()
     

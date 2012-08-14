@@ -54,7 +54,6 @@ class CSVStack(CSVKitUtility):
             f.close()
 
 def launch_new_instance():
-    """Create and run csvstack"""
     utility = CSVStack()
     utility.main()
     

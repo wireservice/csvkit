@@ -61,7 +61,6 @@ class CSVGrep(CSVKitUtility):
             output.writerow(row)
 
 def launch_new_instance():
-    """Create and run csvgrep"""
     utility = CSVGrep()
     utility.main()
     

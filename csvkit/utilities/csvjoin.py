@@ -102,7 +102,6 @@ class CSVJoin(CSVKitUtility):
 
 
 def launch_new_instance():
-    """Create and run csvjoin"""
     utility = CSVJoin()
     utility.main()
     

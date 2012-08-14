@@ -61,7 +61,6 @@ class CSVClean(CSVKitUtility):
         return err_row
 
 def launch_new_instance():
-    """Create and run csvclean"""
     utility = CSVClean()
     utility.main()
     

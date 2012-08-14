@@ -68,7 +68,6 @@ class In2CSV(CSVKitUtility):
         self.output_file.write(convert.convert(f, format, **kwargs))
 
 def launch_new_instance():
-    """Create and run in2csv"""
     utility = In2CSV()
     utility.main()
     

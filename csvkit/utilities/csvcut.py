@@ -49,7 +49,6 @@ class CSVCut(CSVKitUtility):
             output.writerow(out_row)
                 
 def launch_new_instance():
-    """Create and run csvcut"""
     utility = CSVCut()
     utility.main()
     

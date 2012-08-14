@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import os
+
 from csvkit import CSVKitReader
 from csvkit.cli import CSVKitUtility 
 

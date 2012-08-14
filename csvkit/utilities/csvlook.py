@@ -45,7 +45,6 @@ class CSVLook(CSVKitUtility):
                 self.output_file.write('%s\n' % divider)
 
 def launch_new_instance():
-    """Create and run csvlook"""
     utility = CSVLook()
     utility.main()
     

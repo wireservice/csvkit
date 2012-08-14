@@ -215,7 +215,6 @@ def freq(l, n=MAX_FREQ):
 
 
 def launch_new_instance():
-    """Create and run csvstat"""
     utility = CSVStat()
     utility.main()
     

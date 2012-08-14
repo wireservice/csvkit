@@ -44,7 +44,6 @@ class CSVSort(CSVKitUtility):
             output.writerow(row)
 
 def launch_new_instance():
-    """Create and run csvsort"""
     utility = CSVSort()
     utility.main()
     

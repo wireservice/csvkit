@@ -88,7 +88,6 @@ class CSVSQL(CSVKitUtility):
 
 
 def launch_new_instance():
-    """Create and run csvsql"""
     utility = CSVSQL()
     utility.main()
     
