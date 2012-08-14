@@ -22,6 +22,10 @@ Loads a CSV file into a :doc:`CSVKitReader </api/csvkit>` object and then drops 
 
 This utility will automatically use the IPython shell if it is installed, otherwise it will use the running Python shell.
 
+.. note::
+
+    csvpy does not currently accept input on STDIN. This should be fixed in a future release.
+
 Also see: :doc:`common_arguments`.
 
 Examples
