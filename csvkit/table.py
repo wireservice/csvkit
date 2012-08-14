@@ -62,8 +62,6 @@ class Column(list):
     def max_length(self):
         """
         Compute maximum length of data in this column.
-        
-        Returns 0 if the column does not of type ``unicode``.
         """
         l = 0
 
@@ -72,6 +70,9 @@ class Column(list):
 
             if self.has_nulls():
                 l = max(l, 4) # "None"
+
+        if self.type == int or self.type == datetime.date:
+            l = max([len(str(d)) if d else 0 for d in self])
 
         return l
 
