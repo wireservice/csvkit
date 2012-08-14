@@ -43,6 +43,10 @@ For developers::
     pip install -r requirements.txt
     nosetests
 
+.. note::
+
+    csvkit is tested against Python 2.6, 2.7 and PyPy. Neither Python < 2.6 nor Python >= 3.0 are supported at this time.
+
 Tutorial
 ========
 
