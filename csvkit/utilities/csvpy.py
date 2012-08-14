@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-import os
+import sys
 
 from csvkit import CSVKitReader
 from csvkit.cli import CSVKitUtility 
 
-class CSVLook(CSVKitUtility):
+class CSVPy(CSVKitUtility):
     description = 'Load a CSV file into a CSVKitReader object and then drops into a Python shell.'
     override_flags = 'l'
 
@@ -15,6 +15,12 @@ class CSVLook(CSVKitUtility):
         pass
 
     def main(self):
+        if self.args.file == sys.stdin:
+            raise NotImplementedError('csvpy does not currently support input via pipes. Sorry!')
+        else:
+            # Attempt reading filename, will cause lazy loader to access file and raise error if it does not exist
+            filename = self.args.file.name
+
         reader = CSVKitReader(self.args.file, **self.reader_kwargs)
 
         try:
@@ -26,7 +32,7 @@ class CSVLook(CSVKitUtility):
             code.interact(self.welcome_message, local={ 'reader': reader })        
 
 def launch_new_instance():
-    utility = CSVLook()
+    utility = CSVPy()
     utility.main()
     
 if __name__ == "__main__":

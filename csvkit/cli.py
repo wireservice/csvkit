@@ -55,7 +55,7 @@ class CSVFileType(object):
     An argument factory like argparse.FileType with compression support.
     """
 
-    def __init__(self, mode = "rb"):
+    def __init__(self, mode='rb'):
         """
         Initialize the factory.
         """
@@ -65,22 +65,20 @@ class CSVFileType(object):
         """
         Build a file-like object from the specified path.
         """
-        if path == "-":
-            if "r" in self._mode:
+        if path == '-':
+            if 'r' in self._mode:
                 return sys.stdin
-            elif "w" in self._mode:
+            elif 'w' in self._mode:
                 return sys.stdout
             else:
-                raise ValueError("invalid path \"-\" with mode {0}".format(self._mode))
+                raise ValueError('Invalid path "-" with mode {0}'.format(self._mode))
         else:
             (_, extension) = os.path.splitext(path)
 
-            if extension == ".gz":
-                #return gzip.open(path, self._mode)
+            if extension == '.gz':
                 return LazyFile(gzip.open, path, self._mode)
-            if extension == ".bz2":
+            if extension == '.bz2':
                 return LazyFile(bz2.BZ2File, path, self._mode)
-                #return bz2.BZ2File(path, self._mode)
             else:
                 return LazyFile(open, path, self._mode)
 
