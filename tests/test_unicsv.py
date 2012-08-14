@@ -8,6 +8,96 @@ import unittest
 
 from csvkit import unicsv
 
+class TestUnicodeCSVReader(unittest.TestCase):
+    def test_utf8(self):
+        with open('examples/test_utf8.csv') as f:
+            reader = unicsv.UnicodeCSVReader(f, encoding='utf-8')
+            self.assertEqual(reader.next(), ['a', 'b', 'c'])
+            self.assertEqual(reader.next(), ['1', '2', '3'])
+            self.assertEqual(reader.next(), ['4', '5', u'ʤ'])
+
+    def test_latin1(self):
+        with open('examples/test_latin1.csv') as f:
+            reader = unicsv.UnicodeCSVReader(f, encoding='latin1')
+            self.assertEqual(reader.next(), ['a', 'b', 'c'])
+            self.assertEqual(reader.next(), ['1', '2', '3'])
+            self.assertEqual(reader.next(), ['4', '5', u'©'])
+
+    def test_utf16_big(self):
+        with open('examples/test_utf16_big.csv') as f:
+            reader = unicsv.UnicodeCSVReader(f, encoding='utf-16')
+            self.assertEqual(reader.next(), ['a', 'b', 'c'])
+            self.assertEqual(reader.next(), ['1', '2', '3'])
+            self.assertEqual(reader.next(), ['4', '5', u'ʤ'])
+
+    def test_utf16_little(self):
+        with open('examples/test_utf16_little.csv') as f:
+            reader = unicsv.UnicodeCSVReader(f, encoding='utf-16')
+            self.assertEqual(reader.next(), ['a', 'b', 'c'])
+            self.assertEqual(reader.next(), ['1', '2', '3'])
+            self.assertEqual(reader.next(), ['4', '5', u'ʤ'])
+
+class TestUnicodeCSVWriter(unittest.TestCase):
+    def test_utf8(self):
+        output = StringIO()
+        writer = unicsv.UnicodeCSVWriter(output, encoding='utf-8')
+        self.assertEqual(writer._eight_bit, True)
+        writer.writerow(['a', 'b', 'c'])
+        writer.writerow(['1', '2', '3'])
+        writer.writerow(['4', '5', u'ʤ'])
+
+        written = StringIO(output.getvalue())
+
+        reader = unicsv.UnicodeCSVReader(written, encoding='utf-8')
+        self.assertEqual(reader.next(), ['a', 'b', 'c'])
+        self.assertEqual(reader.next(), ['1', '2', '3'])
+        self.assertEqual(reader.next(), ['4', '5', u'ʤ'])
+
+    def test_latin1(self):
+        output = StringIO()
+        writer = unicsv.UnicodeCSVWriter(output, encoding='latin1')
+        self.assertEqual(writer._eight_bit, True)
+        writer.writerow(['a', 'b', 'c'])
+        writer.writerow(['1', '2', '3'])
+        writer.writerow(['4', '5', u'©'])
+
+        written = StringIO(output.getvalue())
+
+        reader = unicsv.UnicodeCSVReader(written, encoding='latin1')
+        self.assertEqual(reader.next(), ['a', 'b', 'c'])
+        self.assertEqual(reader.next(), ['1', '2', '3'])
+        self.assertEqual(reader.next(), ['4', '5', u'©'])
+
+    def test_utf16_big(self):
+        output = StringIO()
+        writer = unicsv.UnicodeCSVWriter(output, encoding='utf-16-be')
+        self.assertEqual(writer._eight_bit, False)
+        writer.writerow(['a', 'b', 'c'])
+        writer.writerow(['1', '2', '3'])
+        writer.writerow(['4', '5', u'ʤ'])
+
+        written = StringIO(output.getvalue())
+
+        reader = unicsv.UnicodeCSVReader(written, encoding='utf-16-be')
+        self.assertEqual(reader.next(), ['a', 'b', 'c'])
+        self.assertEqual(reader.next(), ['1', '2', '3'])
+        self.assertEqual(reader.next(), ['4', '5', u'\u02A4'])
+
+    def test_utf16_little(self):
+        output = StringIO()
+        writer = unicsv.UnicodeCSVWriter(output, encoding='utf-16-le')
+        self.assertEqual(writer._eight_bit, False)
+        writer.writerow(['a', 'b', 'c'])
+        writer.writerow(['1', '2', '3'])
+        writer.writerow(['4', '5', u'ʤ'])
+
+        written = StringIO(output.getvalue())
+
+        reader = unicsv.UnicodeCSVReader(written, encoding='utf-16-le')
+        self.assertEqual(reader.next(), ['a', 'b', 'c'])
+        self.assertEqual(reader.next(), ['1', '2', '3'])
+        self.assertEqual(reader.next(), ['4', '5', u'\u02A4'])
+
 class TestUnicodeCSVDictReader(unittest.TestCase):
     def setUp(self):
         self.f = open('examples/dummy.csv')

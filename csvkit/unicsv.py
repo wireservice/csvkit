@@ -11,6 +11,8 @@ from cStringIO import StringIO
 
 from csvkit.exceptions import FieldSizeLimitError
 
+EIGHT_BIT_ENCODINGS = ['utf-8', 'u8', 'utf', 'utf8', 'latin-1', 'iso-8859-1', 'iso8859-1', '8859', 'cp819', 'latin', 'latin1', 'l1']
+
 class UTF8Recoder(object):
     """
     Iterator that reads an encoded stream and reencodes the input to UTF-8.
@@ -58,25 +60,37 @@ class UnicodeCSVReader(object):
 class UnicodeCSVWriter(object):
     """
     A CSV writer which will write rows to a file in the specified encoding.
+
+    NB: Optimized so that eight-bit encodings skip re-encoding. See:
+        https://github.com/onyxfish/csvkit/issues/175
     """
     def __init__(self, f, encoding='utf-8', **kwargs):
-        # Redirect output to a queue
-        self.queue = StringIO()
-        self.writer = csv.writer(self.queue, **kwargs)
-        self.stream = f
-        self.encoder = codecs.getincrementalencoder(encoding)()
+        self.encoding = encoding
+        self._eight_bit = (self.encoding.lower().replace('_', '-') in EIGHT_BIT_ENCODINGS)
+
+        if self._eight_bit:
+            self.writer = csv.writer(f, **kwargs)
+        else:
+            # Redirect output to a queue for reencoding
+            self.queue = StringIO()
+            self.writer = csv.writer(self.queue, **kwargs)
+            self.stream = f
+            self.encoder = codecs.getincrementalencoder(encoding)()
 
     def writerow(self, row):
-        self.writer.writerow([unicode(s if s != None else '').encode('utf-8') for s in row])
-        # Fetch UTF-8 output from the queue ...
-        data = self.queue.getvalue()
-        data = data.decode('utf-8')
-        # ... and reencode it into the target encoding
-        data = self.encoder.encode(data)
-        # write to the target stream
-        self.stream.write(data)
-        # empty queue
-        self.queue.truncate(0)
+        if self._eight_bit:
+            self.writer.writerow([unicode(s if s != None else '').encode(self.encoding) for s in row])
+        else:
+            self.writer.writerow([unicode(s if s != None else '').encode('utf-8') for s in row])
+            # Fetch UTF-8 output from the queue...
+            data = self.queue.getvalue()
+            data = data.decode('utf-8')
+            # ...and reencode it into the target encoding
+            data = self.encoder.encode(data)
+            # write to the file 
+            self.stream.write(data)
+            # empty the queue
+            self.queue.truncate(0)
 
     def writerows(self, rows):
         for row in rows:

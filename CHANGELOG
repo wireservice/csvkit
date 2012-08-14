@@ -1,6 +1,7 @@
 0.4.5
 -----
 
+* Optimize writing of eight bit codecs. (#175)
 * Created csvpy. (#44)
 * Support --not-columns for excluding columns. (#137)
 * Add Jan Schulz to AUTHORS file. 
