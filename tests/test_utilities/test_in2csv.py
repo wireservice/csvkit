@@ -15,3 +15,4 @@ class TestIn2CSV(unittest.TestCase):
         
         target_output = open('examples/testxls_converted.csv', 'r').read()
         self.assertEqual(output_file.getvalue(), target_output)
+
