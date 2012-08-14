@@ -31,19 +31,21 @@ setup(
         'csvkit.convert',
         'csvkit.utilities'
     ],
-    entry_points =  {"console_scripts": [
-        'csvcut = csvkit.utilities.csvcut:launch_new_instance',
-        'in2csv = csvkit.utilities.in2csv:launch_new_instance',
-        'csvsql = csvkit.utilities.csvsql:launch_new_instance',
-        'csvclean = csvkit.utilities.csvclean:launch_new_instance',
-        'csvstat = csvkit.utilities.csvstat:launch_new_instance',
-        'csvlook = csvkit.utilities.csvlook:launch_new_instance',
-        'csvjoin = csvkit.utilities.csvjoin:launch_new_instance',
-        'csvstack = csvkit.utilities.csvstack:launch_new_instance',
-        'csvsort = csvkit.utilities.csvsort:launch_new_instance',
-        'csvgrep = csvkit.utilities.csvgrep:launch_new_instance',
-        'csvjson = csvkit.utilities.csvjson:launch_new_instance']
-},
+    entry_points ={
+        'console_scripts': [
+            'csvcut = csvkit.utilities.csvcut:launch_new_instance',
+            'in2csv = csvkit.utilities.in2csv:launch_new_instance',
+            'csvsql = csvkit.utilities.csvsql:launch_new_instance',
+            'csvclean = csvkit.utilities.csvclean:launch_new_instance',
+            'csvstat = csvkit.utilities.csvstat:launch_new_instance',
+            'csvlook = csvkit.utilities.csvlook:launch_new_instance',
+            'csvjoin = csvkit.utilities.csvjoin:launch_new_instance',
+            'csvstack = csvkit.utilities.csvstack:launch_new_instance',
+            'csvsort = csvkit.utilities.csvsort:launch_new_instance',
+            'csvgrep = csvkit.utilities.csvgrep:launch_new_instance',
+            'csvjson = csvkit.utilities.csvjson:launch_new_instance'
+        ]
+    },
     install_requires = [
         'argparse==1.2.1',
         'xlrd==0.7.1',
