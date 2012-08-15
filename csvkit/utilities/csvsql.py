@@ -30,6 +30,8 @@ class CSVSQL(CSVKitUtility):
             help='Skip creating a table. Only valid when --insert is specified.')
         self.argparser.add_argument('--blanks', dest='blanks', action='store_true',
             help='Do not coerce empty strings to NULL values.')
+        self.argparser.add_argument('--no-infer', dest='no_infer',
+            help='A comma separated list of column indices or names to skip type inference. Specified columns will be treated as strings.')
 
     def main(self):
         # Ensure we're handling a list, even if it's just one file
