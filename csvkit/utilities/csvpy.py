@@ -1,35 +1,30 @@
 #!/usr/bin/env python
 
-import sys
-
 from csvkit import CSVKitReader
-from csvkit.cli import CSVKitUtility 
+from csvkit.cli import CSVFileType, CSVKitUtility 
 
 class CSVPy(CSVKitUtility):
     description = 'Load a CSV file into a CSVKitReader object and then drops into a Python shell.'
-    override_flags = 'l'
-
-    welcome_message = 'Welcome! Your data has been loaded in a CSVKitReader object named "reader".'
+    override_flags = ['l', 'f', 'zero']
 
     def add_arguments(self):
-        pass
+        self.argparser.add_argument('file', metavar="FILE", type=CSVFileType(),
+            help='The CSV file to operate on.')
 
     def main(self):
-        if self.args.file == sys.stdin:
-            raise NotImplementedError('csvpy does not currently support input via pipes. Sorry!')
-        else:
-            # Attempt reading filename, will cause lazy loader to access file and raise error if it does not exist
-            filename = self.args.file.name
+        # Attempt reading filename, will cause lazy loader to access file and raise error if it does not exist
+        filename = self.args.file.name
+        welcome_message = 'Welcome! "%s" has been loaded in a CSVKitReader object named "reader".' % filename
 
         reader = CSVKitReader(self.args.file, **self.reader_kwargs)
 
         try:
             from IPython.frontend.terminal.embed import InteractiveShellEmbed
-            ipy = InteractiveShellEmbed(banner1=self.welcome_message)
+            ipy = InteractiveShellEmbed(banner1=welcome_message)
             ipy()
         except ImportError:
             import code
-            code.interact(self.welcome_message, local={ 'reader': reader })        
+            code.interact(welcome_message, local={ 'reader': reader })        
 
 def launch_new_instance():
     utility = CSVPy()

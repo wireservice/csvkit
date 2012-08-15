@@ -8,14 +8,13 @@ Description
 Loads a CSV file into a :doc:`CSVKitReader </api/csvkit>` object and then drops into a Python shell so the user can inspect the data however they see fit::
 
     usage: csvpy [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                 [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-v] [--zero]
-                 [FILE]
+                 [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-v]
+                 FILE
 
     Load a CSV file into a CSVKitReader object and then drops into a Python shell.
 
     positional arguments:
-      FILE                  The CSV file to operate on. If omitted, will accept
-                            input on STDIN.
+      FILE                  The CSV file to operate on.
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -24,7 +23,7 @@ This utility will automatically use the IPython shell if it is installed, otherw
 
 .. note::
 
-    csvpy does not currently accept input on STDIN. This should be fixed in a future release.
+    Due to platform limitations, csvpy does not accept file input on STDIN. 
 
 Also see: :doc:`common_arguments`.
 
