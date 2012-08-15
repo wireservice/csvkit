@@ -8,7 +8,9 @@ Description
 Converts a CSV file into JSON or GeoJSON (depending on flags)::
 
     usage: csvjson [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-e ENCODING] [-v] [-l] [-i INDENT] [-k KEY]
+                   [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-v] [-l]
+                   [--zero] [-i INDENT] [-k KEY] [--lat LAT] [--lon LON]
+                   [--crs CRS]
                    [FILE]
 
     Convert a CSV file into JSON (or GeoJSON).
@@ -32,7 +34,9 @@ Converts a CSV file into JSON or GeoJSON (depending on flags)::
       --lon LON             A column index or name containing a longitude. Output
                             will be GeoJSON instead of JSON. Only valid if --lat
                             is also specified.
-
+      --crs CRS             A coordinate reference system string to be included
+                            with GeoJSON output. Only valid if --lat and --lon are
+                            also specified.
 
 Also see: :doc:`common_arguments`.
 
@@ -65,7 +69,7 @@ Results in a JSON document like::
 
 Converting locations of public art into GeoJSON::
 
-    $ csvjson --lat latitude --lon longitude --k slug -i 4 examples/test_geo.csv
+    $ csvjson --lat latitude --lon longitude --k slug --crs EPSG:4269 -i 4 examples/test_geo.csv
 
 Results in a GeoJSON document like::
 
@@ -77,6 +81,12 @@ Results in a GeoJSON document like::
             -95.250699, 
             32.351434
         ], 
+        "crs": {
+            "type": "name", 
+            "properties": {
+                "name": "EPSG:4269"
+            }
+        }, 
         "features": [
             {
                 "geometry": {
@@ -103,3 +113,4 @@ Results in a GeoJSON document like::
         [...]
         ]
     }
+

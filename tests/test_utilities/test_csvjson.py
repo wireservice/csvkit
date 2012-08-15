@@ -53,6 +53,7 @@ class TestCSVJSON(unittest.TestCase):
         geojson = json.loads(output_file.getvalue())
 
         self.assertEqual(geojson['type'], 'FeatureCollection')
+        self.assertFalse('crs' in geojson)
         self.assertEqual(geojson['bbox'], [-95.334619, 32.299076986939205, -95.250699, 32.351434])
         self.assertEqual(len(geojson['features']), 17)
 
@@ -77,6 +78,7 @@ class TestCSVJSON(unittest.TestCase):
         geojson = json.loads(output_file.getvalue())
 
         self.assertEqual(geojson['type'], 'FeatureCollection')
+        self.assertFalse('crs' in geojson)
         self.assertEqual(geojson['bbox'], [-95.334619, 32.299076986939205, -95.250699, 32.351434])
         self.assertEqual(len(geojson['features']), 17)
 
@@ -90,4 +92,23 @@ class TestCSVJSON(unittest.TestCase):
             self.assertEqual(len(geometry['coordinates']), 2)
             self.assertTrue(isinstance(geometry['coordinates'][0], float))
             self.assertTrue(isinstance(geometry['coordinates'][1], float))
+
+    def test_geojson_with_crs(self):
+        args = ['--lat', 'latitude', '--lon', 'longitude', '--crs', 'EPSG:4269', 'examples/test_geo.csv']
+        output_file = StringIO.StringIO()
+        
+        utility = CSVJSON(args, output_file)
+        utility.main()
+
+        geojson = json.loads(output_file.getvalue())
+
+        self.assertEqual(geojson['type'], 'FeatureCollection')
+        self.assertTrue('crs' in geojson)
+        self.assertEqual(geojson['bbox'], [-95.334619, 32.299076986939205, -95.250699, 32.351434])
+        self.assertEqual(len(geojson['features']), 17)
+
+        crs = geojson['crs']
+
+        self.assertEqual(crs['type'], 'name')
+        self.assertEqual(crs['properties']['name'], 'EPSG:4269')
 

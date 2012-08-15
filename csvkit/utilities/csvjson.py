@@ -19,6 +19,8 @@ class CSVJSON(CSVKitUtility):
             help='A column index or name containing a latitude. Output will be GeoJSON instead of JSON. Only valid if --lon is also specified.')
         self.argparser.add_argument('--lon', dest='lon', type=str, default=None,
             help='A column index or name containing a longitude. Output will be GeoJSON instead of JSON. Only valid if --lat is also specified.')
+        self.argparser.add_argument('--crs', dest='crs', type=str, default=None,
+            help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
 
     def main(self):
         """
@@ -30,11 +32,15 @@ class CSVJSON(CSVKitUtility):
         if self.args.lon and not self.args.lat:
             self.argparser.error('--lat is required whenever --lon is specified.')
 
+        if self.args.crs and not self.args.lat:
+            self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
+
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         column_names = rows.next()
 
         stream = codecs.getwriter('utf-8')(self.output_file)
 
+        # GeoJSON
         if self.args.lat and self.args.lon:
             features = []
             min_lon = None
@@ -96,6 +102,15 @@ class CSVJSON(CSVKitUtility):
                 'bbox': [min_lon, min_lat, max_lon, max_lat],
                 'features': features 
             }
+
+            if self.args.crs:
+                output['crs'] = {
+                    'type': 'name',
+                    'properties': {
+                        'name': self.args.crs
+                    }
+                }
+        # Keyed JSON
         elif self.args.key:
             output = {}
             
@@ -107,6 +122,7 @@ class CSVJSON(CSVKitUtility):
                     raise NonUniqueKeyColumnException('Value %s is not unique in the key column.' % unicode(k))
 
                 output[k] = row_dict
+        # Boring JSON
         else:
             output = [dict(zip(column_names, row)) for row in rows]
 
