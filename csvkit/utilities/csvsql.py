@@ -35,6 +35,9 @@ class CSVSQL(CSVKitUtility):
         # Ensure we're handling a list, even if it's just one file
         if not isinstance(self.args.files, list):
             self.args.files = [self.args.files]
+        else:
+            if self.args.table_name:
+                self.argparser.error('The --table argument is only allowed when specifying a single file.')
 
         for f in self.args.files:
             if self.args.table_name:
