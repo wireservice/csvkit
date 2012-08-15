@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from csvkit import CSVKitReader
+from csvkit import CSVKitReader, CSVKitDictReader
 from csvkit.cli import CSVFileType, CSVKitUtility 
 
 class CSVPy(CSVKitUtility):
@@ -10,13 +10,21 @@ class CSVPy(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument('file', metavar="FILE", type=CSVFileType(),
             help='The CSV file to operate on.')
+        self.argparser.add_argument('--dict', dest='as_dict', action='store_true',
+            help='Use CSVKitDictReader instead of CSVKitReader.')
 
     def main(self):
         # Attempt reading filename, will cause lazy loader to access file and raise error if it does not exist
         filename = self.args.file.name
-        welcome_message = 'Welcome! "%s" has been loaded in a CSVKitReader object named "reader".' % filename
 
-        reader = CSVKitReader(self.args.file, **self.reader_kwargs)
+        if self.args.as_dict:
+            reader_class = CSVKitDictReader
+        else:
+            reader_class = CSVKitReader
+
+        reader = reader_class(self.args.file, **self.reader_kwargs)
+        
+        welcome_message = 'Welcome! "%s" has been loaded in a %s object named "reader".' % (filename, reader_class.__name__)
 
         try:
             from IPython.frontend.terminal.embed import InteractiveShellEmbed

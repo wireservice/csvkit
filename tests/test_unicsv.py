@@ -114,6 +114,20 @@ class TestUnicodeCSVDictReader(unittest.TestCase):
             u'c': u'3'
         })
 
+    def test_latin1(self):
+        with open('examples/test_latin1.csv') as f:
+            reader = unicsv.UnicodeCSVDictReader(f, encoding='latin1')
+            self.assertEqual(reader.next(), {
+                u'a': u'1',
+                u'b': u'2',
+                u'c': u'3'
+            })
+            self.assertEqual(reader.next(), {
+                u'a': u'4',
+                u'b': u'5',
+                u'c': u'©'
+            })
+
 class TestUnicodeCSVDictWriter(unittest.TestCase):
     def setUp(self):
         self.output = StringIO()

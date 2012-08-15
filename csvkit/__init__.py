@@ -10,8 +10,7 @@ from csvkit import unicsv
 
 class CSVKitReader(unicsv.UnicodeCSVReader):
     """
-    A unicode-aware CSV reader. Currently adds nothing to :class:`csvkit.unicsv.UnicodeCSVReader`, but might
-    someday.
+    A unicode-aware CSV reader. Currently adds nothing to :class:`csvkit.unicsv.UnicodeCSVReader`, but might someday.
     """
     pass
 
@@ -48,8 +47,7 @@ class CSVKitWriter(unicsv.UnicodeCSVWriter):
 
 class CSVKitDictReader(unicsv.UnicodeCSVDictReader):
     """
-    A unicode-aware CSV DictReader. Currently adds nothing to :class:`csvkit.unicsv.UnicodeCSVWriter`, but might
-    someday.
+    A unicode-aware CSV DictReader. Currently adds nothing to :class:`csvkit.unicsv.UnicodeCSVWriter`, but might someday.
     """
     pass
 

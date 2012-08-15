@@ -102,8 +102,14 @@ class UnicodeCSVDictReader(csv.DictReader):
     of :func:`csv.reader`.
     """
     def __init__(self, f, fieldnames=None, restkey=None, restval=None, *args, **kwargs):
+        reader = UnicodeCSVReader(f, *args, **kwargs)
+
+        if 'encoding' in kwargs:
+            kwargs.pop('encoding')
+
         csv.DictReader.__init__(self, f, fieldnames, restkey, restval, *args, **kwargs)
-        self.reader = UnicodeCSVReader(f, *args, **kwargs)
+
+        self.reader = reader 
 
 class UnicodeCSVDictWriter(csv.DictWriter):
     """

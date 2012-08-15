@@ -38,6 +38,9 @@ class LazyFile(object):
 
         return getattr(self.f, name)
 
+    def __iter__(self):
+        return self
+
     def close(self):
         self.f.close()
         self.f = None
