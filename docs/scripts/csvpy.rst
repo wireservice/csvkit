@@ -34,7 +34,7 @@ Examples
 Basic use::
 
     $ csvpy examples/dummy.csv
-    Welcome! Your data has been loaded in a CSVKitReader object named "reader".
+    Welcome! "examples/dummy.csv" has been loaded in a CSVKitReader object named "reader".
     >>> reader.next()
     [u'a', u'b', u'c']
 
