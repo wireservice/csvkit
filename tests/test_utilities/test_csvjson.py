@@ -63,8 +63,8 @@ class TestCSVJSON(unittest.TestCase):
             geometry = feature['geometry']
 
             self.assertEqual(len(geometry['coordinates']), 2)
-            self.assertIsInstance(geometry['coordinates'][0], float)
-            self.assertIsInstance(geometry['coordinates'][1], float)
+            self.assertTrue(isinstance(geometry['coordinates'][0], float))
+            self.assertTrue(isinstance(geometry['coordinates'][1], float))
 
     def test_geojson_with_id(self):
         args = ['--lat', 'latitude', '--lon', 'longitude', '-k', 'slug', 'examples/test_geo.csv']
@@ -86,6 +86,6 @@ class TestCSVJSON(unittest.TestCase):
             geometry = feature['geometry']
 
             self.assertEqual(len(geometry['coordinates']), 2)
-            self.assertIsInstance(geometry['coordinates'][0], float)
-            self.assertIsInstance(geometry['coordinates'][1], float)
+            self.assertTrue(isinstance(geometry['coordinates'][0], float))
+            self.assertTrue(isinstance(geometry['coordinates'][1], float))
 
