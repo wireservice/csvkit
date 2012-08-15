@@ -4,28 +4,82 @@ import json
 import codecs
 
 from csvkit import CSVKitReader
-from csvkit.cli import CSVKitUtility
+from csvkit.cli import CSVKitUtility, match_column_identifier
 from csvkit.exceptions import NonUniqueKeyColumnException
 
 class CSVJSON(CSVKitUtility):
-    description = 'Convert a CSV file into JSON.'
+    description = 'Convert a CSV file into JSON (or GeoJSON).'
 
     def add_arguments(self):
         self.argparser.add_argument('-i', '--indent', dest='indent', type=int, default=None,
             help='Indent the output JSON this many spaces. Disabled by default.')
         self.argparser.add_argument('-k', '--key', dest='key', type=str, default=None,
-            help='Output JSON as an array of objects keyed by a given column, KEY, rather than as a list. All values in the column must be unique.')
+            help='Output JSON as an array of objects keyed by a given column, KEY, rather than as a list. All values in the column must be unique. If --lat and --lon are also specified, this column will be used as GeoJSON Feature ID.')
+        self.argparser.add_argument('--lat', dest='lat', type=str, default=None,
+            help='A column index or name containing a latitude. Output will be GeoJSON instead of JSON. Only valid if --lon is also specified.')
+        self.argparser.add_argument('--lon', dest='lon', type=str, default=None,
+            help='A column index or name containing a longitude. Output will be GeoJSON instead of JSON. Only valid if --lat is also specified.')
 
     def main(self):
         """
         Convert CSV to JSON. 
         """
+        if self.args.lat and not self.args.lon:
+            self.argparser.error('--lon is required whenever --lat is specified.')
+
+        if self.args.lon and not self.args.lat:
+            self.argparser.error('--lat is required whenever --lon is specified.')
+
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         column_names = rows.next()
 
         stream = codecs.getwriter('utf-8')(self.output_file)
 
-        if self.args.key:
+        if self.args.lat and self.args.lon:
+            features = []
+
+            lat_column = match_column_identifier(column_names, self.args.lat, self.args.zero_based)
+            lon_column = match_column_identifier(column_names, self.args.lon, self.args.zero_based)
+
+            if self.args.key:
+                id_column = match_column_identifier(column_names, self.args.key, self.args.zero_based)
+            else:
+                id_column = None
+
+            for row in rows:
+                feature = { 'type': 'Feature' }
+                properties = {}
+                geoid = None
+                lat = None
+                lon = None
+
+                for i, c in enumerate(row):
+                    if i == lat_column:
+                        lat = float(c)
+                    elif i == lon_column:
+                        lon = float(c)
+                    elif id_column is not None and i == id_column:
+                        geoid = c
+                    else:
+                        properties[column_names[i]] = c
+
+                if id_column is not None:
+                    feature['id'] = geoid
+
+                feature['geometry'] = {
+                    'type': 'Point',
+                    'coordinates': [lon, lat]
+                }
+
+                feature['properties'] = properties
+
+                features.append(feature)
+
+            output = {
+                'type': 'FeatureCollection',
+                'features': features 
+            }
+        elif self.args.key:
             output = {}
             
             for row in rows:

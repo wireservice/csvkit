@@ -5,13 +5,13 @@ csvjson
 Description
 ===========
 
-Converts a CSV file into JSON::
+Converts a CSV file into JSON or GeoJSON (depending on flags)::
 
     usage: csvjson [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                    [-p ESCAPECHAR] [-e ENCODING] [-v] [-l] [-i INDENT] [-k KEY]
                    [FILE]
 
-    Convert a CSV file into JSON.
+    Convert a CSV file into JSON (or GeoJSON).
 
     positional arguments:
       FILE                  The CSV file to operate on. If omitted, will accept
@@ -23,7 +23,15 @@ Converts a CSV file into JSON::
                             default.
       -k KEY, --key KEY     Output JSON as an array of objects keyed by a given
                             column, KEY, rather than as a list. All values in the
-                            column must be unique.
+                            column must be unique. If --lat and --lon are also
+                            specified, this column will be used as GeoJSON Feature
+                            ID.
+      --lat LAT             A column index or name containing a latitude. Output
+                            will be GeoJSON instead of JSON. Only valid if --lon
+                            is also specified.
+      --lon LON             A column index or name containing a longitude. Output
+                            will be GeoJSON instead of JSON. Only valid if --lat
+                            is also specified.
 
 
 Also see: :doc:`common_arguments`.
@@ -55,3 +63,37 @@ Results in a JSON document like::
         [...]
     }
 
+Converting locations of public art into GeoJSON::
+
+    $ csvjson --lat latitude --lon longitude --k slug -i 4 examples/test_geo.csv
+
+Results in a GeoJSON document like::
+
+    {
+        "type": "FeatureCollection", 
+        "features": [
+            {
+                "geometry": {
+                    "type": "Point", 
+                    "coordinates": [
+                        -95.30181, 
+                        32.35066
+                    ]
+                }, 
+                "type": "Feature", 
+                "id": "dcl", 
+                "properties": {
+                    "photo_credit": "", 
+                    "description": "In addition to being the only coffee shop in downtown Tyler, DCL also features regular exhibitions of work by local artists.", 
+                    "artist": "", 
+                    "title": "Downtown Coffee Lounge", 
+                    "install_date": "", 
+                    "address": "200 West Erwin Street", 
+                    "last_seen_date": "3/30/12", 
+                    "type": "Gallery", 
+                    "photo_url": ""
+                }
+            },
+        [...]
+        ]
+    }

@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
+import json
 import StringIO
 import unittest
 
 from csvkit.exceptions import NonUniqueKeyColumnException
 from csvkit.utilities.csvjson import CSVJSON
 
-class TestCSVStack(unittest.TestCase):
+class TestCSVJSON(unittest.TestCase):
     def test_simple(self):
         args = ['examples/dummy.csv']
         output_file = StringIO.StringIO()
@@ -41,3 +42,50 @@ class TestCSVStack(unittest.TestCase):
         utility = CSVJSON(args, output_file)
 
         self.assertRaises(NonUniqueKeyColumnException, utility.main)
+
+    def test_geojson(self):
+        args = ['--lat', 'latitude', '--lon', 'longitude', 'examples/test_geo.csv']
+        output_file = StringIO.StringIO()
+        
+        utility = CSVJSON(args, output_file)
+        utility.main()
+
+        geojson = json.loads(output_file.getvalue())
+
+        self.assertEqual(geojson['type'], 'FeatureCollection')
+        self.assertEqual(len(geojson['features']), 17)
+
+        for feature in geojson['features']:
+            self.assertEqual(feature['type'], 'Feature')
+            self.assertFalse('id' in feature)
+            self.assertEqual(len(feature['properties']), 10)
+            
+            geometry = feature['geometry']
+
+            self.assertEqual(len(geometry['coordinates']), 2)
+            self.assertIsInstance(geometry['coordinates'][0], float)
+            self.assertIsInstance(geometry['coordinates'][1], float)
+
+    def test_geojson_with_id(self):
+        args = ['--lat', 'latitude', '--lon', 'longitude', '-k', 'slug', 'examples/test_geo.csv']
+        output_file = StringIO.StringIO()
+        
+        utility = CSVJSON(args, output_file)
+        utility.main()
+
+        geojson = json.loads(output_file.getvalue())
+
+        self.assertEqual(geojson['type'], 'FeatureCollection')
+        self.assertEqual(len(geojson['features']), 17)
+
+        for feature in geojson['features']:
+            self.assertEqual(feature['type'], 'Feature')
+            self.assertTrue('id' in feature)
+            self.assertEqual(len(feature['properties']), 9)
+            
+            geometry = feature['geometry']
+
+            self.assertEqual(len(geometry['coordinates']), 2)
+            self.assertIsInstance(geometry['coordinates'][0], float)
+            self.assertIsInstance(geometry['coordinates'][1], float)
+
