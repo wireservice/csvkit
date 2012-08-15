@@ -71,6 +71,12 @@ Results in a GeoJSON document like::
 
     {
         "type": "FeatureCollection", 
+        "bbox": [
+            -95.334619, 
+            32.299076986939205, 
+            -95.250699, 
+            32.351434
+        ], 
         "features": [
             {
                 "geometry": {

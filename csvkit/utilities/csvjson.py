@@ -37,6 +37,10 @@ class CSVJSON(CSVKitUtility):
 
         if self.args.lat and self.args.lon:
             features = []
+            min_lon = None
+            min_lat = None
+            max_lon = None
+            max_lat = None
 
             lat_column = match_column_identifier(column_names, self.args.lat, self.args.zero_based)
             lon_column = match_column_identifier(column_names, self.args.lon, self.args.zero_based)
@@ -56,8 +60,20 @@ class CSVJSON(CSVKitUtility):
                 for i, c in enumerate(row):
                     if i == lat_column:
                         lat = float(c)
+
+                        if min_lat is None or lat < min_lat:
+                            min_lat = lat
+
+                        if max_lat is None or lat > max_lat:
+                            max_lat = lat
                     elif i == lon_column:
                         lon = float(c)
+
+                        if min_lon is None or lon < min_lon:
+                            min_lon = lon
+
+                        if max_lon is None or lon > max_lon:
+                            max_lon = lon
                     elif id_column is not None and i == id_column:
                         geoid = c
                     else:
@@ -77,6 +93,7 @@ class CSVJSON(CSVKitUtility):
 
             output = {
                 'type': 'FeatureCollection',
+                'bbox': [min_lon, min_lat, max_lon, max_lat],
                 'features': features 
             }
         elif self.args.key:

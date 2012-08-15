@@ -53,6 +53,7 @@ class TestCSVJSON(unittest.TestCase):
         geojson = json.loads(output_file.getvalue())
 
         self.assertEqual(geojson['type'], 'FeatureCollection')
+        self.assertEqual(geojson['bbox'], [-95.334619, 32.299076986939205, -95.250699, 32.351434])
         self.assertEqual(len(geojson['features']), 17)
 
         for feature in geojson['features']:
@@ -76,6 +77,7 @@ class TestCSVJSON(unittest.TestCase):
         geojson = json.loads(output_file.getvalue())
 
         self.assertEqual(geojson['type'], 'FeatureCollection')
+        self.assertEqual(geojson['bbox'], [-95.334619, 32.299076986939205, -95.250699, 32.351434])
         self.assertEqual(len(geojson['features']), 17)
 
         for feature in geojson['features']:
