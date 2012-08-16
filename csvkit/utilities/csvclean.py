@@ -24,7 +24,7 @@ class CSVClean(CSVKitUtility):
             
             if checker.errs:
                 for e in checker.errs:
-                    self.output_file.write('Line %i: %s\n' % (e.line_number,e.msg))
+                    self.output_file.write('Line %i: %s\n' % (e.line_number, e.msg))
             else:
                 self.output_file.write('No errors.\n')
             
@@ -48,10 +48,10 @@ class CSVClean(CSVKitUtility):
                 err_header = ['line_number', 'msg']
                 err_header.extend(checker.column_names)
                 err_file.writerow(err_header)
+                err_count = len(checker.errs)
 
                 for e in checker.errs:
                     err_file.writerow(self._format_error_row(e))
-                    err_count = len(checker.errs)
 
                 self.output_file.write('%i error%s logged to %s\n' % (err_count,'' if err_count == 1 else 's', err_filename))
             else:

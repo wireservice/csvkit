@@ -66,7 +66,6 @@ class RowChecker(object):
         self.reader = reader
         self.column_names = reader.next()
 
-        self.input_rows = 1 
         self.errs = []
         self.rows_joined = 0
         self.joins = 0
@@ -75,13 +74,13 @@ class RowChecker(object):
         """
         A generator which yields rows which are ready to write to output.
         """
+        line_number = self.reader.line_num
+        
         for row in self.reader:
-            self.input_rows += 1 
-            line_number = self.input_rows + 1 # add one for 1-based counting
 
             try:
                 if len(row) != len(self.column_names):
-                    raise LengthMismatchError(line_number,row,len(self.column_names))
+                    raise LengthMismatchError(line_number, row, len(self.column_names))
 
                 yield row
             except LengthMismatchError, e:
@@ -111,3 +110,5 @@ class RowChecker(object):
             except CSVTestException, e:
                 self.errs.append(e)
         
+            line_number = self.reader.line_num
+ 
