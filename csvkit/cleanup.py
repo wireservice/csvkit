@@ -77,7 +77,6 @@ class RowChecker(object):
         line_number = self.reader.line_num
         
         for row in self.reader:
-
             try:
                 if len(row) != len(self.column_names):
                     raise LengthMismatchError(line_number, row, len(self.column_names))

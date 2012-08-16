@@ -2,6 +2,7 @@
 
 from cStringIO import StringIO
 import os
+from time import sleep
 import unittest
 
 from csvkit.utilities.csvclean import CSVClean
@@ -31,6 +32,7 @@ class TestCSVClean(unittest.TestCase):
         # Cleanup
         os.remove('examples/bad_err.csv')
         os.remove('examples/bad_out.csv')
+        sleep(0.1)
 
     def test_dry_run(self):
         args = ['-n', 'examples/bad.csv']
