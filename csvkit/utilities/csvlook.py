@@ -31,7 +31,6 @@ class CSVLook(CSVKitUtility):
         self.output_file.write('%s\n' % divider)
 
         for i, row in enumerate(rows):
-            self.input_line_number = i + 1
             output = []
 
             for j, d in enumerate(row):

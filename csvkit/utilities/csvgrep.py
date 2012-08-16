@@ -57,7 +57,6 @@ class CSVGrep(CSVKitUtility):
         filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse=self.args.inverse)
 
         for i, row in enumerate(filter_reader):
-            self.input_line_number = i + 1
             output.writerow(row)
 
 def launch_new_instance():
