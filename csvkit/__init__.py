@@ -74,7 +74,7 @@ class CSVKitDictWriter(unicsv.UnicodeCSVDictWriter):
             self._append_line_number(row)
 
         # Convert embedded Mac line endings to unix style line endings so they get quoted
-        row = dict([(k, v.replace('\r', '\n')) if isinstance(v, basestring) else v for k, v in row.items()])
+        row = dict([(k, v.replace('\r', '\n')) if isinstance(v, basestring) else (k, v) for k, v in row.items()])
 
         unicsv.UnicodeCSVDictWriter.writerow(self, row)
 
