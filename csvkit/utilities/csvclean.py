@@ -22,8 +22,8 @@ class CSVClean(CSVKitUtility):
             for row in checker.checked_rows():
                 pass
             
-            if checker.errs:
-                for e in checker.errs:
+            if checker.errors:
+                for e in checker.errors:
                     self.output_file.write('Line %i: %s\n' % (e.line_number, e.msg))
             else:
                 self.output_file.write('No errors.\n')
@@ -31,40 +31,44 @@ class CSVClean(CSVKitUtility):
             if checker.joins:
                 self.output_file.write('%i rows would have been joined/reduced to %i rows after eliminating expected internal line breaks.\n' % (checker.rows_joined, checker.joins))
         else:
-            base,ext = splitext(self.args.file.name)
+            base, ext = splitext(self.args.file.name)
 
-            cleaned_file = CSVKitWriter(open('%s_out.csv' % base,'w'), **self.writer_kwargs)
+            with open('%s_out.csv' % base,'w') as f:
+                clean_writer = CSVKitWriter(f, **self.writer_kwargs)
 
-            checker = RowChecker(reader)
-            cleaned_file.writerow(checker.column_names)
+                checker = RowChecker(reader)
+                clean_writer.writerow(checker.column_names)
 
-            for row in checker.checked_rows():
-                cleaned_file.writerow(row)
+                for row in checker.checked_rows():
+                    clean_writer.writerow(row)
             
-            if checker.errs:
-                err_filename = '%s_err.csv' % base
-                err_file = CSVKitWriter(open(err_filename, 'w'), **self.writer_kwargs)
+            if checker.errors:
+                error_filename = '%s_err.csv' % base
 
-                err_header = ['line_number', 'msg']
-                err_header.extend(checker.column_names)
-                err_file.writerow(err_header)
-                err_count = len(checker.errs)
+                with open(error_filename, 'w') as f:
+                    error_writer = CSVKitWriter(f, **self.writer_kwargs)
 
-                for e in checker.errs:
-                    err_file.writerow(self._format_error_row(e))
+                    error_header = ['line_number', 'msg']
+                    error_header.extend(checker.column_names)
+                    error_writer.writerow(error_header)
 
-                self.output_file.write('%i error%s logged to %s\n' % (err_count,'' if err_count == 1 else 's', err_filename))
+                    error_count = len(checker.errors)
+
+                    for e in checker.errors:
+                        error_writer.writerow(self._format_error_row(e))
+
+                self.output_file.write('%i error%s logged to %s\n' % (error_count,'' if error_count == 1 else 's', error_filename))
             else:
                 self.output_file.write('No errors.\n')
 
             if checker.joins:
                 self.output_file.write('%i rows were joined/reduced to %i rows after eliminating expected internal line breaks.\n' % (checker.rows_joined, checker.joins))
 
-    def _format_error_row(self, e):
-        err_row = [e.line_number, e.msg]
-        err_row.extend(e.row)
+    def _format_error_row(self, error):
+        row = [error.line_number, error.msg]
+        row.extend(error.row)
 
-        return err_row
+        return row
 
 def launch_new_instance():
     utility = CSVClean()

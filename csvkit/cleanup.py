@@ -66,7 +66,7 @@ class RowChecker(object):
         self.reader = reader
         self.column_names = reader.next()
 
-        self.errs = []
+        self.errors = []
         self.rows_joined = 0
         self.joins = 0
 
@@ -83,9 +83,9 @@ class RowChecker(object):
 
                 yield row
             except LengthMismatchError, e:
-                self.errs.append(e)
+                self.errors.append(e)
 
-                joinable_row_errors = extract_joinable_row_errors(self.errs)
+                joinable_row_errors = extract_joinable_row_errors(self.errors)
                 
                 while joinable_row_errors:
                     fixed_row = join_rows([err.row for err in joinable_row_errors], joiner=' ')
@@ -100,14 +100,14 @@ class RowChecker(object):
                         yield fixed_row
                         
                         for fixed in joinable_row_errors:
-                            self.errs.remove(fixed)
+                            self.errors.remove(fixed)
                         
                         break
 
                     joinable_row_errors = joinable_row_errors[1:] # keep trying in case we're too long because of a straggler
 
             except CSVTestException, e:
-                self.errs.append(e)
+                self.errors.append(e)
         
             line_number = self.reader.line_num
  
