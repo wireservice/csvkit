@@ -66,7 +66,7 @@ Standardize the formatting of a CSV file (quoting, line endings, etc.)::
 
 Fetch csvkit's open issues from the Github API, convert the JSON response into a CSV, and write it to a file::
 
-    $ curl http://github.com/api/v2/json/issues/list/onyxfish/csvkit/open | in2csv -v -k issues > issues.csv 
+    $ curl https://api.github.com/repos/onyxfish/csvkit/issues?state=open | in2csv -f json -v > issues.csv 
 
 Convert a DBase DBF file to an equivalent CSV::
 
