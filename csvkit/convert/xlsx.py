@@ -36,7 +36,11 @@ def xlsx2csv(f, output=None, **kwargs):
     writer = CSVKitWriter(output)
 
     book = load_workbook(f, use_iterators=True)
-    sheet = book.get_active_sheet()
+    if 'sheet' in kwargs:
+        sheetn = kwargs['sheet']
+        sheet = book.get_sheet_by_name(sheetn)
+    else:
+        sheet = book.get_active_sheet()
 
     for i, row in enumerate(sheet.iter_rows()):
         if i == 0:
