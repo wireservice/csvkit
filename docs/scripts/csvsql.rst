@@ -8,7 +8,7 @@ Description
 Generate SQL statements for a CSV file or create execute those statements directly on a database. In the latter case supports both creating tables and inserting data.::
 
     usage: csvsql [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                  [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-v]
+                  [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-H] [-v]
                   [-y SNIFFLIMIT]
                   [-i {access,sybase,sqlite,informix,firebird,mysql,oracle,maxdb,postgresql,mssql}]
                   [--db CONNECTION_STRING] [--insert]

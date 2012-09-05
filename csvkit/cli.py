@@ -177,6 +177,9 @@ class CSVKitUtility(object):
         if 'e' not in self.override_flags:
             self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
                                 help='Specify the encoding the input CSV file.')
+        if 'H' not in self.override_flags:
+            self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
+                                help='Specifies that the input CSV file has no header row.')
         if 'v' not in self.override_flags:
             self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
                                 help='Print detailed tracebacks when errors occur.')
