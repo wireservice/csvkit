@@ -6,6 +6,7 @@ import unittest
 
 from csvkit import CSVKitReader
 from csvkit.utilities.csvsort import CSVSort
+from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
 class TestCSVSort(unittest.TestCase):
     def test_sort_string_reverse(self):
@@ -38,3 +39,16 @@ class TestCSVSort(unittest.TestCase):
 
         self.assertEqual(test_order, new_order)
 
+    def test_invalid_column(self):
+        args = ['-c', '0', 'examples/dummy.csv']
+        output_file = StringIO.StringIO()
+        utility = CSVSort(args, output_file)
+
+        self.assertRaises(ColumnIdentifierError, utility.main)
+
+    def test_invalid_options(self):
+        args = ['-n', '--no-header-row', 'examples/dummy.csv']
+        output_file = StringIO.StringIO()
+        utility = CSVSort(args, output_file)
+
+        self.assertRaises(RequiredHeaderError, utility.main)

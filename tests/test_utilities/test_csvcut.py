@@ -5,6 +5,7 @@ import unittest
 
 from csvkit import CSVKitReader
 from csvkit.utilities.csvcut import CSVCut
+from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
 class TestCSVCut(unittest.TestCase):
     def test_simple(self):
@@ -85,3 +86,16 @@ class TestCSVCut(unittest.TestCase):
         self.assertEqual(reader.next(), ['a'])
         self.assertEqual(reader.next(), ['1'])
 
+    def test_invalid_column(self):
+        args = ['-c', '0', 'examples/dummy.csv']
+        output_file = StringIO.StringIO()
+        utility = CSVCut(args, output_file)
+
+        self.assertRaises(ColumnIdentifierError, utility.main)
+
+    def test_invalid_options(self):
+        args = ['-n', '--no-header-row', 'examples/dummy.csv']
+        output_file = StringIO.StringIO()
+        utility = CSVCut(args, output_file)
+
+        self.assertRaises(RequiredHeaderError, utility.main)
