@@ -60,6 +60,9 @@ def xlsx2csv(f, output=None, **kwargs):
             if value.__class__ in (datetime.datetime, datetime.date, datetime.time):
                 value = value.isoformat()
 
+            if value == "\0":
+                continue
+
             out_row.append(value)
 
         writer.writerow(out_row)
