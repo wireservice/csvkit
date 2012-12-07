@@ -34,12 +34,8 @@ class CSVSQL(CSVKitUtility):
             help='A comma separated list of column indices or names to skip type inference. Specified columns will be treated as strings.')
 
     def main(self):
-        # Ensure we're handling a list, even if it's just one file
-        if not isinstance(self.args.files, list):
-            self.args.files = [self.args.files]
-        else:
-            if self.args.table_name:
-                self.argparser.error('The --table argument is only allowed when specifying a single file.')
+        if len(self.args.files) > 1 and self.args.table_name:
+            self.argparser.error('The --table argument is only allowed when specifying a single file.')
 
         for f in self.args.files:
             if self.args.table_name:
@@ -81,8 +77,7 @@ class CSVSQL(CSVKitUtility):
 
                     conn = engine.connect()
                     trans = conn.begin()
-                    for row in csv_table.to_rows():
-                        conn.execute(insert, [dict(zip(headers, row)), ])
+                    conn.execute(insert, [dict(zip(headers, row)) for row in csv_table.to_rows()])
                     trans.commit()
                     conn.close()
 
