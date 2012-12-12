@@ -1,4 +1,10 @@
-0.4.5
+0.5.1
+-----
+
+* Added Chris Rosenthal to AUTHORS.
+* Fixed multi-file input to csvsql. (#193)
+
+0.5.0
 -----
 
 * Implement geojson support in csvjson. (#159)
