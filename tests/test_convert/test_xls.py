@@ -80,7 +80,7 @@ class TestXLS(unittest.TestCase):
         self.assertEquals(column_type, xlrd.biffh.XL_CELL_EMPTY) 
 
     def test_xls(self):
-        with open('examples/test.xls', 'r') as f:
+        with open('examples/test.xls', 'rb') as f:
             output = xls.xls2csv(f)
         
         with open('examples/testxls_converted.csv', 'r') as f:
