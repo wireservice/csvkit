@@ -85,3 +85,10 @@ class TestXLS(unittest.TestCase):
         
         with open('examples/testxls_converted.csv', 'r') as f:
             self.assertEquals(f.read(), output)
+
+    def test_xls_with_sheet(self):
+        with open('examples/sheets.xls', 'rb') as f:
+            output = xls.xls2csv(f, sheet='Sheet2')
+
+        with open('examples/sheetsxls_converted.csv', 'r') as f:
+            self.assertEquals(f.read(), output)

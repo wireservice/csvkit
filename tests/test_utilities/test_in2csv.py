@@ -16,3 +16,12 @@ class TestIn2CSV(unittest.TestCase):
         target_output = open('examples/testxls_converted.csv', 'r').read()
         self.assertEqual(output_file.getvalue(), target_output)
 
+    def test_convert_specific_xls_sheet(self):
+        args = ['-f', 'xls', '--sheet', 'Sheet2', 'examples/sheets.xls']
+        output_file = StringIO.StringIO()
+
+        utility = In2CSV(args, output_file)
+        utility.main()
+
+        target_output = open('examples/sheetsxls_converted.csv', 'r').read()
+        self.assertEqual(output_file.getvalue(), target_output)

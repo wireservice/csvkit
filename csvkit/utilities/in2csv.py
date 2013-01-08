@@ -21,6 +21,8 @@ class In2CSV(CSVKitUtility):
                             help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
                             help='Limit CSV dialect sniffing to the specified number of bytes.')
+        self.argparser.add_argument('--sheet', dest='sheet',
+                            help='The name of the XLSX sheet to operate on.')
 
 
     def main(self):
@@ -60,6 +62,9 @@ class In2CSV(CSVKitUtility):
 
         if self.args.snifflimit:
             kwargs['snifflimit'] = self.args.snifflimit
+
+        if self.args.sheet:
+            kwargs['sheet'] = self.args.sheet
 
         # Fixed width can be processed as a stream
         if format == 'fixed':
