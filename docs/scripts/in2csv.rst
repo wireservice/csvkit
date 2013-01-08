@@ -40,6 +40,7 @@ The header line is required though the columns may be in any order::
       -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
                             Limit CSV dialect sniffing to the specified number of
                             bytes.
+      --sheet SHEET         The name of the XLSX sheet to operate on.
 
 Also see: :doc:`common_arguments`.
 
