@@ -153,12 +153,11 @@ class TestMaxFieldSize(unittest.TestCase):
 
         with open('dummy.csv', 'w') as f:
             f.write('a' * 10)
-            f.close()
 
     def tearDown(self):
         # Resetting limit to avoid failure in other tests.
         csv.field_size_limit(self.lim)
-        os.system('rm dummy.csv')
+        os.remove('dummy.csv')
 
     def test_maxfieldsize(self):
         # Testing --maxfieldsize for failure. Creating data using str * int.
