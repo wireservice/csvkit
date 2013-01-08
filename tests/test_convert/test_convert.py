@@ -4,7 +4,7 @@ from csvkit import convert
 
 class TestConvert(unittest.TestCase):
     def test_valid_file(self):
-        with open('examples/test.xls', 'r') as f:
+        with open('examples/test.xls', 'rb') as f:
             output = convert.convert(f, 'xls')
         
         with open('examples/testxls_converted.csv', 'r') as f:
