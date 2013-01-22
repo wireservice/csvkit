@@ -177,8 +177,8 @@ class CSVKitUtility(object):
         if 'e' not in self.override_flags:
             self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
                                 help='Specify the encoding the input CSV file.')
-        if 's' not in self.override_flags:
-            self.argparser.add_argument('-s', '--skipinitialspace', dest='skipinitialspace', default=False, action='store_true',
+        if 'S' not in self.override_flags:
+            self.argparser.add_argument('-S', '--skipinitialspace', dest='skipinitialspace', default=False, action='store_true',
                                 help='Whitespace immediately following the delimiter is ignored')
         if 'v' not in self.override_flags:
             self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
