@@ -8,7 +8,7 @@ Description
 Converts a CSV file into JSON or GeoJSON (depending on flags)::
 
     usage: csvjson [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-v] [-l]
+                   [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-H] [-v] [-l]
                    [--zero] [-i INDENT] [-k KEY] [--lat LAT] [--lon LON]
                    [--crs CRS]
                    [FILE]

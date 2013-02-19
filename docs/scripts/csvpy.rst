@@ -8,7 +8,7 @@ Description
 Loads a CSV file into a :class:`csvkit.CSVKitReader` object and then drops into a Python shell so the user can inspect the data however they see fit::
 
     usage: csvpy [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                 [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-v]
+                 [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-H] [-v]
                  FILE
 
     Load a CSV file into a CSVKitReader object and then drops into a Python shell.

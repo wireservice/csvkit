@@ -5,6 +5,7 @@ import unittest
 
 from csvkit import CSVKitReader
 from csvkit.utilities.csvgrep import CSVGrep
+from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
 class TestCSVCut(unittest.TestCase):
     def test_match(self):
@@ -71,3 +72,16 @@ class TestCSVCut(unittest.TestCase):
         self.assertEqual(reader.next(), ['State Name', 'State Abbreviate', 'Code', 'Montgomery GI Bill-Active Duty', 'Montgomery GI Bill- Selective Reserve', 'Dependents\' Educational Assistance', 'Reserve Educational Assistance Program', 'Post-Vietnam Era Veteran\'s Educational Assistance Program', 'TOTAL', ''])
         self.assertEqual(reader.next(), ['ILLINOIS', 'IL', '17', '15,659', '2,491', '2,025', '1,770', '19', '21,964', ''])
 
+    def test_invalid_column(self):
+        args = ['-c', '0', '-m', '1', 'examples/dummy.csv']
+        output_file = StringIO.StringIO()
+        utility = CSVGrep(args, output_file)
+
+        self.assertRaises(ColumnIdentifierError, utility.main)
+
+    def test_invalid_options(self):
+        args = ['-n', '--no-header-row', 'examples/dummy.csv']
+        output_file = StringIO.StringIO()
+        utility = CSVGrep(args, output_file)
+
+        self.assertRaises(RequiredHeaderError, utility.main)

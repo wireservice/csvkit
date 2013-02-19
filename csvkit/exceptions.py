@@ -85,3 +85,9 @@ class InvalidValueForTypeListException(CustomException):
         msg = 'Encountered errors converting values in %i columns' % len(errors)
         super(InvalidValueForTypeListException, self).__init__(msg)
 
+class RequiredHeaderError(CustomException):
+    """
+    Exception raised when an operation requires a CSV file to have a header row.
+    """
+    pass
+

@@ -2,6 +2,7 @@
 
 from csvkit import CSVKitReader, CSVKitDictReader
 from csvkit.cli import CSVFileType, CSVKitUtility 
+from csvkit.exceptions import RequiredHeaderError
 
 class CSVPy(CSVKitUtility):
     description = 'Load a CSV file into a CSVKitReader object and then drops into a Python shell.'
@@ -18,7 +19,10 @@ class CSVPy(CSVKitUtility):
         filename = self.args.file.name
 
         if self.args.as_dict:
-            reader_class = CSVKitDictReader
+            if self.args.no_header_row:
+                raise RequiredHeaderError, 'You cannot use --no-header-row with the csvpy --dict option.'
+            else:
+                reader_class = CSVKitDictReader
         else:
             reader_class = CSVKitReader
 

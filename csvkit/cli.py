@@ -7,7 +7,7 @@ import os.path
 import sys
 
 from csvkit import CSVKitReader
-from csvkit.exceptions import ColumnIdentifierError
+from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
 def lazy_opener(fn):
     def wrapped(self, *args, **kwargs):
@@ -177,6 +177,9 @@ class CSVKitUtility(object):
         if 'e' not in self.override_flags:
             self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
                                 help='Specify the encoding the input CSV file.')
+        if 'H' not in self.override_flags:
+            self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
+                                help='Specifies that the input CSV file has no header row.')
         if 'v' not in self.override_flags:
             self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
                                 help='Print detailed tracebacks when errors occur.')
@@ -255,6 +258,9 @@ class CSVKitUtility(object):
         """
         Pretty-prints the names and indices of all columns to a file-like object (usually sys.stdout).
         """
+        if self.args.no_header_row:
+            raise RequiredHeaderError, 'You cannot use --no-header-row with the -n or --names options.'
+
         f = self.args.file
         output = self.output_file
         try:
