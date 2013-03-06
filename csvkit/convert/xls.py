@@ -127,6 +127,7 @@ def xls2csv(f, **kwargs):
     book = xlrd.open_workbook(file_contents=f.read())
     if 'sheet' in kwargs:
         sheet = book.sheet_by_name(kwargs['sheet'])
+        kwargs.pop('sheet')
     else:
         sheet = book.sheet_by_index(0)
 

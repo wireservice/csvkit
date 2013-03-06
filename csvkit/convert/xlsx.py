@@ -33,13 +33,14 @@ def xlsx2csv(f, output=None, **kwargs):
     if not streaming:
         output = StringIO()
 
-    writer = CSVKitWriter(output, **kwargs)
-
     book = load_workbook(f, use_iterators=True)
     if 'sheet' in kwargs:
         sheet = book.get_sheet_by_name(kwargs['sheet'])
+        kwargs.pop('sheet')
     else:
         sheet = book.get_active_sheet()
+
+    writer = CSVKitWriter(output, **kwargs)
 
     for i, row in enumerate(sheet.iter_rows()):
         if i == 0:
