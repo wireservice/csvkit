@@ -33,7 +33,7 @@ def xlsx2csv(f, output=None, **kwargs):
     if not streaming:
         output = StringIO()
 
-    writer = CSVKitWriter(output)
+    writer = CSVKitWriter(output, **kwargs)
 
     book = load_workbook(f, use_iterators=True)
     if 'sheet' in kwargs:

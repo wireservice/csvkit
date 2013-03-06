@@ -146,7 +146,7 @@ def xls2csv(f, **kwargs):
         tab.append(column)
 
     o = StringIO()
-    output = tab.to_csv(o)
+    output = tab.to_csv(o, **kwargs)
     output = o.getvalue()
     o.close()
 

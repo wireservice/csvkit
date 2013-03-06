@@ -56,7 +56,7 @@ def json2csv(f, key=None, **kwargs):
     fields = sorted(list(field_set))
 
     o = StringIO()
-    writer = CSVKitWriter(o)
+    writer = CSVKitWriter(o, **kwargs)
 
     writer.writerow(fields)
 
