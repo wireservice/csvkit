@@ -194,7 +194,9 @@ class Table(list):
 
         dialect = sniffer.sniff_dialect(sample)
 
-        f = StringIO(contents) 
+        normal_type = kwargs.pop("normal_type", InvalidType)
+
+        f = StringIO(contents)
         reader = CSVKitReader(f, dialect=dialect, **kwargs)
 
         headers = reader.next()
@@ -218,7 +220,7 @@ class Table(list):
         columns = []
 
         for i, c in enumerate(data_columns):
-            columns.append(Column(column_ids[i], headers[i], c, blanks_as_nulls=blanks_as_nulls, type_inference=type_inference))
+            columns.append(Column(column_ids[i], headers[i], c, blanks_as_nulls=blanks_as_nulls, type_inference=type_inference, normal_type=normal_type))
 
         return Table(columns, name=name)
 
