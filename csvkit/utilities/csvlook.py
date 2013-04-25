@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 
 from csvkit import CSVKitReader
-from csvkit.cli import CSVKitUtility 
+from csvkit.cli import CSVKitUtility
 
 class CSVLook(CSVKitUtility):
     description = 'Render a CSV file in the console as a fixed-width table.'
     override_flags = 'l'
 
     def add_arguments(self):
-        pass
+        self.argparser.add_argument('-H', '--no-header-line', action='store_false',
+                                    dest='divider', default=True,
+                                    help='Suppress divider below header line.')
 
     def main(self):
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
@@ -40,13 +42,12 @@ class CSVLook(CSVKitUtility):
 
             self.output_file.write(('| %s |\n' % ('|'.join(output))).encode('utf-8'))
 
-            if i == 0 or i == len(rows) - 1:
+            if (i == 0 and self.args.divider) or i == len(rows) - 1:
                 self.output_file.write('%s\n' % divider)
 
 def launch_new_instance():
     utility = CSVLook()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
-

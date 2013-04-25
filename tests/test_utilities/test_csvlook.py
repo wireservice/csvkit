@@ -22,3 +22,17 @@ class TestCSVLook(unittest.TestCase):
         self.assertEqual(input_file.next(), '|  1 | 4 | 5  |\n')
         self.assertEqual(input_file.next(), '|----+---+----|\n')
 
+    def test_dividerless(self):
+        args = ['examples/dummy3.csv', '-H']
+        output_file = StringIO.StringIO()
+        utility = CSVLook(args, output_file)
+
+        utility.main()
+
+        input_file = StringIO.StringIO(output_file.getvalue())
+
+        self.assertEqual(input_file.next(), '|----+---+----|\n')
+        self.assertEqual(input_file.next(), '|  a | b | c  |\n')
+        self.assertEqual(input_file.next(), '|  1 | 2 | 3  |\n')
+        self.assertEqual(input_file.next(), '|  1 | 4 | 5  |\n')
+        self.assertEqual(input_file.next(), '|----+---+----|\n')
