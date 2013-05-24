@@ -142,7 +142,7 @@ def xls2csv(f, **kwargs):
 
         column_type = determine_column_type(types)
         t, normal_values = NORMALIZERS[column_type](
-            values, datemode=book.datemode, escape_lf=kwargs['escape_lf']
+            values, datemode=book.datemode, escape_lf=kwargs.get('escape_lf')
         )
 
         column = table.Column(i, column_name, normal_values, normal_type=t)

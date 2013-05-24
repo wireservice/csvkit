@@ -18,3 +18,10 @@ class TestXLSX(unittest.TestCase):
 
         with open('examples/sheetsxlsx_converted.csv', 'r') as f:
             self.assertEquals(f.read(), output)
+
+    def test_xls_with_escaped_lf(self):
+        with open('examples/test.xlsx', 'rb') as f:
+            output = xlsx.xlsx2csv(f, escape_lf=True)
+
+        with open('examples/testxlsx_converted_escaped.csv', 'r') as f:
+            self.assertEquals(f.read(), output)

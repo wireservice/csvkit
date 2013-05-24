@@ -18,8 +18,14 @@ class TestCSVSort(unittest.TestCase):
         input_file = StringIO.StringIO(output_file.getvalue())
         reader = CSVKitReader(input_file)
 
-        test_order = [u'text', u'Unicode! Σ', u'This row has blanks', u'Chicago Tribune', u'Chicago Sun-Times', u'Chicago Reader']
-        new_order = [unicode(r[0]) for r in reader] 
+        test_order = [u'text',
+                      u'Unicode! Σ',
+                      u'This row has blanks',
+                      u'This row has a\nmulti-line value',
+                      u'Chicago Tribune',
+                      u'Chicago Sun-Times',
+                      u'Chicago Reader']
+        new_order = [unicode(r[0]) for r in reader]
 
         self.assertEqual(test_order, new_order)
 
@@ -33,8 +39,14 @@ class TestCSVSort(unittest.TestCase):
         input_file = StringIO.StringIO(output_file.getvalue())
         reader = CSVKitReader(input_file)
 
-        test_order = [u'text', u'This row has blanks', u'Unicode! Σ', u'Chicago Tribune', u'Chicago Sun-Times', u'Chicago Reader']
-        new_order = [unicode(r[0]) for r in reader] 
+        test_order = [u'text',
+                      u'This row has blanks',
+                      u'Unicode! Σ',
+                      u'This row has a\nmulti-line value',
+                      u'Chicago Tribune',
+                      u'Chicago Sun-Times',
+                      u'Chicago Reader']
+        new_order = [unicode(r[0]) for r in reader]
 
         self.assertEqual(test_order, new_order)
 

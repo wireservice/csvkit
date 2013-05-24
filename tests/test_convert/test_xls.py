@@ -73,16 +73,16 @@ class TestXLS(unittest.TestCase):
 
     def test_determine_column_type_multiple(self):
         column_type = xls.determine_column_type([xlrd.biffh.XL_CELL_NUMBER, xlrd.biffh.XL_CELL_TEXT, xlrd.biffh.XL_CELL_EMPTY])
-        self.assertEquals(column_type, xlrd.biffh.XL_CELL_TEXT) 
+        self.assertEquals(column_type, xlrd.biffh.XL_CELL_TEXT)
 
     def test_determine_column_type_empty(self):
         column_type = xls.determine_column_type([xlrd.biffh.XL_CELL_EMPTY, xlrd.biffh.XL_CELL_EMPTY, xlrd.biffh.XL_CELL_EMPTY])
-        self.assertEquals(column_type, xlrd.biffh.XL_CELL_EMPTY) 
+        self.assertEquals(column_type, xlrd.biffh.XL_CELL_EMPTY)
 
     def test_xls(self):
         with open('examples/test.xls', 'rb') as f:
             output = xls.xls2csv(f)
-        
+
         with open('examples/testxls_converted.csv', 'r') as f:
             self.assertEquals(f.read(), output)
 
@@ -91,4 +91,11 @@ class TestXLS(unittest.TestCase):
             output = xls.xls2csv(f, sheet='Sheet2')
 
         with open('examples/sheetsxls_converted.csv', 'r') as f:
+            self.assertEquals(f.read(), output)
+
+    def test_xls_with_escaped_lf(self):
+        with open('examples/test.xls', 'rb') as f:
+            output = xls.xls2csv(f, escape_lf=True)
+
+        with open('examples/testxls_converted_escaped.csv', 'r') as f:
             self.assertEquals(f.read(), output)
