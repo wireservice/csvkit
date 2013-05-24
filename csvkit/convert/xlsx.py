@@ -5,7 +5,7 @@ import datetime
 
 from openpyxl.reader.excel import load_workbook
 
-from csvkit import CSVKitWriter 
+from csvkit import CSVKitWriter
 from csvkit.typeinference import NULL_TIME
 
 def normalize_datetime(dt):
@@ -43,7 +43,7 @@ def xlsx2csv(f, output=None, **kwargs):
 
     for i, row in enumerate(sheet.iter_rows()):
         if i == 0:
-            writer.writerow([c.internal_value for c in row]) 
+            writer.writerow([c.internal_value for c in row])
             continue
 
         out_row = []
@@ -59,6 +59,8 @@ def xlsx2csv(f, output=None, **kwargs):
             elif value.__class__ is float:
                 if value % 1 == 0:
                     value = int(value)
+            elif value.__class__ is unicode and kwargs['escape_lf']:
+                value = value.replace('\n', '\\\n')
 
             if value.__class__ in (datetime.datetime, datetime.date, datetime.time):
                 value = value.isoformat()
