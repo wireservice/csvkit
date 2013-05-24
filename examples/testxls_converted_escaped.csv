@@ -4,5 +4,5 @@ Chicago Sun-Times,1948-01-01,63,True,1.27,14:57:13,1948-01-01T14:57:13,,Extra da
 Chicago Tribune,1920-01-01,164,False,41800000.01,00:00:00,1920-01-01T00:00:00,,
 This row has blanks,,,,,,,,
 Unicode! Σ,,,,,,,,
-"This row has a
+"This row has a\
 multi-line value",,,,,,,,
