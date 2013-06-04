@@ -23,7 +23,8 @@ class In2CSV(CSVKitUtility):
                             help='Limit CSV dialect sniffing to the specified number of bytes.')
         self.argparser.add_argument('--sheet', dest='sheet',
                             help='The name of the XLSX sheet to operate on.')
-
+        self.argparser.add_argument('--escape_lf', dest='escape_lf', action='store_true',
+                            help='Escape line feed characters within values with a backslash.')
 
     def main(self):
         if self.args.format:
@@ -53,6 +54,7 @@ class In2CSV(CSVKitUtility):
             f = open(self.args.file, 'rU')
 
         kwargs = self.reader_kwargs
+        kwargs['escape_lf'] = self.args.escape_lf
 
         if self.args.schema:
             kwargs['schema'] = self.args.schema
@@ -75,7 +77,7 @@ class In2CSV(CSVKitUtility):
 def launch_new_instance():
     utility = In2CSV()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
 

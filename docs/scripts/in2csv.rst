@@ -41,6 +41,8 @@ The header line is required though the columns may be in any order::
                             Limit CSV dialect sniffing to the specified number of
                             bytes.
       --sheet SHEET         The name of the XLSX sheet to operate on.
+      --escape_lf           Escape line feed characters within values with a
+                            backslash.
 
 Also see: :doc:`common_arguments`.
 

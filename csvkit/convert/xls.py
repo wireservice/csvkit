@@ -14,10 +14,11 @@ def normalize_empty(values, **kwargs):
     """
     return None, [None] * len(values)
 
-def normalize_text(values, **kwargs):
+def normalize_text(values, escape_lf=False, **kwargs):
     """
     Normalize a column of text cells.
     """
+    values = [v.replace('\n', '\\n') if escape_lf else v for v in values]
     return unicode, [unicode(v) if v else None for v in values]
 
 def normalize_numbers(values, **kwargs):
@@ -54,7 +55,7 @@ def normalize_dates(values, datemode=0, **kwargs):
         v_tuple = xlrd.xldate_as_tuple(v, datemode)
 
         if v_tuple == (0, 0, 0, 0, 0, 0):
-            # Midnight 
+            # Midnight
             normal_values.append(datetime.time(*v_tuple[3:]))
             normal_types_set.add(datetime.time)
         elif v_tuple[3:] == (0, 0, 0):
@@ -72,7 +73,7 @@ def normalize_dates(values, datemode=0, **kwargs):
 
     if len(normal_types_set) == 1:
         # No special handling if column contains only one type
-        pass 
+        pass
     elif normal_types_set == set([datetime.datetime, datetime.date]):
         # If a mix of dates and datetimes, up-convert dates to datetimes
         for i, v in enumerate(normal_values):
@@ -94,7 +95,7 @@ def normalize_booleans(values, **kwargs):
     """
     Normalize a column of boolean cells.
     """
-    return bool, [bool(v) if v != '' else None for v in values] 
+    return bool, [bool(v) if v != '' else None for v in values]
 
 NORMALIZERS = {
     xlrd.biffh.XL_CELL_EMPTY: normalize_empty,
@@ -130,7 +131,7 @@ def xls2csv(f, **kwargs):
     else:
         sheet = book.sheet_by_index(0)
 
-    tab = table.Table() 
+    tab = table.Table()
 
     for i in range(sheet.ncols):
         # Trim headers
@@ -140,7 +141,9 @@ def xls2csv(f, **kwargs):
         types = sheet.col_types(i)[1:]
 
         column_type = determine_column_type(types)
-        t, normal_values = NORMALIZERS[column_type](values, datemode=book.datemode)
+        t, normal_values = NORMALIZERS[column_type](
+            values, datemode=book.datemode, escape_lf=kwargs.get('escape_lf')
+        )
 
         column = table.Column(i, column_name, normal_values, normal_type=t)
         tab.append(column)
@@ -150,5 +153,5 @@ def xls2csv(f, **kwargs):
     output = o.getvalue()
     o.close()
 
-    return output 
+    return output
 
