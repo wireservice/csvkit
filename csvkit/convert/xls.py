@@ -18,8 +18,8 @@ def normalize_text(values, escape_lf=False, **kwargs):
     """
     Normalize a column of text cells.
     """
-    values = [v.replace('\n', '\\\n') if escape_lf else v for v in values]
-    return (unicode, [unicode(v) if v else None for v in values])
+    values = [v.replace('\n', '\\n') if escape_lf else v for v in values]
+    return unicode, [unicode(v) if v else None for v in values]
 
 def normalize_numbers(values, **kwargs):
     """

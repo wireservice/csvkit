@@ -60,7 +60,7 @@ def xlsx2csv(f, output=None, **kwargs):
                 if value % 1 == 0:
                     value = int(value)
             elif value.__class__ is unicode and kwargs.get('escape_lf'):
-                value = value.replace('\n', '\\\n')
+                value = value.replace('\n', '\\n')
 
             if value.__class__ in (datetime.datetime, datetime.date, datetime.time):
                 value = value.isoformat()
