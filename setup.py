@@ -46,6 +46,7 @@ setup(
             'csvjson = csvkit.utilities.csvjson:launch_new_instance',
             'csvpy = csvkit.utilities.csvpy:launch_new_instance',
             'csvgroup = csvkit.utilities.csvgroup:launch_new_instance',
+            'csvpys = csvkit.utilities.csvpys:launch_new_instance',
         ]
     },
     install_requires = [
