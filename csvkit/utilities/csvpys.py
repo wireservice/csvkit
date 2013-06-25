@@ -15,8 +15,9 @@ class CSVScript(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                                     help='Display column names and indices from the input CSV and exit.')
-        self.argparser.add_argument('-s', '--script', dest='script', action='append',
-                                    help='New column name and a python script. -c "<NEW_COLUMN_NAME>|<PYTHON SCRIPT>". Inside script use c[0] or ch[\'header\'] locals.')
+        self.argparser.add_argument('-s', '--script', dest='script', nargs=2, metavar=('NEW_COLUMN', 'PY_SCRIPT'),
+                                    action='append',
+                                    help='New column name and a python script.". Inside script use c[0] or ch[\'header\'] locals.')
 
         self.argparser.add_argument('file', metavar="FILE", nargs='?', type=CSVFileType(), default=sys.stdin,
                                     help='The CSV file to operate on. If omitted, will accept input on STDIN.')

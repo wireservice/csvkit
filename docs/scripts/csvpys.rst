@@ -122,7 +122,7 @@ For following data::
 
 Lets sum values for both Montgomery GI Bill::
 
-    $ csvcut -c 1,4,5 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvpys -s "TOTAL|int(c[2].replace(',', '') if c[2] != '' else 0) + int(c[3].replace(',', '') if c[3] != '' else 0)" | csvlook
+    $ csvcut -c 1,4,5 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvpys -s TOTAL "int(c[2].replace(',', '') if c[2] != '' else 0) + int(c[3].replace(',', '') if c[3] != '' else 0)" | csvlook
     |--------------------+--------------------------------+---------------------------------------+--------|
     |  State Name        | Montgomery GI Bill-Active Duty | Montgomery GI Bill- Selective Reserve | TOTAL  |
     |--------------------+--------------------------------+---------------------------------------+--------|
@@ -192,7 +192,7 @@ Lets sum values for both Montgomery GI Bill::
 
 The same using column names::
 
-    $ csvcut -c 1,4,5 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvpys -s "TOTAL|int(ch['Montgomery GI Bill-Active Duty'].replace(',', '') if ch['Montgomery GI Bill-Active Duty'] != '' else 0) + int(ch['Montgomery GI Bill- Selective Reserve'].replace(',', '') if ch['Montgomery GI Bill- Selective Reserve'] != '' else 0)" | csvlook
+    $ csvcut -c 1,4,5 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvpys -s TOTAL "int(ch['Montgomery GI Bill-Active Duty'].replace(',', '') if ch['Montgomery GI Bill-Active Duty'] != '' else 0) + int(ch['Montgomery GI Bill- Selective Reserve'].replace(',', '') if ch['Montgomery GI Bill- Selective Reserve'] != '' else 0)" | csvlook
 
 
 
@@ -259,7 +259,7 @@ Other example, lets play with data::
 
 The task is to classify as True all states that have a value greater or equal than 10 in second column::
 
-    $ csvcut -c 1,8 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvpys -s "Classify|bool(int(c[2])>=10) if c[2] != '' else ''" | csvlook
+    $ csvcut -c 1,8 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvpys -s Classify "bool(int(c[2])>=10) if c[2] != '' else ''" | csvlook
     |--------------------+-----------------------------------------------------------+-----------|
     |  State Name        | Post-Vietnam Era Veteran's Educational Assistance Program | Classify  |
     |--------------------+-----------------------------------------------------------+-----------|
@@ -325,7 +325,7 @@ The task is to classify as True all states that have a value greater or equal th
 
 OK, within the last example we will calculate number of A's in state names::
 
-    $ csvcut -c 1 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvpys -s "A letter count| collections.Counter(c[1])['A']" | csvlook
+    $ csvcut -c 1 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvpys -s "A letter count" "collections.Counter(c[1])['A']" | csvlook
     |--------------------+-----------------|
     |  State Name        | A letter count  |
     |--------------------+-----------------|
