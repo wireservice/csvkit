@@ -1,57 +1,72 @@
 #!/usr/bin/env python
 
 import unittest
+from csvkit.group import group_rows, MaxAggregator, MinAggregator, CountAggregator, CountAAggregator
 
-from csvkit.group import group_rows
-import csvkit.utilities.csvgroup  # At least verify this imports
+test_header = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+test_data = [['a', 'a', 'a', 1, 2, 3],
+             ['b', 'a', 'a', 3, 2, 1],
+             ['c', 'b', 'a', 0, 0, 0],
+             ['d', 'b', 'a', 6, 7, 1]]
+
+
+class TestAggregators(unittest.TestCase):
+    def test_max(self):
+        a = MaxAggregator(3)
+        for row in test_data:
+            a.take_row(row)
+        self.assertEqual(a.get_result(), 6)
+
+
+    def test_min(self):
+        a = MinAggregator(3)
+        for row in test_data:
+            a.take_row(row)
+        self.assertEqual(a.get_result(), 0)
+
+    def test_count(self):
+        a = CountAggregator(3)
+        for row in test_data:
+            a.take_row(row)
+        self.assertEqual(a.get_result(), 4)
+
+    def test_countA(self):
+        a = CountAAggregator(3)
+        for row in test_data:
+            a.take_row(row)
+        self.assertEqual(a.get_result(), 3)
 
 
 class TestGroup(unittest.TestCase):
-
-    def setUp(self):
-        self.header = ['h1', 'h2', 'h3']
-        self.tab1 = [
-            ['a', 'a', 'a'],
-            ['b', 'a', 'a'],
-            ['c', 'b', 'a'],
-            ['d', 'b', 'a']]
-
     def test_header(self):
-        output = group_rows(self.header, self.tab1, [0])
-        self.assertEqual(output[0], ['h1', 'h2', 'h3'])
+        output = list(group_rows(test_header, test_data, [1],
+                                 [MaxAggregator(3), MinAggregator(4)]))
+        self.assertEqual(output[0], ['h2', 'max(h4)', 'min(h5)'])
 
-    def test_header_with_count(self):
-        #Note: arguments to group_rows are zero indexed, unlike on command line
-        output = group_rows(self.header, self.tab1, [0], 'count')
-        self.assertEqual(output[0], ['h1', 'h2', 'h3', 'count'])
+
+    def test_group_zero(self):
+        output = list(group_rows(test_header, test_data, [],
+                                 [MaxAggregator(3), MinAggregator(4),
+                                  CountAggregator(4), ]))
+        self.assertEqual(len(output), 2)
+        self.assertEqual(output[1], [6, 0, 4])
 
     def test_group_one(self):
-        output = group_rows(self.header, self.tab1, [2], 'count')
-        self.assertEqual(len(output), 2)
-        self.assertEqual(output[1], ['a', 'a', 'a', 4])
+        output = list(group_rows(test_header, test_data, [1],
+                                 [MaxAggregator(3), MinAggregator(4),
+                                  CountAggregator(4), ]))
+        self.assertEqual(len(output), 3)
+        self.assertEqual(output[1], ['a', 3, 2, 2])
+        self.assertEqual(output[2], ['b', 6, 0, 2])
+
 
     def test_group_two(self):
-        output = group_rows(self.header, self.tab1, [1], 'count')
+        output = list(group_rows(test_header, test_data, [1, 2],
+                                 [MaxAggregator(3), MinAggregator(4),
+                                  CountAggregator(4), ]))
         self.assertEqual(len(output), 3)
-        self.assertEqual(output[1], ['a', 'a', 'a', 2])
-        self.assertEqual(output[2], ['c', 'b', 'a', 2])
+        self.assertEqual(output[1], ['a', 'a', 3, 2, 2])
+        self.assertEqual(output[2], ['b', 'a', 6, 0, 2])
 
-    def test_group_two_columns_unique(self):
-        output = group_rows(self.header, self.tab1, [0, 1], 'count')
-        self.assertEqual(len(output), 5)
-        self.assertEqual(output[1], ['a', 'a', 'a', 1])
-        self.assertEqual(output[2], ['b', 'a', 'a', 1])
-        self.assertEqual(output[3], ['c', 'b', 'a', 1])
-        self.assertEqual(output[4], ['d', 'b', 'a', 1])
 
-    def test_group_two_columns_non_unique(self):
-        output = group_rows(self.header, self.tab1, [1, 2], 'count')
-        self.assertEqual(len(output), 3)
-        self.assertEqual(output[1], ['a', 'a', 'a', 2])
-        self.assertEqual(output[2], ['c', 'b', 'a', 2])
 
-    def test_group_two_group_only(self):
-        output = group_rows(self.header, self.tab1, [1, 2], 'count', grouped_only=True)
-        self.assertEqual(len(output), 3)
-        self.assertEqual(output[1], ['a', 'a', 2])
-        self.assertEqual(output[2], ['b', 'a', 2])

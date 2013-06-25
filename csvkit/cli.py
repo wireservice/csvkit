@@ -282,11 +282,7 @@ class CSVKitUtility(object):
                 i += 1
             output.write('%3i: %s\n' % (i, c))
 
-    def _parse_column_names(self, column_string):
-        """
-        Parse a command line argument of comma separated columns
-        """
-        return map(str.strip, column_string.split(','))
+
 
 def match_column_identifier(column_names, c, zero_based=False):
     """

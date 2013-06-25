@@ -5,33 +5,102 @@ csvgroup
 Description
 ===========
 
-Perform a SQL-like group by operation on a csv file on a specified column or columns. For each grouping, the row printed is the row that is first in the lexicographic sorting of the group's rows. Optionally add a new column to indicate how many rows are in each group. Optionally only show the grouped columns in the output.
+Perform a SQL-like group by operation on a csv file on a specified column or columns. For each grouping, the row printed is the row that is first in the lexicographic sorting of the group's rows. Optionally add a new column to indicate how many rows are in each group. Optionally only show the grouped columns in the output::
 
 
     usage: csvgroup [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                    [-p` ESCAPECHAR] [-e ENCODING] [-c COLUMNS]
-		    [-n COUNT_COLUMN_NAME] [-g]
-                    FILES [FILES ...]
+                [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-v] [-l]
+                [--zero] [-c COLUMNS] [-a FUNCTION COLUMNS] [-n]
+                [FILE]
 
-    Execute a SQL-like group by on a specified column or columns.
+    Execute a SQL-like group by on specified column or columns
 
     positional arguments:
-      FILES                 The CSV files to operate on. If only one is specified,
-                            it will be copied to STDOUT.
+      FILE                  The CSV file to operate on. If omitted, will accept
+                            input on STDIN.
 
     optional arguments:
-      -h, --help            show this help message and exit
       -c COLUMNS, --columns COLUMNS
-                            The column name(s) or index(es) on which to group
-			    by.Separate multiple columns by commas. Indexes
-			    start at 1. If left unspecified, all columns will be used
-      -n COUNT_COLUMN_NAME, --count COUNT_COLUMN_NAME
-                            Add a column with the given name for the row count
-			    for each group. If no COUNT_COLUMN_NAME is
-			    specified, use the name "count"
-      -g, --grouped_only    Only include the grouped columns in the output
-
-      Note that grouping reads the entire file into memory. Don't try this on very
-      large files.
+                            The column name(s) on which to group by. Should be
+                            either one name (or index) or a comma-separated list.
+                            May also be left unspecified, in which case none
+                            columns will be used
+      -a FUNCTION COLUMNS, --aggregation FUNCTION COLUMNS
+                            Aggregate column values using max function
+      -n, --names           Display column names and indices from the input CSV
+                            and exit.
 
 Also see: :doc:`common_arguments`.
+
+Aggregation functions
+=====================
+
+ * max
+ * min
+ * count - count every row
+ * countA - count non zero rows
+
+
+Examples
+========
+
+Having a data::
+
+    $ csvlook examples/test_group.csv
+    |-----+----+----+----+----+-----|
+    |  h1 | h2 | h3 | h4 | h5 | h6  |
+    |-----+----+----+----+----+-----|
+    |  a  | a  | b  | 1  | 2  | 3   |
+    |  c  | b  | b  | 0  | 0  | 0   |
+    |  d  | b  | b  | 6  | 7  | 1   |
+    |  b  | a  | b  | 3  | 2  | 1   |
+    |-----+----+----+----+----+-----|
+
+
+Lets aggregate by column h2 using  min, max and count of columns h4, h5, h6:
+
+.. warning::
+
+    You should be familiar with ``sort|uniq`` idiom in *nix, also here you need to always use
+    ``csvsort | csvgroup``.
+
+::
+
+    $ csvsort -c h2 examples/test_group.csv | csvgroup -c h2 -a min h4 -a max h5 -a count h6 | csvlook
+    |-----+---------+---------+------------|
+    |  h2 | min(h4) | max(h5) | count(h6)  |
+    |-----+---------+---------+------------|
+    |  a  | 1       | 2       | 2          |
+    |  b  | 0       | 7       | 2          |
+    |-----+---------+---------+------------|
+
+We can also define many columns for one aggregate::
+
+    $ csvsort -c h2 examples/test_group.csv | csvgroup -c h2 -a max 4-6 | csvlook
+    |-----+---------+---------+----------|
+    |  h2 | max(h4) | max(h5) | max(h6)  |
+    |-----+---------+---------+----------|
+    |  a  | 3       | 2       | 3        |
+    |  b  | 6       | 7       | 1        |
+    |-----+---------+---------+----------|
+
+
+Aggregating by two columns::
+
+    $ csvsort -c h2,h3 examples/test_group.csv | csvgroup -c h2,h3 -a max 4-6 | csvlook
+    |-----+----+---------+---------+----------|
+    |  h2 | h3 | max(h4) | max(h5) | max(h6)  |
+    |-----+----+---------+---------+----------|
+    |  a  | b  | 3       | 2       | 3        |
+    |  b  | b  | 6       | 7       | 1        |
+    |-----+----+---------+---------+----------|
+
+And by all rows::
+
+    $ csvgroup -a max 4-6 examples/test_group.csv | csvlook
+    |----------+---------+----------|
+    |  max(h4) | max(h5) | max(h6)  |
+    |----------+---------+----------|
+    |  6       | 7       | 3        |
+    |----------+---------+----------|
+
