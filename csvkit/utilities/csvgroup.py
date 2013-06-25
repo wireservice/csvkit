@@ -1,56 +1,63 @@
 #!/usr/bin/env python
 
 from csvkit import CSVKitReader, CSVKitWriter
-from csvkit.cli import CSVKitUtility, match_column_identifier
-from csvkit.group import group_rows
+from csvkit.cli import CSVKitUtility, parse_column_identifiers
+from csvkit.group import group_rows, aggregate_functions
 
 
 class CSVGroup(CSVKitUtility):
-    description = 'Execute a SQL-like group by on specified column or colums'
+    description = 'Execute a SQL-like group by on specified column or columns'
 
     def add_arguments(self):
         self.argparser.add_argument('-c', '--columns', dest='columns',
-            help='The column name(s) on which to group by. Should be either one name (or index) or a comma-separated list. May also be left unspecified, in which case all columns will be used')
-        self.argparser.add_argument('-n', '--count', dest='count_column_name', nargs='?', const='count',
-            default=None,
-            help='Generate a new column containing the count of rows in this group. Specify a name for the new column, or the name "count" will be used"')
+                                    help='The column name(s) on which to group by. Should be either one name (or index) or a comma-separated list. May also be left unspecified, in which case none columns will be used')
 
-        self.argparser.add_argument('-g', '--grouped_only', dest='grouped_only',
-            action='store_true',
-            help='Only include the grouped columns in the output'
-        )
+        self.argparser.add_argument('-a', '--aggregation', dest='aggregations',
+                                    nargs=2, metavar=('FUNCTION', 'COLUMNS'),
+                                    action='append',
+                                    help='Aggregate column values using max function')
 
-    def main(self, group=True, write=True):
-        if self.args.columns:
-            grouped_columns = self._parse_column_names(self.args.columns)
-        else:
-            grouped_columns = []
+        self.argparser.add_argument('-n', '--names', dest='names_only',
+                                    action='store_true',
+                                    help='Display column names and indices from the input CSV and exit.')
+
+    def main(self):
+        if self.args.names_only:
+            self.print_column_names()
+            return
 
         #Read in header and rows
         reader = CSVKitReader(self.args.file, **self.reader_kwargs)
-        header = reader.next()
-        rows = list(reader)
-
+        column_names = reader.next()
+        if self.args.columns is None:
+            grouped_columns_ids = []
+        else:
+            grouped_columns_ids = parse_column_identifiers(self.args.columns,
+                                                       column_names,
+                                                       self.args.zero_based)
+        aggregations = []
+        try:
+            for (fun, cols) in map(lambda (f, cols): (
+            f, parse_column_identifiers(cols, column_names, self.args.zero_based)),
+                                   self.args.aggregations):
+                for col in cols:
+                    aggregations.append(aggregate_functions[fun](col))
+        except KeyError:
+            self.argparser.error("Wrong aggregator function. Available: " + ', '.join(aggregate_functions.keys()))
         #Determine columns to group by, default to all columns
-        if not grouped_columns:
-            grouped_columns = [x for x in range(1,len(header) + 1)]
-        grouped_column_ids = [match_column_identifier(header, c) \
-                              for c in grouped_columns]
 
-        #Perform the grouping
-        if group:
-            table = group_rows(header, rows, grouped_column_ids, self.args.count_column_name,
-                              self.args.grouped_only)
 
         #Write the output
-        if write:
-            output = CSVKitWriter(self.output_file, **self.writer_kwargs)
-            for row in table:
-                output.writerow(row)
+        output = CSVKitWriter(self.output_file, **self.writer_kwargs)
+        for row in group_rows(column_names, reader, grouped_columns_ids,
+                              aggregations):
+            output.writerow(row)
+
 
 def launch_new_instance():
     utility = CSVGroup()
     utility.main()
+
 
 if __name__ == "__main__":
     launch_new_instance()

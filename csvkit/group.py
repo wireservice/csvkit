@@ -1,35 +1,103 @@
 #!/usr/bin/env python
+from copy import deepcopy
 from itertools import groupby
 
 
-def group_rows(header, rows, grouped_column_ids, count_column_name=None, grouped_only=False):
+def group_rows(column_names, rows, grouped_columns_ids, aggregations):
     """
     Given a list of rows (header row first), group by given column ids
     grouped_column_ids should be zero indexed
     """
     #Define key fn that makes tuple of given indices from row
-    keyfn = lambda x: tuple(x[i] for i in grouped_column_ids)
+    keyfn = lambda x: tuple(x[i] for i in grouped_columns_ids)
 
-    #Sort the rows first
-    rows.sort(key=keyfn)
-
-    #First row of output is header
-    if grouped_only:
-        header = list(keyfn(header))
-    if count_column_name:
-        header.append(count_column_name)
-    output = [header] if header is not None else []
+    yield list(keyfn(column_names)) + map(lambda a: a.get_column_name(column_names), aggregations)
 
     #Group
     for group, group_rows in groupby(rows, key=keyfn):
-        group_rows = list(group_rows)
-        count = len(group_rows)
-        #Output first row only of each group
-        out_row = group_rows[0]
-        if grouped_only:
-            out_row = list(keyfn(out_row))
-        if count_column_name:
-            out_row.append(count)
-        output.append(out_row)
+        aggregations_copy = deepcopy(aggregations)
+        for row in group_rows:
+            for agg in aggregations_copy:
+                agg.take_row(row)
+        yield list(group) + map(lambda a: a.get_result(), aggregations_copy)
 
-    return output
+
+class Aggregator(object):
+    cast_type = None
+    name_format = '%s'
+
+    def __init__(self, column_id):
+        self.column_id = column_id
+        self.result = None
+
+    def get_value(self, row):
+        if self.cast_type:
+            return self.cast_type(row[self.column_id])
+        else:
+            return row[self.column_id]
+
+    def take_row(self, row):
+        raise NotImplementedError()
+
+    def get_result(self):
+        return self.result
+
+    def get_column_name(self, column_names):
+        return self.name_format % column_names[self.column_id]
+
+
+
+class FunAggregator(Aggregator):
+    cast_type = int
+    name_format = '(%s)'
+    fun = None
+
+    def take_row(self, row):
+        value = self.get_value(row)
+        if self.result is not None:
+            self.result = self.fun(value, self.result)
+        else:
+            self.result = value
+
+class MaxAggregator(FunAggregator):
+    name_format = 'max(%s)'
+    fun = max
+
+class MinAggregator(FunAggregator):
+    name_format = 'min(%s)'
+    fun = min
+
+class ConditionCountAggregator(Aggregator):
+
+    def condition(self, value):
+        return True
+
+    def take_row(self, row):
+        value = self.get_value(row)
+        if self.result is not None:
+            if self.condition(value):
+                self.result += 1
+        else:
+            if self.condition(value):
+                self.result = 1
+            else:
+                self.result = 0
+
+class CountAggregator(ConditionCountAggregator):
+    name_format = 'count(%s)'
+    pass
+
+class CountAAggregator(ConditionCountAggregator):
+    name_format = 'countA(%s)'
+    cast_type = int
+
+    def condition(self, value):
+        return value > 0
+
+aggregate_functions = {
+    'min': MinAggregator,
+    'max': MaxAggregator,
+    'count': CountAggregator,
+    'countA': CountAAggregator,
+
+}
