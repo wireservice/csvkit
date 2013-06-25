@@ -56,15 +56,13 @@ Having a data::
     |  b  | a  | b  | 3  | 2  | 1   |
     |-----+----+----+----+----+-----|
 
-
-Lets aggregate by column h2 using  min, max and count of columns h4, h5, h6:
-
 .. warning::
 
-    You should be familiar with ``sort|uniq`` idiom in *nix, also here you need to always use
-    ``csvsort | csvgroup``.
+    You should be familiar with ``sort | uniq`` idiom in \*nix, also here you need to always use ``csvsort | csvgroup``.
 
-::
+
+
+Lets aggregate by column h2 using  min, max and count of columns h4, h5, h6::
 
     $ csvsort -c h2 examples/test_group.csv | csvgroup -c h2 -a min h4 -a max h5 -a count h6 | csvlook
     |-----+---------+---------+------------|
