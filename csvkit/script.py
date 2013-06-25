@@ -9,6 +9,7 @@ import random
 # noinspection PyUnresolvedReferences
 import collections
 
+
 class ScriptCSVReader(object):
     """
     Given any row iterator returns header and rows after evaluation series of scripts on them.
@@ -21,7 +22,7 @@ class ScriptCSVReader(object):
         super(ScriptCSVReader, self).__init__()
         self.zero_based = zero_based
         self.reader = reader
-        self.scripts = map(lambda script: script.split('|', 1), scripts)
+        self.scripts = scripts
         self.column_names = reader.next()
 
     def __iter__(self):
