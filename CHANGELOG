@@ -3,6 +3,9 @@
 
 * Added Chris Rosenthal to AUTHORS.
 * Fixed multi-file input to csvsql. (#193)
+* Added csvpys command (python scripting). (#214, #215)
+* Added csvgroup command (equivalent to sql group by). (#215)
+* Added Krzysztof Dorosz to AUTHORS.
 
 0.5.0
 -----
