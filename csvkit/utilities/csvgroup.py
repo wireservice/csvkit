@@ -48,7 +48,9 @@ class CSVGroup(CSVKitUtility):
             for row in table:
                 output.writerow(row)
 
-
-if __name__ == '__main__':
-    utility = CSVGroup() #Runs arparse parse_args
+def launch_new_instance():
+    utility = CSVGroup()
     utility.main()
+
+if __name__ == "__main__":
+    launch_new_instance()
