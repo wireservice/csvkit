@@ -1,6 +1,6 @@
-=======
-csvgrep
-=======
+======
+csvpys
+======
 
 Description
 ===========
@@ -37,14 +37,17 @@ There is no custom scripting language. Just use plain python. Locals are supplie
 
  * ``c`` - integer indexed variable (by current row's column id; 0-based or 1-based according to ``--zero``)
  option),
+
  * ``ch`` - string indexed variable (by current row's column name).
+
+
 
 Globals are supplied with following modules:
 
- * ``re``
- * ``math``
- * ``random``
- * ``collections``
+ * re
+ * math
+ * random
+ * collections
 
 .. note::
 
