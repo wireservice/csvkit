@@ -46,13 +46,14 @@ setup(
             'csvjson = csvkit.utilities.csvjson:launch_new_instance',
             'csvpy = csvkit.utilities.csvpy:launch_new_instance',
             'csvpys = csvkit.utilities.csvpys:launch_new_instance',
+            'csvgroup = csvkit.utilities.csvgroup:launch_new_instance',
         ]
     },
     install_requires = [
-        'argparse>=1.2.1',
-        'xlrd>=0.7.1',
-        'python-dateutil>=1.5',
-        'sqlalchemy>=0.6.6',
-        'openpyxl>=1.5.7',
-        'dbf>=0.94.003']
+        'argparse==1.2.1',
+        'xlrd==0.7.1',
+        'python-dateutil==1.5',
+        'sqlalchemy==0.6.6',
+        'openpyxl==1.5.7',
+        'dbf==0.94.003']
 )
