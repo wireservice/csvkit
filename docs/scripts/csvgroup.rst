@@ -37,6 +37,7 @@ Aggregation functions
 
  * max
  * min
+ * sum
  * count - count every row
  * countA - count non zero rows
 

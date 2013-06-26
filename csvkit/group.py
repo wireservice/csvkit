@@ -11,7 +11,8 @@ def group_rows(column_names, rows, grouped_columns_ids, aggregations):
     #Define key fn that makes tuple of given indices from row
     keyfn = lambda x: tuple(x[i] for i in grouped_columns_ids)
 
-    yield list(keyfn(column_names)) + map(lambda a: a.get_column_name(column_names), aggregations)
+    yield list(keyfn(column_names)) + map(
+        lambda a: a.get_column_name(column_names), aggregations)
 
     #Group
     for group, group_rows in groupby(rows, key=keyfn):
@@ -46,7 +47,6 @@ class Aggregator(object):
         return self.name_format % column_names[self.column_id]
 
 
-
 class FunAggregator(Aggregator):
     cast_type = int
     name_format = '(%s)'
@@ -59,16 +59,23 @@ class FunAggregator(Aggregator):
         else:
             self.result = value
 
+
 class MaxAggregator(FunAggregator):
     name_format = 'max(%s)'
-    fun = max
+    fun = staticmethod(max)
+
 
 class MinAggregator(FunAggregator):
     name_format = 'min(%s)'
-    fun = min
+    fun = staticmethod(min)
+
+
+class SumAggregator(FunAggregator):
+    name_format = 'sum(%s)'
+    fun = staticmethod(lambda a, b: a + b)
+
 
 class ConditionCountAggregator(Aggregator):
-
     def condition(self, value):
         return True
 
@@ -83,9 +90,11 @@ class ConditionCountAggregator(Aggregator):
             else:
                 self.result = 0
 
+
 class CountAggregator(ConditionCountAggregator):
     name_format = 'count(%s)'
     pass
+
 
 class CountAAggregator(ConditionCountAggregator):
     name_format = 'countA(%s)'
@@ -94,9 +103,11 @@ class CountAAggregator(ConditionCountAggregator):
     def condition(self, value):
         return value > 0
 
+
 aggregate_functions = {
     'min': MinAggregator,
     'max': MaxAggregator,
+    'sum': SumAggregator,
     'count': CountAggregator,
     'countA': CountAAggregator,
 

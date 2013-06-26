@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import unittest
-from csvkit.group import group_rows, MaxAggregator, MinAggregator, CountAggregator, CountAAggregator
+from csvkit.group import group_rows, MaxAggregator, MinAggregator, CountAggregator, CountAAggregator, SumAggregator
 
 test_header = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
 test_data = [['a', 'a', 'a', 1, 2, 3],
@@ -23,6 +23,12 @@ class TestAggregators(unittest.TestCase):
         for row in test_data:
             a.take_row(row)
         self.assertEqual(a.get_result(), 0)
+
+    def test_sum(self):
+        a = SumAggregator(3)
+        for row in test_data:
+            a.take_row(row)
+        self.assertEqual(a.get_result(), 10)
 
     def test_count(self):
         a = CountAggregator(3)
