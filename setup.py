@@ -27,7 +27,7 @@ setup(
         'Topic :: Utilities'
     ],
     packages=[
-        'csvkit', 
+        'csvkit',
         'csvkit.convert',
         'csvkit.utilities'
     ],
@@ -48,7 +48,7 @@ setup(
         ]
     },
     install_requires = [
-        'argparse>=1.2.1',
+        # 'argparse>=1.2.1',
         'xlrd>=0.7.1',
         'python-dateutil>=1.5',
         'sqlalchemy>=0.6.6',
