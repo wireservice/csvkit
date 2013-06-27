@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+# globals for eval
 # noinspection PyUnresolvedReferences
 import re
 # noinspection PyUnresolvedReferences
@@ -8,6 +9,8 @@ import math
 import random
 # noinspection PyUnresolvedReferences
 import collections
+# noinspection PyUnresolvedReferences
+from rex import rex
 
 
 class ScriptCSVReader(object):
@@ -23,6 +26,8 @@ class ScriptCSVReader(object):
         self.zero_based = zero_based
         self.reader = reader
         self.scripts = scripts
+        self.compiled_scripts = map(lambda (i, script): (script[0], compile(script[1], 'script-%d' % i, 'eval')),
+                                    enumerate(self.scripts))
         self.column_names = reader.next()
 
     def __iter__(self):
@@ -35,7 +40,7 @@ class ScriptCSVReader(object):
 
         while True:
             row = self.reader.next()
-            return row + list(run_scripts(self.scripts, row, self.column_names, self.zero_based))
+            return row + list(run_scripts(self.compiled_scripts, row, self.column_names, self.zero_based))
 
         raise StopIteration()
 
