@@ -48,6 +48,7 @@ Globals are supplied with following modules:
  * math
  * random
  * collections
+ * ``python-rex <https://github.com/cypreess/python-rex>``_
 
 .. note::
 
