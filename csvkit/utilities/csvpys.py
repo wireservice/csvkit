@@ -8,7 +8,7 @@ from csvkit.script import ScriptCSVReader
 
 
 class CSVScript(CSVKitUtility):
-    description = 'Python scripting in CSV files, allowing to save processing result as new csv columns.'
+    description = 'Python scripting in CSV files. Run arbitrary python expression on each CSV row to compute value of a new  column.'
     override_flags = 'f'
 
 
@@ -17,7 +17,7 @@ class CSVScript(CSVKitUtility):
                                     help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-s', '--script', dest='script', nargs=2, metavar=('NEW_COLUMN', 'PY_SCRIPT'),
                                     action='append',
-                                    help='New column name and a python script.". Inside script use c[0] or ch[\'header\'] locals.')
+                                    help='New column name and a python expression. Inside expression use c[0] or ch[\'header\'] locals. Expression value will be saved as a new column.')
 
         self.argparser.add_argument('file', metavar="FILE", nargs='?', type=CSVFileType(), default=sys.stdin,
                                     help='The CSV file to operate on. If omitted, will accept input on STDIN.')
