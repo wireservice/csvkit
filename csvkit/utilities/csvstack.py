@@ -38,7 +38,7 @@ class CSVStack(CSVKitUtility):
 
         for i, f in enumerate(self.args.files):
             rows = CSVKitReader(f, **self.reader_kwargs)
-            headers = rows.next()
+            headers = next(rows, [])
 
             if i == 0:
                 if groups:
