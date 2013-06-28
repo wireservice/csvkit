@@ -5,7 +5,8 @@ csvgroup
 Description
 ===========
 
-Perform a SQL-like group by operation on a csv file on a specified column or columns. For each grouping, the row printed is the row that is first in the lexicographic sorting of the group's rows. Optionally add a new column to indicate how many rows are in each group. Optionally only show the grouped columns in the output::
+Perform a SQL-like group by operation on a CSV file on a specified column or columns. Operation results in printing
+columns that were aggregation key (it will be distinct in every row) and appending all columns from aggregation functions values::
 
 
     usage: csvgroup [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
@@ -40,6 +41,7 @@ Aggregation functions
  * sum
  * count - count every row
  * countA - count non zero rows
+ * common - returns most common value (handy with text fields aggregation)
 
 
 Examples
@@ -59,7 +61,9 @@ Having a data::
 
 .. warning::
 
-    You should be familiar with ``sort | uniq`` idiom in \*nix, also here you need to always use ``csvsort | csvgroup``.
+    Before grouping by any number of columns (see ``-c`` option) you should always sort data using the same columns identifiers ( e.g. use ``csvsort -c 1,2,3 | csvgroup -c 1,2,3``). csvgroup pre assumes that data are already sorted using aggregation key. This is very similar to Linux ``sort`` and ``uniq`` idiom.
+
+    Sorting is however not necessary for grouping without specifying `-c` parameter (without aggregation key).
 
 
 
@@ -102,4 +106,18 @@ And by all rows::
     |----------+---------+----------|
     |  6       | 7       | 3        |
     |----------+---------+----------|
+
+.. note::
+
+    Notice that aggregation by all rows does not require any kind of sorting, because every row is treated as unique.
+
+Get most common value of every column::
+
+    $ csvgroup -a common 1-6 examples/test_group.csv | csvlook
+    |-----+----+----+----+----+-----|
+    |  h1 | h2 | h3 | h4 | h5 | h6  |
+    |-----+----+----+----+----+-----|
+    |  a  | a  | b  | 1  | 2  | 1   |
+    |-----+----+----+----+----+-----|
+
 

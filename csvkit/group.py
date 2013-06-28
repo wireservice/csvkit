@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from collections import Counter
 from copy import deepcopy
 from itertools import groupby
 
@@ -45,6 +46,22 @@ class Aggregator(object):
 
     def get_column_name(self, column_names):
         return self.name_format % column_names[self.column_id]
+
+
+class CommonAggregator(Aggregator):
+    """Returns most common value from column"""
+
+    name_format = '%s'
+
+    def __init__(self, column_id):
+        super(CommonAggregator, self).__init__(column_id)
+        self.counter = Counter()
+
+    def take_row(self, row):
+        self.counter[self.get_value(row)] += 1
+
+    def get_result(self):
+        return self.counter.most_common(1)[0][0]
 
 
 class FunAggregator(Aggregator):
@@ -110,5 +127,6 @@ aggregate_functions = {
     'sum': SumAggregator,
     'count': CountAggregator,
     'countA': CountAAggregator,
+    'common': CommonAggregator,
 
 }
