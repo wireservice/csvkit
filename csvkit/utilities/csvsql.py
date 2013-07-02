@@ -32,6 +32,8 @@ class CSVSQL(CSVKitUtility):
             help='Do not coerce empty strings to NULL values.')
         self.argparser.add_argument('--no-infer', dest='no_infer',
             help='A comma separated list of column indices or names to skip type inference. Specified columns will be treated as strings.')
+        self.argparser.add_argument('--db-schema', dest='db_schema',
+            help='Optional name of database schema to create table(s) in.')
 
     def main(self):
         if len(self.args.files) > 1 and self.args.table_name:
@@ -66,7 +68,8 @@ class CSVSQL(CSVKitUtility):
                 except ImportError:
                     raise ImportError('You don\'t appear to have the necessary database backend installed for connection string you\'re trying to use.. Available backends include:\n\nPostgresql:\tpip install psycopg2\nMySQL:\t\tpip install MySQL-python\n\nFor details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at: \n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n')
 
-                sql_table = sql.make_table(csv_table, table_name, self.args.no_constraints, metadata)
+                sql_table = sql.make_table(csv_table, table_name, self.args.no_constraints,
+                    self.args.db_schema, metadata)
 
                 if not self.args.no_create:
                     sql_table.create()
