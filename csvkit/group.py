@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-from collections import Counter
+try :
+    from collections import Counter
+except ImportError :
+    from counterbackport import Counter
 from copy import deepcopy
 from itertools import groupby
 
