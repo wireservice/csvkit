@@ -42,7 +42,7 @@ class CSVStack(CSVKitUtility):
 
             # If we have header rows, use them
             if not self.args.no_header_row:
-                headers = rows.next()
+                headers = next(rows, [])
 
                 if i == 0:
                     if groups:

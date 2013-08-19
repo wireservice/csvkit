@@ -12,6 +12,8 @@
 * Add --no-inference option to in2csv and csvsql. (#206)
 * Add Federico Scrinzi to AUTHORS file.
 * Add --no-header-row to all tools. (#189)
+* Fix csvstack blowing up on empty files. (#209)
+* Added Chris Rosenthal to AUTHORS file.
 
 0.5.0
 -----
