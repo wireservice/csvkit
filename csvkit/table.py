@@ -187,15 +187,14 @@ class Table(list):
         # which are not seekable and thus must be buffered
         contents = f.read()
 
-        if snifflimit:
-            sample = contents[:snifflimit]
-        else:
-            sample = contents
-
-        dialect = sniffer.sniff_dialect(sample)
+        # snifflimit == 0 means do not sniff
+        if snifflimit is None:
+            kwargs['dialect'] = sniffer.sniff_dialect(contents)
+        elif snifflimit > 0:
+            kwargs['dialect'] = sniffer.sniff_dialect(contents[:snifflimit])
 
         f = StringIO(contents) 
-        reader = CSVKitReader(f, dialect=dialect, **kwargs)
+        reader = CSVKitReader(f, **kwargs)
 
         headers = reader.next()
         
