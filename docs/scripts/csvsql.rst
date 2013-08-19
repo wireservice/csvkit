@@ -45,6 +45,8 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                             specified.
       --blanks              Do not coerce empty strings to NULL values.
       --no-inference        Disable type inference when parsing the input.
+      --db-schema           Optional name of database schema to create table(s)
+                            in. 
 
 Also see: :doc:`common_arguments`.
 
