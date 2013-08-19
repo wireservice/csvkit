@@ -41,6 +41,7 @@ The header line is required though the columns may be in any order::
                             Limit CSV dialect sniffing to the specified number of
                             bytes. Specify "0" to disable sniffing entirely.
       --sheet SHEET         The name of the XLSX sheet to operate on.
+      --no-inference        Disable type inference when parsing the input.
 
 Also see: :doc:`common_arguments`.
 

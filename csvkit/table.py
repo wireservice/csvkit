@@ -18,14 +18,18 @@ class Column(list):
     """
     A normalized data column and inferred annotations (nullable, etc.).
     """
-    def __init__(self, order, name, l, normal_type=InvalidType, blanks_as_nulls=True):
+    def __init__(self, order, name, l, normal_type=InvalidType, blanks_as_nulls=True, infer_types=True):
         """
         Construct a column from a sequence of values.
         
         If normal_type is not InvalidType, inference will be skipped and values assumed to have already been normalized.
+        If infer_types is False, type inference will be skipped and the type assumed to be unicode.
         """
         if normal_type != InvalidType:
             t = normal_type
+            data = l
+        elif not infer_types:
+            t = unicode
             data = l
         else:
             t, data = typeinference.normalize_column_type(l, blanks_as_nulls=blanks_as_nulls)
@@ -174,7 +178,7 @@ class Table(list):
         return row_data
 
     @classmethod
-    def from_csv(cls, f, name='from_csv_table', snifflimit=None, column_ids=None, blanks_as_nulls=True, zero_based=False, **kwargs):
+    def from_csv(cls, f, name='from_csv_table', snifflimit=None, column_ids=None, blanks_as_nulls=True, zero_based=False, infer_types=True, **kwargs):
         """
         Creates a new Table from a file-like object containing CSV data.
 
@@ -193,7 +197,7 @@ class Table(list):
         elif snifflimit > 0:
             kwargs['dialect'] = sniffer.sniff_dialect(contents[:snifflimit])
 
-        f = StringIO(contents) 
+        f = StringIO(contents)
         reader = CSVKitReader(f, **kwargs)
 
         headers = reader.next()
@@ -217,7 +221,7 @@ class Table(list):
         columns = []
 
         for i, c in enumerate(data_columns):
-            columns.append(Column(column_ids[i], headers[i], c, blanks_as_nulls=blanks_as_nulls))
+            columns.append(Column(column_ids[i], headers[i], c, blanks_as_nulls=blanks_as_nulls, infer_types=infer_types))
 
         return Table(columns, name=name)
 

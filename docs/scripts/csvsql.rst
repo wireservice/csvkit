@@ -44,6 +44,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
       --no-create           Skip creating a table. Only valid when --insert is
                             specified.
       --blanks              Do not coerce empty strings to NULL values.
+      --no-inference        Disable type inference when parsing the input.
 
 Also see: :doc:`common_arguments`.
 

@@ -9,6 +9,8 @@
 * Add Matt Dudys to AUTHORS.
 * Add support for --skipinitialspace. (#201)
 * Add Joakim Lundborg to AUTHORS.
+* Add --no-inference option to in2csv and csvsql. (#206)
+* Add Federico Scrinzi to AUTHORS file.
 
 0.5.0
 -----

@@ -23,6 +23,8 @@ class In2CSV(CSVKitUtility):
                             help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('--sheet', dest='sheet',
                             help='The name of the XLSX sheet to operate on.')
+        self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
+                            help='Disable type inference when parsing the input.')
 
 
     def main(self):
@@ -65,6 +67,9 @@ class In2CSV(CSVKitUtility):
 
         if self.args.sheet:
             kwargs['sheet'] = self.args.sheet
+
+        if self.args.no_inference:
+            kwargs['type_inference'] = False
 
         # Fixed width can be processed as a stream
         if format == 'fixed':
