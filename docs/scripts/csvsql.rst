@@ -27,7 +27,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
       -h, --help            show this help message and exit
       -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
                             Limit CSV dialect sniffing to the specified number of
-                            bytes.
+                            bytes. Specify "0" to disable sniffing entirely.
       -i {access,sybase,sqlite,informix,firebird,mysql,oracle,maxdb,postgresql,mssql}, --dialect {access,sybase,sqlite,informix,firebird,mysql,oracle,maxdb,postgresql,mssql}
                             Dialect of SQL to generate. Only valid when --db is
                             not specified.

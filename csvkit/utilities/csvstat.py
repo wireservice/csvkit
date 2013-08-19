@@ -19,7 +19,7 @@ class CSVStat(CSVKitUtility):
 
     def add_arguments(self):
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
-            help='Limit CSV dialect sniffing to the specified number of bytes.')
+            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
             help='A comma separated list of column indices or names to be examined. Defaults to all columns.')
         self.argparser.add_argument('--max', dest='max_only', action='store_true',

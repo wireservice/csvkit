@@ -11,7 +11,7 @@ class CSVSort(CSVKitUtility):
 
     def add_arguments(self):        
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
-                            help='Limit CSV dialect sniffing to the specified number of bytes.')
+                            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                             help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',

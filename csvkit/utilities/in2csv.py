@@ -20,7 +20,7 @@ class In2CSV(CSVKitUtility):
         self.argparser.add_argument('-k', '--key', dest='key',
                             help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
-                            help='Limit CSV dialect sniffing to the specified number of bytes.')
+                            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('--sheet', dest='sheet',
                             help='The name of the XLSX sheet to operate on.')
 

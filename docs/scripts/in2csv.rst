@@ -39,7 +39,7 @@ The header line is required though the columns may be in any order::
                             list of objects to be converted when processing JSON.
       -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
                             Limit CSV dialect sniffing to the specified number of
-                            bytes.
+                            bytes. Specify "0" to disable sniffing entirely.
       --sheet SHEET         The name of the XLSX sheet to operate on.
 
 Also see: :doc:`common_arguments`.
