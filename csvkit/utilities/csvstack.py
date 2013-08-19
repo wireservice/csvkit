@@ -38,13 +38,14 @@ class CSVStack(CSVKitUtility):
 
         for i, f in enumerate(self.args.files):
             rows = CSVKitReader(f, **self.reader_kwargs)
-            headers = rows.next()
+            if not self.args.no_header_row:
+                headers = rows.next()
 
-            if i == 0:
-                if groups:
-                    headers.insert(0, group_name)
-                
-                output.writerow(headers)
+                if i == 0:
+                    if groups:
+                        headers.insert(0, group_name)
+
+                    output.writerow(headers)
 
             for row in rows:
                 if groups:

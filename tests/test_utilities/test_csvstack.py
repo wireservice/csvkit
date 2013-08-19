@@ -55,3 +55,17 @@ class TestCSVStack(unittest.TestCase):
         self.assertEqual(reader.next()[0], '1')
         self.assertEqual(reader.next()[0], '1')
 
+    def test_no_header_row(self):
+        # stack two CSV files
+        args = ['--no-header-row', 'examples/no_header_row.csv', 'examples/no_header_row2.csv']
+        output_file = StringIO.StringIO()
+        utility = CSVStack(args, output_file)
+
+        utility.main()
+
+        # verify the stacked file's contents
+        input_file = StringIO.StringIO(output_file.getvalue())
+        reader = CSVKitReader(input_file)
+
+        self.assertEqual(reader.next()[0], '1')
+        self.assertEqual(reader.next()[0], '4')
