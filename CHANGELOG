@@ -3,8 +3,10 @@
 
 * Added Chris Rosenthal to AUTHORS.
 * Fixed multi-file input to csvsql. (#193)
-* Passing --snifflimit=0 to disable dialect sniffing.
+* Passing --snifflimit=0 to disable dialect sniffing. (#190)
 * Add aarcro to the AUTHORS file.
+* Improve performance of csvgrep. (#204)
+* Add Matt Dudys to AUTHORS.
 
 0.5.0
 -----
