@@ -71,14 +71,14 @@ def get_connection(connection_string):
 
     return engine, metadata
 
-def make_table(csv_table, name='table_name', no_constraints=False, metadata=None):
+def make_table(csv_table, name='table_name', no_constraints=False, db_schema=None, metadata=None):
     """
     Creates a sqlalchemy table from a csvkit Table.
     """
     if not metadata:
         metadata = MetaData()
 
-    sql_table = Table(csv_table.name, metadata)
+    sql_table = Table(csv_table.name, metadata, schema=db_schema)
 
     for column in csv_table:
         sql_table.append_column(make_column(column, no_constraints))

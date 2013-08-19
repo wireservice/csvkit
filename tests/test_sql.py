@@ -98,6 +98,18 @@ u"""CREATE TABLE test_table (
 \tempty_column VARCHAR
 );""")
 
+    def test_make_create_table_statement_with_schema(self):
+        sql_table = sql.make_table(self.csv_table, 'csvsql', db_schema='test_schema')
+        statement = sql.make_create_table_statement(sql_table)
+
+        self.assertEqual(statement, 
+u"""CREATE TABLE test_schema.test_table (
+\ttext VARCHAR(17) NOT NULL, 
+\tinteger INTEGER, 
+\tdatetime DATETIME, 
+\tempty_column VARCHAR(32)
+);""")
+
     def make_insert_statement(self):
         sql_table = sql.make_table(self.csv_table, 'csvsql')
         statement = sql.make_insert_statement(sql_table, self.csv_table._prepare_rows_for_serialization()[0])
