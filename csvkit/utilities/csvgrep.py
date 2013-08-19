@@ -36,7 +36,7 @@ class CSVGrep(CSVKitUtility):
         if not self.args.columns:
             self.argparser.error('You must specify at least one column to search using the -c option.')
 
-        if not self.args.regex and not self.args.pattern and not self.args.matchfile:
+        if self.args.regex is None and self.args.pattern is None and self.args.matchfile is None:
             self.argparser.error('One of -r, -m or -f must be specified, unless using the -n option.')
 
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
