@@ -25,3 +25,14 @@ class TestIn2CSV(unittest.TestCase):
 
         target_output = open('examples/sheetsxls_converted.csv', 'r').read()
         self.assertEqual(output_file.getvalue(), target_output)
+
+    def test_csv_no_headers(self):
+        args = ['--no-header-row', 'examples/no_header_row.csv']
+        output_file = StringIO.StringIO()
+
+        utility = In2CSV(args, output_file)
+        utility.main()
+
+        output = output_file.getvalue()
+
+        self.assertTrue('column1,column2,column3' in output)

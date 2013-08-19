@@ -30,7 +30,14 @@ class CSVSort(CSVKitUtility):
         else:
             table_name = 'csvsql_table'
 
-        tab = table.Table.from_csv(self.args.file, name=table_name, snifflimit=self.args.snifflimit, **self.reader_kwargs)
+        tab = table.Table.from_csv(
+            self.args.file,
+            name=table_name,
+            snifflimit=self.args.snifflimit,
+            no_header_row=self.args.no_header_row,
+            **self.reader_kwargs
+        )
+        
         column_ids = parse_column_identifiers(self.args.columns, tab.headers(), self.args.zero_based)
 
         rows = tab.to_rows(serialize_dates=True) 

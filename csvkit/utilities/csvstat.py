@@ -15,7 +15,7 @@ OPERATIONS =('min', 'max', 'sum', 'mean', 'median', 'stdev', 'nulls', 'unique', 
 
 class CSVStat(CSVKitUtility):
     description = 'Print descriptive statistics for each column in a CSV file.'
-    override_flags = 'l'
+    override_flags = ['l']
 
     def add_arguments(self):
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
@@ -44,7 +44,14 @@ class CSVStat(CSVKitUtility):
             help='Only output max value length.')
 
     def main(self):
-        tab = table.Table.from_csv(self.args.file, snifflimit=self.args.snifflimit, column_ids=self.args.columns,zero_based=self.args.zero_based, **self.reader_kwargs)
+        tab = table.Table.from_csv(
+            self.args.file,
+            snifflimit=self.args.snifflimit,
+            column_ids=self.args.columns,
+            zero_based=self.args.zero_based,
+            no_header_row=self.args.no_header_row,
+            **self.reader_kwargs
+        )
 
         operations = [op for op in OPERATIONS if getattr(self.args, op + '_only')]
 

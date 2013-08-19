@@ -9,6 +9,7 @@ from csvkit.exceptions import NonUniqueKeyColumnException
 
 class CSVJSON(CSVKitUtility):
     description = 'Convert a CSV file into JSON (or GeoJSON).'
+    override_flags = ['H']
 
     def add_arguments(self):
         self.argparser.add_argument('-i', '--indent', dest='indent', type=int, default=None,

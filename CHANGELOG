@@ -11,6 +11,7 @@
 * Add Joakim Lundborg to AUTHORS.
 * Add --no-inference option to in2csv and csvsql. (#206)
 * Add Federico Scrinzi to AUTHORS file.
+* Add --no-header-row to all tools. (#189)
 
 0.5.0
 -----

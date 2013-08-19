@@ -2,11 +2,13 @@
 
 import datetime
 from cStringIO import StringIO
+import itertools
 
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit import sniffer
 from csvkit import typeinference
 from csvkit.cli import parse_column_identifiers
+from csvkit.headers import make_default_headers
 
 class InvalidType(object):
     """
@@ -178,7 +180,7 @@ class Table(list):
         return row_data
 
     @classmethod
-    def from_csv(cls, f, name='from_csv_table', snifflimit=None, column_ids=None, blanks_as_nulls=True, zero_based=False, infer_types=True, **kwargs):
+    def from_csv(cls, f, name='from_csv_table', snifflimit=None, column_ids=None, blanks_as_nulls=True, zero_based=False, infer_types=True, no_header_row=False, **kwargs):
         """
         Creates a new Table from a file-like object containing CSV data.
 
@@ -198,22 +200,33 @@ class Table(list):
             kwargs['dialect'] = sniffer.sniff_dialect(contents[:snifflimit])
 
         f = StringIO(contents)
-        reader = CSVKitReader(f, **kwargs)
+        rows = CSVKitReader(f, **kwargs)
 
-        headers = reader.next()
-        
-        if column_ids:
-            column_ids = parse_column_identifiers(column_ids, headers, zero_based)
-            headers = [headers[c] for c in column_ids]
+        if no_header_row:
+            # Peek at a row to infer column names from
+            row = next(rows) 
+
+            headers = make_default_headers(len(row))
+            column_ids = range(len(row))
+            data_columns = [[] for c in headers]
+
+            # Put row back on top
+            rows = itertools.chain([row], rows)
         else:
-            column_ids = range(len(headers))
+            headers = rows.next()
+            
+            if column_ids:
+                column_ids = parse_column_identifiers(column_ids, headers, zero_based)
+                headers = [headers[c] for c in column_ids]
+            else:
+                column_ids = range(len(headers))
         
-        data_columns = [[] for c in headers]
+            data_columns = [[] for c in headers]
 
-        for row in reader:
-            for i, d in enumerate(row):
+        for i, row in enumerate(rows):
+            for j, d in enumerate(row):
                 try:
-                    data_columns[i].append(row[column_ids[i]].strip())
+                    data_columns[j].append(row[column_ids[j]].strip())
                 except IndexError:
                     # Non-rectangular data is truncated
                     break

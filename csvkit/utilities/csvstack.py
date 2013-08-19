@@ -4,10 +4,11 @@ import os
 
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit.cli import CSVFileType, CSVKitUtility
+from csvkit.headers import make_default_headers
 
 class CSVStack(CSVKitUtility):
     description = 'Stack up the rows from multiple CSV files, optionally adding a grouping value.'
-    override_flags = 'f'
+    override_flags = ['f']
 
     def add_arguments(self):
         self.argparser.add_argument('files', metavar='FILES', nargs='+', type=CSVFileType())
@@ -38,6 +39,8 @@ class CSVStack(CSVKitUtility):
 
         for i, f in enumerate(self.args.files):
             rows = CSVKitReader(f, **self.reader_kwargs)
+
+            # If we have header rows, use them
             if not self.args.no_header_row:
                 headers = rows.next()
 
@@ -46,12 +49,29 @@ class CSVStack(CSVKitUtility):
                         headers.insert(0, group_name)
 
                     output.writerow(headers)
+            # If we don't generate simple column names based on first row
+            else:
+                row = next(rows, [])
+
+                headers = make_default_headers(len(row))
+
+                if i == 0:
+                    if groups:
+                        headers.insert(0, group_name)
+
+                    output.writerow(headers)
+
+                if groups:
+                    row.insert(0, groups[i])
+
+                output.writerow(row)
 
             for row in rows:
                 if groups:
                     row.insert(0, groups[i])
 
                 output.writerow(row)
+
             f.close()
 
 def launch_new_instance():

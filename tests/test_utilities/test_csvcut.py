@@ -99,3 +99,17 @@ class TestCSVCut(unittest.TestCase):
         utility = CSVCut(args, output_file)
 
         self.assertRaises(RequiredHeaderError, utility.main)
+
+    def test_no_header_row(self):
+        args = ['-c', '2', '--no-header-row', 'examples/no_header_row.csv']
+        output_file = StringIO.StringIO()
+        utility = CSVCut(args, output_file)
+
+        utility.main()
+
+        input_file = StringIO.StringIO(output_file.getvalue())
+        reader = CSVKitReader(input_file)
+
+        self.assertEqual(reader.next(), ['column2'])
+        self.assertEqual(reader.next(), ['2'])
+

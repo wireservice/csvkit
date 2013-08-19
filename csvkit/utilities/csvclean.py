@@ -8,6 +8,7 @@ from csvkit.cleanup import RowChecker
 
 class CSVClean(CSVKitUtility):
     description = 'Fix common errors in a CSV file.'
+    override_flags = ['H']
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--dry-run', dest='dryrun', action='store_true',

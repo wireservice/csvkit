@@ -2,7 +2,6 @@
 
 from cStringIO import StringIO
 import os
-from time import sleep
 import unittest
 
 from csvkit.utilities.csvclean import CSVClean

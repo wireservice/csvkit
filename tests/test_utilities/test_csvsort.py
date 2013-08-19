@@ -52,3 +52,19 @@ class TestCSVSort(unittest.TestCase):
         utility = CSVSort(args, output_file)
 
         self.assertRaises(RequiredHeaderError, utility.main)
+
+    def test_no_header_row(self):
+        args = ['--no-header-row', '-c', '1', '-r', 'examples/no_header_row3.csv']
+        output_file = StringIO.StringIO()
+        utility = CSVSort(args, output_file)
+
+        utility.main()
+
+        input_file = StringIO.StringIO(output_file.getvalue())
+        reader = CSVKitReader(input_file)
+
+        test_order = ['column1', '4', '1']
+        new_order = [unicode(r[0]) for r in reader] 
+
+        self.assertEqual(test_order, new_order)
+

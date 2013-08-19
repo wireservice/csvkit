@@ -7,7 +7,7 @@ from csvkit import CSVKitReader
 from csvkit.utilities.csvgrep import CSVGrep
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
-class TestCSVCut(unittest.TestCase):
+class TestCSVGrep(unittest.TestCase):
     def test_match(self):
         args = ['-c', '1', '-m', '1', 'examples/dummy.csv']
         output_file = StringIO.StringIO()
@@ -78,10 +78,3 @@ class TestCSVCut(unittest.TestCase):
         utility = CSVGrep(args, output_file)
 
         self.assertRaises(ColumnIdentifierError, utility.main)
-
-    def test_invalid_options(self):
-        args = ['-n', '--no-header-row', 'examples/dummy.csv']
-        output_file = StringIO.StringIO()
-        utility = CSVGrep(args, output_file)
-
-        self.assertRaises(RequiredHeaderError, utility.main)

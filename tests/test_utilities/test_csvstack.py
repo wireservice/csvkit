@@ -67,5 +67,6 @@ class TestCSVStack(unittest.TestCase):
         input_file = StringIO.StringIO(output_file.getvalue())
         reader = CSVKitReader(input_file)
 
+        self.assertEqual(reader.next()[0], 'column1')
         self.assertEqual(reader.next()[0], '1')
         self.assertEqual(reader.next()[0], '4')

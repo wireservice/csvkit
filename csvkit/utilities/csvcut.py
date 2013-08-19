@@ -9,8 +9,11 @@ https://gist.github.com/561347/9846ebf8d0a69b06681da9255ffe3d3f59ec2c97
 Used and modified with permission.
 """
 
+import itertools
+
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
+from csvkit.headers import make_default_headers
 
 class CSVCut(CSVKitUtility):
     description = 'Filter and truncate CSV files. Like unix "cut" command, but for tabular data.'
@@ -31,7 +34,16 @@ class CSVCut(CSVKitUtility):
             return
 
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
-        column_names = rows.next()
+
+        if self.args.no_header_row:
+            row = rows.next()
+
+            column_names = make_default_headers(len(row))
+
+            # Put the row back on top
+            rows = itertools.chain([row], rows)
+        else:
+            column_names = rows.next()
 
         column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based, self.args.not_columns)
         output = CSVKitWriter(self.output_file, **self.writer_kwargs)

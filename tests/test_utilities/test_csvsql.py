@@ -51,3 +51,18 @@ class TestCSVSQL(unittest.TestCase):
         self.assertTrue('float VARCHAR(11) NOT NULL' in sql)
         self.assertTrue('time VARCHAR(8) NOT NULL' in sql)
         self.assertTrue('datetime VARCHAR(19) NOT NULL' in sql)
+
+    def test_no_header_row(self):
+        args = ['--table', 'foo', '--no-header-row', 'examples/no_header_row.csv']
+        output_file = StringIO()
+
+        utility = CSVSQL(args, output_file)
+        utility.main() 
+
+        sql = output_file.getvalue()
+
+        self.assertTrue('CREATE TABLE foo' in sql)
+        self.assertTrue('column1 INTEGER NOT NULL' in sql)
+        self.assertTrue('column2 INTEGER NOT NULL' in sql)
+        self.assertTrue('column3 INTEGER NOT NULL' in sql)
+

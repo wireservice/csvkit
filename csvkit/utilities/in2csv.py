@@ -8,7 +8,7 @@ from csvkit.cli import CSVFileType, CSVKitUtility
 class In2CSV(CSVKitUtility):
     description = 'Convert common, but less awesome, tabular data formats to CSV.'
     epilog='Some command line flags only pertain to specific input formats.'
-    override_flags = 'f'
+    override_flags = ['f']
 
     def add_arguments(self):
         self.argparser.add_argument('file', metavar="FILE", nargs='?', default=sys.stdin,
@@ -70,6 +70,9 @@ class In2CSV(CSVKitUtility):
 
         if self.args.no_inference:
             kwargs['type_inference'] = False
+
+        if format == 'csv' and self.args.no_header_row:
+            kwargs['no_header_row'] = True
 
         # Fixed width can be processed as a stream
         if format == 'fixed':

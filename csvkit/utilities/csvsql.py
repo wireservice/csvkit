@@ -9,7 +9,7 @@ from csvkit.cli import CSVFileType, CSVKitUtility
 
 class CSVSQL(CSVKitUtility):
     description = 'Generate SQL statements for a CSV file or create execute those statements directly on a database.'
-    override_flags = 'lf'
+    override_flags = ['l', 'f']
 
     def add_arguments(self):
         self.argparser.add_argument('files', metavar="FILE", nargs='*', type=CSVFileType(), default=sys.stdin,
@@ -56,9 +56,12 @@ class CSVSQL(CSVKitUtility):
                 self.argparser.error('The --no-create option is only valid --insert is also specified.')
 
             csv_table = table.Table.from_csv(
-                f, name=table_name, snifflimit=self.args.snifflimit,
+                f,
+                name=table_name,
+                snifflimit=self.args.snifflimit,
                 blanks_as_nulls=(not self.args.blanks),
                 infer_types=(not self.args.no_inference),
+                no_header_row=self.args.no_header_row,
                 **self.reader_kwargs
             )
 

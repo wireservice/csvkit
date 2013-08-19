@@ -10,7 +10,7 @@ from csvkit.grep import FilteringCSVReader
 
 class CSVGrep(CSVKitUtility):
     description = 'Search CSV files. Like the unix "grep" command, but for tabular data.'
-    override_flags = 'f'
+    override_flags = ['f', 'H']
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
@@ -33,8 +33,11 @@ class CSVGrep(CSVKitUtility):
             self.print_column_names()
             return
 
+        if not self.args.columns:
+            self.argparser.error('You must specify at least one column to search using the -c option.')
+
         if not self.args.regex and not self.args.pattern and not self.args.matchfile:
-            self.argparser.error("One of -r, -m or -f must be specified, unless using the -n option.")
+            self.argparser.error('One of -r, -m or -f must be specified, unless using the -n option.')
 
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
         column_names = rows.next()
