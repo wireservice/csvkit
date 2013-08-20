@@ -16,6 +16,7 @@
 * Add Chris Rosenthal to AUTHORS file.
 * Add --db-schema option to csvsql. (#216)
 * Add Shane StClair to AUTHORS file.
+* Add --no-inference support to csvsort. (#222)
 
 0.5.0
 -----

@@ -29,7 +29,8 @@ Sort CSV files. Like unix "sort" command, but for tabular data::
                             A comma separated list of column indices or names to
                             be extracted. Defaults to all columns.
       -r, --reverse         Sort in descending order.
-
+      --no-inference        Disable type inference when parsing the input.
+ 
 Also see: :doc:`common_arguments`.
 
 Examples
