@@ -17,7 +17,9 @@ class CSVSort(CSVKitUtility):
         self.argparser.add_argument('-c', '--columns', dest='columns',
                             help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
         self.argparser.add_argument('-r', '--reverse', dest='reverse', action='store_true',
-                help='Sort in descending order.')
+                            help='Sort in descending order.')
+        self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
+                            help='Disable type inference when parsing the input.')
 
     def main(self):
         if self.args.names_only:
@@ -35,6 +37,7 @@ class CSVSort(CSVKitUtility):
             name=table_name,
             snifflimit=self.args.snifflimit,
             no_header_row=self.args.no_header_row,
+            infer_types=(not self.args.no_inference),
             **self.reader_kwargs
         )
         
