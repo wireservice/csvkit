@@ -17,7 +17,7 @@ def normalize_datetime(dt):
     if ms < 1000:
         return dt.replace(microsecond=0)
     elif ms > 999000:
-        return dt.replace(second=dt.second + 1, microsecond=0)
+        return dt.replace(microsecond=0) + datetime.timedelta(seconds=1)
 
     return dt
 
