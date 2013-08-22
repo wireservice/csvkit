@@ -1,7 +1,8 @@
 0.6.2
 -----
 
-
+* Fix XLSX datetime normalization bug. (#223)
+* Add raistlin7447 to AUTHORS.
 
 0.6.1
 -----
