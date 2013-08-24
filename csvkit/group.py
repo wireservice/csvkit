@@ -95,6 +95,12 @@ class SumAggregator(FunAggregator):
     fun = staticmethod(lambda a, b: a + b)
 
 
+class SumfAggregator(FunAggregator):
+    cast_type = float
+    name_format = 'sumf(%s)'
+    fun = staticmethod(lambda a, b: a + b)
+
+
 class ConditionCountAggregator(Aggregator):
     def condition(self, value):
         return True
@@ -128,6 +134,7 @@ aggregate_functions = {
     'min': MinAggregator,
     'max': MaxAggregator,
     'sum': SumAggregator,
+    'sumf': SumfAggregator,
     'count': CountAggregator,
     'countA': CountAAggregator,
     'common': CommonAggregator,
