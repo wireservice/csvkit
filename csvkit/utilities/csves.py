@@ -5,6 +5,7 @@ import sys
 import logging
 import elasticsearch
 import json
+from itertools import islice, chain
 
 from csvkit import CSVKitDictReader
 from csvkit.cli import CSVKitUtility
@@ -23,6 +24,8 @@ class CSVES(CSVKitUtility):
             help='Specify Elasticsearch host.')
         self.argparser.add_argument('--port', dest='port', default="9200",
             help='Specify Elasticsearch port.')
+        self.argparser.add_argument('--batch-size', dest='batch_size', type=int, default=1000,
+            help='Specify Elasticsearch batch size for bulk inserts.')
 
     def main(self):
         es = elasticsearch.Elasticsearch([{'host':self.args.host, 'port':self.args.port}])
@@ -35,10 +38,20 @@ class CSVES(CSVKitUtility):
                 mapping_json = json.load(mapping_file)
                 es.indices.put_mapping(index=self.args.index_name, doc_type=self.args.doc_type, body=mapping_json)
 
-        rows = CSVKitDictReader(self.args.file, **self.reader_kwargs)
-        for row in rows:
-            action={ "index" : { "_index" : self.args.index_name, "_type" : self.args.doc_type } }
-            es.bulk([action,row])
+        def batch(iterable, size):
+            sourceiter = iter(iterable)
+            while True:
+                batchiter = islice(sourceiter, size)
+                yield chain([batchiter.next()], batchiter)
+
+        reader = CSVKitDictReader(self.args.file, **self.reader_kwargs)
+        action={ "index" : { "_index" : self.args.index_name, "_type" : self.args.doc_type } }
+        for rows in batch(reader, self.args.batch_size):
+            action_data_pairs = []
+            for row in rows:
+                action_data_pairs.append(action)
+                action_data_pairs.append(row)
+            es.bulk(action_data_pairs)
         
 
 def launch_new_instance():
