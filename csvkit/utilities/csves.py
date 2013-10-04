@@ -37,7 +37,6 @@ class CSVES(CSVKitUtility):
 
         rows = CSVKitDictReader(self.args.file, **self.reader_kwargs)
         for row in rows:
-            #es.index(index=self.args.index_name, doc_type=self.args.doc_type, body=row)
             action={ "index" : { "_index" : self.args.index_name, "_type" : self.args.doc_type } }
             es.bulk([action,row])
         
