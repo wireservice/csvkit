@@ -30,7 +30,6 @@ All utilities which accept CSV as input share a set of common command-line argum
   -e ENCODING, --encoding ENCODING
   -S, --skipinitialspace
                         Ignore whitespace immediately following the delimiter.
-  -H, --no-header-row   Specifies that the input CSV file has no header row.
   -v, --verbose         Print detailed tracebacks when errors occur.
                         Specify the encoding the input file.
   -l, --linenumbers     Insert a column of line numbers at the front of the
