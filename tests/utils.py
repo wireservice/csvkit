@@ -10,3 +10,9 @@ def stderr_as_stdout():
     yield
     sys.stderr = temp
 
+@contextmanager
+def stdin_as_string(str):
+    temp = sys.stdin
+    sys.stdin = str
+    yield
+    sys.stdin = temp
