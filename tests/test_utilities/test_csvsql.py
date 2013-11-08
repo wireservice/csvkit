@@ -12,7 +12,7 @@ class TestCSVSQL(unittest.TestCase):
         output_file = StringIO()
 
         utility = CSVSQL(args, output_file)
-        utility.main() 
+        utility.main()
 
         sql = output_file.getvalue()
 
@@ -31,7 +31,7 @@ class TestCSVSQL(unittest.TestCase):
 
         utility = CSVSQL(args, output_file)
 
-        with stderr_as_stdout(): 
+        with stderr_as_stdout():
             self.assertRaises(SystemExit, utility.main)
 
     def test_no_inference(self):
@@ -39,7 +39,7 @@ class TestCSVSQL(unittest.TestCase):
         output_file = StringIO()
 
         utility = CSVSQL(args, output_file)
-        utility.main() 
+        utility.main()
 
         sql =  output_file.getvalue()
 
@@ -57,7 +57,7 @@ class TestCSVSQL(unittest.TestCase):
         output_file = StringIO()
 
         utility = CSVSQL(args, output_file)
-        utility.main() 
+        utility.main()
 
         sql = output_file.getvalue()
 
