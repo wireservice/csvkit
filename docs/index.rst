@@ -41,6 +41,7 @@ For developers::
     cd csvkit
     mkvirtualenv --no-site-packages csvkit
     pip install -r requirements.txt
+    python setup.py develop
     nosetests
 
 .. note::
