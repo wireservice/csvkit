@@ -4,7 +4,7 @@ from cStringIO import StringIO
 import unittest
 
 from csvkit.utilities.csvsql import CSVSQL
-from tests.utils import stderr_as_stdout
+from tests.utils import stderr_as_stdout, stdin_as_string
 
 class TestCSVSQL(unittest.TestCase):
     def test_create_table(self):
@@ -12,7 +12,7 @@ class TestCSVSQL(unittest.TestCase):
         output_file = StringIO()
 
         utility = CSVSQL(args, output_file)
-        utility.main() 
+        utility.main()
 
         sql = output_file.getvalue()
 
@@ -31,7 +31,7 @@ class TestCSVSQL(unittest.TestCase):
 
         utility = CSVSQL(args, output_file)
 
-        with stderr_as_stdout(): 
+        with stderr_as_stdout():
             self.assertRaises(SystemExit, utility.main)
 
     def test_no_inference(self):
@@ -39,7 +39,7 @@ class TestCSVSQL(unittest.TestCase):
         output_file = StringIO()
 
         utility = CSVSQL(args, output_file)
-        utility.main() 
+        utility.main()
 
         sql =  output_file.getvalue()
 
@@ -57,7 +57,7 @@ class TestCSVSQL(unittest.TestCase):
         output_file = StringIO()
 
         utility = CSVSQL(args, output_file)
-        utility.main() 
+        utility.main()
 
         sql = output_file.getvalue()
 
@@ -66,3 +66,19 @@ class TestCSVSQL(unittest.TestCase):
         self.assertTrue('column2 INTEGER NOT NULL' in sql)
         self.assertTrue('column3 INTEGER NOT NULL' in sql)
 
+    def test_stdin(self):
+        args = ['--table', 'foo']
+        output_file = StringIO()
+
+        input_file = StringIO("a,b,c\n1,2,3\n")
+
+        with stdin_as_string(input_file):
+            utility = CSVSQL(args, output_file)
+            utility.main()
+
+            sql = output_file.getvalue()
+
+            self.assertTrue('CREATE TABLE foo' in sql)
+            self.assertTrue('a INTEGER NOT NULL' in sql)
+            self.assertTrue('b INTEGER NOT NULL' in sql)
+            self.assertTrue('c INTEGER NOT NULL' in sql)

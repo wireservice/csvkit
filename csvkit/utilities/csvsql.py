@@ -12,7 +12,7 @@ class CSVSQL(CSVKitUtility):
     override_flags = ['l', 'f']
 
     def add_arguments(self):
-        self.argparser.add_argument('files', metavar="FILE", nargs='*', type=CSVFileType(), default=sys.stdin,
+        self.argparser.add_argument('files', metavar="FILE", nargs='*', type=CSVFileType(), default=[sys.stdin],
             help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
             help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
