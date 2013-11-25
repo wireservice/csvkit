@@ -348,7 +348,7 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
                     if b:
                         b = int(b) + 1
                     else:
-                        b = len(column_names)
+                        b = len(column_names) + 1
                         
                 except ValueError:
                     raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
