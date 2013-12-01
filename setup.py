@@ -34,6 +34,7 @@ setup(
     entry_points ={
         'console_scripts': [
             'csvcut = csvkit.utilities.csvcut:launch_new_instance',
+            'csvsplit = csvkit.utilities.csvsplit:launch_new_instance',
             'in2csv = csvkit.utilities.in2csv:launch_new_instance',
             'csvsql = csvkit.utilities.csvsql:launch_new_instance',
             'csvclean = csvkit.utilities.csvclean:launch_new_instance',
