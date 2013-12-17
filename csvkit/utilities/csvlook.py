@@ -71,7 +71,6 @@ class CSVLook(CSVKitUtility):
 
             self.output_file.write(('| %s |\n' % ('|'.join(output))).encode('utf-8'))
 
-            #if (i == 0 and not self.args.no_header_row) or i == len(rows) - 1:
             if (i == 0 or i == len(rows) - 1):
                 self.output_file.write('%s\n' % divider)
 
