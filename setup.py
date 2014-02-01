@@ -40,6 +40,7 @@ setup(
             'csvstat = csvkit.utilities.csvstat:launch_new_instance',
             'csvlook = csvkit.utilities.csvlook:launch_new_instance',
             'csvjoin = csvkit.utilities.csvjoin:launch_new_instance',
+            'csvsplit = csvkit.utilities.csvsplit:launch_new_instance',
             'csvstack = csvkit.utilities.csvstack:launch_new_instance',
             'csvsort = csvkit.utilities.csvsort:launch_new_instance',
             'csvgrep = csvkit.utilities.csvgrep:launch_new_instance',
