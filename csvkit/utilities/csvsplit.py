@@ -64,6 +64,9 @@ class CSVSplit(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument('-c', '--columns', dest='columns',
                         help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
+        self.argparser.add_argument('-o', '--output', dest='output',
+                        help='The output filename template. The value of the specified columns will be added right before the extension. It must be specified if reading from STDIN.')
+
 
     def main(self, file_constructor=open):
         # file_constructor parameter is used to test without creating files
@@ -85,7 +88,13 @@ class CSVSplit(CSVKitUtility):
 
         column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based)
         
-        # FIXME: assign output basename/fname in case of reading from STDIN
+        try:
+            basename = self.args.file._lazy_args[0]
+        except AttributeError:
+            basename = self.args.output
+            if not basename:
+                self.argparser.error('You must specify the output filename template when you are reading from STDIN.')
+
         writers_pool = FileWritersPool(file_constructor, self.writer_kwargs)
         for row in rows:
             grouping_values = tuple([row[c] if c < len(row) else None for c in column_ids])
@@ -93,7 +102,7 @@ class CSVSplit(CSVKitUtility):
                 writers_pool.get_writer(grouping_values)\
                     .writerow(row)
             except KeyError:
-                fname = fname_format(self.args.file._lazy_args[0], '_'.join(grouping_values))
+                fname = fname_format(basename, '_'.join(grouping_values))
                 writers_pool.create_writer(grouping_values, fname)
                 writer = writers_pool.get_writer(grouping_values)
                 if not self.args.no_header_row:
