@@ -2,6 +2,7 @@
 
 import collections
 import itertools
+import os.path
 
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
@@ -14,14 +15,8 @@ def fname_format(fname, label):
     "data/population.projection_2009.csv".
 
     """
-    parts = fname.split(".")
-    if len(parts) > 1: # We have an extension
-        first = '.'.join(parts[:-1])
-        ext = ".{}".format(parts[-1])
-    else: # No extension
-        first = parts[0]
-        ext = ""
-    full_fname = "{}_{}{}".format(first, label, ext)
+    root, ext = os.path.splitext(fname)
+    full_fname = "{}_{}{}".format(root, label, ext)
     return full_fname
 
 class FileWritersPool(object):

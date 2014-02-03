@@ -43,7 +43,7 @@ class TestCSVSplit(unittest.TestCase):
         self.assertEqual(reader.next(), ['sdf', '4', '5', '6'])
 
     def test_no_header_row(self):
-        # Split a file in two files
+        # Split a no header file in two files
         args = ['-c', '1', '--no-header-row', 'examples/dummy-stacked.csv']
         utility = CSVSplit(args)
 
@@ -64,3 +64,34 @@ class TestCSVSplit(unittest.TestCase):
         reader = CSVKitReader(input_file)
         self.assertEqual(reader.next(), ['sdf', '1', '2', '3'])
         self.assertEqual(reader.next(), ['sdf', '4', '5', '6'])
+
+    # def test_stdin(self):
+    #     # Split a no file from stdin in two files
+    #     args = ['-c', '1']
+    #     utility = CSVSplit(args)
+
+    #     dummy_files = DummyFiles()
+    #     # assert that raises an error utility.main(dummy_files.dummy_file_constructor)
+    #     #print dummy_files.file_objs
+
+    #     # Split a no file from stdin in two files
+    #     args = ['-c', '1' '-o' ['splitted.csv']]
+    #     utility = CSVSplit(args)
+
+    #     dummy_files = DummyFiles()
+    #     assert that raises an error utility.main(dummy_files.dummy_file_constructor)
+
+        # input_file = StringIO.StringIO(dummy_files.file_objs[('examples/dummy-stacked_foo.csv')].getvalue())
+        # reader = CSVKitReader(input_file)
+        # self.assertEqual(reader.next(), ['foo', 'a', 'b', 'c'])
+
+        # input_file = StringIO.StringIO(dummy_files.file_objs[('examples/dummy-stacked_asd.csv')].getvalue())
+        # reader = CSVKitReader(input_file)
+        # self.assertEqual(reader.next(), ['asd', '1', '2', '3'])
+        # self.assertEqual(reader.next(), ['asd', '4', '5', '6'])
+
+        # input_file = StringIO.StringIO(dummy_files.file_objs[('examples/dummy-stacked_sdf.csv')].getvalue())
+        # reader = CSVKitReader(input_file)
+        # self.assertEqual(reader.next(), ['sdf', '1', '2', '3'])
+        # self.assertEqual(reader.next(), ['sdf', '4', '5', '6'])
+
