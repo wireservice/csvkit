@@ -27,9 +27,11 @@ class FileWritersPool(object):
     handle, closes those that were not used recently.
 
     """
-    def __init__(self, file_constructor, writer_kwargs):
+    def __init__(self, file_constructor, writer_kwargs, write_header, column_names):
         self.file_constructor = file_constructor
         self.writer_kwargs = writer_kwargs
+        self.write_header = write_header
+        self.column_names = column_names
         self.writers = {}
         # TODO: replace with a number dependent on the max opened files on this system
         self.last_used = collections.deque(maxlen=100)
@@ -57,10 +59,14 @@ class FileWritersPool(object):
             for fw in to_be_closed:
                 self.opened_fobjs[fw].close()
                 self.writers.pop(fw)
+            fobj = self.file_constructor(fname, mode, **self.writer_kwargs)
 
         self.opened_fobjs[fname] = fobj
-        self.writers[fname] = CSVKitWriter(fobj)
-        return self.writers[fname]
+        writer = CSVKitWriter(fobj)
+        self.writers[fname] = writer
+        if not self.write_header:
+            writer.writerow(self.column_names)
+        return writer
 
 
 
@@ -101,13 +107,12 @@ class CSVSplit(CSVKitUtility):
             if not basename:
                 self.argparser.error('You must specify the output filename template when you are reading from STDIN.')
 
-        writers_pool = FileWritersPool(file_constructor, self.writer_kwargs)
+        writers_pool = FileWritersPool(file_constructor, self.writer_kwargs,
+            self.args.no_header_row, column_names)
         for row in rows:
             grouping_values = tuple([row[c] if c < len(row) else None for c in column_ids])
             fname = fname_format(basename, '_'.join(grouping_values))
             writers_pool.get_writer(fname).writerow(row)
-            if not self.args.no_header_row:
-                writer.writerow(column_names)
 
 
 def launch_new_instance():
