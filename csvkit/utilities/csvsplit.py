@@ -96,7 +96,8 @@ class CSVSplit(CSVKitUtility):
                 fname = fname_format(self.args.file._lazy_args[0], '_'.join(grouping_values))
                 writers_pool.create_writer(grouping_values, fname)
                 writer = writers_pool.get_writer(grouping_values)
-                writer.writerow(column_names)
+                if not self.args.no_header_row:
+                    writer.writerow(column_names)
                 writer.writerow(row)
 
 

@@ -53,17 +53,14 @@ class TestCSVSplit(unittest.TestCase):
 
         input_file = StringIO.StringIO(dummy_files.file_objs[('examples/dummy-stacked_foo.csv')].getvalue())
         reader = CSVKitReader(input_file)
-        self.assertEqual(reader.next(), ['column1', 'column2', 'column3', 'column4'])
         self.assertEqual(reader.next(), ['foo', 'a', 'b', 'c'])
 
         input_file = StringIO.StringIO(dummy_files.file_objs[('examples/dummy-stacked_asd.csv')].getvalue())
         reader = CSVKitReader(input_file)
-        self.assertEqual(reader.next(), ['column1', 'column2', 'column3', 'column4'])
         self.assertEqual(reader.next(), ['asd', '1', '2', '3'])
         self.assertEqual(reader.next(), ['asd', '4', '5', '6'])
 
         input_file = StringIO.StringIO(dummy_files.file_objs[('examples/dummy-stacked_sdf.csv')].getvalue())
         reader = CSVKitReader(input_file)
-        self.assertEqual(reader.next(), ['column1', 'column2', 'column3', 'column4'])
         self.assertEqual(reader.next(), ['sdf', '1', '2', '3'])
         self.assertEqual(reader.next(), ['sdf', '4', '5', '6'])
