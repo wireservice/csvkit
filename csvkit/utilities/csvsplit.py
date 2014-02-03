@@ -9,7 +9,8 @@ from csvkit.cli import CSVKitUtility, parse_column_identifiers
 from csvkit.headers import make_default_headers
 
 def fname_format(fname, label):
-    """Return a filename with a label, inserted right before the last file extension.
+    """
+    Return a filename with a label, inserted right before the last file extension.
 
     For example "data/population.projection.csv" with label `2009` becomes
     "data/population.projection_2009.csv".
@@ -20,6 +21,12 @@ def fname_format(fname, label):
     return full_fname
 
 class FileWritersPool(object):
+    """
+    Manages a pool of open files and CSV Writers, so that we don't have to open and
+    close them continuously. When the number of files is more that the system can
+    handle, closes those that were not used recently.
+
+    """
     def __init__(self, file_constructor, writer_kwargs):
         self.file_constructor = file_constructor
         self.writer_kwargs = writer_kwargs
@@ -28,27 +35,32 @@ class FileWritersPool(object):
         self.last_used = collections.deque(maxlen=100)
         self.opened_fobjs = {}
 
-    def get_writer(self, name):
-        self.last_used.append(name)
-        return self.writers[name]
-
-    def create_writer(self, name, fname):
+    def get_writer(self, fname):
+        self.last_used.append(fname)
         try:
-            if name in self.opened_fobjs:
-                mode = "a"
-            else:
-                mode = "w"
-            fobj = self.file_constructor(fname, mode, **self.writer_kwargs)
-            self.writers[name] = CSVKitWriter(fobj)
-            self.opened_fobjs[name] = fobj
+            return self.writers[fname]
+        except KeyError:
+            return self._create_writer(fname)
+
+    def _create_writer(self, fname):
+        if fname in self.opened_fobjs:
+            mode = "a"
+        else:
+            mode = "w"
+        try:
+            fobj = self.file_constructor(fname, mode, **self.writer_kwargs)  
         except IOError:
-            # Too many open files, close the recently not used
-            for k in self.writers:
-                if k not in self.last_used and k in self.opened_fobjs:
-                    self.opened_fobjs.pop(k).close()
-            fobj = self.file_constructor(fname, mode, **self.writer_kwargs)
-            self.writers[name] = CSVKitWriter(fobj)
-            self.opened_fobjs[name] = fobj
+            # Too many open files, close those not recently used and try again
+            to_be_closed = [fw for fw in self.writers
+                if fw not in self.last_used
+                and fw not in self.opened_fobjs]
+            for fw in to_be_closed:
+                self.opened_fobjs[fw].close()
+                self.writers.pop(fw)
+
+        self.opened_fobjs[fname] = fobj
+        self.writers[fname] = CSVKitWriter(fobj)
+        return self.writers[fname]
 
 
 
@@ -80,7 +92,6 @@ class CSVSplit(CSVKitUtility):
         else:
             column_names = rows.next()
 
-
         column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based)
         
         try:
@@ -93,16 +104,10 @@ class CSVSplit(CSVKitUtility):
         writers_pool = FileWritersPool(file_constructor, self.writer_kwargs)
         for row in rows:
             grouping_values = tuple([row[c] if c < len(row) else None for c in column_ids])
-            try:
-                writers_pool.get_writer(grouping_values)\
-                    .writerow(row)
-            except KeyError:
-                fname = fname_format(basename, '_'.join(grouping_values))
-                writers_pool.create_writer(grouping_values, fname)
-                writer = writers_pool.get_writer(grouping_values)
-                if not self.args.no_header_row:
-                    writer.writerow(column_names)
-                writer.writerow(row)
+            fname = fname_format(basename, '_'.join(grouping_values))
+            writers_pool.get_writer(fname).writerow(row)
+            if not self.args.no_header_row:
+                writer.writerow(column_names)
 
 
 def launch_new_instance():
