@@ -54,8 +54,7 @@ class FileWritersPool(object):
         except IOError:
             # Too many open files, close those not recently used and try again
             to_be_closed = [fw for fw in self.writers
-                if fw not in self.last_used
-                and fw not in self.opened_fobjs]
+                if fw not in self.last_used]
             for fw in to_be_closed:
                 self.opened_fobjs[fw].close()
                 self.writers.pop(fw)
