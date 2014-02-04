@@ -63,7 +63,7 @@ class FileWritersPool(object):
         self.opened_fobjs[fname] = fobj
         writer = CSVKitWriter(fobj)
         self.writers[fname] = writer
-        if not self.write_header:
+        if self.write_header and mode == "w":
             writer.writerow(self.column_names)
         return writer
 
@@ -107,7 +107,7 @@ class CSVSplit(CSVKitUtility):
                 self.argparser.error('You must specify the output filename template when you are reading from STDIN.')
 
         writers_pool = FileWritersPool(file_constructor, self.writer_kwargs,
-            self.args.no_header_row, column_names)
+            not self.args.no_header_row, column_names)
         for row in rows:
             grouping_values = tuple([row[c] if c < len(row) else None for c in column_ids])
             fname = fname_format(basename, '_'.join(grouping_values))
