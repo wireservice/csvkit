@@ -26,7 +26,7 @@ def fixed2csv(f, schema, output=None, **kwargs):
     except KeyError:
         encoding = None
 
-    writer = CSVKitWriter(output)
+    writer = CSVKitWriter(output, **kwargs)
 
     reader = FixedWidthReader(f, schema, encoding=encoding)
     writer.writerows(reader)

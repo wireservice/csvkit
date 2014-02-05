@@ -11,7 +11,7 @@ def csv2csv(f, **kwargs):
     tab = table.Table.from_csv(f, **kwargs) 
 
     o = StringIO()
-    output = tab.to_csv(o)
+    output = tab.to_csv(o, **kwargs)
     output = o.getvalue()
     o.close()
 

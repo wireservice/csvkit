@@ -78,6 +78,17 @@ class UnicodeCSVWriter(object):
             self.encoder = codecs.getincrementalencoder(encoding)()
 
     def writerow(self, row):
+        ### HACK: Work around for unresolved issue in csv module http://bugs.python.org/issue12178
+        escapechar = self.writer.dialect.escapechar
+        if escapechar != None:
+            fixed_row = []
+            for s in row:
+                if isinstance(s, (str, unicode)):
+                    fixed_row.append(s.replace(escapechar,(escapechar + escapechar)))
+                else:
+                    fixed_row.append(s)
+            row = fixed_row
+        ###
         if self._eight_bit:
             self.writer.writerow([unicode(s if s != None else '').encode(self.encoding) for s in row])
         else:

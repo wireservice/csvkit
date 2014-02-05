@@ -204,27 +204,27 @@ class CSVKitUtility(object):
         """
         kwargs = {}
 
-        if self.args.encoding:
+        if self.args.encoding is not None:
             kwargs['encoding'] = self.args.encoding
 
-        if self.args.tabs:
+        if self.args.tabs is True:
             kwargs['delimiter'] = '\t'
-        elif self.args.delimiter:
+        elif self.args.delimiter is not None:
             kwargs['delimiter'] = self.args.delimiter
 
-        if self.args.quotechar:
+        if self.args.quotechar is not None:
             kwargs['quotechar'] = self.args.quotechar
 
-        if self.args.quoting:
+        if self.args.quoting is not None:
             kwargs['quoting'] = self.args.quoting
 
-        if self.args.doublequote:
+        if self.args.doublequote is not None:
             kwargs['doublequote'] = self.args.doublequote
 
-        if self.args.escapechar:
+        if self.args.escapechar is not None:
             kwargs['escapechar'] = self.args.escapechar
-
-        if self.args.maxfieldsize:
+        
+        if self.args.maxfieldsize is not None:
             kwargs['maxfieldsize'] = self.args.maxfieldsize
 
         if self.args.skipinitialspace:
