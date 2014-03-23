@@ -6,10 +6,9 @@ import os
 
 from csvkit.utilities.sql2csv import SQL2CSV
 from csvkit.utilities.csvsql import CSVSQL
-from tests.utils import stderr_as_stdout, stdin_as_string
+from tests.utils import stdin_as_string
 
 class TestSQL2CSV(unittest.TestCase):
-
     def setUp(self):
         self.db_file = "foo.db"
 
@@ -20,9 +19,14 @@ class TestSQL2CSV(unittest.TestCase):
             pass
 
     def csvsql(self, csv_file):
+        """
+        Load test data into the DB and return it as a string for comparison.
+        """
         args = ['--db', "sqlite:///" + self.db_file, '--table', 'foo', '--insert', csv_file]
+
         utility = CSVSQL(args)
         utility.main()
+
         return open(csv_file, 'r').read().strip()
 
     def test_query(self):
@@ -32,6 +36,7 @@ class TestSQL2CSV(unittest.TestCase):
         utility = SQL2CSV(args, output_file)
         utility.main()
         csv = output_file.getvalue()
+
         self.assertTrue('question' in csv)
         self.assertTrue('54' in csv)
 
@@ -43,6 +48,7 @@ class TestSQL2CSV(unittest.TestCase):
             utility = SQL2CSV([], output_file)
             utility.main()
             csv = output_file.getvalue()
+
             self.assertTrue('answer' in csv)
             self.assertTrue('42' in csv)
 
@@ -55,6 +61,7 @@ class TestSQL2CSV(unittest.TestCase):
             utility = SQL2CSV(args, output_file)
             utility.main()
             csv = output_file.getvalue()
+
             self.assertTrue('question' in csv)
             self.assertTrue('42' not in csv)
 
@@ -62,6 +69,7 @@ class TestSQL2CSV(unittest.TestCase):
         target_output = self.csvsql('examples/test_utf8.csv')
         args = ['--db', "sqlite:///" + self.db_file, '--query', 'select * from foo']
         output_file = StringIO()
+
         utility = SQL2CSV(args, output_file)
         utility.main()
 

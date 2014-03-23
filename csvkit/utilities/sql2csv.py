@@ -5,7 +5,6 @@ import sys
 
 from csvkit import CSVKitWriter
 from csvkit import sql
-from csvkit import table
 from csvkit.cli import CSVKitUtility
 
 class SQL2CSV(CSVKitUtility):
@@ -41,19 +40,23 @@ class SQL2CSV(CSVKitUtility):
             raise ImportError('You don\'t appear to have the necessary database backend installed for connection string you\'re trying to use.. Available backends include:\n\nPostgresql:\tpip install psycopg2\nMySQL:\t\tpip install MySQL-python\n\nFor details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at: \n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n')
 
         conn = engine.connect()
+
         if self.args.query:
             query = self.args.query.strip()
         else:
             query = ""
+
             for line in self.args.file:
                 query += line
 
         rows = conn.execute(query)
         output = CSVKitWriter(self.output_file, **self.writer_kwargs)
+
         if not self.args.no_header_row:
             output.writerow(rows._metadata.keys)
         for row in rows:
             output.writerow(row)
+
         conn.close()
 
 def launch_new_instance():

@@ -45,7 +45,7 @@ setup(
             'csvstack = csvkit.utilities.csvstack:launch_new_instance',
             'csvstat = csvkit.utilities.csvstat:launch_new_instance',
             'in2csv = csvkit.utilities.in2csv:launch_new_instance',
-            'sql2csv = csvkit.utilities.sql2csv:launch_new_instance',
+            'sql2csv = csvkit.utilities.sql2csv:launch_new_instance'
         ]
     },
     install_requires = [
@@ -54,5 +54,6 @@ setup(
         'python-dateutil>=1.5',
         'sqlalchemy>=0.6.6',
         'openpyxl>=1.5.7',
-        'dbf>=0.94.003']
+        'dbf>=0.94.003'
+    ]
 )
