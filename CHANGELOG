@@ -3,6 +3,11 @@
 
 * Fix XLSX datetime normalization bug. (#223)
 * Add raistlin7447 to AUTHORS.
+* Merged sql2csv utility (#259).
+* Add Jeroen Janssens to AUTHORS.
+* Validate csvsql DB connections before parsing CSVs. (#257)
+* Clarify install process for Ubuntu. (#249)
+* Clarify docs for --escapechar. (#242)
 
 0.6.1
 -----
