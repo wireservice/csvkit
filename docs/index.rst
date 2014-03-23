@@ -73,6 +73,7 @@ csvkit is comprised of a number of individual command line utilities that be loo
     :maxdepth: 1 
 
     scripts/in2csv
+    scripts/sql2csv
 
 *Processing*
 
