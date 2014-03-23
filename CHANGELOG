@@ -8,6 +8,7 @@
 * Validate csvsql DB connections before parsing CSVs. (#257)
 * Clarify install process for Ubuntu. (#249)
 * Clarify docs for --escapechar. (#242)
+* Make ``import csvkit`` API compatible with ``import csv``.
 
 0.6.1
 -----

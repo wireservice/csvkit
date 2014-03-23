@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 """
-This module contains csvkit's superpowered reader and writer. The most improvement over the standard library versions is that these versions are completely unicode aware and can support any encoding by simply passing in the its name at the time they are created.
+This module contains csvkit's superpowered reader and writer. The greatest improvement over the standard library versions is that these versions are completely unicode aware and can support any encoding by simply passing in the its name at the time they are created.
 
-We recommend you use these as a replacement for :func:`csv.reader` and :func:`csv.writer`.
+This module defines ``reader``, ``writer``, ``DictReader`` and ``DictWriter`` so you can use it as a drop-in replacement for :mod:`csv`. Alternatively, you can instantiate :class:`CSVKitReader`, :class:`CSVKitWriter`, :class:`CSVKitDictReader` and :class:`CSVKitDictWriter` directly.
 """
 
-from csvkit import unicsv 
+from csvkit import unicsv
 
 class CSVKitReader(unicsv.UnicodeCSVReader):
     """
@@ -82,3 +82,17 @@ class CSVKitDictWriter(unicsv.UnicodeCSVDictWriter):
         for row in rows:
             self.writerow(row)
 
+def reader(*args, **kwargs):
+    """
+    A drop-in replacement for Python's :func:`csv.reader` that leverages :class:`csvkit.CSVKitReader`.
+    """
+    return CSVKitReader(*args, **kwargs)
+
+def writer(*args, **kwargs):
+    """
+    A drop-in replacement for Python's :func:`csv.writer` that leverages :class:`csvkit.CSVKitWriter`.
+    """
+    return CSVKitWriter(*args, **kwargs)
+
+DictReader = CSVKitDictReader
+DictWriter = CSVKitDictWriter
