@@ -43,4 +43,6 @@ Load data about financial aid recipients into Postgresql. Then find the three st
     $ csvsql --db "postgresql:///recipients" --table "fy09" --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
     $ sql2csv --db "postgresql:///recipients" --query "select * from fy09 where \"State Name\" != '' order by fy09.\"TOTAL\" limit 3"
 
+You can even use it as a simple SQL calculator::
 
+    $ sql2csv --db "sqlite:///math.db" --query "select 300 * 47 % 14 * 27 + 7000"
