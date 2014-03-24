@@ -136,7 +136,7 @@ class TestUnicodeCSVDictWriter(unittest.TestCase):
         self.output.close()
 
     def test_writer(self):
-        writer = unicsv.UnicodeCSVDictWriter(self.output, ['a', 'b', 'c'], writeheader=True)
+        writer = unicsv.UnicodeCSVDictWriter(self.output, ['a', 'b', 'c'], writeheader=True, lineterminator='\n')
         writer.writerow({
             u'a': u'1',
             u'b': u'2',
@@ -145,7 +145,7 @@ class TestUnicodeCSVDictWriter(unittest.TestCase):
 
         result = self.output.getvalue()
 
-        self.assertEqual(result, 'a,b,c\r\n1,2,☃\r\n')
+        self.assertEqual(result, 'a,b,c\n1,2,☃\n')
 
 class TestMaxFieldSize(unittest.TestCase):
     def setUp(self):

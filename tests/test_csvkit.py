@@ -96,7 +96,7 @@ class TestCSVKitDictWriter(unittest.TestCase):
 
         result = self.output.getvalue()
 
-        self.assertEqual(result, 'a,b,c\r\n1,2,☃\r\n')
+        self.assertEqual(result, 'a,b,c\n1,2,☃\n')
 
     def test_writer_alias(self):
         writer = csvkit.DictWriter(self.output, ['a', 'b', 'c'], writeheader=True)
@@ -108,5 +108,5 @@ class TestCSVKitDictWriter(unittest.TestCase):
 
         result = self.output.getvalue()
 
-        self.assertEqual(result, 'a,b,c\r\n1,2,☃\r\n')
+        self.assertEqual(result, 'a,b,c\n1,2,☃\n')
 
