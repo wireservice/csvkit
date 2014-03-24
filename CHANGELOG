@@ -9,6 +9,8 @@
 * Clarify install process for Ubuntu. (#249)
 * Clarify docs for --escapechar. (#242)
 * Make ``import csvkit`` API compatible with ``import csv``.
+* Update Travis CI link. (#258)
+* Add Sébastien Fievet to AUTHORS.
 
 0.6.1
 -----
