@@ -43,7 +43,7 @@ class UnicodeCSVReader(object):
             row = self.reader.next()
         except csv.Error, e:
             # Terrible way to test for this exception, but there is no subclass
-            if fnmatch.fnmatch(str(e), 'field large[rt] than field limit *'):
+            if 'field larger than field limit' in str(e):
                 raise FieldSizeLimitError(csv.field_size_limit())
             else:
                 raise e
