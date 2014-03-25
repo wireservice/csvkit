@@ -53,7 +53,7 @@ setup(
         'xlrd>=0.9.2',
         'python-dateutil>=1.5',
         'SQLAlchemy>=0.6.6',
-        'openpyxl>=1.8.4'
+        'openpyxl>=1.8.4',
         'dbf>=0.95.004'
     ]
 )
