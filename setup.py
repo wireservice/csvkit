@@ -9,7 +9,7 @@ setup(
     long_description=open('README').read(),
     author='Christopher Groskopf',
     author_email='staringmonkey@gmail.com',
-    url='http://blog.apps.chicagotribune.com/',
+    url='http://csvkit.rtfd.org/',
     license='MIT',
     classifiers=[
         'Development Status :: 4 - Beta',
