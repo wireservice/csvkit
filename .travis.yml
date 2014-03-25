@@ -4,6 +4,6 @@ python:
   - "2.7"
   - "pypy"
 install:
-  - "pip install argparse --use-mirrors"
+  - "pip install 'argparse>=1.2.1' --allow-external"
   - "pip install -r requirements.txt --use-mirrors"
 script: nosetests
