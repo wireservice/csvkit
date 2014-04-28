@@ -1,6 +1,7 @@
 0.7.3
 -----
 
+* Only install argparse for Python < 2.7. (#224)
 * Add Diego Rabatone Oliveira to AUTHORS.
 * Add Ryan Murphy to AUTHORS.
 * Fix DBF dependency. (#270)
