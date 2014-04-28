@@ -1,7 +1,12 @@
+0.7.3
+-----
+
+* Fix DBF dependency. (#270)
+
 0.7.2
 -----
 
-* Fix CHANGELOG or release.
+* Fix CHANGELOG for release.
 
 0.7.1
 -----
