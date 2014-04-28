@@ -58,6 +58,10 @@ If you are a developer that also wants to hack on csvkit, install it this way::
     python setup.py develop
     nosetests
 
+.. note::
+
+    If you have a recent version of pip, you may need to run pip with the additional arguments :code:`--allow-external argparse`.
+    
 Tutorial
 ========
 
