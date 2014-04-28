@@ -1,6 +1,8 @@
 0.7.3
 -----
 
+* Add Diego Rabatone Oliveira to AUTHORS.
+* Add Ryan Murphy to AUTHORS.
 * Fix DBF dependency. (#270)
 
 0.7.2
