@@ -1,6 +1,17 @@
 #!/usr/bin/env python
 
+import sys
 from setuptools import setup
+
+install_requires = [
+    'xlrd>=0.7.1',
+    'python-dateutil>=1.5',
+    'sqlalchemy>=0.6.6',
+    'openpyxl>=1.5.7',
+    'dbf==0.94.003']
+
+if sys.version_info < (2, 7):
+    install_requires.append('argparse>=1.2.1')
 
 setup(
     name='csvkit',
@@ -48,12 +59,5 @@ setup(
             'sql2csv = csvkit.utilities.sql2csv:launch_new_instance'
         ]
     },
-    install_requires = [
-        'argparse>=1.2.1',
-        'xlrd>=0.9.2',
-        'python-dateutil>=1.5',
-        'SQLAlchemy>=0.9.3',
-        'openpyxl>=1.8.4',
-        'dbf==0.95.004'
-    ]
+    install_requires = install_requires
 )
