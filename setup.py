@@ -54,6 +54,6 @@ setup(
         'python-dateutil>=1.5',
         'SQLAlchemy>=0.9.3',
         'openpyxl>=1.8.4',
-        'dbf>=0.95.004'
+        'dbf==0.95.004'
     ]
 )
