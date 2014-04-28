@@ -40,7 +40,7 @@ If you only want to use csvkit, install it this way::
 
 If you are installing on Ubuntu you may need to install the Python development headers prior to install csvkit::
 
-    sudo apt-get install python-dev python-pip python-setuptools build-essentila
+    sudo apt-get install python-dev python-pip python-setuptools build-essential
 
 If the installation appears to be successful but running the tools fails, try updating your version of Python setuptools:
 
