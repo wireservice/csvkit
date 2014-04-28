@@ -42,6 +42,11 @@ If you are installing on Ubuntu you may need to install the Python development h
 
     sudo apt-get install python-dev python-pip python-setuptools build-essentila
 
+If the installation appears to be successful but running the tools fails, try updating your version of Python setuptools:
+
+    pip install setuptools --upgrade
+    pip install csvkit --upgrade
+
 .. note::
 
     csvkit is routinely tested on OSX, somewhat less frequently on Linux and once in a while on Windows. All platforms are supported. It is tested against Python 2.6, 2.7 and PyPy. Neither Python < 2.6 nor Python >= 3.0 are supported at this time.
