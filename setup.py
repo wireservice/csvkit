@@ -8,7 +8,9 @@ install_requires = [
     'python-dateutil>=1.5',
     'sqlalchemy>=0.6.6',
     'openpyxl>=1.5.7',
-    'dbf==0.94.003']
+    'dbf==0.94.003',
+    'python-rex',
+]
 
 if sys.version_info < (2, 7):
     install_requires.append('argparse>=1.2.1')
@@ -57,7 +59,10 @@ setup(
             'csvstat = csvkit.utilities.csvstat:launch_new_instance',
             'in2csv = csvkit.utilities.in2csv:launch_new_instance',
             'sql2csv = csvkit.utilities.sql2csv:launch_new_instance'
+            'csvpy = csvkit.utilities.csvpy:launch_new_instance',
+            'csvgroup = csvkit.utilities.csvgroup:launch_new_instance',
+            'csvpys = csvkit.utilities.csvpys:launch_new_instance',
         ]
     },
-    install_requires = install_requires
+    install_requires=install_requires
 )

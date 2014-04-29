@@ -39,6 +39,7 @@ class CSVStack(CSVKitUtility):
 
         for i, f in enumerate(self.args.files):
             rows = CSVKitReader(f, **self.reader_kwargs)
+            headers = next(rows, [])
 
             # If we have header rows, use them
             if not self.args.no_header_row:

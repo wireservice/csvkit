@@ -105,6 +105,8 @@ csvkit is comprised of a number of individual command line utilities that be loo
     scripts/csvjoin
     scripts/csvsort
     scripts/csvstack
+    scripts/csvpys
+    scripts/csvgroup
 
 *Output (and Analysis)*
    

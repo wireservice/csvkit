@@ -51,6 +51,11 @@
 * Add --db-schema option to csvsql. (#216)
 * Add Shane StClair to AUTHORS file.
 * Add --no-inference support to csvsort. (#222)
+* Added Chris Rosenthal to AUTHORS.
+* Fixed multi-file input to csvsql. (#193)
+* Added csvpys command (python scripting). (#214, #215)
+* Added csvgroup command (equivalent to sql group by). (#215)
+* Added Krzysztof Dorosz to AUTHORS.
 
 0.5.0
 -----
