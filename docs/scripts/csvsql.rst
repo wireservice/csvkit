@@ -57,7 +57,7 @@ Examples
 
 Generate a statement in the PostgreSQL dialect::
 
-    $ csvsql -i postgresql  examples/realdata/FY09_EDU_Recipients_by_State.csv
+    $ csvsql -i postgresql examples/realdata/FY09_EDU_Recipients_by_State.csv
 
 Create a table and import data from the CSV directly into Postgres::
 

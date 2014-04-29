@@ -1,8 +1,36 @@
-0.6.2
+0.7.3
+-----
+
+* Only install argparse for Python < 2.7. (#224)
+* Add Diego Rabatone Oliveira to AUTHORS.
+* Add Ryan Murphy to AUTHORS.
+* Fix DBF dependency. (#270)
+
+0.7.2
+-----
+
+* Fix CHANGELOG for release.
+
+0.7.1
+-----
+
+* Fix homepage url in setup.py.
+
+0.7.0
 -----
 
 * Fix XLSX datetime normalization bug. (#223)
 * Add raistlin7447 to AUTHORS.
+* Merged sql2csv utility (#259).
+* Add Jeroen Janssens to AUTHORS.
+* Validate csvsql DB connections before parsing CSVs. (#257)
+* Clarify install process for Ubuntu. (#249)
+* Clarify docs for --escapechar. (#242)
+* Make ``import csvkit`` API compatible with ``import csv``.
+* Update Travis CI link. (#258)
+* Add Sébastien Fievet to AUTHORS.
+* Use case-sensitive name for SQLAlchemy (#237)
+* Add Travis Swicegood to AUTHORS.
 
 0.6.1
 -----

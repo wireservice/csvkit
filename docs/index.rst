@@ -31,11 +31,30 @@ As there is no formally defined CSV format, csvkit encourages well-known formatt
 Installation
 ============
 
-For users::
+Users
+-----
+
+If you only want to use csvkit, install it this way::
 
     pip install csvkit
 
-For developers::
+If you are installing on Ubuntu you may need to install the Python development headers prior to install csvkit::
+
+    sudo apt-get install python-dev python-pip python-setuptools build-essential
+
+If the installation appears to be successful but running the tools fails, try updating your version of Python setuptools:
+
+    pip install setuptools --upgrade
+    pip install csvkit --upgrade
+
+.. note::
+
+    csvkit is routinely tested on OSX, somewhat less frequently on Linux and once in a while on Windows. All platforms are supported. It is tested against Python 2.6, 2.7 and PyPy. Neither Python < 2.6 nor Python >= 3.0 are supported at this time.
+
+Developers
+----------
+
+If you are a developer that also wants to hack on csvkit, install it this way::
 
     git clone git://github.com/onyxfish/csvkit.git
     cd csvkit
@@ -46,8 +65,8 @@ For developers::
 
 .. note::
 
-    csvkit is routinely tested on OSX, somewhat less frequently on Linux and once in a while on Windows. All platforms are supported. It is tested against Python 2.6, 2.7 and PyPy. Neither Python < 2.6 nor Python >= 3.0 are supported at this time.
-
+    If you have a recent version of pip, you may need to run pip with the additional arguments :code:`--allow-external argparse`.
+    
 Tutorial
 ========
 
@@ -73,6 +92,7 @@ csvkit is comprised of a number of individual command line utilities that be loo
     :maxdepth: 1 
 
     scripts/in2csv
+    scripts/sql2csv
 
 *Processing*
 
@@ -106,10 +126,22 @@ csvkit is comprised of a number of individual command line utilities that be loo
 
     scripts/common_arguments
 
-Development
-===========
+Using as a library
+==================
 
-csvkit is designed to augment or supercede much of Python's :mod:`csv` module. Important parts of the API are documented here:
+csvkit is designed to be used a replacement for most of Python's :mod:`csv` module. Important parts of the API are documented on the following pages.
+
+Don't!
+
+::
+
+    import csv
+
+Do!
+
+::
+
+    import csvkit
 
 .. toctree::
     :maxdepth: 1
