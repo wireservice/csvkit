@@ -24,9 +24,9 @@ Let's start by creating a clean workspace::
     $ mkdir va_benefits
     $ cd va_benefits
 
-Now let's fetch the 2009 data file and rename it:
+Now let's fetch the 2009 data file, decompress it (which is like unzipping), and rename it:
 
-    $ curl -o 2009.csv http://www.data.gov/download/4029/csv
+    $ curl --compressed -o 2009.csv http://www.data.gov/download/4029/csv 
 
 At first glance this may appear to have worked. You will end up with a ``2009.csv`` file in your working directory. However, when I said this tutorial would tackle real-world problems, I meant it. Let's take a look at the contents of that file::
 
