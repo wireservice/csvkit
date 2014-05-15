@@ -31,8 +31,15 @@ class TestCSVLook(unittest.TestCase):
 
         input_file = StringIO.StringIO(output_file.getvalue())
 
-        self.assertEqual(input_file.next(), '|----+---+----|\n')
-        self.assertEqual(input_file.next(), '|  1 | 2 | 3  |\n')
-        self.assertEqual(input_file.next(), '|  4 | 5 | 6  |\n')
-        self.assertEqual(input_file.next(), '|----+---+----|\n')
+        #self.assertEqual(input_file.next(), '|----+---+----|\n')
+        #self.assertEqual(input_file.next(), '|  1 | 2 | 3  |\n')
+        #self.assertEqual(input_file.next(), '|  4 | 5 | 6  |\n')
+        #self.assertEqual(input_file.next(), '|----+---+----|\n')
+
+        self.assertEqual(input_file.next(), '|----------+---------+----------|\n')
+        self.assertEqual(input_file.next(), '|  column1 | column2 | column3  |\n')
+        self.assertEqual(input_file.next(), '|----------+---------+----------|\n')
+        self.assertEqual(input_file.next(), '|  1       | 2       | 3        |\n')
+        self.assertEqual(input_file.next(), '|  4       | 5       | 6        |\n')
+        self.assertEqual(input_file.next(), '|----------+---------+----------|\n')
 

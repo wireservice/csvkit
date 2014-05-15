@@ -2,17 +2,48 @@
 
 from csvkit import CSVKitReader
 from csvkit.cli import CSVKitUtility 
+from csvkit.headers import make_default_headers
+import itertools
 
 class CSVLook(CSVKitUtility):
     description = 'Render a CSV file in the console as a fixed-width table.'
-    override_flags = 'l'
 
     def add_arguments(self):
         pass
 
     def main(self):
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
+
+
+
+        # Make a default header row if none exists
+        if self.args.no_header_row:
+            row = rows.next()
+
+            column_names = make_default_headers(len(row))
+
+            # Put the row back on top
+            rows = itertools.chain([row], rows)
+        else:
+            column_names = rows.next()
+
+        column_names = list(column_names)
+
+
+
+        # prepend 'line_number' column with line numbers if --linenumbers option
+        if self.args.line_numbers:
+            column_names.insert(0, 'line_number')
+            rows = [list(itertools.chain([str(i + 1)], row)) for i, row in enumerate(rows)]
+
+
+        # Convert to normal list of rows
         rows = list(rows)
+
+        # Insert the column names at the top
+        rows.insert(0, column_names)
+
+
 
         widths = []
 
@@ -40,7 +71,7 @@ class CSVLook(CSVKitUtility):
 
             self.output_file.write(('| %s |\n' % ('|'.join(output))).encode('utf-8'))
 
-            if (i == 0 and not self.args.no_header_row) or i == len(rows) - 1:
+            if (i == 0 or i == len(rows) - 1):
                 self.output_file.write('%s\n' % divider)
 
 def launch_new_instance():
