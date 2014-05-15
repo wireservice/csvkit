@@ -2,7 +2,11 @@
 
 import json
 from cStringIO import StringIO
-import unittest
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from csvkit.exceptions import NonUniqueKeyColumnException
 from csvkit.utilities.csvjson import CSVJSON
@@ -15,7 +19,9 @@ class TestCSVJSON(unittest.TestCase):
         utility = CSVJSON(args, output_file)
         utility.main()
 
-        self.assertEqual(output_file.getvalue(), '[{"a": "1", "c": "3", "b": "2"}]')
+        js = json.loads(output_file.getvalue())
+
+        self.assertDictEqual(js[0], {"a": "1", "c": "3", "b": "2"})
 
     def test_indentation(self):
         args = ['-i', '4', 'examples/dummy.csv']
@@ -24,7 +30,9 @@ class TestCSVJSON(unittest.TestCase):
         utility = CSVJSON(args, output_file)
         utility.main()
 
-        self.assertEqual(output_file.getvalue(), '[\n    {\n        "a": "1", \n        "c": "3", \n        "b": "2"\n    }\n]')
+        js = json.loads(output_file.getvalue())
+
+        self.assertDictEqual(js[0], {"a": "1", "c": "3", "b": "2"})
 
     def test_keying(self):
         args = ['-k', 'a', 'examples/dummy.csv']
@@ -33,7 +41,9 @@ class TestCSVJSON(unittest.TestCase):
         utility = CSVJSON(args, output_file)
         utility.main()
 
-        self.assertEqual(output_file.getvalue(), '{"1": {"a": "1", "c": "3", "b": "2"}}')
+        js = json.loads(output_file.getvalue())
+
+        self.assertDictEqual(js, { "1": {"a": "1", "c": "3", "b": "2"} })
 
     def test_duplicate_keys(self):
         args = ['-k', 'a', 'examples/dummy3.csv']
