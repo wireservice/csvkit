@@ -53,9 +53,11 @@ class CSVSQL(CSVKitUtility):
 
         # If one or more filenames are specified, we need to add stdin ourselves (if available)
         if sys.stdin not in files:
-            mode = os.fstat(0).st_mode
-            if stat.S_ISFIFO(mode) or stat.S_ISREG(mode):
-                files.insert(0, sys.stdin)
+            try:
+                if not sys.stdin.isatty():
+                    files.insert(0, sys.stdin)
+            except:
+                pass
 
         # Create an SQLite database in memory if no connection string is specified
         if query and not connection_string:
