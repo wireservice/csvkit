@@ -90,7 +90,8 @@ class TestCSVSQL(unittest.TestCase):
             self.assertTrue('CREATE TABLE dummy' in sql)
 
     def test_query(self):
-        args = ['--query', 'select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (m.species = i.species) group by m.usda_id', 'examples/iris.csv', 'examples/irismeta.csv']
+
+        args = ['--query', 'select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species', 'examples/iris.csv', 'examples/irismeta.csv']
         output_file = StringIO()
 
         input_file = StringIO("a,b,c\n1,2,3\n")
@@ -102,6 +103,6 @@ class TestCSVSQL(unittest.TestCase):
             sql = output_file.getvalue()
 
             self.assertTrue('usda_id,mean_sepal_length' in sql)
-            self.assertTrue('IRSE,5.00408163265' in sql)
+            self.assertTrue('IRSE,5.006' in sql)
             self.assertTrue('IRVE2,5.936' in sql)
             self.assertTrue('IRVI,6.588' in sql)
