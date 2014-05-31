@@ -1,6 +1,8 @@
 0.7.3
 -----
 
+* Add Tasneem Raja to AUTHORS.
+* Fix off-by-one error in open ended column ranges. (#238)
 * Add Matt Pettis to AUTHORS.
 * Add line numbers flag to csvlook (#244)
 * Only install argparse for Python < 2.7. (#224)
