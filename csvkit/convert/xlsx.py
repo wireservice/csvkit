@@ -49,19 +49,22 @@ def xlsx2csv(f, output=None, **kwargs):
         out_row = []
 
         for c in row:
-            value = c.internal_value
+            if kwargs.get('no_inference'):
+                value = c.value
+            else:
+                value = c.internal_value
 
-            if value.__class__ is datetime.datetime:
-                if value.time() != NULL_TIME:
-                    value = normalize_datetime(value)
-                else:
-                    value = value.date()
-            elif value.__class__ is float:
-                if value % 1 == 0:
-                    value = int(value)
+                if value.__class__ is datetime.datetime:
+                    if value.time() != NULL_TIME:
+                        value = normalize_datetime(value)
+                    else:
+                        value = value.date()
+                elif value.__class__ is float:
+                    if value % 1 == 0:
+                        value = int(value)
 
-            if value.__class__ in (datetime.datetime, datetime.date, datetime.time):
-                value = value.isoformat()
+                if value.__class__ in (datetime.datetime, datetime.date, datetime.time):
+                    value = value.isoformat()
 
             out_row.append(value)
 
