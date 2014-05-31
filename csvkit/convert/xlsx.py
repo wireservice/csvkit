@@ -21,15 +21,15 @@ def normalize_datetime(dt):
 
     return dt
 
-def has_time_elements(cell):
+def has_date_elements(cell):
     """
     Try to use formatting to determine if a cell contains only time info.
 
     See: http://office.microsoft.com/en-us/excel-help/number-format-codes-HP005198679.aspx
     """
-    if 'h' in cell.number_format or \
-        'H' in cell.number_format or \
-        'hh' in cell.number_format:
+    if 'd' in cell.number_format or \
+        'y' in cell.number_format:
+
         return True
 
     return False
@@ -66,14 +66,15 @@ def xlsx2csv(f, output=None, **kwargs):
             value = c.value
 
             if value.__class__ is datetime.datetime:
-                if value.time() != NULL_TIME or has_time_elements(c):
-                    # Handle default XLSX date as 00:00 time 
-                    if value.date() == datetime.date(1904, 1, 1):
-                        value = value.time() 
+                # Handle default XLSX date as 00:00 time 
+                if value.date() == datetime.date(1904, 1, 1) and not has_date_elements(c):
+                    value = value.time() 
 
                     value = normalize_datetime(value)
-                else:
+                elif value.time() == NULL_TIME:
                     value = value.date()
+                else:
+                    value = normalize_datetime(value)
             elif value.__class__ is float:
                 if value % 1 == 0:
                     value = int(value)
