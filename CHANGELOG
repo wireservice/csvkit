@@ -1,6 +1,7 @@
 0.7.3
 -----
 
+* Add Kristina Durivage to AUTHORS. (#243)
 * Added Richard Low to AUTHORS.
 * Support SQL queries "directly" on CSV files. (#276)
 * Add Tasneem Raja to AUTHORS.
