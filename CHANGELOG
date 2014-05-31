@@ -1,6 +1,7 @@
 0.7.3
 -----
 
+* Support SQL queries "directly" on CSV files. (#276)
 * Add Matt Pettis to AUTHORS.
 * Add line numbers flag to csvlook (#244)
 * Only install argparse for Python < 2.7. (#224)

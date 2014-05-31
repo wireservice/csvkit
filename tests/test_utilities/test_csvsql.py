@@ -4,7 +4,7 @@ from cStringIO import StringIO
 import unittest
 
 from csvkit.utilities.csvsql import CSVSQL
-from tests.utils import stderr_as_stdout, stdin_as_string
+from tests.utils import stdin_as_string
 
 class TestCSVSQL(unittest.TestCase):
     def test_create_table(self):

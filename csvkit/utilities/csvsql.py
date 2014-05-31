@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import os
-import stat
 import sys
 
 from csvkit import sql
