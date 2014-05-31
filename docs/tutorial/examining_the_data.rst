@@ -144,7 +144,7 @@ The ``-l`` flag is a special flag that can be passed to any csvkit utility in or
 
 Missouri had the tenth largest population of individuals claiming veterans education benefits.
 
-If we were to join this data up with a table of state population's we could see how much of an outlier state's like Arizona and Missouri are. In future sections we'll present tools for doing just that, however, this specific question is left as an experiment for the reader.
+If we were to join this data up with a table of state populations we could see how much of an outlier state's like Arizona and Missouri are. In future sections we'll present tools for doing just that, however, this specific question is left as an experiment for the reader.
 
 Reading through data with csvlook and less
 ==========================================
