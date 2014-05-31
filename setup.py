@@ -7,7 +7,7 @@ install_requires = [
     'xlrd>=0.7.1',
     'python-dateutil>=1.5',
     'sqlalchemy>=0.6.6',
-    'openpyxl>=1.5.7',
+    'openpyxl>=2.0.3',
     'dbf==0.94.003']
 
 if sys.version_info < (2, 7):

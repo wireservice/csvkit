@@ -5,7 +5,7 @@ python-dateutil>=1.5
 SQLAlchemy>=0.9.3
 sphinx>=1.0.7
 coverage>=3.5.1b1
-openpyxl>=1.8.4
+openpyxl>=2.0.3
 tox>=1.3
 dbf==0.95.004
 unittest2==0.5.1

@@ -21,6 +21,19 @@ def normalize_datetime(dt):
 
     return dt
 
+def has_time_elements(cell):
+    """
+    Try to use formatting to determine if a cell contains only time info.
+
+    See: http://office.microsoft.com/en-us/excel-help/number-format-codes-HP005198679.aspx
+    """
+    if 'h' in cell.number_format or \
+        'H' in cell.number_format or \
+        'hh' in cell.number_format:
+        return True
+
+    return False
+
 def xlsx2csv(f, output=None, **kwargs):
     """
     Convert an Excel .xlsx file to csv.
@@ -36,6 +49,7 @@ def xlsx2csv(f, output=None, **kwargs):
     writer = CSVKitWriter(output)
 
     book = load_workbook(f, use_iterators=True, data_only=True)
+
     if 'sheet' in kwargs:
         sheet = book.get_sheet_by_name(kwargs['sheet'])
     else:
@@ -43,16 +57,20 @@ def xlsx2csv(f, output=None, **kwargs):
 
     for i, row in enumerate(sheet.iter_rows()):
         if i == 0:
-            writer.writerow([c.internal_value for c in row]) 
+            writer.writerow([c.value for c in row]) 
             continue
 
         out_row = []
 
         for c in row:
-            value = c.internal_value
+            value = c.value
 
             if value.__class__ is datetime.datetime:
-                if value.time() != NULL_TIME:
+                if value.time() != NULL_TIME or has_time_elements(c):
+                    # Handle default XLSX date as 00:00 time 
+                    if value.date() == datetime.date(1904, 1, 1):
+                        value = value.time() 
+
                     value = normalize_datetime(value)
                 else:
                     value = value.date()
