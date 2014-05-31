@@ -1,6 +1,7 @@
 0.7.3
 -----
 
+* Support SQL queries "directly" on CSV files. (#276)
 * Add Tasneem Raja to AUTHORS.
 * Fix off-by-one error in open ended column ranges. (#238)
 * Add Matt Pettis to AUTHORS.

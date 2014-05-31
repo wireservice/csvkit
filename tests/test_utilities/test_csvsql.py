@@ -4,7 +4,7 @@ from cStringIO import StringIO
 import unittest
 
 from csvkit.utilities.csvsql import CSVSQL
-from tests.utils import stderr_as_stdout, stdin_as_string
+from tests.utils import stdin_as_string
 
 class TestCSVSQL(unittest.TestCase):
     def test_create_table(self):
@@ -24,15 +24,6 @@ class TestCSVSQL(unittest.TestCase):
         self.assertTrue('float FLOAT' in sql)
         self.assertTrue('time TIME' in sql)
         self.assertTrue('datetime DATETIME' in sql)
-
-    def test_table_argument(self):
-        args = ['--table', 'foo', 'file1.csv', 'file2.csv']
-        output_file = StringIO()
-
-        utility = CSVSQL(args, output_file)
-
-        with stderr_as_stdout():
-            self.assertRaises(SystemExit, utility.main)
 
     def test_no_inference(self):
         args = ['--table', 'foo', '--no-inference', 'examples/testfixed_converted.csv']
@@ -82,3 +73,36 @@ class TestCSVSQL(unittest.TestCase):
             self.assertTrue('a INTEGER NOT NULL' in sql)
             self.assertTrue('b INTEGER NOT NULL' in sql)
             self.assertTrue('c INTEGER NOT NULL' in sql)
+
+    def test_stdin_and_filename(self):
+        args = ['examples/dummy.csv']
+        output_file = StringIO()
+
+        input_file = StringIO("a,b,c\n1,2,3\n")
+
+        with stdin_as_string(input_file):
+            utility = CSVSQL(args, output_file)
+            utility.main()
+
+            sql = output_file.getvalue()
+
+            self.assertTrue('CREATE TABLE stdin' in sql)
+            self.assertTrue('CREATE TABLE dummy' in sql)
+
+    def test_query(self):
+
+        args = ['--query', 'select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species', 'examples/iris.csv', 'examples/irismeta.csv']
+        output_file = StringIO()
+
+        input_file = StringIO("a,b,c\n1,2,3\n")
+
+        with stdin_as_string(input_file):
+            utility = CSVSQL(args, output_file)
+            utility.main()
+
+            sql = output_file.getvalue()
+
+            self.assertTrue('usda_id,mean_sepal_length' in sql)
+            self.assertTrue('IRSE,5.006' in sql)
+            self.assertTrue('IRVE2,5.936' in sql)
+            self.assertTrue('IRVI,6.588' in sql)
