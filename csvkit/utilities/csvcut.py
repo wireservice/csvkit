@@ -50,19 +50,19 @@ class CSVCut(CSVKitUtility):
 
         output.writerow([column_names[c] for c in column_ids])
 
-        for i, row in enumerate(rows):
-            out_row = [row[c] if c < len(row) else None for c in column_ids] 
+        for row in rows:
+            out_row = [row[c] if c < len(row) else None for c in column_ids]
 
             if self.args.delete_empty:
                 if ''.join(out_row) == '':
                     continue
-            
+
             output.writerow(out_row)
-                
+
 def launch_new_instance():
     utility = CSVCut()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
 

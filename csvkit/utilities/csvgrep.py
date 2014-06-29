@@ -43,7 +43,7 @@ class CSVGrep(CSVKitUtility):
         column_names = rows.next()
 
         column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based)
-        
+
         if self.args.regex:
             pattern = re.compile(self.args.regex)
         elif self.args.matchfile:
@@ -51,7 +51,7 @@ class CSVGrep(CSVKitUtility):
             pattern = lambda x: x in lines
         else:
             pattern = self.args.pattern
-            
+
         patterns = dict((c, pattern) for c in column_ids)
 
         output = CSVKitWriter(self.output_file, **self.writer_kwargs)
@@ -59,13 +59,13 @@ class CSVGrep(CSVKitUtility):
 
         filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse=self.args.inverse)
 
-        for i, row in enumerate(filter_reader):
+        for row in filter_reader:
             output.writerow(row)
 
 def launch_new_instance():
     utility = CSVGrep()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
 
