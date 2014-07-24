@@ -26,7 +26,7 @@ class TestColumn(unittest.TestCase):
         self.assertEqual(type(self.c), table.Column)
         self.assertEqual(self.c.order, 0)
         self.assertEqual(self.c.name, u'test')
-        self.assertEqual(self.c.type, unicode)
+        self.assertEqual(self.c.type, six.text_type)
         self.assertEqual(self.c, [u'test', u'column', None])
 
     def test_slice(self):
@@ -73,10 +73,10 @@ class TestTable(unittest.TestCase):
         self.assertEqual(len(t), 8)
         
         self.assertEqual(t[2][0], '40')
-        self.assertEqual(type(t[2][0]), unicode)
+        self.assertEqual(type(t[2][0]), six.text_type)
  
         self.assertEqual(t[3][0], 'True')
-        self.assertEqual(type(t[3][0]), unicode)
+        self.assertEqual(type(t[3][0]), six.text_type)
 
     def test_to_csv(self):
         with open('examples/testfixed_converted.csv', 'r') as f:

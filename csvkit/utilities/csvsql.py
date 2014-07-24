@@ -8,7 +8,6 @@ from csvkit import table
 from csvkit import CSVKitWriter
 from csvkit.cli import CSVFileType, CSVKitUtility
 
-
 class CSVSQL(CSVKitUtility):
     description = 'Generate SQL statements for one or more CSV files, create execute those statements directly on a database, and execute one or more SQL queries.'
     override_flags = ['l', 'f']
@@ -126,7 +125,7 @@ class CSVSQL(CSVKitUtility):
             # Output SQL statements
             else:
                 sql_table = sql.make_table(csv_table, table_name, self.args.no_constraints)
-                self.output_file.write((u'%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect)).encode('utf-8'))
+                self.output_file.write(('%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect)).encode('utf-8'))
 
         if connection_string:
             if query:

@@ -18,7 +18,7 @@ from csvkit.exceptions import FieldSizeLimitError
 
 EIGHT_BIT_ENCODINGS = ['utf-8', 'u8', 'utf', 'utf8', 'latin-1', 'iso-8859-1', 'iso8859-1', '8859', 'cp819', 'latin', 'latin1', 'l1']
 
-class UTF8Recoder(object):
+class UTF8Recoder(six.Iterator):
     """
     Iterator that reads an encoded stream and reencodes the input to UTF-8.
     """
@@ -28,8 +28,8 @@ class UTF8Recoder(object):
     def __iter__(self):
         return self
 
-    def next(self):
-        return self.reader.next().encode('utf-8')
+    def __next__(self):
+        return next(self.reader).encode('utf-8')
 
 class UnicodeCSVReader(object):
     """
@@ -45,7 +45,7 @@ class UnicodeCSVReader(object):
 
     def next(self):
         try:
-            row = self.reader.next()
+            row = next(self.reader)
         except csv.Error as e:
             # Terrible way to test for this exception, but there is no subclass
             if 'field larger than field limit' in str(e):
@@ -53,7 +53,7 @@ class UnicodeCSVReader(object):
             else:
                 raise e
 
-        return [unicode(s, 'utf-8') for s in row]
+        return [six.text_type(s, 'utf-8') for s in row]
 
     def __iter__(self):
         return self
@@ -84,9 +84,9 @@ class UnicodeCSVWriter(object):
 
     def writerow(self, row):
         if self._eight_bit:
-            self.writer.writerow([unicode(s if s != None else '').encode(self.encoding) for s in row])
+            self.writer.writerow([six.text_type(s if s != None else '').encode(self.encoding) for s in row])
         else:
-            self.writer.writerow([unicode(s if s != None else '').encode('utf-8') for s in row])
+            self.writer.writerow([six.text_type(s if s != None else '').encode('utf-8') for s in row])
             # Fetch UTF-8 output from the queue...
             data = self.queue.getvalue()
             data = data.decode('utf-8')

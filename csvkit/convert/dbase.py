@@ -7,6 +7,7 @@ Note: dbf is only supported/imported for Python 2.
 from cStringIO import StringIO
 
 import dbf
+import six
 
 from csvkit import table
 
@@ -24,7 +25,7 @@ def dbf2csv(f, **kwargs):
         for row in db:
             for i, d in enumerate(row):
                 try:
-                    data_columns[i].append(unicode(row[column_ids[i]]).strip())
+                    data_columns[i].append(six.text_type(row[column_ids[i]]).strip())
                 except IndexError:
                     # Non-rectangular data is truncated
                     break

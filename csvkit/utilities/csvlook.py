@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 
+import itertools
+
+import six
+
 from csvkit import CSVKitReader
 from csvkit.cli import CSVKitUtility 
 from csvkit.headers import make_default_headers
-import itertools
 
 class CSVLook(CSVKitUtility):
     description = 'Render a CSV file in the console as a fixed-width table.'
@@ -67,7 +70,7 @@ class CSVLook(CSVKitUtility):
             for j, d in enumerate(row):
                 if d is None:
                     d = ''
-                output.append(' %s ' % unicode(d).ljust(widths[j]))
+                output.append(' %s ' % six.text_type(d).ljust(widths[j]))
 
             self.output_file.write(('| %s |\n' % ('|'.join(output))).encode('utf-8'))
 

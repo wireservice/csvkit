@@ -8,6 +8,8 @@ This module defines ``reader``, ``writer``, ``DictReader`` and ``DictWriter`` so
 
 from csvkit import unicsv
 
+import six
+
 class CSVKitReader(unicsv.UnicodeCSVReader):
     """
     A unicode-aware CSV reader. Currently adds nothing to :class:`csvkit.unicsv.UnicodeCSVReader`, but might someday.
@@ -37,7 +39,7 @@ class CSVKitWriter(unicsv.UnicodeCSVWriter):
             self._append_line_number(row)
 
         # Convert embedded Mac line endings to unix style line endings so they get quoted
-        row = [i.replace('\r', '\n') if isinstance(i, basestring) else i for i in row]
+        row = [i.replace('\r', '\n') if isinstance(i, six.string_types) else i for i in row]
 
         unicsv.UnicodeCSVWriter.writerow(self, row)
 

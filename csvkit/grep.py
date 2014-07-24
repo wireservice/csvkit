@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 from csvkit.exceptions import ColumnIdentifierError
 
 class FilteringCSVReader(object):

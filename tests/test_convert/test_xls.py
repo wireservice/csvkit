@@ -7,6 +7,7 @@ try:
 except ImportError:
     import unittest
 
+import six
 import xlrd
 from xlrd.xldate import xldate_from_date_tuple as xldate, xldate_from_time_tuple as xltime, xldate_from_datetime_tuple as xldatetime
 
@@ -20,7 +21,7 @@ class TestXLS(unittest.TestCase):
 
     def test_text_column(self):
         normal_values = xls.normalize_text([u'This', u'', u'text'])
-        self.assertEquals(normal_values, (unicode, [u'This', None, u'text']))
+        self.assertEquals(normal_values, (six.text_type, [u'This', None, u'text']))
 
     def test_numbers_column_integral(self):
         normal_values = xls.normalize_numbers([1.0, 418000000, -817, 0.0, ''])

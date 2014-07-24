@@ -37,7 +37,7 @@ class Column(list):
             t = normal_type
             data = l
         elif not infer_types:
-            t = unicode
+            t = six.text_type 
             data = l
         else:
             t, data = typeinference.normalize_column_type(l, blanks_as_nulls=blanks_as_nulls)
@@ -54,7 +54,7 @@ class Column(list):
         """
         Stringify a description of this column.
         """
-        return u'%3i: %s (%s)' % (self.order, self.name, self.type)
+        return '%3i: %s (%s)' % (self.order, self.name, self.type)
 
     def __getitem__(self, key):
         """
@@ -79,7 +79,7 @@ class Column(list):
         """
         l = 0
 
-        if self.type == unicode:
+        if self.type == six.text_type:
             l = max([len(d) if d else 0 for d in self])
 
             if self.has_nulls():
@@ -105,7 +105,7 @@ class Table(list):
         """
         Stringify a description of all columns in this table.
         """
-        return u'\n'.join([unicode(c) for c in self])
+        return '\n'.join([six.text_type(c) for c in self])
 
     def _reindex_columns(self):
         """
@@ -256,7 +256,7 @@ class Table(list):
             for c in self:
                 # Stringify datetimes, dates, and times
                 if c.type in [datetime.datetime, datetime.date, datetime.time]:
-                    out_columns.append([unicode(v.isoformat()) if v != None else None for v in c])
+                    out_columns.append([six.text_type(v.isoformat()) if v != None else None for v in c])
                 else:
                     out_columns.append(c)
 

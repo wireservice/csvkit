@@ -29,7 +29,7 @@ class TestCSVSort(unittest.TestCase):
         reader = CSVKitReader(input_file)
 
         test_order = [u'text', u'Unicode! Σ', u'This row has blanks', u'Chicago Tribune', u'Chicago Sun-Times', u'Chicago Reader']
-        new_order = [unicode(r[0]) for r in reader] 
+        new_order = [six.text_type(r[0]) for r in reader] 
 
         self.assertEqual(test_order, new_order)
 
@@ -44,7 +44,7 @@ class TestCSVSort(unittest.TestCase):
         reader = CSVKitReader(input_file)
 
         test_order = [u'text', u'This row has blanks', u'Unicode! Σ', u'Chicago Tribune', u'Chicago Sun-Times', u'Chicago Reader']
-        new_order = [unicode(r[0]) for r in reader] 
+        new_order = [six.text_type(r[0]) for r in reader] 
 
         self.assertEqual(test_order, new_order)
 
@@ -73,7 +73,7 @@ class TestCSVSort(unittest.TestCase):
         reader = CSVKitReader(input_file)
 
         test_order = ['column1', '4', '1']
-        new_order = [unicode(r[0]) for r in reader] 
+        new_order = [six.text_type(r[0]) for r in reader] 
 
         self.assertEqual(test_order, new_order)
 
@@ -88,7 +88,7 @@ class TestCSVSort(unittest.TestCase):
         reader = CSVKitReader(input_file)
 
         test_order = [u'a', u'192', u'27', u'3']
-        new_order = [unicode(r[0]) for r in reader] 
+        new_order = [six.text_type(r[0]) for r in reader] 
 
         self.assertEqual(test_order, new_order)
 

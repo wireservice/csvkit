@@ -6,6 +6,8 @@ import gzip
 import os.path
 import sys
 
+import six
+
 from csvkit import CSVKitReader
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
@@ -256,7 +258,7 @@ class CSVKitUtility(object):
                 if t == UnicodeDecodeError:
                     sys.stderr.write('Your file is not "%s" encoded. Please specify the correct encoding with the -e flag. Use the -v flag to see the complete error.\n' % self.args.encoding)
                 else:
-                    sys.stderr.write('%s\n' % unicode(value).encode('utf-8'))
+                    sys.stderr.write('%s\n' % six.text_type(value).encode('utf-8'))
 
         sys.excepthook = handler
 

@@ -24,7 +24,7 @@ def normalize_text(values, **kwargs):
     """
     Normalize a column of text cells.
     """
-    return unicode, [unicode(v) if v else None for v in values]
+    return six.text_type, [six.text_type(v) if v else None for v in values]
 
 def normalize_numbers(values, **kwargs):
     """

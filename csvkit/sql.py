@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
 import datetime
-from types import NoneType
+
+import six
 
 from sqlalchemy import Column, MetaData, Table, create_engine
 from sqlalchemy import BigInteger, Boolean, Date, DateTime, Float, Integer, String, Time
 from sqlalchemy.schema import CreateTable
+
+NoneType = type(None)
 
 DIALECTS = {
     'access': 'access.base',
@@ -39,7 +42,7 @@ def make_column(column, no_constraints=False):
         datetime.date: Date,
         datetime.time: Time,
         NoneType: String,
-        unicode: String
+        six.text_type: String
         }
 
     if column.type in column_types:
@@ -58,7 +61,7 @@ def make_column(column, no_constraints=False):
     if no_constraints is False:
         if column.type is NoneType:
             sql_type_kwargs['length'] = NULL_COLUMN_MAX_LENGTH
-        elif column.type is unicode:
+        elif column.type is six.text_type:
             sql_type_kwargs['length'] = column.max_length()
 
         sql_column_kwargs['nullable'] = column.has_nulls()
@@ -95,5 +98,5 @@ def make_create_table_statement(sql_table, dialect=None):
     else:
         sql_dialect = None
 
-    return unicode(CreateTable(sql_table).compile(dialect=sql_dialect)).strip() + ';'
+    return six.text_type(CreateTable(sql_table).compile(dialect=sql_dialect)).strip() + ';'
 

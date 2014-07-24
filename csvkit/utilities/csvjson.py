@@ -3,6 +3,8 @@
 import json
 import codecs
 
+import six
+
 from csvkit import CSVKitReader
 from csvkit.cli import CSVKitUtility, match_column_identifier
 from csvkit.exceptions import NonUniqueKeyColumnException
@@ -120,7 +122,7 @@ class CSVJSON(CSVKitUtility):
                 k = row_dict[self.args.key]
 
                 if k in output:
-                    raise NonUniqueKeyColumnException('Value %s is not unique in the key column.' % unicode(k))
+                    raise NonUniqueKeyColumnException('Value %s is not unique in the key column.' % six.text_type(k))
 
                 output[k] = row_dict
         # Boring JSON

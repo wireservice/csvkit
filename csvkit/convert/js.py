@@ -27,7 +27,7 @@ def parse_object(obj, path=''):
     d = {}
 
     for key, value in iterator:
-        key = unicode(key)
+        key = six.text_type(key)
         d.update(parse_object(value, path + key + '/'))
 
     return d
