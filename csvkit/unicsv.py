@@ -6,8 +6,13 @@ This module contains unicode aware replacements for :func:`csv.reader` and :func
 
 import codecs
 import csv
-import fnmatch
-from cStringIO import StringIO
+
+import six
+
+if six.PY3:
+    from io import StringIO
+else:
+    from cStringIO import StringIO
 
 from csvkit.exceptions import FieldSizeLimitError
 
@@ -41,7 +46,7 @@ class UnicodeCSVReader(object):
     def next(self):
         try:
             row = self.reader.next()
-        except csv.Error, e:
+        except csv.Error as e:
             # Terrible way to test for this exception, but there is no subclass
             if 'field larger than field limit' in str(e):
                 raise FieldSizeLimitError(csv.field_size_limit())
@@ -121,9 +126,7 @@ class UnicodeCSVDictWriter(csv.DictWriter):
         self.restval = restval
 
         if extrasaction.lower() not in ("raise", "ignore"):
-            raise ValueError, \
-                  ("extrasaction (%s) must be 'raise' or 'ignore'" %
-                   extrasaction)
+            raise ValueError("extrasaction (%s) must be 'raise' or 'ignore'" % extrasaction)
 
         self.extrasaction = extrasaction
 

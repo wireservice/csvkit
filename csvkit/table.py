@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 
 import datetime
-from cStringIO import StringIO
 import itertools
+
+import six
+
+if six.PY3:
+    from io import StringIO
+else:
+    from cStringIO import StringIO
 
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit import sniffer

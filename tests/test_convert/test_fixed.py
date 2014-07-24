@@ -1,5 +1,16 @@
-import unittest
-from cStringIO import StringIO
+#!/usr/bin/env python
+
+import six
+
+if six.PY3:
+    from io import StringIO
+else:
+    from cStringIO import StringIO
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from csvkit.convert import fixed
 

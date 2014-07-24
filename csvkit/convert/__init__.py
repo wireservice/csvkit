@@ -1,14 +1,20 @@
 #!/usr/bin/env python
 
+import six
+
 from csvitself import csv2csv
-from dbase import dbf2csv
 from fixed import fixed2csv
 from geojs import geojson2csv
 from js import json2csv
 from xls import xls2csv
 from xlsx import xlsx2csv
 
-SUPPORTED_FORMATS = ['fixed', 'xls', 'xlsx', 'csv', 'json', 'geojson', 'dbf']
+SUPPORTED_FORMATS = ['fixed', 'xls', 'xlsx', 'csv', 'json', 'geojson']
+
+if six.PY2:
+    from dbase import dbf2csv
+
+    SUPPORTED_FORMATS.append('dbf')
 
 def convert(f, format, schema=None, key=None, **kwargs):
     """
@@ -36,6 +42,8 @@ def convert(f, format, schema=None, key=None, **kwargs):
     elif format == 'csv':
         return csv2csv(f, **kwargs)
     elif format == 'dbf':
+        if six.PY3:
+            raise ValueError('format "dbf" is not supported forthis version of Python.')
         return dbf2csv(f, **kwargs)
     else:
         raise ValueError('format "%s" is not supported' % format)

@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 
-from cStringIO import StringIO
+import six
+
+if six.PY3:
+    from io import StringIO
+else:
+    from cStringIO import StringIO
 
 from csvkit import table
 

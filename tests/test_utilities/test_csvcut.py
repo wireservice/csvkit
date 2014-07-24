@@ -1,7 +1,16 @@
 #!/usr/bin/env python
 
-import StringIO
-import unittest
+import six
+
+if six.PY3:
+    from io import StringIO
+else:
+    from cStringIO import StringIO
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from csvkit import CSVKitReader
 from csvkit.utilities.csvcut import CSVCut
@@ -10,12 +19,12 @@ from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 class TestCSVCut(unittest.TestCase):
     def test_simple(self):
         args = ['-c', '1,3', 'examples/dummy.csv']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
         utility = CSVCut(args, output_file)
 
         utility.main()
 
-        input_file = StringIO.StringIO(output_file.getvalue())
+        input_file = StringIO(output_file.getvalue())
         reader = CSVKitReader(input_file)
 
         self.assertEqual(reader.next(), ['a', 'c'])
@@ -23,12 +32,12 @@ class TestCSVCut(unittest.TestCase):
 
     def test_names(self):
         args = ['-n', 'examples/dummy.csv']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
         utility = CSVCut(args, output_file)
 
         utility.main()
 
-        input_file = StringIO.StringIO(output_file.getvalue())
+        input_file = StringIO(output_file.getvalue())
 
         self.assertEqual(input_file.next(), '  1: a\n')
         self.assertEqual(input_file.next(), '  2: b\n')
@@ -36,12 +45,12 @@ class TestCSVCut(unittest.TestCase):
 
     def test_with_gzip(self):
         args = ['-c', '1,3', 'examples/dummy.csv.gz']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
         utility = CSVCut(args, output_file)
 
         utility.main()
 
-        input_file = StringIO.StringIO(output_file.getvalue())
+        input_file = StringIO(output_file.getvalue())
         reader = CSVKitReader(input_file)
 
         self.assertEqual(reader.next(), ['a', 'c'])
@@ -49,12 +58,12 @@ class TestCSVCut(unittest.TestCase):
 
     def test_with_bzip2(self):
         args = ['-c', '1,3', 'examples/dummy.csv.bz2']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
         utility = CSVCut(args, output_file)
 
         utility.main()
 
-        input_file = StringIO.StringIO(output_file.getvalue())
+        input_file = StringIO(output_file.getvalue())
         reader = CSVKitReader(input_file)
 
         self.assertEqual(reader.next(), ['a', 'c'])
@@ -62,12 +71,12 @@ class TestCSVCut(unittest.TestCase):
 
     def test_exclude(self):
         args = ['-C', '1,3', 'examples/dummy.csv']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
         utility = CSVCut(args, output_file)
 
         utility.main()
 
-        input_file = StringIO.StringIO(output_file.getvalue())
+        input_file = StringIO(output_file.getvalue())
         reader = CSVKitReader(input_file)
 
         self.assertEqual(reader.next(), ['b'])
@@ -75,12 +84,12 @@ class TestCSVCut(unittest.TestCase):
 
     def test_include_and_exclude(self):
         args = ['-c', '1,3', '-C', '3', 'examples/dummy.csv']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
         utility = CSVCut(args, output_file)
 
         utility.main()
 
-        input_file = StringIO.StringIO(output_file.getvalue())
+        input_file = StringIO(output_file.getvalue())
         reader = CSVKitReader(input_file)
 
         self.assertEqual(reader.next(), ['a'])
@@ -88,26 +97,26 @@ class TestCSVCut(unittest.TestCase):
 
     def test_invalid_column(self):
         args = ['-c', '0', 'examples/dummy.csv']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
         utility = CSVCut(args, output_file)
 
         self.assertRaises(ColumnIdentifierError, utility.main)
 
     def test_invalid_options(self):
         args = ['-n', '--no-header-row', 'examples/dummy.csv']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
         utility = CSVCut(args, output_file)
 
         self.assertRaises(RequiredHeaderError, utility.main)
 
     def test_no_header_row(self):
         args = ['-c', '2', '--no-header-row', 'examples/no_header_row.csv']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
         utility = CSVCut(args, output_file)
 
         utility.main()
 
-        input_file = StringIO.StringIO(output_file.getvalue())
+        input_file = StringIO(output_file.getvalue())
         reader = CSVKitReader(input_file)
 
         self.assertEqual(reader.next(), ['column2'])

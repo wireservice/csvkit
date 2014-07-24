@@ -1,8 +1,18 @@
 #!/usr/bin/env python
 
-from cStringIO import StringIO
 import datetime
-import unittest
+
+import six
+
+if six.PY3:
+    from io import StringIO
+else:
+    from cStringIO import StringIO
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from csvkit import table 
 

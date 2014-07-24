@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 
-import unittest
 import re
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from csvkit.grep import FilteringCSVReader
 from csvkit.exceptions import ColumnIdentifierError

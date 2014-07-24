@@ -1,14 +1,23 @@
 #!/usr/bin/env python
 
-import unittest
-import StringIO
+import six
+
+if six.PY3:
+    from io import StringIO
+else:
+    from cStringIO import StringIO
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from csvkit.utilities.in2csv import In2CSV
 
 class TestIn2CSV(unittest.TestCase):
     def test_convert_xls(self):
         args = ['-f', 'xls', 'examples/test.xls']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
         
         utility = In2CSV(args, output_file)
         utility.main()
@@ -18,7 +27,7 @@ class TestIn2CSV(unittest.TestCase):
 
     def test_convert_specific_xls_sheet(self):
         args = ['-f', 'xls', '--sheet', 'Sheet2', 'examples/sheets.xls']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
 
         utility = In2CSV(args, output_file)
         utility.main()
@@ -28,7 +37,7 @@ class TestIn2CSV(unittest.TestCase):
 
     def test_csv_no_headers(self):
         args = ['--no-header-row', 'examples/no_header_row.csv']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
 
         utility = In2CSV(args, output_file)
         utility.main()

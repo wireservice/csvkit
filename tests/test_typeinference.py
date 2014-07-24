@@ -2,7 +2,11 @@
 
 import datetime
 from types import NoneType
-import unittest
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from csvkit import typeinference
 

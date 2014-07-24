@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 
 from collections import namedtuple
-from cStringIO import StringIO
 from codecs import iterdecode
+
+import six
+
+if six.PY3:
+    from io import StringIO
+else:
+    from cStringIO import StringIO
 
 from csvkit import CSVKitReader, CSVKitWriter
 

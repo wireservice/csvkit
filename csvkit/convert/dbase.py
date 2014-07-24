@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+Note: dbf is only supported/imported for Python 2.
+"""
+
 from cStringIO import StringIO
 
 import dbf

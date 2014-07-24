@@ -1,19 +1,28 @@
 #!/usr/bin/env python
 
-import StringIO
-import unittest
+import six
+
+if six.PY3:
+    from io import StringIO
+else:
+    from cStringIO import StringIO
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from csvkit.utilities.csvlook import CSVLook
 
 class TestCSVLook(unittest.TestCase):
     def test_simple(self):
         args = ['examples/dummy3.csv']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
         utility = CSVLook(args, output_file)
 
         utility.main()
 
-        input_file = StringIO.StringIO(output_file.getvalue())
+        input_file = StringIO(output_file.getvalue())
 
         self.assertEqual(input_file.next(), '|----+---+----|\n')
         self.assertEqual(input_file.next(), '|  a | b | c  |\n')
@@ -24,12 +33,12 @@ class TestCSVLook(unittest.TestCase):
 
     def test_no_header(self):
         args = ['--no-header-row', 'examples/no_header_row3.csv']
-        output_file = StringIO.StringIO()
+        output_file = StringIO()
         utility = CSVLook(args, output_file)
 
         utility.main()
 
-        input_file = StringIO.StringIO(output_file.getvalue())
+        input_file = StringIO(output_file.getvalue())
 
         #self.assertEqual(input_file.next(), '|----+---+----|\n')
         #self.assertEqual(input_file.next(), '|  1 | 2 | 3  |\n')
