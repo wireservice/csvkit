@@ -60,7 +60,13 @@ class Column(list):
         """
         Return null for keys beyond the range of the column. This allows for columns to be of uneven length and still be merged into rows cleanly.
         """
-        if key >= len(self):
+        l = len(self)
+
+        if isinstance(key, slice):
+            indices = six.moves.range(*key.indices(l))
+            return [(list.__getitem__(self, i) if i < l else None) for i in indices]
+
+        if key >= l:
             return None
 
         return list.__getitem__(self, key)
@@ -219,7 +225,7 @@ class Table(list):
             # Put row back on top
             rows = itertools.chain([row], rows)
         else:
-            headers = rows.next()
+            headers = next(rows)
             
             if column_ids:
                 column_ids = parse_column_identifiers(column_ids, headers, zero_based)
@@ -261,9 +267,9 @@ class Table(list):
                     out_columns.append(c)
 
             # Convert columns to rows 
-            return zip(*out_columns)
+            return list(zip(*out_columns))
         else:
-            return zip(*self)
+            return list(zip(*self))
 
     def to_csv(self, output, **kwargs):
         """

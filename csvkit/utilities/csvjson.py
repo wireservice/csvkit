@@ -39,9 +39,12 @@ class CSVJSON(CSVKitUtility):
             self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
 
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
-        column_names = rows.next()
+        column_names = next(rows)
 
-        stream = codecs.getwriter('utf-8')(self.output_file)
+        if six.PY2:
+            stream = codecs.getwriter('utf-8')(self.output_file)
+        else:
+            stream = self.output_file 
 
         # GeoJSON
         if self.args.lat and self.args.lon:
@@ -129,7 +132,15 @@ class CSVJSON(CSVKitUtility):
         else:
             output = [dict(zip(column_names, row)) for row in rows]
 
-        json.dump(output, stream, ensure_ascii=False, indent=self.args.indent, encoding='utf-8')
+        kwargs = {
+            'ensure_ascii': False,
+            'indent': self.args.indent,
+        }
+
+        if six.PY2:
+            kwargs['encoding'] = 'utf-8'
+
+        json.dump(output, stream, **kwargs)
 
 
 def launch_new_instance():

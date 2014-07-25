@@ -40,8 +40,8 @@ class TestCli(unittest.TestCase):
     def test_range_notation_open_ended(self):
         self.assertEqual([0,1,2], parse_column_identifiers(':3', self.headers))
 
-        target = range(3,len(self.headers)) # protect against devs adding to self.headers
-        target.insert(0,0)
+        target = list(range(3,len(self.headers))) # protect against devs adding to self.headers
+        target.insert(0, 0)
         self.assertEqual(target, parse_column_identifiers('1,4:', self.headers))        
 
-        self.assertEqual(range(0,len(self.headers)), parse_column_identifiers('1:', self.headers))
+        self.assertEqual(list(range(0, len(self.headers))), parse_column_identifiers('1:', self.headers))

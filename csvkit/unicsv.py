@@ -2,6 +2,8 @@
 
 """
 This module contains unicode aware replacements for :func:`csv.reader` and :func:`csv.writer`. The implementations are largely copied from `examples in the csv module documentation <http://docs.python.org/library/csv.html#examples>`_.
+
+These classes are supported for Python 2 only. The Python 3 version of `csv` supports unicode internally.
 """
 
 import codecs
@@ -121,7 +123,7 @@ class UnicodeCSVDictWriter(csv.DictWriter):
     Defer almost all implementation to :class:`csv.DictWriter`, but wraps our unicode writer instead
     of :func:`csv.writer`.
     """
-    def __init__(self, f, fieldnames, writeheader=False, restval="", extrasaction="raise", *args, **kwds):
+    def __init__(self, f, fieldnames, restval="", extrasaction="raise", *args, **kwds):
         self.fieldnames = fieldnames 
         self.restval = restval
 
@@ -131,7 +133,4 @@ class UnicodeCSVDictWriter(csv.DictWriter):
         self.extrasaction = extrasaction
 
         self.writer = UnicodeCSVWriter(f, *args, **kwds)
-
-        if writeheader:
-            self.writerow(dict(zip(self.fieldnames, self.fieldnames)))
 

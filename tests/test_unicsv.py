@@ -18,6 +18,7 @@ except ImportError:
 
 from csvkit import unicsv
 
+@unittest.skipIf(six.PY3, "Not supported in Python 3.")
 class TestUnicodeCSVReader(unittest.TestCase):
     def test_utf8(self):
         with open('examples/test_utf8.csv') as f:
@@ -146,7 +147,8 @@ class TestUnicodeCSVDictWriter(unittest.TestCase):
         self.output.close()
 
     def test_writer(self):
-        writer = unicsv.UnicodeCSVDictWriter(self.output, ['a', 'b', 'c'], writeheader=True, lineterminator='\n')
+        writer = unicsv.UnicodeCSVDictWriter(self.output, ['a', 'b', 'c'], lineterminator='\n')
+        writer.writeheader()
         writer.writerow({
             u'a': u'1',
             u'b': u'2',

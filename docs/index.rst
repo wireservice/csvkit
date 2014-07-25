@@ -59,13 +59,19 @@ If you are a developer that also wants to hack on csvkit, install it this way::
     git clone git://github.com/onyxfish/csvkit.git
     cd csvkit
     mkvirtualenv --no-site-packages csvkit
-    pip install -r requirements.txt
+
+    # For Python 2
+    pip install -r requirements-py2.txt
+
+    # For Python 3
+    pip install -r requirements-py3.txt
+
     python setup.py develop
     nosetests
 
 .. note::
 
-    If you have a recent version of pip, you may need to run pip with the additional arguments :code:`--allow-external argparse`.
+    If you are using Python2 and have a recent version of pip, you may need to run pip with the additional arguments :code:`--allow-external argparse`.
     
 Tutorial
 ========

@@ -17,7 +17,7 @@ def lazy_opener(fn):
         fn(*args, **kwargs)
     return wrapped
 
-class LazyFile(object):
+class LazyFile(six.Iterator):
     """
     A proxy for a File object that delays opening it until
     a read method is called.
@@ -48,23 +48,26 @@ class LazyFile(object):
         self.f = None
         self._is_lazy_opened = False
 
-    def next(self):
+    def __next__(self):
         if not self._is_lazy_opened:
             self.f = self.init(*self._lazy_args, **self._lazy_kwargs)
             self._is_lazy_opened = True
 
-        return self.f.next()
+        return next(self.f)
 
 class CSVFileType(object):
     """
     An argument factory like argparse.FileType with compression support.
     """
 
-    def __init__(self, mode='rb'):
+    def __init__(self):
         """
         Initialize the factory.
         """
-        self._mode = mode
+        if six.PY2:
+            self._mode = 'rb'
+        else:
+            self._mode = 'r'
 
     def __call__(self, path):
         """
@@ -206,9 +209,6 @@ class CSVKitUtility(object):
         """
         kwargs = {}
 
-        if self.args.encoding:
-            kwargs['encoding'] = self.args.encoding
-
         if self.args.tabs:
             kwargs['delimiter'] = '\t'
         elif self.args.delimiter:
@@ -291,7 +291,7 @@ def match_column_identifier(column_names, c, zero_based=False):
     Note that integer values are *always* treated as positional identifiers. If you happen to have
     column names which are also integers, you must specify them using a positional index.
     """
-    if isinstance(c, basestring) and not c.isdigit() and c in column_names:
+    if isinstance(c, six.string_types) and not c.isdigit() and c in column_names:
         return column_names.index(c)
     else:
         try:
