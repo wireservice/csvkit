@@ -64,10 +64,11 @@ class CSVFileType(object):
         """
         Initialize the factory.
         """
+        # In Python2 we decode these using UTF8Recoder
         if six.PY2:
             self._mode = 'rb'
         else:
-            self._mode = 'r'
+            self._mode = 'rt'
 
     def __call__(self, path):
         """
@@ -86,7 +87,10 @@ class CSVFileType(object):
             if extension == '.gz':
                 return LazyFile(gzip.open, path, self._mode)
             if extension == '.bz2':
-                return LazyFile(bz2.BZ2File, path, self._mode)
+                if six.PY2:
+                    return LazyFile(bz2.BZ2File, path, self._mode)
+                else:
+                    return LazyFile(bz2.open, path, self._mode)
             else:
                 return LazyFile(open, path, self._mode)
 
@@ -277,7 +281,7 @@ class CSVKitUtility(object):
             zero_based=False
 
         rows = CSVKitReader(f, **self.reader_kwargs)
-        column_names = rows.next()
+        column_names = next(rows)
 
         for i, c in enumerate(column_names):
             if not zero_based:

@@ -29,14 +29,14 @@ class TestCSVClean(unittest.TestCase):
 
         try:
             with open('examples/bad_err.csv') as f:
-                f.next()
-                self.assertEqual(f.next()[0], '1')
-                self.assertEqual(f.next()[0], '2')
+                next(f)
+                self.assertEqual(next(f)[0], '1')
+                self.assertEqual(next(f)[0], '2')
                 self.assertRaises(StopIteration, f.next)
                 
             with open('examples/bad_out.csv') as f:
-                f.next()
-                self.assertEqual(f.next()[0], '0')
+                next(f)
+                self.assertEqual(next(f)[0], '0')
                 self.assertRaises(StopIteration, f.next)
         finally:
             # Cleanup
@@ -55,6 +55,6 @@ class TestCSVClean(unittest.TestCase):
 
         output = StringIO(output_file.getvalue())
 
-        self.assertEqual(output.next()[:6], 'Line 1')
-        self.assertEqual(output.next()[:6], 'Line 2')
+        self.assertEqual(next(output)[:6], 'Line 1')
+        self.assertEqual(next(output)[:6], 'Line 2')
 

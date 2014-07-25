@@ -36,14 +36,14 @@ class CSVCut(CSVKitUtility):
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
 
         if self.args.no_header_row:
-            row = rows.next()
+            row = next(rows)
 
             column_names = make_default_headers(len(row))
 
             # Put the row back on top
             rows = itertools.chain([row], rows)
         else:
-            column_names = rows.next()
+            column_names = next(rows)
 
         column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based, self.args.not_columns)
         output = CSVKitWriter(self.output_file, **self.writer_kwargs)

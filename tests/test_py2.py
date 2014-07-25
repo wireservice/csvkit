@@ -20,16 +20,16 @@ class TestCSVKitReader(unittest.TestCase):
     def test_utf8(self):
         with open('examples/test_utf8.csv') as f:
             reader = csvkit.CSVKitReader(f, encoding='utf-8')
-            self.assertEqual(reader.next(), ['a', 'b', 'c'])
-            self.assertEqual(reader.next(), ['1', '2', '3'])
-            self.assertEqual(reader.next(), ['4', '5', u'ʤ'])
+            self.assertEqual(next(reader), ['a', 'b', 'c'])
+            self.assertEqual(next(reader), ['1', '2', '3'])
+            self.assertEqual(next(reader), ['4', '5', u'ʤ'])
 
     def test_reader_alias(self):
         with open('examples/test_utf8.csv') as f:
             reader = csvkit.reader(f, encoding='utf-8')
-            self.assertEqual(reader.next(), ['a', 'b', 'c'])
-            self.assertEqual(reader.next(), ['1', '2', '3'])
-            self.assertEqual(reader.next(), ['4', '5', u'ʤ'])
+            self.assertEqual(next(reader), ['a', 'b', 'c'])
+            self.assertEqual(next(reader), ['1', '2', '3'])
+            self.assertEqual(next(reader), ['4', '5', u'ʤ'])
 
 
 @unittest.skipIf(six.PY3, "Not supported in Python 3.")
@@ -45,9 +45,9 @@ class TestCSVKitWriter(unittest.TestCase):
         written = StringIO(output.getvalue())
 
         reader = csvkit.CSVKitReader(written, encoding='utf-8')
-        self.assertEqual(reader.next(), ['a', 'b', 'c'])
-        self.assertEqual(reader.next(), ['1', '2', '3'])
-        self.assertEqual(reader.next(), ['4', '5', u'ʤ'])
+        self.assertEqual(next(reader), ['a', 'b', 'c'])
+        self.assertEqual(next(reader), ['1', '2', '3'])
+        self.assertEqual(next(reader), ['4', '5', u'ʤ'])
 
     def test_writer_alias(self):
         output = StringIO()
@@ -60,9 +60,9 @@ class TestCSVKitWriter(unittest.TestCase):
         written = StringIO(output.getvalue())
 
         reader = csvkit.reader(written, encoding='utf-8')
-        self.assertEqual(reader.next(), ['a', 'b', 'c'])
-        self.assertEqual(reader.next(), ['1', '2', '3'])
-        self.assertEqual(reader.next(), ['4', '5', u'ʤ'])
+        self.assertEqual(next(reader), ['a', 'b', 'c'])
+        self.assertEqual(next(reader), ['1', '2', '3'])
+        self.assertEqual(next(reader), ['4', '5', u'ʤ'])
 
 
 @unittest.skipIf(six.PY3, "Not supported in Python 3.")
@@ -76,7 +76,7 @@ class TestCSVKitDictReader(unittest.TestCase):
     def test_reader(self):
         reader = csvkit.CSVKitDictReader(self.f)
 
-        self.assertEqual(reader.next(), {
+        self.assertEqual(next(reader), {
             u'a': u'1',
             u'b': u'2',
             u'c': u'3'
@@ -85,7 +85,7 @@ class TestCSVKitDictReader(unittest.TestCase):
     def test_reader_alias(self):
         reader = csvkit.DictReader(self.f)
 
-        self.assertEqual(reader.next(), {
+        self.assertEqual(next(reader), {
             u'a': u'1',
             u'b': u'2',
             u'c': u'3'

@@ -83,7 +83,7 @@ class FixedWidthRowParser(object):
         for i,row in enumerate(schema_reader):
             try:
                 self.fields.append(schema_decoder(row))
-            except Exception,e:
+            except Exception as e:
                 raise ValueError("Error reading schema at line %i: %s" % (i + 2,e))
 
     def parse(self, line):

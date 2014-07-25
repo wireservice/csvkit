@@ -52,7 +52,7 @@ class TestCleanup(unittest.TestCase):
         errs = [e1, e2, e3]
         joinable = extract_joinable_row_errors(errs)
         self.assertEqual(1,len(joinable))
-        self.assertTrue(iter(joinable).next() is e3)
+        self.assertTrue(next(iter(joinable)) is e3)
 
     def test_extract_joinable_row_errors_3(self):
         e1 = CSVTestException(1,['foo', 'bar', 'baz'], "A throwaway message.")
@@ -72,7 +72,7 @@ class TestCleanup(unittest.TestCase):
         errs = [e1, e2, e3]
         joinable = extract_joinable_row_errors(errs)
         self.assertEqual(1,len(joinable))
-        self.assertTrue(iter(joinable).next() is e3)
+        self.assertTrue(next(iter(joinable)) is e3)
 
     def test_real_world_join_fail(self):
         start = [['168772', '1102', '$0.23 TO $0.72', 'HOUR', '1.5%'],

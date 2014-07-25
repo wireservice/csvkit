@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
+import io
 import sys
+
+import six
 
 from csvkit import convert
 from csvkit.cli import CSVFileType, CSVKitUtility
@@ -47,7 +50,12 @@ class In2CSV(CSVKitUtility):
             if not format:
                 self.argparser.error('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
-        if isinstance(self.args.file, file):
+        if six.PY2:
+            t = file
+        else:
+            t = io.IOBase
+
+        if isinstance(self.args.file, t):
             f = self.args.file
         elif format in ('xls', 'xlsx'):
             f = open(self.args.file, 'rb')

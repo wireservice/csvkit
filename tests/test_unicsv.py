@@ -23,31 +23,32 @@ class TestUnicodeCSVReader(unittest.TestCase):
     def test_utf8(self):
         with open('examples/test_utf8.csv') as f:
             reader = unicsv.UnicodeCSVReader(f, encoding='utf-8')
-            self.assertEqual(reader.next(), ['a', 'b', 'c'])
-            self.assertEqual(reader.next(), ['1', '2', '3'])
-            self.assertEqual(reader.next(), ['4', '5', u'ʤ'])
+            self.assertEqual(next(reader), ['a', 'b', 'c'])
+            self.assertEqual(next(reader), ['1', '2', '3'])
+            self.assertEqual(next(reader), ['4', '5', u'ʤ'])
 
     def test_latin1(self):
         with open('examples/test_latin1.csv') as f:
             reader = unicsv.UnicodeCSVReader(f, encoding='latin1')
-            self.assertEqual(reader.next(), ['a', 'b', 'c'])
-            self.assertEqual(reader.next(), ['1', '2', '3'])
-            self.assertEqual(reader.next(), ['4', '5', u'©'])
+            self.assertEqual(next(reader), ['a', 'b', 'c'])
+            self.assertEqual(next(reader), ['1', '2', '3'])
+            self.assertEqual(next(reader), ['4', '5', u'©'])
 
     def test_utf16_big(self):
         with open('examples/test_utf16_big.csv') as f:
             reader = unicsv.UnicodeCSVReader(f, encoding='utf-16')
-            self.assertEqual(reader.next(), ['a', 'b', 'c'])
-            self.assertEqual(reader.next(), ['1', '2', '3'])
-            self.assertEqual(reader.next(), ['4', '5', u'ʤ'])
+            self.assertEqual(next(reader), ['a', 'b', 'c'])
+            self.assertEqual(next(reader), ['1', '2', '3'])
+            self.assertEqual(next(reader), ['4', '5', u'ʤ'])
 
     def test_utf16_little(self):
         with open('examples/test_utf16_little.csv') as f:
             reader = unicsv.UnicodeCSVReader(f, encoding='utf-16')
-            self.assertEqual(reader.next(), ['a', 'b', 'c'])
-            self.assertEqual(reader.next(), ['1', '2', '3'])
-            self.assertEqual(reader.next(), ['4', '5', u'ʤ'])
+            self.assertEqual(next(reader), ['a', 'b', 'c'])
+            self.assertEqual(next(reader), ['1', '2', '3'])
+            self.assertEqual(next(reader), ['4', '5', u'ʤ'])
 
+@unittest.skipIf(six.PY3, "Not supported in Python 3.")
 class TestUnicodeCSVWriter(unittest.TestCase):
     def test_utf8(self):
         output = StringIO()
@@ -60,9 +61,9 @@ class TestUnicodeCSVWriter(unittest.TestCase):
         written = StringIO(output.getvalue())
 
         reader = unicsv.UnicodeCSVReader(written, encoding='utf-8')
-        self.assertEqual(reader.next(), ['a', 'b', 'c'])
-        self.assertEqual(reader.next(), ['1', '2', '3'])
-        self.assertEqual(reader.next(), ['4', '5', u'ʤ'])
+        self.assertEqual(next(reader), ['a', 'b', 'c'])
+        self.assertEqual(next(reader), ['1', '2', '3'])
+        self.assertEqual(next(reader), ['4', '5', u'ʤ'])
 
     def test_latin1(self):
         output = StringIO()
@@ -75,9 +76,9 @@ class TestUnicodeCSVWriter(unittest.TestCase):
         written = StringIO(output.getvalue())
 
         reader = unicsv.UnicodeCSVReader(written, encoding='latin1')
-        self.assertEqual(reader.next(), ['a', 'b', 'c'])
-        self.assertEqual(reader.next(), ['1', '2', '3'])
-        self.assertEqual(reader.next(), ['4', '5', u'©'])
+        self.assertEqual(next(reader), ['a', 'b', 'c'])
+        self.assertEqual(next(reader), ['1', '2', '3'])
+        self.assertEqual(next(reader), ['4', '5', u'©'])
 
     def test_utf16_big(self):
         output = StringIO()
@@ -90,9 +91,9 @@ class TestUnicodeCSVWriter(unittest.TestCase):
         written = StringIO(output.getvalue())
 
         reader = unicsv.UnicodeCSVReader(written, encoding='utf-16-be')
-        self.assertEqual(reader.next(), ['a', 'b', 'c'])
-        self.assertEqual(reader.next(), ['1', '2', '3'])
-        self.assertEqual(reader.next(), ['4', '5', u'\u02A4'])
+        self.assertEqual(next(reader), ['a', 'b', 'c'])
+        self.assertEqual(next(reader), ['1', '2', '3'])
+        self.assertEqual(next(reader), ['4', '5', u'\u02A4'])
 
     def test_utf16_little(self):
         output = StringIO()
@@ -105,10 +106,11 @@ class TestUnicodeCSVWriter(unittest.TestCase):
         written = StringIO(output.getvalue())
 
         reader = unicsv.UnicodeCSVReader(written, encoding='utf-16-le')
-        self.assertEqual(reader.next(), ['a', 'b', 'c'])
-        self.assertEqual(reader.next(), ['1', '2', '3'])
-        self.assertEqual(reader.next(), ['4', '5', u'\u02A4'])
+        self.assertEqual(next(reader), ['a', 'b', 'c'])
+        self.assertEqual(next(reader), ['1', '2', '3'])
+        self.assertEqual(next(reader), ['4', '5', u'\u02A4'])
 
+@unittest.skipIf(six.PY3, "Not supported in Python 3.")
 class TestUnicodeCSVDictReader(unittest.TestCase):
     def setUp(self):
         self.f = open('examples/dummy.csv')
@@ -119,7 +121,7 @@ class TestUnicodeCSVDictReader(unittest.TestCase):
     def test_reader(self):
         reader = unicsv.UnicodeCSVDictReader(self.f)
 
-        self.assertEqual(reader.next(), {
+        self.assertEqual(next(reader), {
             u'a': u'1',
             u'b': u'2',
             u'c': u'3'
@@ -128,17 +130,18 @@ class TestUnicodeCSVDictReader(unittest.TestCase):
     def test_latin1(self):
         with open('examples/test_latin1.csv') as f:
             reader = unicsv.UnicodeCSVDictReader(f, encoding='latin1')
-            self.assertEqual(reader.next(), {
+            self.assertEqual(next(reader), {
                 u'a': u'1',
                 u'b': u'2',
                 u'c': u'3'
             })
-            self.assertEqual(reader.next(), {
+            self.assertEqual(next(reader), {
                 u'a': u'4',
                 u'b': u'5',
                 u'c': u'©'
             })
 
+@unittest.skipIf(six.PY3, "Not supported in Python 3.")
 class TestUnicodeCSVDictWriter(unittest.TestCase):
     def setUp(self):
         self.output = StringIO()
@@ -159,6 +162,7 @@ class TestUnicodeCSVDictWriter(unittest.TestCase):
 
         self.assertEqual(result, 'a,b,c\n1,2,☃\n')
 
+@unittest.skipIf(six.PY3, "Not supported in Python 3.")
 class TestMaxFieldSize(unittest.TestCase):
     def setUp(self):
         self.lim = csv.field_size_limit()

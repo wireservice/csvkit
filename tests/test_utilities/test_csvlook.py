@@ -24,12 +24,12 @@ class TestCSVLook(unittest.TestCase):
 
         input_file = StringIO(output_file.getvalue())
 
-        self.assertEqual(input_file.next(), '|----+---+----|\n')
-        self.assertEqual(input_file.next(), '|  a | b | c  |\n')
-        self.assertEqual(input_file.next(), '|----+---+----|\n')
-        self.assertEqual(input_file.next(), '|  1 | 2 | 3  |\n')
-        self.assertEqual(input_file.next(), '|  1 | 4 | 5  |\n')
-        self.assertEqual(input_file.next(), '|----+---+----|\n')
+        self.assertEqual(next(input_file), '|----+---+----|\n')
+        self.assertEqual(next(input_file), '|  a | b | c  |\n')
+        self.assertEqual(next(input_file), '|----+---+----|\n')
+        self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')
+        self.assertEqual(next(input_file), '|  1 | 4 | 5  |\n')
+        self.assertEqual(next(input_file), '|----+---+----|\n')
 
     def test_no_header(self):
         args = ['--no-header-row', 'examples/no_header_row3.csv']
@@ -40,15 +40,15 @@ class TestCSVLook(unittest.TestCase):
 
         input_file = StringIO(output_file.getvalue())
 
-        #self.assertEqual(input_file.next(), '|----+---+----|\n')
-        #self.assertEqual(input_file.next(), '|  1 | 2 | 3  |\n')
-        #self.assertEqual(input_file.next(), '|  4 | 5 | 6  |\n')
-        #self.assertEqual(input_file.next(), '|----+---+----|\n')
+        #self.assertEqual(next(input_file), '|----+---+----|\n')
+        #self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')
+        #self.assertEqual(next(input_file), '|  4 | 5 | 6  |\n')
+        #self.assertEqual(next(input_file), '|----+---+----|\n')
 
-        self.assertEqual(input_file.next(), '|----------+---------+----------|\n')
-        self.assertEqual(input_file.next(), '|  column1 | column2 | column3  |\n')
-        self.assertEqual(input_file.next(), '|----------+---------+----------|\n')
-        self.assertEqual(input_file.next(), '|  1       | 2       | 3        |\n')
-        self.assertEqual(input_file.next(), '|  4       | 5       | 6        |\n')
-        self.assertEqual(input_file.next(), '|----------+---------+----------|\n')
+        self.assertEqual(next(input_file), '|----------+---------+----------|\n')
+        self.assertEqual(next(input_file), '|  column1 | column2 | column3  |\n')
+        self.assertEqual(next(input_file), '|----------+---------+----------|\n')
+        self.assertEqual(next(input_file), '|  1       | 2       | 3        |\n')
+        self.assertEqual(next(input_file), '|  4       | 5       | 6        |\n')
+        self.assertEqual(next(input_file), '|----------+---------+----------|\n')
 
