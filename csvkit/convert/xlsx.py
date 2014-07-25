@@ -2,14 +2,8 @@
 
 import datetime
 
-import six
-
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 from openpyxl.reader.excel import load_workbook
+import six
 
 from csvkit import CSVKitWriter 
 from csvkit.typeinference import NULL_TIME
@@ -50,7 +44,7 @@ def xlsx2csv(f, output=None, **kwargs):
     streaming = True if output else False
 
     if not streaming:
-        output = StringIO()
+        output = six.StringIO()
 
     writer = CSVKitWriter(output)
 

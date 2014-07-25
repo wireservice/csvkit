@@ -3,12 +3,6 @@
 import datetime
 
 import six
-
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 import xlrd
 
 from csvkit import table
@@ -151,7 +145,7 @@ def xls2csv(f, **kwargs):
         column = table.Column(i, column_name, normal_values, normal_type=t)
         tab.append(column)
 
-    o = StringIO()
+    o = six.StringIO()
     output = tab.to_csv(o)
     output = o.getvalue()
     o.close()

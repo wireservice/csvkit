@@ -17,22 +17,18 @@ class CSVLook(CSVKitUtility):
     def main(self):
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
 
-
-
         # Make a default header row if none exists
         if self.args.no_header_row:
-            row = rows.next()
+            row = next(rows)
 
             column_names = make_default_headers(len(row))
 
             # Put the row back on top
             rows = itertools.chain([row], rows)
         else:
-            column_names = rows.next()
+            column_names = next(rows)
 
         column_names = list(column_names)
-
-
 
         # prepend 'line_number' column with line numbers if --linenumbers option
         if self.args.line_numbers:
@@ -45,8 +41,6 @@ class CSVLook(CSVKitUtility):
 
         # Insert the column names at the top
         rows.insert(0, column_names)
-
-
 
         widths = []
 
@@ -72,7 +66,7 @@ class CSVLook(CSVKitUtility):
                     d = ''
                 output.append(' %s ' % six.text_type(d).ljust(widths[j]))
 
-            self.output_file.write(('| %s |\n' % ('|'.join(output))).encode('utf-8'))
+            self.output_file.write(('| %s |\n' % ('|'.join(output))))
 
             if (i == 0 or i == len(rows) - 1):
                 self.output_file.write('%s\n' % divider)

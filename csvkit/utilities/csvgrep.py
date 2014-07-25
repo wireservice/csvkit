@@ -40,7 +40,7 @@ class CSVGrep(CSVKitUtility):
             self.argparser.error('One of -r, -m or -f must be specified, unless using the -n option.')
 
         rows = CSVKitReader(self.args.file, **self.reader_kwargs)
-        column_names = rows.next()
+        column_names = next(rows)
 
         column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based)
         

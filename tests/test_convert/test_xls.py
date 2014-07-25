@@ -37,7 +37,7 @@ class TestXLS(unittest.TestCase):
             xldate((1984, 2, 23), 0),
             xldate((1907, 12, 25), 0),
             ''], 0)
-        self.assertEquals(normal_values, (datetime.date, [datetime.date(2004, 06, 05), datetime.date(1984, 02, 23), datetime.date(1907, 12, 25), None]))
+        self.assertEquals(normal_values, (datetime.date, [datetime.date(2004, 6, 5), datetime.date(1984, 2, 23), datetime.date(1907, 12, 25), None]))
 
     def test_dates_column_times(self):
         normal_values = xls.normalize_dates([
@@ -45,7 +45,7 @@ class TestXLS(unittest.TestCase):
             xltime((4, 5, 37)),
             xltime((0, 0, 0)),
             ''], 0)
-        self.assertEquals(normal_values, (datetime.time, [datetime.time(14, 30, 00), datetime.time(4, 5, 37), datetime.time(0, 0, 0), None]))
+        self.assertEquals(normal_values, (datetime.time, [datetime.time(14, 30, 0), datetime.time(4, 5, 37), datetime.time(0, 0, 0), None]))
 
     def test_dates_column_datetimes(self):
         normal_values = xls.normalize_dates([

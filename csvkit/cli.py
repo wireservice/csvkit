@@ -2,6 +2,7 @@
 
 import argparse
 import bz2
+import codecs
 import gzip
 import os.path
 import sys
@@ -113,7 +114,10 @@ class CSVKitUtility(object):
         self._install_exception_handler()
 
         if output_file is None:
-            self.output_file = sys.stdout
+            if six.PY2:
+                self.output_file = codecs.getwriter('utf-8')(sys.stdout)
+            else:
+                self.output_file = sys.stdout
         else:
             self.output_file = output_file
 
@@ -253,6 +257,9 @@ class CSVKitUtility(object):
         """
         Installs a replacement for sys.excepthook, which handles pretty-printing uncaught exceptions.
         """
+        if six.PY2:
+            sys.stderr = codecs.getwriter('utf-8')(sys.stderr)
+
         def handler(t, value, traceback):
             if self.args.verbose:
                 sys.__excepthook__(t, value, traceback)
@@ -262,7 +269,7 @@ class CSVKitUtility(object):
                 if t == UnicodeDecodeError:
                     sys.stderr.write('Your file is not "%s" encoded. Please specify the correct encoding with the -e flag. Use the -v flag to see the complete error.\n' % self.args.encoding)
                 else:
-                    sys.stderr.write('%s\n' % six.text_type(value).encode('utf-8'))
+                    sys.stderr.write('%s\n' % six.text_type(value))
 
         sys.excepthook = handler
 

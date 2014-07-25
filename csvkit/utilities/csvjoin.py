@@ -98,7 +98,7 @@ class CSVJoin(CSVKitUtility):
         """
         Parse a list of join columns.
         """
-        return map(str.strip, join_string.split(','))
+        return list(map(str.strip, join_string.split(',')))
 
 
 def launch_new_instance():

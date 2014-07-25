@@ -4,11 +4,6 @@ import json
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 try:
     import unittest2 as unittest
 except ImportError:
@@ -20,7 +15,7 @@ from csvkit.utilities.csvjson import CSVJSON
 class TestCSVJSON(unittest.TestCase):
     def test_simple(self):
         args = ['examples/dummy.csv']
-        output_file = StringIO()
+        output_file = six.StringIO()
 
         utility = CSVJSON(args, output_file)
         utility.main()
@@ -31,7 +26,7 @@ class TestCSVJSON(unittest.TestCase):
 
     def test_indentation(self):
         args = ['-i', '4', 'examples/dummy.csv']
-        output_file = StringIO()
+        output_file = six.StringIO()
 
         utility = CSVJSON(args, output_file)
         utility.main()
@@ -42,7 +37,7 @@ class TestCSVJSON(unittest.TestCase):
 
     def test_keying(self):
         args = ['-k', 'a', 'examples/dummy.csv']
-        output_file = StringIO()
+        output_file = six.StringIO()
         
         utility = CSVJSON(args, output_file)
         utility.main()
@@ -53,7 +48,7 @@ class TestCSVJSON(unittest.TestCase):
 
     def test_duplicate_keys(self):
         args = ['-k', 'a', 'examples/dummy3.csv']
-        output_file = StringIO()
+        output_file = six.StringIO()
         
         utility = CSVJSON(args, output_file)
 
@@ -61,7 +56,7 @@ class TestCSVJSON(unittest.TestCase):
 
     def test_geojson(self):
         args = ['--lat', 'latitude', '--lon', 'longitude', 'examples/test_geo.csv']
-        output_file = StringIO()
+        output_file = six.StringIO()
         
         utility = CSVJSON(args, output_file)
         utility.main()
@@ -86,7 +81,7 @@ class TestCSVJSON(unittest.TestCase):
 
     def test_geojson_with_id(self):
         args = ['--lat', 'latitude', '--lon', 'longitude', '-k', 'slug', 'examples/test_geo.csv']
-        output_file = StringIO()
+        output_file = six.StringIO()
         
         utility = CSVJSON(args, output_file)
         utility.main()
@@ -111,7 +106,7 @@ class TestCSVJSON(unittest.TestCase):
 
     def test_geojson_with_crs(self):
         args = ['--lat', 'latitude', '--lon', 'longitude', '--crs', 'EPSG:4269', 'examples/test_geo.csv']
-        output_file = StringIO()
+        output_file = six.StringIO()
         
         utility = CSVJSON(args, output_file)
         utility.main()

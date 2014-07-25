@@ -6,11 +6,6 @@ import os
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 try:
     import unittest2 as unittest
 except ImportError:
@@ -51,14 +46,14 @@ class TestUnicodeCSVReader(unittest.TestCase):
 @unittest.skipIf(six.PY3, "Not supported in Python 3.")
 class TestUnicodeCSVWriter(unittest.TestCase):
     def test_utf8(self):
-        output = StringIO()
+        output = six.StringIO()
         writer = unicsv.UnicodeCSVWriter(output, encoding='utf-8')
         self.assertEqual(writer._eight_bit, True)
         writer.writerow(['a', 'b', 'c'])
         writer.writerow(['1', '2', '3'])
         writer.writerow(['4', '5', u'ʤ'])
 
-        written = StringIO(output.getvalue())
+        written = six.StringIO(output.getvalue())
 
         reader = unicsv.UnicodeCSVReader(written, encoding='utf-8')
         self.assertEqual(next(reader), ['a', 'b', 'c'])
@@ -66,14 +61,14 @@ class TestUnicodeCSVWriter(unittest.TestCase):
         self.assertEqual(next(reader), ['4', '5', u'ʤ'])
 
     def test_latin1(self):
-        output = StringIO()
+        output = six.StringIO()
         writer = unicsv.UnicodeCSVWriter(output, encoding='latin1')
         self.assertEqual(writer._eight_bit, True)
         writer.writerow(['a', 'b', 'c'])
         writer.writerow(['1', '2', '3'])
         writer.writerow(['4', '5', u'©'])
 
-        written = StringIO(output.getvalue())
+        written = six.StringIO(output.getvalue())
 
         reader = unicsv.UnicodeCSVReader(written, encoding='latin1')
         self.assertEqual(next(reader), ['a', 'b', 'c'])
@@ -81,14 +76,14 @@ class TestUnicodeCSVWriter(unittest.TestCase):
         self.assertEqual(next(reader), ['4', '5', u'©'])
 
     def test_utf16_big(self):
-        output = StringIO()
+        output = six.StringIO()
         writer = unicsv.UnicodeCSVWriter(output, encoding='utf-16-be')
         self.assertEqual(writer._eight_bit, False)
         writer.writerow(['a', 'b', 'c'])
         writer.writerow(['1', '2', '3'])
         writer.writerow(['4', '5', u'ʤ'])
 
-        written = StringIO(output.getvalue())
+        written = six.StringIO(output.getvalue())
 
         reader = unicsv.UnicodeCSVReader(written, encoding='utf-16-be')
         self.assertEqual(next(reader), ['a', 'b', 'c'])
@@ -96,14 +91,14 @@ class TestUnicodeCSVWriter(unittest.TestCase):
         self.assertEqual(next(reader), ['4', '5', u'\u02A4'])
 
     def test_utf16_little(self):
-        output = StringIO()
+        output = six.StringIO()
         writer = unicsv.UnicodeCSVWriter(output, encoding='utf-16-le')
         self.assertEqual(writer._eight_bit, False)
         writer.writerow(['a', 'b', 'c'])
         writer.writerow(['1', '2', '3'])
         writer.writerow(['4', '5', u'ʤ'])
 
-        written = StringIO(output.getvalue())
+        written = six.StringIO(output.getvalue())
 
         reader = unicsv.UnicodeCSVReader(written, encoding='utf-16-le')
         self.assertEqual(next(reader), ['a', 'b', 'c'])
@@ -144,7 +139,7 @@ class TestUnicodeCSVDictReader(unittest.TestCase):
 @unittest.skipIf(six.PY3, "Not supported in Python 3.")
 class TestUnicodeCSVDictWriter(unittest.TestCase):
     def setUp(self):
-        self.output = StringIO()
+        self.output = six.StringIO()
 
     def tearDown(self):
         self.output.close()

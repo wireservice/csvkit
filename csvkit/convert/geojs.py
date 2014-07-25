@@ -4,11 +4,6 @@ import json
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 from csvkit import CSVKitWriter
 
 def geojson2csv(f, key=None, **kwargs):
@@ -50,7 +45,7 @@ def geojson2csv(f, key=None, **kwargs):
     header.extend(fields)
     header.append('geojson')
 
-    o = StringIO()
+    o = six.StringIO()
     writer = CSVKitWriter(o)
 
     writer.writerow(header)

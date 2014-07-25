@@ -2,11 +2,6 @@
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 try:
     import unittest2 as unittest
 except ImportError:
@@ -16,8 +11,8 @@ from csvkit.utilities.csvstat import CSVStat
 
 class TestCSVStat(unittest.TestCase):
     def test_runs(self):
-        args = ['examples/dummy.csv']
-        output_file = StringIO()
+        args = ['examples/test_utf8.csv']
+        output_file = six.StringIO()
 
         utility = CSVStat(args, output_file)
         utility.main()

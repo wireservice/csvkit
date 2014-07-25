@@ -4,11 +4,6 @@ import os
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 try:
     import unittest2 as unittest
 except ImportError:
@@ -19,7 +14,7 @@ from csvkit.utilities.csvclean import CSVClean
 class TestCSVClean(unittest.TestCase):
     def test_simple(self):
         args = ['examples/bad.csv']
-        output_file = StringIO()
+        output_file = six.StringIO()
 
         utility = CSVClean(args, output_file)
         utility.main()
@@ -45,7 +40,7 @@ class TestCSVClean(unittest.TestCase):
 
     def test_dry_run(self):
         args = ['-n', 'examples/bad.csv']
-        output_file = StringIO()
+        output_file = six.StringIO()
 
         utility = CSVClean(args, output_file)
         utility.main()
@@ -53,7 +48,7 @@ class TestCSVClean(unittest.TestCase):
         self.assertFalse(os.path.exists('examples/bad_err.csv'))
         self.assertFalse(os.path.exists('examples/bad_out.csv'))
 
-        output = StringIO(output_file.getvalue())
+        output = six.StringIO(output_file.getvalue())
 
         self.assertEqual(next(output)[:6], 'Line 1')
         self.assertEqual(next(output)[:6], 'Line 2')

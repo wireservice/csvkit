@@ -2,11 +2,6 @@
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 try:
     import unittest2 as unittest
 except ImportError:
@@ -17,12 +12,12 @@ from csvkit.utilities.csvlook import CSVLook
 class TestCSVLook(unittest.TestCase):
     def test_simple(self):
         args = ['examples/dummy3.csv']
-        output_file = StringIO()
+        output_file = six.StringIO()
         utility = CSVLook(args, output_file)
 
         utility.main()
 
-        input_file = StringIO(output_file.getvalue())
+        input_file = six.StringIO(output_file.getvalue())
 
         self.assertEqual(next(input_file), '|----+---+----|\n')
         self.assertEqual(next(input_file), '|  a | b | c  |\n')
@@ -33,12 +28,12 @@ class TestCSVLook(unittest.TestCase):
 
     def test_no_header(self):
         args = ['--no-header-row', 'examples/no_header_row3.csv']
-        output_file = StringIO()
+        output_file = six.StringIO()
         utility = CSVLook(args, output_file)
 
         utility.main()
 
-        input_file = StringIO(output_file.getvalue())
+        input_file = six.StringIO(output_file.getvalue())
 
         #self.assertEqual(next(input_file), '|----+---+----|\n')
         #self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')

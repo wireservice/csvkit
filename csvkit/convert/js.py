@@ -4,11 +4,6 @@ import json
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 from csvkit import CSVKitWriter
 
 def parse_object(obj, path=''):
@@ -61,7 +56,7 @@ def json2csv(f, key=None, **kwargs):
 
     fields = sorted(list(field_set))
 
-    o = StringIO()
+    o = six.StringIO()
     writer = CSVKitWriter(o)
 
     writer.writerow(fields)

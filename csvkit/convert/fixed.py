@@ -5,11 +5,6 @@ from codecs import iterdecode
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 from csvkit import CSVKitReader, CSVKitWriter
 
 def fixed2csv(f, schema, output=None, **kwargs):
@@ -25,7 +20,7 @@ def fixed2csv(f, schema, output=None, **kwargs):
     streaming = True if output else False
 
     if not streaming:
-        output = StringIO()
+        output = six.StringIO()
 
     try:
         encoding = kwargs['encoding']
@@ -44,7 +39,7 @@ def fixed2csv(f, schema, output=None, **kwargs):
     # Return empty string when streaming
     return ''
 
-class FixedWidthReader(object):
+class FixedWidthReader(six.Iterator):
     """
     Given a fixed-width file and a schema file, produce an analog to a csv reader that yields a row 
     of strings for each line in the fixed-width file, preceded with a row of headers as provided in the schema.  (This might be problematic if fixed-width-files ever have header rows also, but I haven't seen that.)
@@ -61,12 +56,12 @@ class FixedWidthReader(object):
     def __iter__(self):
         return self
         
-    def next(self):
+    def __next__(self):
         if self.header:
             self.header = False
             return self.parser.headers
 
-        return self.parser.parse(self.file.next())
+        return self.parser.parse(next(self.file))
 
 FixedWidthField = namedtuple('FixedWidthField', ['name', 'start', 'length'])
 
@@ -78,7 +73,7 @@ class FixedWidthRowParser(object):
         self.fields = [] # A list of FixedWidthFields
 
         schema_reader = CSVKitReader(schema)
-        schema_decoder = SchemaDecoder(schema_reader.next())
+        schema_decoder = SchemaDecoder(next(schema_reader))
 
         for i,row in enumerate(schema_reader):
             try:

@@ -125,7 +125,7 @@ class CSVSQL(CSVKitUtility):
             # Output SQL statements
             else:
                 sql_table = sql.make_table(csv_table, table_name, self.args.no_constraints)
-                self.output_file.write(('%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect)).encode('utf-8'))
+                self.output_file.write('%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect))
 
         if connection_string:
             if query:

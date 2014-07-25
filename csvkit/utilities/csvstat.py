@@ -75,54 +75,55 @@ class CSVStat(CSVKitUtility):
                 if op == 'unique':
                     stat = len(stat)
                 elif op == 'freq':
-                    stat = ', '.join([(u'"%s": %s' % (six.text_type(k), count)).encode('utf-8') for k, count in stat])
+                    stat = ', '.join([('"%s": %s' % (six.text_type(k), count)) for k, count in stat])
                     stat = '{ %s }' % stat
 
                 if len(tab) == 1:
                     self.output_file.write(six.text_type(stat))
                 else:
-                    self.output_file.write(u'%3i. %s: %s\n' % (c.order + 1, c.name, stat))
+                    self.output_file.write('%3i. %s: %s\n' % (c.order + 1, c.name, stat))
             # Output all stats
             else:
                 for op in OPERATIONS:
                     stats[op] = getattr(self, 'get_%s' % op)(c, values, stats)
 
-                self.output_file.write((u'%3i. %s\n' % (c.order + 1, c.name)).encode('utf-8'))
+                self.output_file.write(('%3i. %s\n' % (c.order + 1, c.name)))
 
                 if c.type == None:
-                    self.output_file.write(u'\tEmpty column\n')
+                    self.output_file.write('\tEmpty column\n')
                     continue
                     
-                self.output_file.write(u'\t%s\n' % c.type)
-                self.output_file.write(u'\tNulls: %s\n' % stats['nulls'])
+                self.output_file.write('\t%s\n' % c.type)
+                self.output_file.write('\tNulls: %s\n' % stats['nulls'])
                 
                 if len(stats['unique']) <= MAX_UNIQUE and c.type is not bool:
                     uniques = [six.text_type(u) for u in list(stats['unique'])]
-                    self.output_file.write((u'\tValues: %s\n' % u', '.join(uniques)).encode('utf-8'))
+                    data = u'\tValues: %s\n' % ', '.join(uniques)
+                    self.output_file.write(data)
                 else:
                     if c.type not in [six.text_type, bool]:
-                        self.output_file.write(u'\tMin: %s\n' % stats['min'])
-                        self.output_file.write(u'\tMax: %s\n' % stats['max'])
+                        self.output_file.write('\tMin: %s\n' % stats['min'])
+                        self.output_file.write('\tMax: %s\n' % stats['max'])
 
                         if c.type in [int, float]:
-                            self.output_file.write(u'\tSum: %s\n' % stats['sum'])
-                            self.output_file.write(u'\tMean: %s\n' % stats['mean'])
-                            self.output_file.write(u'\tMedian: %s\n' % stats['median'])
-                            self.output_file.write(u'\tStandard Deviation: %s\n' % stats['stdev'])
+                            self.output_file.write('\tSum: %s\n' % stats['sum'])
+                            self.output_file.write('\tMean: %s\n' % stats['mean'])
+                            self.output_file.write('\tMedian: %s\n' % stats['median'])
+                            self.output_file.write('\tStandard Deviation: %s\n' % stats['stdev'])
 
-                    self.output_file.write(u'\tUnique values: %i\n' % len(stats['unique']))
+                    self.output_file.write('\tUnique values: %i\n' % len(stats['unique']))
 
                     if len(stats['unique']) != len(values):
-                        self.output_file.write(u'\t%i most frequent values:\n' % MAX_FREQ)
+                        self.output_file.write('\t%i most frequent values:\n' % MAX_FREQ)
                         for value, count in stats['freq']:
-                            self.output_file.write((u'\t\t%s:\t%s\n' % (six.text_type(value), count)).encode('utf-8'))
+                            self.output_file.write(('\t\t%s:\t%s\n' % (six.text_type(value), count)))
 
                     if c.type == six.text_type:
-                        self.output_file.write(u'\tMax length: %i\n' % stats['len'])
+                        self.output_file.write('\tMax length: %i\n' % stats['len'])
 
         if not operations:
-            self.output_file.write(u'\n')
-            self.output_file.write(u'Row count: %s\n' % tab.count_rows())
+            self.output_file.write('\n')
+            self.output_file.write('Row count: %s\n' % tab.count_rows())
 
     def get_min(self, c, values, stats):
         if c.type == NoneType:
@@ -197,11 +198,11 @@ def median(l):
     """
     length = len(l)
 
-    if len(l) % 2 == 1:
-        return l[((length + 1) / 2) - 1]
+    if length % 2 == 1:
+        return l[(length + 1) // 2 - 1]
     else:
-        a = l[(length / 2) - 1]
-        b = l[length / 2]
+        a = l[(length // 2) - 1]
+        b = l[length // 2]
     return (float(a + b)) / 2  
 
 def freq(l, n=MAX_FREQ):
@@ -212,14 +213,15 @@ def freq(l, n=MAX_FREQ):
 
     for x in l:
         s = six.text_type(x)
-        if count.has_key(s):
+
+        if s in count:
             count[s] += 1
         else:
             count[s] = 1
 
     # This will iterate through dictionary, return N highest
     # values as (key, value) tuples.
-    top = nlargest(n, count.iteritems(), itemgetter(1))
+    top = nlargest(n, six.iteritems(count), itemgetter(1))
 
     return top
 

@@ -4,8 +4,6 @@
 Note: dbf is only supported/imported for Python 2.
 """
 
-from cStringIO import StringIO
-
 import dbf
 import six
 
@@ -37,7 +35,7 @@ def dbf2csv(f, **kwargs):
 
         tab = table.Table(columns=columns) 
 
-        o = StringIO()
+        o = six.StringIO()
         output = tab.to_csv(o)
         output = o.getvalue()
         o.close()

@@ -25,7 +25,7 @@ class TestNormalizeType(unittest.TestCase):
     def test_nulls_coerce_fail(self):
         try:
             typeinference.normalize_column_type([u'n/a', u'NA', u'.', u'1.7', u'none', u''], normal_type=NoneType)
-        except InvalidValueForTypeException, e:
+        except InvalidValueForTypeException as e:
             self.assertEqual(e.index, 3)
             self.assertEqual(e.value, '1.7')
             self.assertEqual(e.normal_type, NoneType)
@@ -41,7 +41,7 @@ class TestNormalizeType(unittest.TestCase):
     def test_ints_coerce_fail(self):
         try:
             typeinference.normalize_column_type([u'1', u'-87', u'418000000', u'', u'TRUE'], normal_type=int)
-        except InvalidValueForTypeException, e:
+        except InvalidValueForTypeException as e:
             self.assertEqual(e.index, 4)
             self.assertEqual(e.value, 'TRUE')
             self.assertEqual(e.normal_type, int)
@@ -57,7 +57,7 @@ class TestNormalizeType(unittest.TestCase):
     def test_padded_ints_coerce_fail(self):
         try:
             typeinference.normalize_column_type([u'0001', u'0997', u'8.7', u''], normal_type=int)
-        except InvalidValueForTypeException, e:
+        except InvalidValueForTypeException as e:
             self.assertEqual(e.index, 0)
             self.assertEqual(e.value, '0001')
             self.assertEqual(e.normal_type, int)
@@ -76,7 +76,7 @@ class TestNormalizeType(unittest.TestCase):
     def test_floats_coerce_fail(self):
         try:
             typeinference.normalize_column_type([u'1', u'-87.413', u'418000000.0', u'Hello, world!'], normal_type=float)
-        except InvalidValueForTypeException, e:
+        except InvalidValueForTypeException as e:
             self.assertEqual(e.index, 3)
             self.assertEqual(e.value, 'Hello, world!')
             self.assertEqual(e.normal_type, float)
@@ -113,7 +113,7 @@ class TestNormalizeType(unittest.TestCase):
     def test_booleans_coerce_fail(self):
         try:
             typeinference.normalize_column_type([u'False', u'TRUE', u'FALSE', u'17', u''], normal_type=bool)
-        except InvalidValueForTypeException, e:
+        except InvalidValueForTypeException as e:
             self.assertEqual(e.index, 3)
             self.assertEqual(e.value, '17')
             self.assertEqual(e.normal_type, bool)
@@ -129,7 +129,7 @@ class TestNormalizeType(unittest.TestCase):
     def test_datetimes_coerce_fail(self):
         try:
             typeinference.normalize_column_type([u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', u'4:45 AM'], normal_type=datetime.datetime)
-        except InvalidValueForTypeException, e:
+        except InvalidValueForTypeException as e:
             self.assertEqual(e.index, 3)
             self.assertEqual(e.value, '4:45 AM')
             self.assertEqual(e.normal_type, datetime.datetime)
@@ -145,7 +145,7 @@ class TestNormalizeType(unittest.TestCase):
     def test_dates_coerce_fail(self):
         try:
             typeinference.normalize_column_type([u'Jan 1, 2008 at 4:40 AM', u'2010-01-27T03:45:00', u'3/1/08 16:14:45', u'4:45 AM'], normal_type=datetime.datetime)
-        except InvalidValueForTypeException, e:
+        except InvalidValueForTypeException as e:
             self.assertEqual(e.index, 3)
             self.assertEqual(e.value, '4:45 AM')
             self.assertEqual(e.normal_type, datetime.datetime)
@@ -161,7 +161,7 @@ class TestNormalizeType(unittest.TestCase):
     def test_times_coerce_fail(self):
         try:
             typeinference.normalize_column_type([u'4:40 AM', u'03:45:00', u'16:14:45', u'1,000,000'], normal_type=datetime.time)
-        except InvalidValueForTypeException, e:
+        except InvalidValueForTypeException as e:
             self.assertEqual(e.index, 3)
             self.assertEqual(e.value, '1,000,000')
             self.assertEqual(e.normal_type, datetime.time)
@@ -242,7 +242,7 @@ class TestNormalizeType(unittest.TestCase):
         try:
             typeinference.normalize_table(data, normal_types, accumulate_errors=True)
             self.assertEqual(True, False)
-        except InvalidValueForTypeListException, e:
+        except InvalidValueForTypeListException as e:
             self.assertEqual(len(e.errors), 2)
             self.assertEqual(e.errors[0].index, 0)
             self.assertEqual(e.errors[0].value, 'a')

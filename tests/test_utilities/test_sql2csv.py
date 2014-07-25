@@ -2,11 +2,6 @@
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 try:
     import unittest2 as unittest
 except ImportError:
@@ -41,7 +36,7 @@ class TestSQL2CSV(unittest.TestCase):
 
     def test_query(self):
         args = ['--query', 'select 6*9 as question']
-        output_file = StringIO()
+        output_file = six.StringIO()
 
         utility = SQL2CSV(args, output_file)
         utility.main()
@@ -51,8 +46,8 @@ class TestSQL2CSV(unittest.TestCase):
         self.assertTrue('54' in csv)
 
     def test_stdin(self):
-        output_file = StringIO()
-        input_file = StringIO("select cast(3.1415 * 13.37 as integer) as answer")
+        output_file = six.StringIO()
+        input_file = six.StringIO("select cast(3.1415 * 13.37 as integer) as answer")
 
         with stdin_as_string(input_file):
             utility = SQL2CSV([], output_file)
@@ -64,8 +59,8 @@ class TestSQL2CSV(unittest.TestCase):
 
     def test_stdin_with_query(self):
         args = ['--query', 'select 6*9 as question']
-        output_file = StringIO()
-        input_file = StringIO("select cast(3.1415 * 13.37 as integer) as answer")
+        output_file = six.StringIO()
+        input_file = six.StringIO("select cast(3.1415 * 13.37 as integer) as answer")
 
         with stdin_as_string(input_file):
             utility = SQL2CSV(args, output_file)
@@ -78,7 +73,7 @@ class TestSQL2CSV(unittest.TestCase):
     def test_unicode(self):
         target_output = self.csvsql('examples/test_utf8.csv')
         args = ['--db', "sqlite:///" + self.db_file, '--query', 'select * from foo']
-        output_file = StringIO()
+        output_file = six.StringIO()
 
         utility = SQL2CSV(args, output_file)
         utility.main()
@@ -88,7 +83,7 @@ class TestSQL2CSV(unittest.TestCase):
     def test_no_header_row(self):
         self.csvsql('examples/dummy.csv')
         args = ['--db', "sqlite:///" + self.db_file, '--no-header-row', '--query', 'select * from foo']
-        output_file = StringIO()
+        output_file = six.StringIO()
         utility = SQL2CSV(args, output_file)
         utility.main()
         csv = output_file.getvalue()
@@ -99,7 +94,7 @@ class TestSQL2CSV(unittest.TestCase):
     def test_linenumbers(self):
         self.csvsql('examples/dummy.csv')
         args = ['--db', "sqlite:///" + self.db_file, '--linenumbers', '--query', 'select * from foo']
-        output_file = StringIO()
+        output_file = six.StringIO()
         utility = SQL2CSV(args, output_file)
         utility.main()
         csv = output_file.getvalue()

@@ -3,11 +3,6 @@
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 try:
     import unittest2 as unittest
 except ImportError:
@@ -35,14 +30,14 @@ class TestCSVKitReader(unittest.TestCase):
 @unittest.skipIf(six.PY3, "Not supported in Python 3.")
 class TestCSVKitWriter(unittest.TestCase):
     def test_utf8(self):
-        output = StringIO()
+        output = six.StringIO()
         writer = csvkit.CSVKitWriter(output, encoding='utf-8')
         self.assertEqual(writer._eight_bit, True)
         writer.writerow(['a', 'b', 'c'])
         writer.writerow(['1', '2', '3'])
         writer.writerow(['4', '5', u'ʤ'])
 
-        written = StringIO(output.getvalue())
+        written = six.StringIO(output.getvalue())
 
         reader = csvkit.CSVKitReader(written, encoding='utf-8')
         self.assertEqual(next(reader), ['a', 'b', 'c'])
@@ -50,14 +45,14 @@ class TestCSVKitWriter(unittest.TestCase):
         self.assertEqual(next(reader), ['4', '5', u'ʤ'])
 
     def test_writer_alias(self):
-        output = StringIO()
+        output = six.StringIO()
         writer = csvkit.writer(output, encoding='utf-8')
         self.assertEqual(writer._eight_bit, True)
         writer.writerow(['a', 'b', 'c'])
         writer.writerow(['1', '2', '3'])
         writer.writerow(['4', '5', u'ʤ'])
 
-        written = StringIO(output.getvalue())
+        written = six.StringIO(output.getvalue())
 
         reader = csvkit.reader(written, encoding='utf-8')
         self.assertEqual(next(reader), ['a', 'b', 'c'])
@@ -95,7 +90,7 @@ class TestCSVKitDictReader(unittest.TestCase):
 @unittest.skipIf(six.PY3, "Not supported in Python 3.")
 class TestCSVKitDictWriter(unittest.TestCase):
     def setUp(self):
-        self.output = StringIO()
+        self.output = six.StringIO()
 
     def tearDown(self):
         self.output.close()

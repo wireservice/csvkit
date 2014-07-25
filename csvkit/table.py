@@ -5,11 +5,6 @@ import itertools
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit import sniffer
 from csvkit import typeinference
@@ -211,7 +206,7 @@ class Table(list):
         elif snifflimit > 0:
             kwargs['dialect'] = sniffer.sniff_dialect(contents[:snifflimit])
 
-        f = StringIO(contents)
+        f = six.StringIO(contents)
         rows = CSVKitReader(f, **kwargs)
 
         if no_header_row:

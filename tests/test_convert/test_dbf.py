@@ -5,7 +5,10 @@ try:
 except ImportError:
     import unittest
 
-from csvkit.convert import dbase
+import six
+
+if six.PY2:
+    from csvkit.convert import dbase
 
 @unittest.skipIf(six.PY3, "Not supported in Python 3.")
 class TestDBF(unittest.TestCase):

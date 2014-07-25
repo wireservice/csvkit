@@ -4,11 +4,6 @@ import datetime
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 try:
     import unittest2 as unittest
 except ImportError:
@@ -82,7 +77,7 @@ class TestTable(unittest.TestCase):
         with open('examples/testfixed_converted.csv', 'r') as f:
             contents = f.read()
             f.seek(0)
-            o = StringIO()
+            o = six.StringIO()
             table.Table.from_csv(f).to_csv(o)
             conversion = o.getvalue()
             o.close()

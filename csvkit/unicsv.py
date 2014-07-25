@@ -11,11 +11,6 @@ import csv
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 from csvkit.exceptions import FieldSizeLimitError
 
 EIGHT_BIT_ENCODINGS = ['utf-8', 'u8', 'utf', 'utf8', 'latin-1', 'iso-8859-1', 'iso8859-1', '8859', 'cp819', 'latin', 'latin1', 'l1']
@@ -79,7 +74,7 @@ class UnicodeCSVWriter(object):
             self.writer = csv.writer(f, **kwargs)
         else:
             # Redirect output to a queue for reencoding
-            self.queue = StringIO()
+            self.queue = six.StringIO()
             self.writer = csv.writer(self.queue, **kwargs)
             self.stream = f
             self.encoder = codecs.getincrementalencoder(encoding)()

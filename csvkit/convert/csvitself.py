@@ -2,11 +2,6 @@
 
 import six
 
-if six.PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
-
 from csvkit import table
 
 def csv2csv(f, **kwargs):
@@ -15,7 +10,7 @@ def csv2csv(f, **kwargs):
     """
     tab = table.Table.from_csv(f, **kwargs) 
 
-    o = StringIO()
+    o = six.StringIO()
     output = tab.to_csv(o)
     output = o.getvalue()
     o.close()
