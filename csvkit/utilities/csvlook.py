@@ -15,7 +15,7 @@ class CSVLook(CSVKitUtility):
         pass
 
     def main(self):
-        rows = CSVKitReader(self.args.file, **self.reader_kwargs)
+        rows = CSVKitReader(self.input_file, **self.reader_kwargs)
 
         # Make a default header row if none exists
         if self.args.no_header_row:

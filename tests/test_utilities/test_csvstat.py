@@ -17,3 +17,10 @@ class TestCSVStat(unittest.TestCase):
         utility = CSVStat(args, output_file)
         utility.main()
 
+    def test_encoding(self):
+        args = ['-e', 'latin1', 'examples/test_latin1.csv']
+        output_file = six.StringIO()
+
+        utility = CSVStat(args, output_file)
+        utility.main()
+

@@ -56,45 +56,6 @@ class LazyFile(six.Iterator):
 
         return next(self.f)
 
-class CSVFileType(object):
-    """
-    An argument factory like argparse.FileType with compression support.
-    """
-
-    def __init__(self):
-        """
-        Initialize the factory.
-        """
-        # In Python2 we decode these using UTF8Recoder
-        if six.PY2:
-            self._mode = 'rb'
-        else:
-            self._mode = 'rt'
-
-    def __call__(self, path):
-        """
-        Build a file-like object from the specified path.
-        """
-        if path == '-':
-            if 'r' in self._mode:
-                return sys.stdin
-            elif 'w' in self._mode:
-                return sys.stdout
-            else:
-                raise ValueError('Invalid path "-" with mode {0}'.format(self._mode))
-        else:
-            (_, extension) = os.path.splitext(path)
-
-            if extension == '.gz':
-                return LazyFile(gzip.open, path, self._mode)
-            if extension == '.bz2':
-                if six.PY2:
-                    return LazyFile(bz2.BZ2File, path, self._mode)
-                else:
-                    return LazyFile(bz2.open, path, self._mode)
-            else:
-                return LazyFile(open, path, self._mode)
-
 class CSVKitUtility(object):
     description = ''
     epilog = ''
@@ -107,6 +68,9 @@ class CSVKitUtility(object):
         self._init_common_parser()
         self.add_arguments()
         self.args = self.argparser.parse_args(args)
+
+        if 'f' not in self.override_flags:
+            self.input_file = self._open_input_file(self.args.input_path)
 
         self.reader_kwargs = self._extract_csv_reader_kwargs()
         self.writer_kwargs = self._extract_csv_writer_kwargs()
@@ -164,41 +128,41 @@ class CSVKitUtility(object):
 
         # Input
         if 'f' not in self.override_flags:
-            self.argparser.add_argument('file', metavar="FILE", nargs='?', type=CSVFileType(), default=sys.stdin,
-                                help='The CSV file to operate on. If omitted, will accept input on STDIN.')
+            self.argparser.add_argument(metavar="FILE", nargs='?', dest='input_path',
+                help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         if 'd' not in self.override_flags:
             self.argparser.add_argument('-d', '--delimiter', dest='delimiter',
-                                help='Delimiting character of the input CSV file.')
+                help='Delimiting character of the input CSV file.')
         if 't' not in self.override_flags:
             self.argparser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
-                                help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
+                help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
         if 'q' not in self.override_flags:
             self.argparser.add_argument('-q', '--quotechar', dest='quotechar',
-                                help='Character used to quote strings in the input CSV file.')
+                help='Character used to quote strings in the input CSV file.')
         if 'u' not in self.override_flags:
             self.argparser.add_argument('-u', '--quoting', dest='quoting', type=int, choices=[0,1,2,3],
-                                help='Quoting style used in the input CSV file. 0 = Quote Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 = Quote None.')
+                help='Quoting style used in the input CSV file. 0 = Quote Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 = Quote None.')
         if 'b' not in self.override_flags:
             self.argparser.add_argument('-b', '--doublequote', dest='doublequote', action='store_true',
-                                help='Whether or not double quotes are doubled in the input CSV file.')
+                help='Whether or not double quotes are doubled in the input CSV file.')
         if 'p' not in self.override_flags:
             self.argparser.add_argument('-p', '--escapechar', dest='escapechar',
-                                help='Character used to escape the delimiter if --quoting 3 ("Quote None") is specified and to escape the QUOTECHAR if --doublequote is not specified.')
+                help='Character used to escape the delimiter if --quoting 3 ("Quote None") is specified and to escape the QUOTECHAR if --doublequote is not specified.')
         if 'z' not in self.override_flags:
             self.argparser.add_argument('-z', '--maxfieldsize', dest='maxfieldsize', type=int,
-                                help='Maximum length of a single field in the input CSV file.')
+                help='Maximum length of a single field in the input CSV file.')
         if 'e' not in self.override_flags:
             self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
-                                help='Specify the encoding the input CSV file.')
+                help='Specify the encoding the input CSV file.')
         if 'S' not in self.override_flags:
             self.argparser.add_argument('-S', '--skipinitialspace', dest='skipinitialspace', default=False, action='store_true',
-                                help='Ignore whitespace immediately following the delimiter.')
+                help='Ignore whitespace immediately following the delimiter.')
         if 'H' not in self.override_flags:
             self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
-                                help='Specifies that the input CSV file has no header row. Will create default headers.')
+                help='Specifies that the input CSV file has no header row. Will create default headers.')
         if 'v' not in self.override_flags:
             self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
-                                help='Print detailed tracebacks when errors occur.')
+                help='Print detailed tracebacks when errors occur.')
 
         # Output
         if 'l' not in self.override_flags:
@@ -210,6 +174,33 @@ class CSVKitUtility(object):
             self.argparser.add_argument('--zero', dest='zero_based', action='store_true',
                             help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
         
+    def _open_input_file(self, path):
+        """
+        Open the input file specified on the command line.
+        """
+        if six.PY2:
+            mode = 'rb'
+            kwargs = {}
+        else:
+            mode = 'rt'
+            kwargs = { 'encoding': self.args.encoding }
+
+        if not path or path == '-':
+            f = sys.stdin
+        else:
+            (_, extension) = os.path.splitext(path)
+
+            if extension == '.gz':
+                f = LazyFile(gzip.open, path, mode, **kwargs)
+            if extension == '.bz2':
+                if six.PY2:
+                    f = LazyFile(bz2.BZ2File, path, mode, **kwargs)
+                else:
+                    f = LazyFile(bz2.open, path, mode, **kwargs)
+            else:
+                f = LazyFile(open, path, mode, **kwargs)
+
+        return f
 
     def _extract_csv_reader_kwargs(self):
         """
@@ -280,8 +271,9 @@ class CSVKitUtility(object):
         if self.args.no_header_row:
             raise RequiredHeaderError('You cannot use --no-header-row with the -n or --names options.')
 
-        f = self.args.file
+        f = self.input_file
         output = self.output_file
+
         try:
             zero_based=self.args.zero_based
         except:

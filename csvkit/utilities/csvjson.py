@@ -38,7 +38,7 @@ class CSVJSON(CSVKitUtility):
         if self.args.crs and not self.args.lat:
             self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
 
-        rows = CSVKitReader(self.args.file, **self.reader_kwargs)
+        rows = CSVKitReader(self.input_file, **self.reader_kwargs)
         column_names = next(rows)
 
         if six.PY2:

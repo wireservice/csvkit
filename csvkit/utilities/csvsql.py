@@ -6,14 +6,15 @@ import sys
 from csvkit import sql
 from csvkit import table
 from csvkit import CSVKitWriter
-from csvkit.cli import CSVFileType, CSVKitUtility
+from csvkit.cli import CSVKitUtility
 
 class CSVSQL(CSVKitUtility):
     description = 'Generate SQL statements for one or more CSV files, create execute those statements directly on a database, and execute one or more SQL queries.'
     override_flags = ['l', 'f']
 
     def add_arguments(self):
-        self.argparser.add_argument('files', metavar="FILE", nargs='*', type=CSVFileType(), default=[sys.stdin],
+
+        self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
             help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
             help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
@@ -42,7 +43,11 @@ class CSVSQL(CSVKitUtility):
         connection_string = self.args.connection_string
         do_insert = self.args.insert
         query = self.args.query
-        files = self.args.files
+
+        self.input_files = []
+
+        for path in self.args.input_paths:
+            self.input_files.append(self._open_input_file(path))
 
         if self.args.table_names:
             table_names = self.args.table_names.split(',')
@@ -50,10 +55,10 @@ class CSVSQL(CSVKitUtility):
             table_names = []
 
         # If one or more filenames are specified, we need to add stdin ourselves (if available)
-        if sys.stdin not in files:
+        if sys.stdin not in self.input_files:
             try:
                 if not sys.stdin.isatty():
-                    files.insert(0, sys.stdin)
+                    self.input_files.insert(0, sys.stdin)
             except:
                 pass
 
@@ -80,7 +85,7 @@ class CSVSQL(CSVKitUtility):
             conn = engine.connect()
             trans = conn.begin()
 
-        for f in files:
+        for f in self.input_files:
             try:
                 # Try to use name specified via --table
                 table_name = table_names.pop(0)

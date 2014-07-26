@@ -48,7 +48,7 @@ class CSVStat(CSVKitUtility):
 
     def main(self):
         tab = table.Table.from_csv(
-            self.args.file,
+            self.input_file,
             snifflimit=self.args.snifflimit,
             column_ids=self.args.columns,
             zero_based=self.args.zero_based,

@@ -33,7 +33,7 @@ class CSVCut(CSVKitUtility):
             self.print_column_names()
             return
 
-        rows = CSVKitReader(self.args.file, **self.reader_kwargs)
+        rows = CSVKitReader(self.input_file, **self.reader_kwargs)
 
         if self.args.no_header_row:
             row = next(rows)
