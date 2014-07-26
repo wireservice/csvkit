@@ -45,6 +45,10 @@ The header line is required though the columns may be in any order::
 
 Also see: :doc:`common_arguments`.
 
+.. note::
+
+    DBF format is only supported when running on Python 2.
+
 Examples
 ========
 
