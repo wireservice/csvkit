@@ -1,6 +1,8 @@
 0.8.0
 -----
 
+* Add Espartaco Palma to AUTHORS.
+* Remove unnecessary enumerate calls. (#292)
 * Deprecated DBF support for Python 3+.
 * Add support for Python 3.3 and 3.4 (#239)
 
