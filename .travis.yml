@@ -6,9 +6,9 @@ python:
   - "3.4"
   - "pypy"
 install:
-  - if [[ $TRAVIS_PYTHON_VERSION == "2.6" ]]; then pip install -r requirements-py2.txt --use-mirrors --allow-external argparse fi
-  - if [[ $TRAVIS_PYTHON_VERSION == "2.7" ]]; then pip install -r requirements-py2.txt fi
-  - if [[ $TRAVIS_PYTHON_VERSION == "3.3" ]]; then pip install -r requirements-py3.txt fi
-  - if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then pip install -r requirements-py3.txt fi
-  - if [[ $TRAVIS_PYTHON_VERSION == "pypy" ]]; then pip install -r requirements-py3.txt fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "2.6" ]]; then pip install -r requirements-py2.txt --use-mirrors --allow-external argparse; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "2.7" ]]; then pip install -r requirements-py2.txt; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.3" ]]; then pip install -r requirements-py3.txt; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then pip install -r requirements-py3.txt; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "pypy" ]]; then pip install -r requirements-py3.txt; fi
 script: nosetests
