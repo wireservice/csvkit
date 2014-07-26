@@ -34,6 +34,8 @@ Generate SQL statements for a CSV file or execute those statements directly on a
       --db CONNECTION_STRING
                             If present, a sqlalchemy connection string to use to
                             directly execute generated SQL on a database.
+      --query QUERY         Execute one or more SQL queries delimited by ";" and
+                            output the result of the last query as CSV.
       --insert              In addition to creating the table, also insert the
                             data into the table. Only valid when --db is
                             specified.
@@ -51,6 +53,11 @@ Generate SQL statements for a CSV file or execute those statements directly on a
 Also see: :doc:`common_arguments`.
 
 For information on connection strings and supported dialects refer to the `SQLAlchemy documentation <http://www.sqlalchemy.org/docs/dialects/>`_.
+
+
+.. note::
+    
+    Using the ``--query`` option may cause rounding (in Python 2) or introduce [Python floating point issues](https://docs.python.org/3.4/tutorial/floatingpoint.html) (in Python 3).
 
 Examples
 ========

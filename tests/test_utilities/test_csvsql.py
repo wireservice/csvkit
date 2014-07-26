@@ -106,9 +106,13 @@ class TestCSVSQL(unittest.TestCase):
 
             sql = output_file.getvalue()
 
-            print(sql)
-
-            self.assertTrue('usda_id,mean_sepal_length' in sql)
-            self.assertTrue('IRSE,5.006' in sql)
-            self.assertTrue('IRVE2,5.936' in sql)
-            self.assertTrue('IRVI,6.588' in sql)
+            if six.PY2:
+                self.assertTrue('usda_id,mean_sepal_length' in sql)
+                self.assertTrue('IRSE,5.006' in sql)
+                self.assertTrue('IRVE2,5.936' in sql)
+                self.assertTrue('IRVI,6.588' in sql)
+            else:
+                self.assertTrue('usda_id,mean_sepal_length' in sql)
+                self.assertTrue('IRSE,5.005' in sql)
+                self.assertTrue('IRVE2,5.936' in sql)
+                self.assertTrue('IRVI,6.587' in sql)
