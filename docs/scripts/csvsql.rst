@@ -80,3 +80,6 @@ Create tables for an entire folder of CSVs and import data from those files dire
     $ createdb test
     $ csvsql --db postgresql:///test --insert examples/*.csv
 
+You can also use CSVSQL to "directly" query one or more CSV files. Please note that this will create an in-memory SQL database, so it won't be very fast::
+
+    $ csvsql --query  "select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species" examples/iris.csv examples/irismeta.csv
