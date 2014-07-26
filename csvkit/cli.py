@@ -190,9 +190,9 @@ class CSVKitUtility(object):
         else:
             (_, extension) = os.path.splitext(path)
 
-            if extension == '.gz':
+            if extension == u'.gz':
                 f = LazyFile(gzip.open, path, mode, **kwargs)
-            if extension == '.bz2':
+            elif extension == '.bz2':
                 if six.PY2:
                     f = LazyFile(bz2.BZ2File, path, mode, **kwargs)
                 else:
