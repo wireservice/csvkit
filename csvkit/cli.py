@@ -231,6 +231,9 @@ class CSVKitUtility(object):
         if self.args.skipinitialspace:
             kwargs['skipinitialspace'] = self.args.skipinitialspace
 
+        if six.PY2 and self.args.encoding:
+            kwargs['encoding'] = self.args.encoding
+
         return kwargs
 
     def _extract_csv_writer_kwargs(self):
