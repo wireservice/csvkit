@@ -49,7 +49,7 @@ If the installation appears to be successful but running the tools fails, try up
 
 .. note::
 
-    csvkit is routinely tested on OSX, somewhat less frequently on Linux and once in a while on Windows. All platforms are supported. It is tested against Python 2.6, 2.7 and PyPy. Neither Python < 2.6 nor Python >= 3.0 are supported at this time.
+    csvkit is routinely tested on OSX, somewhat less frequently on Linux and once in a while on Windows. All platforms are supported. It is tested against Python 2.6, 2.7, 3.3, 3.4 and PyPy. Neither Python < 2.6 nor Python < 3.3 are supported at this time.
 
 Developers
 ----------
@@ -60,14 +60,14 @@ If you are a developer that also wants to hack on csvkit, install it this way::
     cd csvkit
     mkvirtualenv --no-site-packages csvkit
 
-    # For Python 2
+    # If running Python 2
     pip install -r requirements-py2.txt
 
-    # For Python 3
+    # If running Python 3
     pip install -r requirements-py3.txt
 
     python setup.py develop
-    nosetests
+    tox
 
 .. note::
 

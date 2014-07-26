@@ -8,6 +8,7 @@ These classes are supported for Python 2 only. The Python 3 version of `csv` sup
 
 import codecs
 import csv
+import sys
 
 import six
 
@@ -128,4 +129,11 @@ class UnicodeCSVDictWriter(csv.DictWriter):
         self.extrasaction = extrasaction
 
         self.writer = UnicodeCSVWriter(f, *args, **kwds)
+
+    if sys.version_info < (2, 7):
+        def writeheader(self):
+            """
+            Python 2.6 is missing the writeheader function.
+            """
+            self.writerow(dict(zip(self.fieldnames, self.fieldnames)))
 

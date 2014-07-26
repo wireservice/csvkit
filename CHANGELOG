@@ -1,3 +1,8 @@
+0.8.0
+-----
+
+* Add support for Python 3.3 and 3.4 (#239)
+
 0.7.3
 -----
 
