@@ -1,6 +1,7 @@
 0.8.0
 -----
 
+* Deprecated DBF support for Python 3+.
 * Add support for Python 3.3 and 3.4 (#239)
 
 0.7.3
