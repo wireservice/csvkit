@@ -27,12 +27,12 @@ class TestCSVClean(unittest.TestCase):
                 next(f)
                 self.assertEqual(next(f)[0], '1')
                 self.assertEqual(next(f)[0], '2')
-                self.assertRaises(StopIteration, f.next)
+                self.assertRaises(StopIteration, next, f)
                 
             with open('examples/bad_out.csv') as f:
                 next(f)
                 self.assertEqual(next(f)[0], '0')
-                self.assertRaises(StopIteration, f.next)
+                self.assertRaises(StopIteration, next, f)
         finally:
             # Cleanup
             os.remove('examples/bad_err.csv')
