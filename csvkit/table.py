@@ -214,7 +214,8 @@ class Table(list):
             row = next(rows) 
 
             headers = make_default_headers(len(row))
-            column_ids = range(len(row))
+            column_ids = parse_column_identifiers(column_ids, headers, zero_based)
+            headers = [headers[c] for c in column_ids]
             data_columns = [[] for c in headers]
 
             # Put row back on top
