@@ -3,7 +3,12 @@
 """
 This module contains unicode aware replacements for :func:`csv.reader` and :func:`csv.writer`. The implementations are largely copied from `examples in the csv module documentation <http://docs.python.org/library/csv.html#examples>`_.
 
-These classes are supported for Python 2 only. The Python 3 version of `csv` supports unicode internally.
+These classes are available for Python 2 only. The Python 3 version of `csv` supports unicode internally.
+
+.. note::
+
+    You probably don't want to use these classes directly. Try the :mod:`csvkit` module.
+
 """
 
 import codecs

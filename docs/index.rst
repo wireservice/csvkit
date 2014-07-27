@@ -126,9 +126,10 @@ csvkit is comprised of a number of individual command line utilities that be loo
 *Appendices*
 
 .. toctree::
-    :maxdepth: 1 
+    :maxdepth: 2 
 
-    scripts/common_arguments
+    common_arguments
+    tricks
 
 Using as a library
 ==================

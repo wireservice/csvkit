@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-This module contains csvkit's superpowered reader and writer. The greatest improvement over the standard library versions is that these versions are completely unicode aware and can support any encoding by simply passing in the its name at the time they are created.
+This module contains csvkit's superpowered reader and writer. For Python 2 users, the greatest improvement over the standard library versions is that these versions are completely unicode aware and can support any encoding by simply passing in the its name at the time they are created. Python 3 resolves the unicode issues with the ``csv`` module, so this module is provided mostly for compatability purposes.
 
 This module defines ``reader``, ``writer``, ``DictReader`` and ``DictWriter`` so you can use it as a drop-in replacement for :mod:`csv`. Alternatively, you can instantiate :class:`CSVKitReader`, :class:`CSVKitWriter`, :class:`CSVKitDictReader` and :class:`CSVKitDictWriter` directly.
 """
