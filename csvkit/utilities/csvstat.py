@@ -47,6 +47,11 @@ class CSVStat(CSVKitUtility):
             help='Only output max value length.')
 
     def main(self):
+        operations = [op for op in OPERATIONS if getattr(self.args, op + '_only')]
+
+        if len(operations) > 1:
+            self.argparser.error('Only one statistic argument may be specified (mean, median, etc).')
+
         tab = table.Table.from_csv(
             self.input_file,
             snifflimit=self.args.snifflimit,
@@ -55,11 +60,6 @@ class CSVStat(CSVKitUtility):
             no_header_row=self.args.no_header_row,
             **self.reader_kwargs
         )
-
-        operations = [op for op in OPERATIONS if getattr(self.args, op + '_only')]
-
-        if len(operations) > 1:
-            self.argparser.error('Only one statistic argument may be specified (mean, median, etc).')
 
         for c in tab:
             values = sorted(filter(lambda i: i is not None, c))
