@@ -1,6 +1,8 @@
 0.8.0
 -----
 
+* Add pnaimoli to AUTHORS.
+* Fix column specification in csvstat. (#236)
 * Added "Tips and Tricks" documentation. (#297, #298)
 * Add Espartaco Palma to AUTHORS.
 * Remove unnecessary enumerate calls. (#292)

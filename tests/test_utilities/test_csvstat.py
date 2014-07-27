@@ -24,3 +24,15 @@ class TestCSVStat(unittest.TestCase):
         utility = CSVStat(args, output_file)
         utility.main()
 
+    def test_no_header_row(self):
+        args = ['-H', '-c', '2', 'examples/no_header_row.csv']
+        output_file = six.StringIO()
+
+        utility = CSVStat(args, output_file)
+        utility.main()
+
+        stats = output_file.getvalue()
+
+        self.assertFalse('column1' in stats)
+        self.assertTrue('column2' in stats)
+
