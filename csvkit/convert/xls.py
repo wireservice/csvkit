@@ -125,6 +125,7 @@ def xls2csv(f, **kwargs):
     Convert an Excel .xls file to csv.
     """
     book = xlrd.open_workbook(file_contents=f.read())
+
     if 'sheet' in kwargs:
         sheet = book.sheet_by_name(kwargs['sheet'])
     else:

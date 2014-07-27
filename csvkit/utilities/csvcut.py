@@ -20,13 +20,13 @@ class CSVCut(CSVKitUtility):
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
-                        help='Display column names and indices from the input CSV and exit.')
+            help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
-                        help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
+            help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
         self.argparser.add_argument('-C', '--not-columns', dest='not_columns',
-                        help='A comma separated list of column indices or names to be excluded. Defaults to no columns.')
+            help='A comma separated list of column indices or names to be excluded. Defaults to no columns.')
         self.argparser.add_argument('-x', '--delete-empty-rows', dest='delete_empty', action='store_true',
-                        help='After cutting, delete rows which are completely empty.')
+            help='After cutting, delete rows which are completely empty.')
 
     def main(self):
         if self.args.names_only:

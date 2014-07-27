@@ -20,6 +20,16 @@ class TestIn2CSV(unittest.TestCase):
         target_output = open('examples/testxls_converted.csv', 'r').read()
         self.assertEqual(output_file.getvalue(), target_output)
 
+    def test_convert_xlsx(self):
+        args = ['-f', 'xlsx', 'examples/test.xlsx']
+        output_file = six.StringIO()
+        
+        utility = In2CSV(args, output_file)
+        utility.main()
+        
+        target_output = open('examples/testxlsx_converted.csv', 'r').read()
+        self.assertEqual(output_file.getvalue(), target_output)
+
     def test_convert_specific_xls_sheet(self):
         args = ['-f', 'xls', '--sheet', 'Sheet2', 'examples/sheets.xls']
         output_file = six.StringIO()

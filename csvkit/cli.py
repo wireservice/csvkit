@@ -78,10 +78,7 @@ class CSVKitUtility(object):
         self._install_exception_handler()
 
         if output_file is None:
-            if six.PY2:
-                self.output_file = codecs.getwriter('utf-8')(sys.stdout)
-            else:
-                self.output_file = sys.stdout
+            self.output_file = sys.stdout
         else:
             self.output_file = output_file
 
@@ -99,7 +96,6 @@ class CSVKitUtility(object):
         except (ImportError, AttributeError):
             #Do nothing on platforms that don't have signals or don't have SIGPIPE
             pass
-
 
     def add_arguments(self):
         """

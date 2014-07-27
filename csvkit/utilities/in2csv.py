@@ -10,20 +10,19 @@ class In2CSV(CSVKitUtility):
 
     def add_arguments(self):
         self.argparser.add_argument(metavar="FILE", nargs='?', dest='input_path',
-                            help='The CSV file to operate on. If omitted, will accept input on STDIN.')
+            help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-f', '--format', dest='filetype',
-                            help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(convert.SUPPORTED_FORMATS)))
+            help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(convert.SUPPORTED_FORMATS)))
         self.argparser.add_argument('-s', '--schema', dest='schema',
-                            help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
+            help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
         self.argparser.add_argument('-k', '--key', dest='key',
-                            help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
+            help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
-                            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
+            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('--sheet', dest='sheet',
-                            help='The name of the XLSX sheet to operate on.')
+            help='The name of the XLSX sheet to operate on.')
         self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
-                            help='Disable type inference when parsing the input.')
-
+            help='Disable type inference when parsing the input.')
 
     def main(self):
         if self.args.filetype:
@@ -48,7 +47,7 @@ class In2CSV(CSVKitUtility):
         if filetype in ('xls', 'xlsx'):
             self.input_file = open(self.args.input_path, 'rb')
         else:
-            self.input_file = open(self.args.input_path, 'rtU')
+            self.input_file = self._open_input_file(self.args.input_path)
 
         kwargs = self.reader_kwargs
 
@@ -74,7 +73,9 @@ class In2CSV(CSVKitUtility):
         if filetype == 'fixed':
             kwargs['output'] = self.output_file
 
-        self.output_file.write(convert.convert(self.input_file, filetype, **kwargs))
+        data = convert.convert(self.input_file, filetype, **kwargs)
+
+        self.output_file.write(data)
 
 def launch_new_instance():
     utility = In2CSV()
