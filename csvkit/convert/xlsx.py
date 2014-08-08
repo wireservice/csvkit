@@ -46,7 +46,7 @@ def xlsx2csv(f, output=None, **kwargs):
     if not streaming:
         output = six.StringIO()
 
-    writer = CSVKitWriter(output)
+    writer = CSVKitWriter(output, **kwargs)
 
     book = load_workbook(f, use_iterators=True, data_only=True)
 

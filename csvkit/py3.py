@@ -36,8 +36,20 @@ class CSVKitWriter(object):
     def __init__(self, f, line_numbers=False, **kwargs):
         self.row_count = 0
         self.line_numbers = line_numbers
-
-        self.writer = csv.writer(f, lineterminator='\n', **kwargs)
+        self._decimal_delimiter = kwargs.pop('out_decimal_delimiter', '.')
+        filtered_kwargs = {
+            'delimiter': kwargs.pop('out_delimiter', None),
+            'doubleqoute': kwargs.pop('out_doubleqoute', None),
+            'escapechar': kwargs.pop('out_escapechar', None),
+            'quotechar': kwargs.pop('out_quotechar', None),
+            'quoting': kwargs.pop('out_quoting', None),
+            'skipinitialspace': kwargs.pop('out_skipinitialspace', None),
+            'strict': kwargs.pop('out_strict', None),
+            'encoding': kwargs.pop('out_encoding', 'utf-8'),
+            'lineterminator': kwargs.pop('out_lineterminator', '\n')
+        }
+        filtered_kwargs = {k: v for k, v in filtered_kwargs.iteritems() if v is not None}
+        self.writer = csv.writer(f, **filtered_kwargs)
 
     def _append_line_number(self, row):
         if self.row_count == 0:
@@ -54,6 +66,9 @@ class CSVKitWriter(object):
 
         # Convert embedded Mac line endings to unix style line endings so they get quoted
         row = [i.replace('\r', '\n') if isinstance(i, six.string_types) else i for i in row]
+
+        # Convert decimal delimiter of floats
+        row = [six.text_type(i).replace('.', self._decimal_delimiter) if isinstance(i, float) else i for i in row]
 
         self.writer.writerow(row)
 
