@@ -42,7 +42,7 @@ If you are installing on Ubuntu you may need to install the Python development h
 
     sudo apt-get install python-dev python-pip python-setuptools build-essential
 
-If the installation appears to be successful but running the tools fails, try updating your version of Python setuptools:
+If the installation appears to be successful but running the tools fails, try updating your version of Python setuptools::
 
     pip install setuptools --upgrade
     pip install csvkit --upgrade
