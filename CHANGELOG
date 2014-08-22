@@ -1,3 +1,8 @@
+0.8.1
+-----
+
+* Fix bug causing CSVKitDictWriter to output 'utf-8' for blank fields.
+
 0.8.0
 -----
 
