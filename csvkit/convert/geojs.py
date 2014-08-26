@@ -46,7 +46,7 @@ def geojson2csv(f, key=None, **kwargs):
     header.append('geojson')
 
     o = six.StringIO()
-    writer = CSVKitWriter(o)
+    writer = CSVKitWriter(o, **kwargs)
 
     writer.writerow(header)
 

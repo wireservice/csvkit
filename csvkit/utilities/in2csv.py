@@ -23,6 +23,20 @@ class In2CSV(CSVKitUtility):
             help='The name of the XLSX sheet to operate on.')
         self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
             help='Disable type inference when parsing the input.')
+        self.argparser.add_argument('--out-decimal-delimiter', dest='out_decimal_delimiter',
+                                    help='Decimal delimiter for floats in output CSV')
+        self.argparser.add_argument('--out-delimiter', dest='out_delimiter',
+                                    help='Delimiting character of the output CSV file.')
+        self.argparser.add_argument('--out-encoding', dest='out_encoding',
+                                    help='Specify the encoding of the output CSV file.')
+        self.argparser.add_argument('-out--quotechar', dest='out_quotechar',
+                                    help='Character used to quote strings in the output CSV file.')
+        self.argparser.add_argument('--out-quoting', dest='out_quoting', type=int, choices=[0, 1, 2, 3],
+                                    help='Quoting style used in the output CSV file. 0 = Quote Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 = Quote None.')
+        self.argparser.add_argument('--out-doublequote', dest='out_doublequote', action='store_true',
+                                    help='Whether or not double quotes are doubled in the output CSV file.')
+        self.argparser.add_argument('--out-escapechar', dest='out_escapechar',
+                                    help='Character used to escape the delimiter in the output CSV if --quoting 3 ("Quote None") is specified and to escape the QUOTECHAR if --doublequote is not specified.')
 
     def main(self):
         if self.args.filetype:
@@ -65,6 +79,27 @@ class In2CSV(CSVKitUtility):
 
         if self.args.no_inference:
             kwargs['type_inference'] = False
+
+        if self.args.out_decimal_delimiter:
+            kwargs['out_decimal_delimiter'] = self.args.out_decimal_delimiter
+
+        if self.args.out_delimiter:
+            kwargs['out_delimiter'] = self.args.out_delimiter
+
+        if self.args.out_encoding:
+            kwargs['out_encoding'] = self.args.out_encoding
+
+        if self.args.out_quotechar:
+            kwargs['out_quotechar'] = self.args.out_quotechar
+
+        if self.args.out_quoting:
+            kwargs['out_qouting'] = self.args.out_quoting
+
+        if self.args.out_doublequote:
+            kwargs['out_doublequote'] = True
+
+        if self.args.out_escapechar:
+            kwargs['out_escapechar'] = self.args.out_escapechar
 
         if filetype == 'csv' and self.args.no_header_row:
             kwargs['no_header_row'] = True

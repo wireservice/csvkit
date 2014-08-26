@@ -241,6 +241,27 @@ class CSVKitUtility(object):
         if 'l' not in self.override_flags and self.args.line_numbers:
             kwargs['line_numbers'] = True
 
+        if hasattr(self.args, 'out_decimal_delimiter') and self.args.out_decimal_delimiter:
+            kwargs['out_decimal_delimiter'] = self.args.out_decimal_delimiter
+
+        if hasattr(self.args, 'out_delimiter') and self.args.out_delimiter:
+            kwargs['out_delimiter'] = self.args.out_delimiter
+
+        if hasattr(self.args, 'out_encodingr') and self.args.out_encoding:
+            kwargs['out_encoding'] = self.args.out_encoding
+
+        if hasattr(self.args, 'out_quotechar') and self.args.out_quotechar:
+            kwargs['out_quotechar'] = self.args.out_quotechar
+
+        if hasattr(self.args, 'out_quoting') and self.args.out_quoting:
+            kwargs['out_qouting'] = self.args.out_quoting
+
+        if hasattr(self.args, 'out_doublequote') and self.args.out_doublequote:
+            kwargs['out_doublequote'] = True
+
+        if hasattr(self.args, 'out_escapechar') and self.args.out_escapechar:
+            kwargs['out_escapechar'] = self.args.out_escapechar
+
         return kwargs
 
     def _install_exception_handler(self):
