@@ -7,7 +7,7 @@ import math
 
 import six
 
-from csvkit import table
+from csvkit import CSVKitReader, table
 from csvkit.cli import CSVKitUtility
 
 NoneType = type(None)
@@ -45,12 +45,27 @@ class CSVStat(CSVKitUtility):
             help='Only output frequent values.')
         self.argparser.add_argument('--len', dest='len_only', action='store_true',
             help='Only output max value length.')
+        self.argparser.add_argument('--count', dest='count_only', action='store_true',
+            help='Only output row count')
 
     def main(self):
         operations = [op for op in OPERATIONS if getattr(self.args, op + '_only')]
 
         if len(operations) > 1:
             self.argparser.error('Only one statistic argument may be specified (mean, median, etc).')
+
+        if operations and self.args.count_only:
+            self.argparser.error('You may not specify --count and a statistical argument at the same time.')
+
+        if self.args.count_only:
+            count = len(list(CSVKitReader(self.input_file)))
+
+            if not self.args.no_header_row:
+                count -= 1
+            
+            self.output_file.write('Row count: %i\n' % count)
+
+            return
 
         tab = table.Table.from_csv(
             self.input_file,

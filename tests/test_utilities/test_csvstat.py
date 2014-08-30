@@ -36,3 +36,14 @@ class TestCSVStat(unittest.TestCase):
         self.assertFalse('column1' in stats)
         self.assertTrue('column2' in stats)
 
+    def test_count_only(self):
+        args = ['--count', 'examples/dummy.csv']
+        output_file = six.StringIO()
+
+        utility = CSVStat(args, output_file)
+        utility.main()
+
+        stats = output_file.getvalue()
+
+        self.assertEqual(stats, 'Row count: 1\n')
+

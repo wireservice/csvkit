@@ -35,6 +35,7 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
       --unique              Only output unique values.
       --freq                Only output frequent values.
       --len                 Only output max value length.
+      --count               Only output row count
 
 Also see: :doc:`common_arguments`.
 
