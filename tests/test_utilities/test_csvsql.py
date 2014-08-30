@@ -65,7 +65,7 @@ class TestCSVSQL(unittest.TestCase):
         args = ['--table', 'foo']
         output_file = six.StringIO()
 
-        input_file = six.StringIO("a,b,c\n1,2,3\n")
+        input_file = six.StringIO('a,b,c\n1,2,3\n')
 
         with stdin_as_string(input_file):
             utility = CSVSQL(args, output_file)

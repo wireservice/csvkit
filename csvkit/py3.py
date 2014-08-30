@@ -37,7 +37,10 @@ class CSVKitWriter(object):
         self.row_count = 0
         self.line_numbers = line_numbers
 
-        self.writer = csv.writer(f, lineterminator='\n', **kwargs)
+        if 'lineterminator' not in kwargs:
+            kwargs['lineterminator'] = '\n'
+
+        self.writer = csv.writer(f, **kwargs)
 
     def _append_line_number(self, row):
         if self.row_count == 0:
@@ -74,7 +77,11 @@ class CSVKitDictWriter(csv.DictWriter):
     def __init__(self, f, fieldnames, line_numbers=False, **kwargs):
         self.row_count = 0
         self.line_numbers = line_numbers
-        csv.DictWriter.__init__(self, f, fieldnames, lineterminator='\n', **kwargs)
+
+        if 'lineterminator' not in kwargs:
+            kwargs['lineterminator'] = '\n'
+
+        csv.DictWriter.__init__(self, f, fieldnames, **kwargs)
 
     def _append_line_number(self, row):
         if self.row_count == 0:

@@ -21,7 +21,11 @@ class CSVKitWriter(unicsv.UnicodeCSVWriter):
     def __init__(self, f, encoding='utf-8', line_numbers=False, **kwargs):
         self.row_count = 0
         self.line_numbers = line_numbers
-        unicsv.UnicodeCSVWriter.__init__(self, f, encoding, lineterminator='\n', **kwargs)
+
+        if 'lineterminator' not in kwargs:
+            kwargs['lineterminator'] = '\n'
+
+        unicsv.UnicodeCSVWriter.__init__(self, f, encoding, **kwargs)
 
     def _append_line_number(self, row):
         if self.row_count == 0:
@@ -58,7 +62,11 @@ class CSVKitDictWriter(unicsv.UnicodeCSVDictWriter):
     def __init__(self, f, fieldnames, encoding='utf-8', line_numbers=False, **kwargs):
         self.row_count = 0
         self.line_numbers = line_numbers
-        unicsv.UnicodeCSVDictWriter.__init__(self, f, fieldnames, encoding=encoding, lineterminator='\n', **kwargs)
+
+        if 'lineterminator' not in kwargs:
+            kwargs['lineterminator'] = '\n'
+
+        unicsv.UnicodeCSVDictWriter.__init__(self, f, fieldnames, encoding=encoding, **kwargs)
 
     def _append_line_number(self, row):
         if self.row_count == 0:
