@@ -117,6 +117,7 @@ csvkit is comprised of a number of individual command line utilities that be loo
 .. toctree::
     :maxdepth: 1 
 
+    scripts/csvformat
     scripts/csvjson
     scripts/csvlook
     scripts/csvpy
