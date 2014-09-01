@@ -122,7 +122,7 @@ class CSVSQL(CSVKitUtility):
                     sql_table.create()
 
                 # Insert data
-                if do_insert:
+                if do_insert and csv_table.count_rows() > 0:
                     insert = sql_table.insert()
                     headers = csv_table.headers()
                     conn.execute(insert, [dict(zip(headers, row)) for row in csv_table.to_rows()])
