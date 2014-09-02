@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import six
 
@@ -46,4 +47,21 @@ class TestCSVLook(unittest.TestCase):
         self.assertEqual(next(input_file), '|  1       | 2       | 3        |\n')
         self.assertEqual(next(input_file), '|  4       | 5       | 6        |\n')
         self.assertEqual(next(input_file), '|----------+---------+----------|\n')
+
+    def test_unicode(self):
+        args = ['examples/test_utf8.csv']
+
+        output_file = six.StringIO()
+        utility = CSVLook(args, output_file)
+
+        utility.main()
+
+        input_file = six.StringIO(output_file.getvalue())
+
+        self.assertEqual(next(input_file), u'|----+---+----|\n')
+        self.assertEqual(next(input_file), u'|  a | b | c  |\n')
+        self.assertEqual(next(input_file), u'|----+---+----|\n')
+        self.assertEqual(next(input_file), u'|  1 | 2 | 3  |\n')
+        self.assertEqual(next(input_file), u'|  4 | 5 | ʤ  |\n')
+        self.assertEqual(next(input_file), u'|----+---+----|\n')
 

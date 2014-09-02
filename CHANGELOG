@@ -1,7 +1,6 @@
 0.8.1
 -----
 
-* Add Shane StClair to AUTHORS. (#300)
 * Fix Integrity error when inserting zero rows in database with csvsql. (#299)
 * Add Michael Mior to AUTHORS. (#305)
 * Add --count option to CSVStat.
