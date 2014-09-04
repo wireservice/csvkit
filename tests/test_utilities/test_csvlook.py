@@ -56,7 +56,7 @@ class TestCSVLook(unittest.TestCase):
 
         utility.main()
 
-        input_file = six.StringIO(output_file.getvalue())
+        input_file = six.StringIO(unicode(output_file.getvalue(), 'utf-8'))
 
         self.assertEqual(next(input_file), u'|----+---+----|\n')
         self.assertEqual(next(input_file), u'|  a | b | c  |\n')

@@ -169,7 +169,13 @@ class CSVKitUtility(object):
         if 'zero' not in self.override_flags:
             self.argparser.add_argument('--zero', dest='zero_based', action='store_true',
                             help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
-        
+
+    def _write_to_output_file(self, string):
+        """
+        Encodes and writes the passed string to the output file.
+        """
+        self.output_file.write(string.encode('utf-8'))
+
     def _open_input_file(self, path):
         """
         Open the input file specified on the command line.
