@@ -56,7 +56,9 @@ class CSVLook(CSVKitUtility):
         # horizontal and vertical dividers.
         divider = '|--' + '-+-'.join('-'* w for w in widths) + '--|'
 
-        self.output_file.write('%s\n' % divider)
+        write = lambda t: self.output_file.write(t.encode('utf-8'))
+
+        write('%s\n' % divider)
 
         for i, row in enumerate(rows):
             output = []
@@ -66,12 +68,10 @@ class CSVLook(CSVKitUtility):
                     d = ''
                 output.append(' %s ' % six.text_type(d).ljust(widths[j]))
 
-            row = ('| %s |\n' % ('|'.join(output))).encode('utf-8')
-
-            self.output_file.write(row)
+            write('| %s |\n' % ('|'.join(output)))
 
             if (i == 0 or i == len(rows) - 1):
-                self.output_file.write('%s\n' % divider)
+                write('%s\n' % divider)
 
 def launch_new_instance():
     utility = CSVLook()

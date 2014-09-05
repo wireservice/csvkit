@@ -57,13 +57,15 @@ class CSVStat(CSVKitUtility):
         if operations and self.args.count_only:
             self.argparser.error('You may not specify --count and a statistical argument at the same time.')
 
+        write = lambda t: self.output_file.write(t.encode('utf-8'))
+
         if self.args.count_only:
             count = len(list(CSVKitReader(self.input_file)))
 
             if not self.args.no_header_row:
                 count -= 1
             
-            self.output_file.write('Row count: %i\n' % count)
+            write('Row count: %i\n' % count)
 
             return
 
@@ -94,51 +96,51 @@ class CSVStat(CSVKitUtility):
                     stat = '{ %s }' % stat
 
                 if len(tab) == 1:
-                    self.output_file.write(six.text_type(stat))
+                    write(six.text_type(stat))
                 else:
-                    self.output_file.write('%3i. %s: %s\n' % (c.order + 1, c.name, stat))
+                    write('%3i. %s: %s\n' % (c.order + 1, c.name, stat))
             # Output all stats
             else:
                 for op in OPERATIONS:
                     stats[op] = getattr(self, 'get_%s' % op)(c, values, stats)
 
-                self.output_file.write(('%3i. %s\n' % (c.order + 1, c.name)))
+                write(('%3i. %s\n' % (c.order + 1, c.name)))
 
                 if c.type == None:
-                    self.output_file.write('\tEmpty column\n')
+                    write('\tEmpty column\n')
                     continue
                     
-                self.output_file.write('\t%s\n' % c.type)
-                self.output_file.write('\tNulls: %s\n' % stats['nulls'])
+                write('\t%s\n' % c.type)
+                write('\tNulls: %s\n' % stats['nulls'])
                 
                 if len(stats['unique']) <= MAX_UNIQUE and c.type is not bool:
                     uniques = [six.text_type(u) for u in list(stats['unique'])]
                     data = u'\tValues: %s\n' % ', '.join(uniques)
-                    self.output_file.write(data)
+                    write(data)
                 else:
                     if c.type not in [six.text_type, bool]:
-                        self.output_file.write('\tMin: %s\n' % stats['min'])
-                        self.output_file.write('\tMax: %s\n' % stats['max'])
+                        write('\tMin: %s\n' % stats['min'])
+                        write('\tMax: %s\n' % stats['max'])
 
                         if c.type in [int, float]:
-                            self.output_file.write('\tSum: %s\n' % stats['sum'])
-                            self.output_file.write('\tMean: %s\n' % stats['mean'])
-                            self.output_file.write('\tMedian: %s\n' % stats['median'])
-                            self.output_file.write('\tStandard Deviation: %s\n' % stats['stdev'])
+                            write('\tSum: %s\n' % stats['sum'])
+                            write('\tMean: %s\n' % stats['mean'])
+                            write('\tMedian: %s\n' % stats['median'])
+                            write('\tStandard Deviation: %s\n' % stats['stdev'])
 
-                    self.output_file.write('\tUnique values: %i\n' % len(stats['unique']))
+                    write('\tUnique values: %i\n' % len(stats['unique']))
 
                     if len(stats['unique']) != len(values):
-                        self.output_file.write('\t%i most frequent values:\n' % MAX_FREQ)
+                        write('\t%i most frequent values:\n' % MAX_FREQ)
                         for value, count in stats['freq']:
-                            self.output_file.write(('\t\t%s:\t%s\n' % (six.text_type(value), count)))
+                            write(('\t\t%s:\t%s\n' % (six.text_type(value), count)))
 
                     if c.type == six.text_type:
-                        self.output_file.write('\tMax length: %i\n' % stats['len'])
+                        write('\tMax length: %i\n' % stats['len'])
 
         if not operations:
-            self.output_file.write('\n')
-            self.output_file.write('Row count: %s\n' % tab.count_rows())
+            write('\n')
+            write('Row count: %s\n' % tab.count_rows())
 
     def get_min(self, c, values, stats):
         if c.type == NoneType:
