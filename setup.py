@@ -7,17 +7,15 @@ install_requires = [
     'xlrd>=0.7.1',
     'sqlalchemy>=0.6.6',
     'openpyxl>=2.0.3',
-    'six>=1.6.1'
+    'six>=1.6.1',
+    'python-dateutil==2.2'
 ]
 
 if sys.version_info < (2, 7):
     install_requires.append('argparse>=1.2.1')
 
 if sys.version_info[0] == 2:
-    install_requires.append('python-dateutil==1.5')
     install_requires.append('dbf==0.94.003')
-else:
-    install_requires.append('python-dateutil>=2.0')
 
 setup(
     name='csvkit',

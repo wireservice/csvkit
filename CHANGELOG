@@ -1,7 +1,8 @@
 0.9.0
 -----
 
-8 Fix sorting of columns with null values. (#302)
+* Upgrade python-dateutil to version 2.2 (#304)
+* Fix sorting of columns with null values. (#302)
 * Added release documentation.
 * Fill out short rows with null values. (#313)
 * Fix unicode output for csvlook and csvstat. (#315)
