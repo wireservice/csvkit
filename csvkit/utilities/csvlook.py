@@ -66,7 +66,9 @@ class CSVLook(CSVKitUtility):
                     d = ''
                 output.append(' %s ' % six.text_type(d).ljust(widths[j]))
 
-            self.output_file.write(('| %s |\n' % ('|'.join(output))))
+            row = ('| %s |\n' % ('|'.join(output))).encode('utf-8')
+
+            self.output_file.write(row)
 
             if (i == 0 or i == len(rows) - 1):
                 self.output_file.write('%s\n' % divider)
