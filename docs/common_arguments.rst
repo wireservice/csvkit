@@ -32,6 +32,9 @@ All utilities which accept CSV as input share a set of common command-line argum
   -l, --linenumbers     Insert a column of line numbers at the front of the
                         output. Useful when piping to grep or as a simple
                         primary key.
+  --zero                When interpreting or displaying column numbers, use
+                        zero-based numbering instead of the default 1-based
+                        numbering.
 
 These arguments may be used to override csvkit's default "smart" parsing of CSV files. This is frequently necessary if the input file uses a particularly unusual style of quoting or is an encoding that is not compatible with utf-8. Not every command is supported by every tool, but the majority of them are.
 
