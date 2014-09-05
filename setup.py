@@ -21,7 +21,7 @@ else:
 
 setup(
     name='csvkit',
-    version='0.8.1',
+    version='0.9.0',
     description='A library of utilities for working with CSV, the king of tabular file formats.',
     long_description=open('README').read(),
     author='Christopher Groskopf',
