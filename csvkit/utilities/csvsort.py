@@ -44,7 +44,7 @@ class CSVSort(CSVKitUtility):
         column_ids = parse_column_identifiers(self.args.columns, tab.headers(), self.args.zero_based)
 
         rows = tab.to_rows(serialize_dates=True) 
-        sorter = lambda r: [r[c] if r[c] is not None else '' for c in column_ids]
+        sorter = lambda r: [(r[c] is not None, r[c]) for c in column_ids]
         rows.sort(key=sorter, reverse=self.args.reverse)
         
         rows.insert(0, tab.headers())

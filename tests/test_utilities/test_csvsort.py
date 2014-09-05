@@ -87,3 +87,19 @@ class TestCSVSort(unittest.TestCase):
 
         self.assertEqual(test_order, new_order)
 
+    def test_sort_ints_and_nulls(self):
+        args = ['-c', '2', 'examples/sort_ints_nulls.csv']
+
+        output_file = six.StringIO()
+        utility = CSVSort(args, output_file)
+
+        utility.main()
+
+        input_file = six.StringIO(output_file.getvalue())
+        reader = CSVKitReader(input_file)
+
+        test_order = ['b', '', '1', '2']
+        new_order = [six.text_type(r[1]) for r in reader] 
+
+        self.assertEqual(test_order, new_order)
+
