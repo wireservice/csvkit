@@ -231,6 +231,8 @@ class Table(list):
         
             data_columns = [[] for c in headers]
 
+        width = len(data_columns)
+
         for i, row in enumerate(rows):
             for j, d in enumerate(row):
                 try:
@@ -238,6 +240,14 @@ class Table(list):
                 except IndexError:
                     # Non-rectangular data is truncated
                     break
+
+            j += 1
+
+            # Populate remaining columns with None
+            while j < width:
+                data_columns[j].append(None)
+
+                j += 1
 
         columns = []
 

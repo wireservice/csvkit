@@ -59,6 +59,19 @@ class TestTable(unittest.TestCase):
         self.assertEqual(t[3][0], True)
         self.assertEqual(type(t[3][0]), bool)
 
+    def test_extra_header(self):
+        with open('examples/test_extra_header.csv', 'r') as f:
+            t = table.Table.from_csv(f)
+
+        self.assertEqual(type(t), table.Table)
+        self.assertEqual(type(t[0]), table.Column)
+        self.assertEqual(len(t), 4)
+
+        self.assertEqual(t[0], [1])
+        self.assertEqual(t[1], [2])
+        self.assertEqual(t[2], [3])
+        self.assertEqual(t[3], [None])
+
     def test_from_csv_no_inference(self):
         with open('examples/testfixed_converted.csv', 'r') as f:
             t = table.Table.from_csv(f, infer_types=False)
