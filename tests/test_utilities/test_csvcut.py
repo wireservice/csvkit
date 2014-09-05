@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import six
 
@@ -24,6 +25,20 @@ class TestCSVCut(unittest.TestCase):
 
         self.assertEqual(next(reader), ['a', 'c'])
         self.assertEqual(next(reader), ['1', '3'])
+
+    def test_unicode(self):
+        args = ['-c', '1,3', 'examples/test_utf8.csv']
+        output_file = six.StringIO()
+        utility = CSVCut(args, output_file)
+
+        utility.main()
+
+        input_file = six.StringIO(output_file.getvalue())
+        reader = CSVKitReader(input_file)
+
+        self.assertEqual(next(reader), ['a', 'c'])
+        self.assertEqual(next(reader), ['1', '3'])
+        self.assertEqual(next(reader), ['4', u'ʤ'])
 
     def test_names(self):
         args = ['-n', 'examples/dummy.csv']
