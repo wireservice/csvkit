@@ -1,6 +1,7 @@
 0.9.0
 -----
 
+* Added release documentation.
 * Fill out short rows with null values. (#313)
 * Fix unicode output for csvlook and csvstat. (#315)
 * Add documentation for --zero. (#323)
