@@ -165,6 +165,7 @@ Want to hack on csvkit? Here's how:
     :maxdepth: 2
 
     contributing
+    release 
 
 Authors
 =======
