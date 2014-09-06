@@ -1,6 +1,7 @@
 0.9.0
 -----
 
+* Maintain key order when converting JSON into CSV. (#325.)
 * Upgrade python-dateutil to version 2.2 (#304)
 * Fix sorting of columns with null values. (#302)
 * Added release documentation.

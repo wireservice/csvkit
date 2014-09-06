@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import collections
 import json
 
 import six
@@ -33,8 +34,7 @@ def json2csv(f, key=None, **kwargs):
 
     The top-level element of the input must be a list or a dictionary. If it is a dictionary, a key must be provided which is an item of the dictionary which contains a list.
     """
-    document = f.read()
-    js = json.loads(document)
+    js = json.load(f, object_pairs_hook=collections.OrderedDict)
 
     if isinstance(js, dict):
         if not key:
@@ -45,16 +45,16 @@ def json2csv(f, key=None, **kwargs):
     if not isinstance(js, list):
         raise TypeError('Only JSON documents with a top-level list element are able to be converted (or a top-level dictionary if specifying a key).')
 
-    field_set = set()
+    fields = []
     flat = []
 
     for obj in js:
         flat.append(parse_object(obj)) 
 
-    for obj in flat:
-        field_set.update(obj.keys())
-
-    fields = sorted(list(field_set))
+    for obj in js:
+        for key in obj.keys():
+            if key not in fields:
+                fields.append(key)
 
     o = six.StringIO()
     writer = CSVKitWriter(o)
@@ -65,10 +65,7 @@ def json2csv(f, key=None, **kwargs):
         row = []
 
         for field in fields:
-            if field in i:
-                row.append(i[field])
-            else:
-                row.append(None)
+            row.append(i.get(field, None))
 
         writer.writerow(row)
 
