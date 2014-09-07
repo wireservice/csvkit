@@ -1,6 +1,7 @@
 0.9.0
 -----
 
+* Fix csvjoin in case where left dataset rows without all columns.
 * Rewrote tutorial based on LESO data. (#324)
 * Don't error in csvjson if lat/lon columns are null. (#326)
 * Maintain field order in output of csvjson.
