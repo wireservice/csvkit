@@ -58,11 +58,11 @@ Let's see what's in there::
 
 As you can see, this data file contains population estimates for each county in Nebraska from the 2012 5-year ACS estimates. This data was retrieved from `Census Reporter <http://censusreporter.org/>`_ and reformatted slightly for this example. Let's join it to our equipment data::
 
-    $ csvjoin -c fips data.csv acs2012_5yr_population.csv
+    $ csvjoin -c fips data.csv acs2012_5yr_population.csv > joined.csv
 
 Since both files contain a fips column, we can use that to join the two. In our output you should see the population data appended at the end of each row of data. Let's combine this with what we've learned before to answer the question "What was the smallest county to receive equipment and what did they receive?"::
 
-    $ csvjoin -c fips data.csv acs2012_5yr_population.csv | csvcut -c county,item_name,total_population | csvsort -c total_population | csvlook | head
+    $ csvcut -c county,item_name,total_population joined.csv | csvsort -c total_population | csvlook | head
     |-------------+----------------------------------------------------------------+-------------------|
     |  county     | item_name                                                      | total_population  |
     |-------------+----------------------------------------------------------------+-------------------|
@@ -74,7 +74,7 @@ Since both files contain a fips column, we can use that to join the two. In our 
     |  NANCE      | RIFLE,5.56 MILLIMETER                                          | 3730              |
     |  NANCE      | RIFLE,7.62 MILLIMETER                                          | 3730              |
 
-Two counties with fewer than one-thousand residents, we're the recipients of 5.56 millimeter assault rifles.
+Two counties with fewer than one-thousand residents were the recipients of 5.56 millimeter assault rifles.
 
 csvstack: combining subsets
 ===========================
@@ -84,7 +84,9 @@ TODO: Add more states...
 csvsql: ultimate power
 ======================
 
-TODO: All the power...
+Sometimes (almost always), the command line isn't enough. It would be crazy to try to do all your analysis using command line tools. Often times, the correct tool for data analysis is SQL. :doc:`/scripts/csvsql` is a bridge that eases migrating your data from a CSV file into a SQL database. For smaller datasets it can also leverage sqlite to allow execution of ad hoc SQL queries without ever touching a database.
+
+TODO
 
 Summing up
 ==========
