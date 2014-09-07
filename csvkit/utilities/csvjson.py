@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 
-import json
 import codecs
+
+try:
+    from collections import OrderedDict
+    import json
+except ImportError:
+    from ordereddict import OrderedDict
+    import simplejson as json
 
 import six
 
@@ -63,8 +69,9 @@ class CSVJSON(CSVKitUtility):
                 id_column = None
 
             for row in rows:
-                feature = { 'type': 'Feature' }
-                properties = {}
+                feature = OrderedDict()
+                feature['type'] = 'Feature'
+                properties = OrderedDict()
                 geoid = None
                 lat = None
                 lon = None
@@ -94,43 +101,58 @@ class CSVJSON(CSVKitUtility):
                 if id_column is not None:
                     feature['id'] = geoid
 
-                feature['geometry'] = {
-                    'type': 'Point',
-                    'coordinates': [lon, lat]
-                }
+                feature['geometry'] = OrderedDict([ 
+                    ('type', 'Point'),
+                    ('coordinates', [lon, lat])
+                ])
 
                 feature['properties'] = properties
 
                 features.append(feature)
 
-            output = {
-                'type': 'FeatureCollection',
-                'bbox': [min_lon, min_lat, max_lon, max_lat],
-                'features': features 
-            }
+            output = OrderedDict([
+                ('type', 'FeatureCollection'),
+                ('bbox', [min_lon, min_lat, max_lon, max_lat]),
+                ('features', features)
+            ])
 
             if self.args.crs:
-                output['crs'] = {
-                    'type': 'name',
-                    'properties': {
+                output['crs'] = OrderedDict([ 
+                    ('type', 'name'),
+                    ('properties', {
                         'name': self.args.crs
-                    }
-                }
+                    })
+                ])
         # Keyed JSON
         elif self.args.key:
-            output = {}
+            output = OrderedDict()
             
             for row in rows:
-                row_dict = dict(zip(column_names, row))
-                k = row_dict[self.args.key]
+                data = OrderedDict()
+
+                for i, column in enumerate(column_names):
+                    data[column] = row[i]
+
+                k = data[self.args.key]
 
                 if k in output:
                     raise NonUniqueKeyColumnException('Value %s is not unique in the key column.' % six.text_type(k))
 
-                output[k] = row_dict
+                output[k] = data
         # Boring JSON
         else:
-            output = [dict(zip(column_names, row)) for row in rows]
+            output = []
+
+            for row in rows:
+                data = OrderedDict()
+
+                for i, column in enumerate(column_names):
+                    try:
+                        data[column] = row[i]
+                    except IndexError:
+                        data[column] = None
+
+                output.append(data)
 
         kwargs = {
             'ensure_ascii': False,

@@ -13,6 +13,8 @@ install_requires = [
 
 if sys.version_info < (2, 7):
     install_requires.append('argparse>=1.2.1')
+    install_requires.append('ordereddict>=1.1')
+    install_requires.append('simplejson>=3.6.3')
 
 if sys.version_info[0] == 2:
     install_requires.append('dbf==0.94.003')
