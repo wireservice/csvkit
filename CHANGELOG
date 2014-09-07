@@ -1,6 +1,7 @@
 0.9.0
 -----
 
+* Don't error in csvjson if lat/lon columns are null. (#326)
 * Maintain field order in output of csvjson.
 * Add unit test for json in2csv. (#77)
 * Maintain key order when converting JSON into CSV. (#325.)

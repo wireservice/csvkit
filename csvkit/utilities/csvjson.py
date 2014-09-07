@@ -78,7 +78,10 @@ class CSVJSON(CSVKitUtility):
 
                 for i, c in enumerate(row):
                     if i == lat_column:
-                        lat = float(c)
+                        try:
+                            lat = float(c)
+                        except ValueError:
+                            lat = None
 
                         if min_lat is None or lat < min_lat:
                             min_lat = lat
@@ -86,7 +89,10 @@ class CSVJSON(CSVKitUtility):
                         if max_lat is None or lat > max_lat:
                             max_lat = lat
                     elif i == lon_column:
-                        lon = float(c)
+                        try:
+                            lon = float(c)
+                        except ValueError:
+                            lon = None
 
                         if min_lon is None or lon < min_lon:
                             min_lon = lon
