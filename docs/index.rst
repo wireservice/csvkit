@@ -76,16 +76,16 @@ If you are a developer that also wants to hack on csvkit, install it this way::
 Tutorial
 ========
 
-The csvkit tutorial walks through processing and analyzing a real dataset from `data.gov <http://data.gov>`_. It is divided into several parts for easier reading:
+The csvkit tutorial walks through processing and analyzing a real dataset:
 
 .. toctree::
     :maxdepth: 2 
     :numbered:
 
-    tutorial/getting_started
-    tutorial/examining_the_data
-    tutorial/adding_another_year
-    tutorial/wrapping_up
+    tutorial/1_getting_started
+    tutorial/2_examining_the_data
+    tutorial/3_power_tools
+    tutorial/4_going_elsewhere
 
 Usage
 =====
