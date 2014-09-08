@@ -129,6 +129,15 @@ Well-formatted queries on the command line! Thisconstruction is so useful, there
 
 SQL queries on CSVs!
 
+sql2csv: getting it back again
+==============================
+
+Being able to migrate your data into a SQL database is very useful for complex analysis, but often you'll also want to get that data back so that, for instance, you can easily distribute it. :doc:`/scripts/sql2csv` allows you to easily extract data from a variety of SQL databases. For example, to export Douglas county from the ``joined`` table from our sqlite database, we would run::
+
+    $ sql2csv --db sqlite:///leso.db -q "select * from joined where county='DOUGLAS'" > douglas.csv
+
+Like ``csvsql``, ``sql2csv`` works with a wide variety of common databases.
+
 Summing up
 ==========
 
