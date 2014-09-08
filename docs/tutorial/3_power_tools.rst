@@ -79,7 +79,39 @@ Two counties with fewer than one-thousand residents were the recipients of 5.56 
 csvstack: combining subsets
 ===========================
 
-TODO: Add more states...
+Frequently large datasets are distributed in many smaller files. At some point you may want to merge those files for aggregate analysis. :doc:`/scripts/csvstack` allows you to "stack" the rows from CSV files with identical headers. To demonstrate, let's imagine we've decided that Nebraska and Kansas form a "region" and that it would be useful to analyze them in a single dataset. Let's grab the Kansas data::
+
+    $ curl -L -O https://github.com/onyxfish/csvkit/raw/master/examples/realdata/ks_033_data.csv
+
+Now let's stack these two data files::
+
+    $ csvstack ne_1033_data.csv ks_1033_data.csv > region.csv
+
+Using csvstat we cansee that our ``rregion.csv`` contains both datasets::
+
+    $ csvstat -c state,acquisition_cost region.csv
+      1. state
+            <type 'unicode'>
+            Nulls: False
+            Values: KS, NE
+      8. acquisition_cost
+            <type 'float'>
+            Nulls: False
+            Min: 0.0
+            Max: 658000.0
+            Sum: 9447912.36
+            Mean: 3618.50339334
+            Median: 138.0
+            Standard Deviation: 23725.9555723
+            Unique values: 127
+            5 most frequent values:
+                    120.0:  649
+                    499.0:  449
+                    138.0:  311
+                    6800.0: 304
+                    58.71:  218
+
+    Row count: 2611
 
 csvsql: ultimate power
 ======================
