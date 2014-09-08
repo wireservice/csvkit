@@ -84,9 +84,50 @@ TODO: Add more states...
 csvsql: ultimate power
 ======================
 
-Sometimes (almost always), the command line isn't enough. It would be crazy to try to do all your analysis using command line tools. Often times, the correct tool for data analysis is SQL. :doc:`/scripts/csvsql` is a bridge that eases migrating your data from a CSV file into a SQL database. For smaller datasets it can also leverage sqlite to allow execution of ad hoc SQL queries without ever touching a database.
+Sometimes (almost always), the command line isn't enough. It would be crazy to try to do all your analysis using command line tools. Often times, the correct tool for data analysis is SQL. :doc:`/scripts/csvsql` is a bridge that eases migrating your data from a CSV file into a SQL database. For smaller datasets it can also leverage `sqlite <https://www.sqlite.org/>`_ to allow execution of ad hoc SQL queries without ever touching a database.
 
-TODO
+By default, ``csvsql`` will generate a create table statement for your data. You can specify what sort of database you are using with the ``-i`` flag::
+
+    $ csvsql -i sqlite joined.csv
+    CREATE TABLE joined (
+            state VARCHAR(2) NOT NULL,
+            county VARCHAR(10) NOT NULL,
+            fips INTEGER NOT NULL,
+            nsn VARCHAR(16) NOT NULL,
+            item_name VARCHAR(62) NOT NULL,
+            quantity VARCHAR(4) NOT NULL,
+            ui VARCHAR(7) NOT NULL,
+            acquisition_cost FLOAT NOT NULL,
+            total_cost VARCHAR(10) NOT NULL,
+            ship_date DATE NOT NULL,
+            federal_supply_category VARCHAR(34) NOT NULL,
+            federal_supply_category_name VARCHAR(35) NOT NULL,
+            federal_supply_class VARCHAR(25) NOT NULL,
+            federal_supply_class_name VARCHAR(63),
+            name VARCHAR(21) NOT NULL,
+            total_population INTEGER NOT NULL,
+            margin_of_error INTEGER NOT NULL
+    );
+
+Here we have the sqlite "create table" statement for our joined data. You'll see that, like ``csvstat``, ``csvsql`` has done it's best to infer the column types.
+
+Often you won't care about storing the schema locally. In this case you can also use ``csvsql`` to create the table directly in the database on your local machine. If you add the ``--insert`` option the data will also be imported::
+
+    $ csvsql --db sqlite:///leso.db --insert joined.csv
+
+You can see the data was imported by running::
+
+    $ sqlite3 -csv leso.db "select * from joined;"
+
+Notice that the output from sqlite is also CSV which means...::
+
+    $ sqlite3 -csv leso.db "select county,item_name from joined where quantity > 5;" | csvlook
+
+Well-formatted queries on the command line! Thisconstruction is so useful, there is a shortcut for it that doesn't require you to create a local database::
+
+    $ csvsql --query "select county,item_name from joined where quantity > 5;" joined.csv | csvlook
+
+SQL queries on CSVs!
 
 Summing up
 ==========
