@@ -24,7 +24,7 @@ Executes arbitrary commands against a SQL database and outputs the results as a 
       --db CONNECTION_STRING
                             An sqlalchemy connection string to connect to a
                             database.
-      -q QUERY, --query QUERY
+      --query QUERY
                             The SQL query to execute. If specified, it overrides
                             FILE and STDIN.
       -H, --no-header-row   Do not output column names.

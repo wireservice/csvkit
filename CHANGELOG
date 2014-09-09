@@ -1,6 +1,8 @@
 0.9.0
 -----
 
+* Write missing sections of the tutorial. (#32)
+* Remove -q arg from sql2csv (conflicts with common flag).
 * Fix csvjoin in case where left dataset rows without all columns.
 * Rewrote tutorial based on LESO data. (#324)
 * Don't error in csvjson if lat/lon columns are null. (#326)
