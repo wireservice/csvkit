@@ -7,6 +7,7 @@ except ImportError:
     from ordereddict import OrderedDict
     import simplejson as json
 
+import itertools
 import six
 
 from csvkit import CSVKitWriter
@@ -38,24 +39,25 @@ def json2csv(f, key=None, **kwargs):
 
     The top-level element of the input must be a list or a dictionary. If it is a dictionary, a key must be provided which is an item of the dictionary which contains a list.
     """
-    js = json.load(f, object_pairs_hook=OrderedDict)
+    first_line = f.readline()
+    try:
+        first_row = json.loads(first_line, object_pairs_hook=OrderedDict)
+        js = itertools.chain((first_row, ), (json.loads(l, object_pairs_hook=OrderedDict) for l in f))
+    except ValueError:
+        document = first_line + f.read()
+        js = json.loads(document, object_pairs_hook=OrderedDict)
 
     if isinstance(js, dict):
         if not key:
             raise TypeError('When converting a JSON document with a top-level dictionary element, a key must be specified.')
-        
-        js = js[key]
 
-    if not isinstance(js, list):
-        raise TypeError('Only JSON documents with a top-level list element are able to be converted (or a top-level dictionary if specifying a key).')
+        js = js[key]
 
     fields = []
     flat = []
 
     for obj in js:
         flat.append(parse_object(obj)) 
-
-    for obj in js:
         for key in obj.keys():
             if key not in fields:
                 fields.append(key)
