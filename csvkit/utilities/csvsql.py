@@ -22,7 +22,7 @@ class CSVSQL(CSVKitUtility):
             help='Dialect of SQL to generate. Only valid when --db is not specified.')
         self.argparser.add_argument('--db', dest='connection_string',
             help='If present, a sqlalchemy connection string to use to directly execute generated SQL on a database.')
-        self.argparser.add_argument('-q', '--query', default=None,
+        self.argparser.add_argument('--query', default=None,
             help='Execute one or more SQL queries delimited by ";" and output the result of the last query as CSV.')
         self.argparser.add_argument('--insert', dest='insert', action='store_true',
             help='In addition to creating the table, also insert the data into the table. Only valid when --db is specified.')
