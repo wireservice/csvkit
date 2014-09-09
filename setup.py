@@ -21,7 +21,7 @@ if sys.version_info[0] == 2:
 
 setup(
     name='csvkit',
-    version='0.9.0',
+    version='0.9.1',
     description='A library of utilities for working with CSV, the king of tabular file formats.',
     long_description=open('README').read(),
     author='Christopher Groskopf',
