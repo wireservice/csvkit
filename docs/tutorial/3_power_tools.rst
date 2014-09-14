@@ -81,7 +81,7 @@ csvstack: combining subsets
 
 Frequently large datasets are distributed in many small files. At some point you will probably want to merge those files for aggregate analysis. :doc:`/scripts/csvstack` allows you to "stack" the rows from CSV files with identical headers. To demonstrate, let's imagine we've decided that Nebraska and Kansas form a "region" and that it would be useful to analyze them in a single dataset. Let's grab the Kansas data::
 
-    $ curl -L -O https://github.com/onyxfish/csvkit/raw/master/examples/realdata/ks_033_data.csv
+    $ curl -L -O https://github.com/onyxfish/csvkit/raw/master/examples/realdata/ks_1033_data.csvstack
 
 Now let's stack these two data files::
 
