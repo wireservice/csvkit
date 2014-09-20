@@ -1,6 +1,10 @@
 0.9.1
 -----
 
+* Add killer examples to doc index. (#328)
+* Reorganize doc index
+* Fix broken csvkit module documentation. (#327)
+
 0.9.0
 -----
 
