@@ -1,6 +1,7 @@
 1.0.0
 -----
 
+* Render docs locally with RTD theme.
 * Fix header in "tricks" docs.
 * Add install instructions to tutorial. (#331)
 * Add killer examples to doc index. (#328)
