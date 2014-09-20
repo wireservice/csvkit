@@ -153,6 +153,8 @@ Do!
     :maxdepth: 1
 
     api/csvkit
+    api/csvkit.py2
+    api/csvkit.py3
     api/csvkit.unicsv
     api/csvkit.sniffer
 

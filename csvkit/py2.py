@@ -10,13 +10,13 @@ from csvkit import unicsv
 
 class CSVKitReader(unicsv.UnicodeCSVReader):
     """
-    A unicode-aware CSV reader. Currently adds nothing to :class:`csvkit.unicsv.UnicodeCSVReader`, but might someday.
+    A unicode-aware CSV reader.
     """
     pass 
 
 class CSVKitWriter(unicsv.UnicodeCSVWriter):
     """
-    A unicode-aware CSV writer with some additional features.
+    A unicode-aware CSV writer.
     """
     def __init__(self, f, encoding='utf-8', line_numbers=False, **kwargs):
         self.row_count = 0
@@ -51,13 +51,13 @@ class CSVKitWriter(unicsv.UnicodeCSVWriter):
 
 class CSVKitDictReader(unicsv.UnicodeCSVDictReader):
     """
-    A unicode-aware CSV DictReader. Currently adds nothing to :class:`csvkit.unicsv.UnicodeCSVWriter`, but might someday.
+    A unicode-aware CSV DictReader.
     """
     pass
 
 class CSVKitDictWriter(unicsv.UnicodeCSVDictWriter):
     """
-    A unicode-aware CSV DictWriter with some additional features.
+    A unicode-aware CSV DictWriter.
     """
     def __init__(self, f, fieldnames, encoding='utf-8', line_numbers=False, **kwargs):
         self.row_count = 0
@@ -92,13 +92,13 @@ class CSVKitDictWriter(unicsv.UnicodeCSVDictWriter):
 
 def reader(*args, **kwargs):
     """
-    A drop-in replacement for Python's :func:`csv.reader` that leverages :class:`csvkit.CSVKitReader`.
+    A drop-in replacement for Python's :func:`csv.reader` that leverages :class:`csvkit.py2.CSVKitReader`.
     """
     return CSVKitReader(*args, **kwargs)
 
 def writer(*args, **kwargs):
     """
-    A drop-in replacement for Python's :func:`csv.writer` that leverages :class:`csvkit.CSVKitWriter`.
+    A drop-in replacement for Python's :func:`csv.writer` that leverages :class:`csvkit.py2.CSVKitWriter`.
     """
     return CSVKitWriter(*args, **kwargs)
 
