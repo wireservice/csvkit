@@ -58,6 +58,8 @@ Extract data from PostgreSQL:::
 
 And much more...
 
+.. _installation:
+
 Installation
 ============
 

@@ -11,6 +11,19 @@ The data will be using is a subset of the United States Defense Logistic Agency 
 
 This tutorial assumes you are comfortable in the command line, but does not assume any prior experience doing data processing or analysis.
 
+Installing csvkit
+=================
+
+Installing csvkit is easy::
+
+    $ sudo pip install csvkit
+
+If you have problems installing, check out the common issues described in the :ref:`installation` section of the full documentation.
+
+.. note::
+
+    If you're familiar with `virtualenv <http://virtualenv.readthedocs.org/en/latest/>`_, it's better to install csvkit inside an env, in which case you should leave off the ``sudo`` in the previous command.
+
 Getting the data
 ================
 
