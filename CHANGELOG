@@ -1,6 +1,7 @@
 0.9.1
 -----
 
+* Fix header in "tricks" docs.
 * Add install instructions to tutorial. (#331)
 * Add killer examples to doc index. (#328)
 * Reorganize doc index

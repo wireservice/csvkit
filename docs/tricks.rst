@@ -13,7 +13,7 @@ csvkit has builtin support for reading ``gzip`` or ``bz2`` compressed input file
 Please note, the files are decompressed in memory, so this is a convenience, not an optimization.
 
 Specifying STDIN as a file
---------------------------
+==========================
 
 Most tools default to ``STDIN`` if no filename is specified, but tools like :doc:`scripts/csvjoin` and :doc:`scripts/csvstack` accept multiple files, so this is not possible. To work around this it is also possible to specify ``STDIN`` by using ``-`` as a filename. For example, these three commands are functionally identical::
 
