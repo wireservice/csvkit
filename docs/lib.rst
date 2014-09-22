@@ -6,13 +6,13 @@ csvkit is designed to be used a replacement for most of Python's :mod:`csv` modu
 
 Don't!
 
-::
+.. code-block:: python
 
     import csv
 
 Do!
 
-::
+.. code-block:: python
 
     import csvkit
 
