@@ -43,7 +43,7 @@ Convert a CSV file to a custom output format.::
                             Character used to terminate lines in the output CSV
                             file. 
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 Examples
 ========

@@ -41,7 +41,7 @@ Merges two or more CSV tables together using a method analogous to SQL JOIN oper
     Note that the join operation requires reading all files into memory. Don't try
     this on very large files.
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 Examples
 ========

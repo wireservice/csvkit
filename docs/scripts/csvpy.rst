@@ -26,7 +26,7 @@ This utility will automatically use the IPython shell if it is installed, otherw
 
     Due to platform limitations, csvpy does not accept file input on STDIN. 
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 Examples
 ========

@@ -18,7 +18,7 @@ Installing csvkit is easy::
 
     $ sudo pip install csvkit
 
-If you have problems installing, check out the common issues described in the :ref:`installation` section of the full documentation.
+If you have problems installing, check out the common issues described in the :doc:`../install` section of the full documentation.
 
 .. note::
 

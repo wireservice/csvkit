@@ -30,7 +30,7 @@ Filters and truncates CSV files. Like unix "cut" command, but for tabular data::
 
 Note that csvcut does not include row filtering, for this you should pipe data to :doc:`csvgrep`.
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 Examples
 ========

@@ -37,7 +37,7 @@ Filter tabular data to only those rows where certain columns contain a given val
       -i, --invert-match    If specified, select non-matching instead of matching
                             rows.
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 NOTE: Even though '-m', '-r', and '-f' are listed as "optional" arguments, you must specify one of them.
 

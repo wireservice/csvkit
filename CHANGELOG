@@ -1,6 +1,7 @@
 1.0.0
 -----
 
+* Reorganize docs so TOC works better. (#339)
 * Render docs locally with RTD theme.
 * Fix header in "tricks" docs.
 * Add install instructions to tutorial. (#331)

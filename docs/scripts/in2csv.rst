@@ -43,7 +43,7 @@ The header line is required though the columns may be in any order::
       --sheet SHEET         The name of the XLSX sheet to operate on.
       --no-inference        Disable type inference when parsing the input.
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 .. note::
 

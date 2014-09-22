@@ -30,7 +30,7 @@ Stack up the rows from multiple CSV files, optionally adding a grouping value to
       --filenames           Use the filename of each input file as its grouping
                             value. When specified, -g will be ignored.
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 Examples
 ========

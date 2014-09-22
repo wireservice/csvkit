@@ -23,7 +23,7 @@ Cleans a CSV file of common syntax errors. Outputs [basename]_out.csv and [basen
                             created. Information about what would have been done
                             will be printed to STDERR.
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 Examples
 ========

@@ -37,7 +37,7 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
       --len                 Only output max value length.
       --count               Only output row count
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 Examples
 ========

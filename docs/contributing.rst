@@ -2,10 +2,26 @@
 Contributing to csvkit
 ======================
 
-Welcome!
-========
+Principles
+==========
 
-Thanks for your interest in contributing to csvkit. There is work be done by developers of all skill levels.
+csvkit is to tabular data what the standard Unix text processing suite (grep, sed, cut, sort) is to text. As such, csvkit adheres to `the Unix philosophy <http://en.wikipedia.org/wiki/Unix_philosophy>`_.
+
+#. Small is beautiful.
+#. Make each program do one thing well.
+#. Build a prototype as soon as possible.
+#. Choose portability over efficiency.
+#. Store data in flat text files.
+#. Use software leverage to your advantage.
+#. Use shell scripts to increase leverage and portability.
+#. Avoid captive user interfaces.
+#. Make every program a filter.
+
+As there is no formally defined CSV format, csvkit encourages well-known formatting standards:
+
+* Output favors compatability with the widest range of applications. This means that quoting is done with double-quotes and only when necessary, columns are separated with commas, and lines are terminated with unix style line endings ("\\n").
+
+* Data that is modified or generated will prefer consistency over brevity. Floats always include at least one decimal place, even if they are round. Dates and times are written in ISO8601 format.
 
 Process for contributing code
 =============================

@@ -50,7 +50,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
       --db-schema           Optional name of database schema to create table(s)
                             in. 
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 For information on connection strings and supported dialects refer to the `SQLAlchemy documentation <http://www.sqlalchemy.org/docs/dialects/>`_.
 
