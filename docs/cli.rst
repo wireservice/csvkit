@@ -8,7 +8,7 @@ Input
 =====
 
 .. toctree::
-    :maxdepth: 1 
+    :maxdepth: 1
 
     scripts/in2csv
     scripts/sql2csv
@@ -17,7 +17,7 @@ Processing
 ==========
 
 .. toctree::
-    :maxdepth: 1 
+    :maxdepth: 1
 
     scripts/csvclean
     scripts/csvcut
@@ -28,9 +28,9 @@ Processing
 
 Output (and Analysis)
 =====================
-   
+
 .. toctree::
-    :maxdepth: 1 
+    :maxdepth: 1
 
     scripts/csvformat
     scripts/csvjson
@@ -38,12 +38,13 @@ Output (and Analysis)
     scripts/csvpy
     scripts/csvsql
     scripts/csvstat
+    scripts/csvplot
 
 Appendices
 ==========
 
 .. toctree::
-    :maxdepth: 2 
+    :maxdepth: 2
 
     common_arguments
     tricks
