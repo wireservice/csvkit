@@ -1,8 +1,19 @@
+===============================
+csvkit
+===============================
+
+.. image:: https://travis-ci.org/onyxfish/csvkit.png?branch=master
+        :target: https://travis-ci.org/onyxfish/csvkit
+        
+.. image:: https://pypip.in/d/csvkit/badge.png
+        :target: https://pypi.python.org/pypi/csvkit
+        
 csvkit is a suite of utilities for converting to and working with CSV, the king of tabular file formats.
 
 It is inspired by pdftk, gdal and the original csvcut utility by Joe Germuska and Aaron Bycoffe.
 
-Important links:
+Important links
+---------------
 
 * Repository:    https://github.com/onyxfish/csvkit
 * Issues:        https://github.com/onyxfish/csvkit/issues
