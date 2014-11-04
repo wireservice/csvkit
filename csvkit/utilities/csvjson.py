@@ -63,6 +63,9 @@ class CSVJSON(CSVKitUtility):
 
         if self.args.crs and not self.args.lat:
             self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
+        
+        if self.args.streamOutput and (self.args.lat or self.args.lon or self.args.key):
+            self.argparser.error('--stream is only allowed if --lat, --lon and --key are not specified.')
 
         rows = CSVKitReader(self.input_file, **self.reader_kwargs)
         column_names = next(rows)
