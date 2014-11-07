@@ -6,6 +6,7 @@ import codecs
 import gzip
 import os.path
 import sys
+import chardet
 
 import six
 
@@ -331,6 +332,14 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
         return columns
 
     if not columns:
+
+        try:
+            if isinstance(ids, unicode) == True:
+                encoding = chardet.detect(ids)["encoding"]
+                ids = unicode(ids, encoding)
+        except NameError:
+            pass
+
         for c in ids.split(','):
             c = c.strip()
 
@@ -363,6 +372,14 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
     excludes = []
     
     if excluded_columns:
+
+        try:
+            if isinstance(ids, unicode) == True:
+                encoding = chardet.detect(excluded_columns)["encoding"]
+                excluded_columns = unicode(excluded_columns, encoding)
+        except NameError:
+            pass
+
         for c in excluded_columns.split(','):
             c = c.strip()
 
