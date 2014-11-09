@@ -130,7 +130,7 @@ class TestCSVJSON(unittest.TestCase):
         utility = CSVJSON(args, output_file)
         utility.main()
         
-        result = map(json.loads, output_file.getvalue().splitlines())
+        result = list(map(json.loads, output_file.getvalue().splitlines()))
         self.assertEqual(len(result), 2)
         self.assertDictEqual(result[0], {"a": "1", "c": "3", "b": "2"})
         self.assertDictEqual(result[1], {"a": "1", "c": "5", "b": "4"})
