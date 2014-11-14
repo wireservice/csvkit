@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 
-from cStringIO import StringIO
+"""
+Note: dbf is only supported/imported for Python 2.
+"""
 
 import dbf
+import six
 
 from csvkit import table
 
@@ -20,7 +23,7 @@ def dbf2csv(f, **kwargs):
         for row in db:
             for i, d in enumerate(row):
                 try:
-                    data_columns[i].append(unicode(row[column_ids[i]]).strip())
+                    data_columns[i].append(six.text_type(row[column_ids[i]]).strip())
                 except IndexError:
                     # Non-rectangular data is truncated
                     break
@@ -32,7 +35,7 @@ def dbf2csv(f, **kwargs):
 
         tab = table.Table(columns=columns) 
 
-        o = StringIO()
+        o = six.StringIO()
         output = tab.to_csv(o)
         output = o.getvalue()
         o.close()

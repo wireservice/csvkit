@@ -1,28 +1,26 @@
 #!/usr/bin/env python
 
 from csvkit import CSVKitReader, CSVKitDictReader
-from csvkit.cli import CSVFileType, CSVKitUtility 
+from csvkit.cli import CSVKitUtility 
 
 class CSVPy(CSVKitUtility):
     description = 'Load a CSV file into a CSVKitReader object and then drops into a Python shell.'
-    override_flags = ['l', 'f', 'zero', 'H']
+    override_flags = ['l', 'zero', 'H']
 
     def add_arguments(self):
-        self.argparser.add_argument('file', metavar="FILE", type=CSVFileType(),
-            help='The CSV file to operate on.')
         self.argparser.add_argument('--dict', dest='as_dict', action='store_true',
             help='Use CSVKitDictReader instead of CSVKitReader.')
 
     def main(self):
         # Attempt reading filename, will cause lazy loader to access file and raise error if it does not exist
-        filename = self.args.file.name
+        filename = self.input_file.name
 
         if self.args.as_dict:
             reader_class = CSVKitDictReader
         else:
             reader_class = CSVKitReader
 
-        reader = reader_class(self.args.file, **self.reader_kwargs)
+        reader = reader_class(self.input_file, **self.reader_kwargs)
         
         welcome_message = 'Welcome! "%s" has been loaded in a %s object named "reader".' % (filename, reader_class.__name__)
 

@@ -2,7 +2,7 @@
 
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit import join
-from csvkit.cli import CSVFileType, CSVKitUtility, match_column_identifier
+from csvkit.cli import CSVKitUtility, match_column_identifier
 
 class CSVJoin(CSVKitUtility):
     description = 'Execute a SQL-like join to merge CSV files on a specified column or columns.'
@@ -10,7 +10,7 @@ class CSVJoin(CSVKitUtility):
     override_flags = ['f', 'H']
     
     def add_arguments(self):
-        self.argparser.add_argument('files', metavar="FILES", nargs='+', type=CSVFileType(),
+        self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
             help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
             help='The column name(s) on which to join. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
@@ -22,16 +22,21 @@ class CSVJoin(CSVKitUtility):
             help='Perform a right outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of right outer joins, starting at the right.')
 
     def main(self):
-        if len(self.args.files) < 2:
+        self.input_files = []
+
+        for path in self.args.input_paths:
+            self.input_files.append(self._open_input_file(path))
+
+        if len(self.input_files) < 2:
             self.argparser.error('You must specify at least two files to join.')
 
         if self.args.columns:
             join_column_names = self._parse_join_column_names(self.args.columns)
 
             if len(join_column_names) == 1:
-                join_column_names = join_column_names * len(self.args.files)
+                join_column_names = join_column_names * len(self.input_files)
 
-            if len(join_column_names) != len(self.args.files):
+            if len(join_column_names) != len(self.input_files):
                 self.argparser.error('The number of join column names must match the number of files, or be a single column name that exists in all files.')
 
         if (self.args.left_join or self.args.right_join or self.args.outer_join) and not self.args.columns:
@@ -42,7 +47,7 @@ class CSVJoin(CSVKitUtility):
 
         tables = []
 
-        for f in self.args.files:
+        for f in self.input_files:
             tables.append(list(CSVKitReader(f, **self.reader_kwargs)))
             f.close()
 
@@ -98,7 +103,7 @@ class CSVJoin(CSVKitUtility):
         """
         Parse a list of join columns.
         """
-        return map(str.strip, join_string.split(','))
+        return list(map(str.strip, join_string.split(',')))
 
 
 def launch_new_instance():

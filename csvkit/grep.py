@@ -1,7 +1,10 @@
 #!/usr/bin/env python
+
+import six
+
 from csvkit.exceptions import ColumnIdentifierError
 
-class FilteringCSVReader(object):
+class FilteringCSVReader(six.Iterator):
     """
     Given any row iterator, only return rows which pass the filter.
     If 'header' is False, then all rows must pass the filter; by default, the first row will be passed
@@ -28,13 +31,16 @@ class FilteringCSVReader(object):
     """
     returned_header = False
     column_names = None
+
     def __init__(self, reader, patterns, header=True, any_match=False, inverse=False):
         super(FilteringCSVReader, self).__init__()
 
         self.reader = reader
         self.header = header
+
         if self.header:
-            self.column_names = reader.next()
+            self.column_names = next(reader)
+
         self.any_match = any_match
         self.inverse = inverse
         self.patterns = standardize_patterns(self.column_names,patterns)
@@ -42,13 +48,14 @@ class FilteringCSVReader(object):
     def __iter__(self):
         return self
         
-    def next(self):
+    def __next__(self):
         if self.column_names and not self.returned_header:
             self.returned_header = True
             return self.column_names
 
         while True:
-            row = self.reader.next()
+            row = next(self.reader)
+
             if self.test_row(row):
                 return row
 

@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 
-from cStringIO import StringIO
-import json
+try:
+    from collections import OrderedDict
+    import json
+except ImportError:
+    from ordereddict import OrderedDict
+    import simplejson as json
+
+import six
 
 from csvkit import CSVKitWriter
 
@@ -9,8 +15,7 @@ def geojson2csv(f, key=None, **kwargs):
     """
     Convert a GeoJSON document into CSV format.
     """
-    document = f.read()
-    js = json.loads(document)
+    js = json.load(f, object_pairs_hook=OrderedDict)
 
     if not isinstance(js, dict):
         raise TypeError('JSON document is not valid GeoJSON: Root element is not an object.')
@@ -27,24 +32,26 @@ def geojson2csv(f, key=None, **kwargs):
     features = js['features']
     
     features_parsed = []    # tuples in the format (id, properties, geometry)
-    property_set = set()
+    property_fields = []
 
     for feature in features:
         geoid = feature.get('id', None)
 
         properties = feature.get('properties') or {}
-        property_set.update(properties.keys())
+
+        for prop in properties.keys():
+            if prop not in property_fields:
+                property_fields.append(prop)
 
         geometry = json.dumps(feature['geometry'])
 
         features_parsed.append((geoid, properties, geometry))
 
     header = ['id']
-    fields = sorted(list(property_set))
-    header.extend(fields)
+    header.extend(property_fields)
     header.append('geojson')
 
-    o = StringIO()
+    o = six.StringIO()
     writer = CSVKitWriter(o)
 
     writer.writerow(header)
@@ -52,7 +59,7 @@ def geojson2csv(f, key=None, **kwargs):
     for geoid, properties, geometry in features_parsed:
         row = [geoid]
 
-        for field in fields:
+        for field in property_fields:
             row.append(properties.get(field, None))
 
         row.append(geometry)

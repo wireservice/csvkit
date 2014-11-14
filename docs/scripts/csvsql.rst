@@ -34,6 +34,8 @@ Generate SQL statements for a CSV file or execute those statements directly on a
       --db CONNECTION_STRING
                             If present, a sqlalchemy connection string to use to
                             directly execute generated SQL on a database.
+      --query QUERY         Execute one or more SQL queries delimited by ";" and
+                            output the result of the last query as CSV.
       --insert              In addition to creating the table, also insert the
                             data into the table. Only valid when --db is
                             specified.
@@ -48,16 +50,21 @@ Generate SQL statements for a CSV file or execute those statements directly on a
       --db-schema           Optional name of database schema to create table(s)
                             in. 
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 For information on connection strings and supported dialects refer to the `SQLAlchemy documentation <http://www.sqlalchemy.org/docs/dialects/>`_.
+
+
+.. note::
+    
+    Using the ``--query`` option may cause rounding (in Python 2) or introduce [Python floating point issues](https://docs.python.org/3.4/tutorial/floatingpoint.html) (in Python 3).
 
 Examples
 ========
 
 Generate a statement in the PostgreSQL dialect::
 
-    $ csvsql -i postgresql  examples/realdata/FY09_EDU_Recipients_by_State.csv
+    $ csvsql -i postgresql examples/realdata/FY09_EDU_Recipients_by_State.csv
 
 Create a table and import data from the CSV directly into Postgres::
 
@@ -73,3 +80,6 @@ Create tables for an entire folder of CSVs and import data from those files dire
     $ createdb test
     $ csvsql --db postgresql:///test --insert examples/*.csv
 
+You can also use CSVSQL to "directly" query one or more CSV files. Please note that this will create an in-memory SQL database, so it won't be very fast::
+
+    $ csvsql --query  "select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species" examples/iris.csv examples/irismeta.csv

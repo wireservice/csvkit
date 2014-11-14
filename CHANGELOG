@@ -1,8 +1,90 @@
-0.6.2
+1.0.0
+-----
+
+* Add missing docs for csvcut -C. (#227)
+* Reorganize docs so TOC works better. (#339)
+* Render docs locally with RTD theme.
+* Fix header in "tricks" docs.
+* Add install instructions to tutorial. (#331)
+* Add killer examples to doc index. (#328)
+* Reorganize doc index
+* Fix broken csvkit module documentation. (#327)
+
+0.9.0
+-----
+
+* Write missing sections of the tutorial. (#32)
+* Remove -q arg from sql2csv (conflicts with common flag).
+* Fix csvjoin in case where left dataset rows without all columns.
+* Rewrote tutorial based on LESO data. (#324)
+* Don't error in csvjson if lat/lon columns are null. (#326)
+* Maintain field order in output of csvjson.
+* Add unit test for json in2csv. (#77)
+* Maintain key order when converting JSON into CSV. (#325.)
+* Upgrade python-dateutil to version 2.2 (#304)
+* Fix sorting of columns with null values. (#302)
+* Added release documentation.
+* Fill out short rows with null values. (#313)
+* Fix unicode output for csvlook and csvstat. (#315)
+* Add documentation for --zero. (#323)
+* Fix Integrity error when inserting zero rows in database with csvsql. (#299)
+* Add Michael Mior to AUTHORS. (#305)
+* Add --count option to CSVStat.
+* Implement csvformat.
+* Fix bug causing CSVKitDictWriter to output 'utf-8' for blank fields.
+
+0.8.0
+-----
+
+* Add pnaimoli to AUTHORS.
+* Fix column specification in csvstat. (#236)
+* Added "Tips and Tricks" documentation. (#297, #298)
+* Add Espartaco Palma to AUTHORS.
+* Remove unnecessary enumerate calls. (#292)
+* Deprecated DBF support for Python 3+.
+* Add support for Python 3.3 and 3.4 (#239)
+
+0.7.3
+-----
+
+* Fix date handling with openpyxl > 2.0 (#285)
+* Add Kristina Durivage to AUTHORS. (#243)
+* Added Richard Low to AUTHORS.
+* Support SQL queries "directly" on CSV files. (#276)
+* Add Tasneem Raja to AUTHORS.
+* Fix off-by-one error in open ended column ranges. (#238)
+* Add Matt Pettis to AUTHORS.
+* Add line numbers flag to csvlook (#244)
+* Only install argparse for Python < 2.7. (#224)
+* Add Diego Rabatone Oliveira to AUTHORS.
+* Add Ryan Murphy to AUTHORS.
+* Fix DBF dependency. (#270)
+
+0.7.2
+-----
+
+* Fix CHANGELOG for release.
+
+0.7.1
+-----
+
+* Fix homepage url in setup.py.
+
+0.7.0
 -----
 
 * Fix XLSX datetime normalization bug. (#223)
 * Add raistlin7447 to AUTHORS.
+* Merged sql2csv utility (#259).
+* Add Jeroen Janssens to AUTHORS.
+* Validate csvsql DB connections before parsing CSVs. (#257)
+* Clarify install process for Ubuntu. (#249)
+* Clarify docs for --escapechar. (#242)
+* Make ``import csvkit`` API compatible with ``import csv``.
+* Update Travis CI link. (#258)
+* Add Sébastien Fievet to AUTHORS.
+* Use case-sensitive name for SQLAlchemy (#237)
+* Add Travis Swicegood to AUTHORS.
 
 0.6.1
 -----

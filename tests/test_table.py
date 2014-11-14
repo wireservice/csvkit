@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
-from cStringIO import StringIO
 import datetime
-import unittest
+
+import six
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from csvkit import table 
 
@@ -16,7 +21,7 @@ class TestColumn(unittest.TestCase):
         self.assertEqual(type(self.c), table.Column)
         self.assertEqual(self.c.order, 0)
         self.assertEqual(self.c.name, u'test')
-        self.assertEqual(self.c.type, unicode)
+        self.assertEqual(self.c.type, six.text_type)
         self.assertEqual(self.c, [u'test', u'column', None])
 
     def test_slice(self):
@@ -54,6 +59,19 @@ class TestTable(unittest.TestCase):
         self.assertEqual(t[3][0], True)
         self.assertEqual(type(t[3][0]), bool)
 
+    def test_extra_header(self):
+        with open('examples/test_extra_header.csv', 'r') as f:
+            t = table.Table.from_csv(f)
+
+        self.assertEqual(type(t), table.Table)
+        self.assertEqual(type(t[0]), table.Column)
+        self.assertEqual(len(t), 4)
+
+        self.assertEqual(t[0], [1])
+        self.assertEqual(t[1], [2])
+        self.assertEqual(t[2], [3])
+        self.assertEqual(t[3], [None])
+
     def test_from_csv_no_inference(self):
         with open('examples/testfixed_converted.csv', 'r') as f:
             t = table.Table.from_csv(f, infer_types=False)
@@ -63,16 +81,16 @@ class TestTable(unittest.TestCase):
         self.assertEqual(len(t), 8)
         
         self.assertEqual(t[2][0], '40')
-        self.assertEqual(type(t[2][0]), unicode)
+        self.assertEqual(type(t[2][0]), six.text_type)
  
         self.assertEqual(t[3][0], 'True')
-        self.assertEqual(type(t[3][0]), unicode)
+        self.assertEqual(type(t[3][0]), six.text_type)
 
     def test_to_csv(self):
         with open('examples/testfixed_converted.csv', 'r') as f:
             contents = f.read()
             f.seek(0)
-            o = StringIO()
+            o = six.StringIO()
             table.Table.from_csv(f).to_csv(o)
             conversion = o.getvalue()
             o.close()

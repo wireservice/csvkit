@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-import unittest
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from csvkit.cli import match_column_identifier, parse_column_identifiers
 
@@ -36,7 +39,9 @@ class TestCli(unittest.TestCase):
 
     def test_range_notation_open_ended(self):
         self.assertEqual([0,1,2], parse_column_identifiers(':3', self.headers))
-        target = range(3,len(self.headers) - 1) # protect against devs adding to self.headers
-        target.insert(0,0)
+
+        target = list(range(3,len(self.headers))) # protect against devs adding to self.headers
+        target.insert(0, 0)
         self.assertEqual(target, parse_column_identifiers('1,4:', self.headers))        
-        
+
+        self.assertEqual(list(range(0, len(self.headers))), parse_column_identifiers('1:', self.headers))

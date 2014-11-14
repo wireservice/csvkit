@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
 import datetime
-from types import NoneType
 
 from dateutil.parser import parse
+import six
 
-from exceptions import InvalidValueForTypeException, InvalidValueForTypeListException
+from csvkit.exceptions import InvalidValueForTypeException, InvalidValueForTypeListException
+
+NoneType = type(None)
 
 NULL_VALUES = ('na', 'n/a', 'none', 'null', '.')
 TRUE_VALUES = ('yes', 'y', 'true', 't')
@@ -30,8 +32,8 @@ def normalize_column_type(l, normal_type=None, blanks_as_nulls=True):
     Returns a tuple of (type, normal_values).
     """
     # Optimizations
-    lower = unicode.lower
-    replace = unicode.replace
+    lower = six.text_type.lower
+    replace = six.text_type.replace
 
     # Convert "NA", "N/A", etc. to null types.
     for i, x in enumerate(l):
@@ -95,9 +97,9 @@ def normalize_column_type(l, normal_type=None, blanks_as_nulls=True):
                 raise InvalidValueForTypeException(i, x, int) 
 
             if blanks_as_nulls:
-                return unicode, [x if x != '' else None for x in l]
+                return six.text_type, [x if x != '' else None for x in l]
             else:
-                return unicode, l 
+                return six.text_type, l 
         except ValueError:
             if normal_type:
                 raise InvalidValueForTypeException(i, x, normal_type) 
@@ -195,9 +197,9 @@ def normalize_column_type(l, normal_type=None, blanks_as_nulls=True):
 
     # Don't know what they are, so they must just be strings 
     if blanks_as_nulls:
-        return unicode, [x if x != '' else None for x in l]
+        return six.text_type, [x if x != '' else None for x in l]
     else:
-        return unicode, l 
+        return six.text_type, l 
 
 def normalize_table(rows, normal_types=None, accumulate_errors=False, blanks_as_nulls=True):
     """
@@ -233,7 +235,7 @@ def normalize_table(rows, normal_types=None, accumulate_errors=False, blanks_as_
 
             new_normal_types.append(t)
             new_normal_columns.append(c)
-        except InvalidValueForTypeException, e:
+        except InvalidValueForTypeException as e:
             if not accumulate_errors:
                 raise                
         

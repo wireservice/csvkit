@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from cStringIO import StringIO
 import datetime
 
+import six
 import xlrd
 
 from csvkit import table
@@ -18,7 +18,7 @@ def normalize_text(values, **kwargs):
     """
     Normalize a column of text cells.
     """
-    return unicode, [unicode(v) if v else None for v in values]
+    return six.text_type, [six.text_type(v) if v else None for v in values]
 
 def normalize_numbers(values, **kwargs):
     """
@@ -125,6 +125,7 @@ def xls2csv(f, **kwargs):
     Convert an Excel .xls file to csv.
     """
     book = xlrd.open_workbook(file_contents=f.read())
+
     if 'sheet' in kwargs:
         sheet = book.sheet_by_name(kwargs['sheet'])
     else:
@@ -145,7 +146,7 @@ def xls2csv(f, **kwargs):
         column = table.Column(i, column_name, normal_values, normal_type=t)
         tab.append(column)
 
-    o = StringIO()
+    o = six.StringIO()
     output = tab.to_csv(o)
     output = o.getvalue()
     o.close()

@@ -33,7 +33,7 @@ def sequential_join(left_table, right_table):
 
     for left_row in left_rows:
         try:
-            right_row = right_rows.next()
+            right_row = next(right_rows)
         except StopIteration:
             output.append(left_row + ([u''] * len(right_headers)))
 
@@ -50,6 +50,7 @@ def inner_join(left_table, left_column_id, right_table, right_column_id):
     """
     # Grab headers
     left_headers = left_table[0]
+    len_left_headers = len(left_headers)
     right_headers = right_table[0]
     left_rows = left_table[1:]
     right_rows = right_table[1:]
@@ -60,6 +61,11 @@ def inner_join(left_table, left_column_id, right_table, right_column_id):
     output = [left_headers + right_headers]
 
     for left_row in left_rows:
+        len_left_row = len(left_row)
+
+        if len_left_row < len_left_headers:
+            left_row.extend([None] * (len_left_headers - len_left_row))
+
         left_key = left_row[left_column_id]
 
         if left_key in right_mapped_keys:
@@ -74,6 +80,7 @@ def full_outer_join(left_table, left_column_id, right_table, right_column_id):
     """
     # Grab headers
     left_headers = left_table[0]
+    len_left_headers = len(left_headers)
     right_headers = right_table[0]
     left_rows = left_table[1:]
     right_rows = right_table[1:]
@@ -87,7 +94,11 @@ def full_outer_join(left_table, left_column_id, right_table, right_column_id):
     output = [left_headers + right_headers]
 
     for left_row in left_rows:
+        len_left_row = len(left_row)
         left_key = left_row[left_column_id]
+
+        if len_left_row < len_left_headers:
+            left_row.extend([None] * (len_left_headers - len_left_row))
 
         if left_key in right_mapped_keys:
             for right_row in right_mapped_keys[left_key]:
@@ -109,6 +120,7 @@ def left_outer_join(left_table, left_column_id, right_table, right_column_id):
     """
     # Grab headers
     left_headers = left_table[0]
+    len_left_headers = len(left_headers)
     right_headers = right_table[0]
     left_rows = left_table[1:]
     right_rows = right_table[1:]
@@ -119,7 +131,11 @@ def left_outer_join(left_table, left_column_id, right_table, right_column_id):
     output = [left_headers + right_headers]
 
     for left_row in left_rows:
+        len_left_row = len(left_row)
         left_key = left_row[left_column_id]
+
+        if len_left_row < len_left_headers:
+            left_row.extend([None] * (len_left_headers - len_left_row))
 
         if left_key in right_mapped_keys:
             for right_row in right_mapped_keys[left_key]:
@@ -135,6 +151,7 @@ def right_outer_join(left_table, left_column_id, right_table, right_column_id):
     """
     # Grab headers
     left_headers = left_table[0]
+    len_left_headers = len(left_headers)
     right_headers = right_table[0]
     left_rows = left_table[1:]
     right_rows = right_table[1:]
@@ -148,7 +165,11 @@ def right_outer_join(left_table, left_column_id, right_table, right_column_id):
     output = [left_headers + right_headers]
 
     for left_row in left_rows:
+        len_left_row = len(left_row)
         left_key = left_row[left_column_id]
+
+        if len_left_row < len_left_headers:
+            left_row.extend([None] * (len_left_headers - len_left_row))
 
         if left_key in right_mapped_keys:
             for right_row in right_mapped_keys[left_key]:

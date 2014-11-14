@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 
-from cStringIO import StringIO
-import json
+try:
+    from collections import OrderedDict
+    import json
+except ImportError:
+    from ordereddict import OrderedDict
+    import simplejson as json
+
+import six
 
 from csvkit import CSVKitWriter
 
@@ -12,7 +18,7 @@ def parse_object(obj, path=''):
     Inspired by JSONPipe (https://github.com/dvxhouse/jsonpipe).
     """
     if isinstance(obj, dict):
-        iterator = obj.iteritems()
+        iterator = obj.items()
     elif isinstance(obj, (list, tuple)):
         iterator = enumerate(obj)
     else:
@@ -21,7 +27,7 @@ def parse_object(obj, path=''):
     d = {}
 
     for key, value in iterator:
-        key = unicode(key)
+        key = six.text_type(key)
         d.update(parse_object(value, path + key + '/'))
 
     return d
@@ -32,8 +38,7 @@ def json2csv(f, key=None, **kwargs):
 
     The top-level element of the input must be a list or a dictionary. If it is a dictionary, a key must be provided which is an item of the dictionary which contains a list.
     """
-    document = f.read()
-    js = json.loads(document)
+    js = json.load(f, object_pairs_hook=OrderedDict)
 
     if isinstance(js, dict):
         if not key:
@@ -44,18 +49,18 @@ def json2csv(f, key=None, **kwargs):
     if not isinstance(js, list):
         raise TypeError('Only JSON documents with a top-level list element are able to be converted (or a top-level dictionary if specifying a key).')
 
-    field_set = set()
+    fields = []
     flat = []
 
     for obj in js:
         flat.append(parse_object(obj)) 
 
-    for obj in flat:
-        field_set.update(obj.keys())
+    for obj in js:
+        for key in obj.keys():
+            if key not in fields:
+                fields.append(key)
 
-    fields = sorted(list(field_set))
-
-    o = StringIO()
+    o = six.StringIO()
     writer = CSVKitWriter(o)
 
     writer.writerow(fields)
@@ -64,10 +69,7 @@ def json2csv(f, key=None, **kwargs):
         row = []
 
         for field in fields:
-            if field in i:
-                row.append(i[field])
-            else:
-                row.append(None)
+            row.append(i.get(field, None))
 
         writer.writerow(row)
 

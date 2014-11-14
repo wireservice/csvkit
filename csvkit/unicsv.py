@@ -2,18 +2,26 @@
 
 """
 This module contains unicode aware replacements for :func:`csv.reader` and :func:`csv.writer`. The implementations are largely copied from `examples in the csv module documentation <http://docs.python.org/library/csv.html#examples>`_.
+
+These classes are available for Python 2 only. The Python 3 version of `csv` supports unicode internally.
+
+.. note::
+
+    You probably don't want to use these classes directly. Try the :mod:`csvkit` module.
+
 """
 
 import codecs
 import csv
-import fnmatch
-from cStringIO import StringIO
+import sys
+
+import six
 
 from csvkit.exceptions import FieldSizeLimitError
 
 EIGHT_BIT_ENCODINGS = ['utf-8', 'u8', 'utf', 'utf8', 'latin-1', 'iso-8859-1', 'iso8859-1', '8859', 'cp819', 'latin', 'latin1', 'l1']
 
-class UTF8Recoder(object):
+class UTF8Recoder(six.Iterator):
     """
     Iterator that reads an encoded stream and reencodes the input to UTF-8.
     """
@@ -23,8 +31,8 @@ class UTF8Recoder(object):
     def __iter__(self):
         return self
 
-    def next(self):
-        return self.reader.next().encode('utf-8')
+    def __next__(self):
+        return next(self.reader).encode('utf-8')
 
 class UnicodeCSVReader(object):
     """
@@ -40,15 +48,15 @@ class UnicodeCSVReader(object):
 
     def next(self):
         try:
-            row = self.reader.next()
-        except csv.Error, e:
+            row = next(self.reader)
+        except csv.Error as e:
             # Terrible way to test for this exception, but there is no subclass
-            if fnmatch.fnmatch(str(e), 'field large[rt] than field limit *'):
+            if 'field larger than field limit' in str(e):
                 raise FieldSizeLimitError(csv.field_size_limit())
             else:
                 raise e
 
-        return [unicode(s, 'utf-8') for s in row]
+        return [six.text_type(s, 'utf-8') for s in row]
 
     def __iter__(self):
         return self
@@ -72,16 +80,16 @@ class UnicodeCSVWriter(object):
             self.writer = csv.writer(f, **kwargs)
         else:
             # Redirect output to a queue for reencoding
-            self.queue = StringIO()
+            self.queue = six.StringIO()
             self.writer = csv.writer(self.queue, **kwargs)
             self.stream = f
             self.encoder = codecs.getincrementalencoder(encoding)()
 
     def writerow(self, row):
         if self._eight_bit:
-            self.writer.writerow([unicode(s if s != None else '').encode(self.encoding) for s in row])
+            self.writer.writerow([six.text_type(s if s != None else '').encode(self.encoding) for s in row])
         else:
-            self.writer.writerow([unicode(s if s != None else '').encode('utf-8') for s in row])
+            self.writer.writerow([six.text_type(s if s != None else '').encode('utf-8') for s in row])
             # Fetch UTF-8 output from the queue...
             data = self.queue.getvalue()
             data = data.decode('utf-8')
@@ -116,19 +124,21 @@ class UnicodeCSVDictWriter(csv.DictWriter):
     Defer almost all implementation to :class:`csv.DictWriter`, but wraps our unicode writer instead
     of :func:`csv.writer`.
     """
-    def __init__(self, f, fieldnames, writeheader=False, restval="", extrasaction="raise", *args, **kwds):
+    def __init__(self, f, fieldnames, restval="", extrasaction="raise", *args, **kwds):
         self.fieldnames = fieldnames 
         self.restval = restval
 
         if extrasaction.lower() not in ("raise", "ignore"):
-            raise ValueError, \
-                  ("extrasaction (%s) must be 'raise' or 'ignore'" %
-                   extrasaction)
+            raise ValueError("extrasaction (%s) must be 'raise' or 'ignore'" % extrasaction)
 
         self.extrasaction = extrasaction
 
         self.writer = UnicodeCSVWriter(f, *args, **kwds)
 
-        if writeheader:
+    if sys.version_info < (2, 7):
+        def writeheader(self):
+            """
+            Python 2.6 is missing the writeheader function.
+            """
             self.writerow(dict(zip(self.fieldnames, self.fieldnames)))
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from cStringIO import StringIO
+import six
 
 from csvkit import table
 
@@ -10,7 +10,7 @@ def csv2csv(f, **kwargs):
     """
     tab = table.Table.from_csv(f, **kwargs) 
 
-    o = StringIO()
+    o = six.StringIO()
     output = tab.to_csv(o)
     output = o.getvalue()
     o.close()

@@ -24,7 +24,7 @@ If a table is too wide to display properly try truncating it using :doc:`csvcut`
 
 If the table is too long, try filtering it down with grep or piping the output to ``less``.
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 Examples
 ========

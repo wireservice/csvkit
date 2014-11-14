@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 
 import datetime
-from types import NoneType
-import math
-
-from csvkit import table
-from csvkit.cli import CSVKitUtility
 from heapq import nlargest
 from operator import itemgetter
+import math
+
+import six
+
+from csvkit import CSVKitReader, table
+from csvkit.cli import CSVKitUtility
+
+NoneType = type(None)
 
 MAX_UNIQUE = 5
 MAX_FREQ = 5
@@ -42,21 +45,38 @@ class CSVStat(CSVKitUtility):
             help='Only output frequent values.')
         self.argparser.add_argument('--len', dest='len_only', action='store_true',
             help='Only output max value length.')
+        self.argparser.add_argument('--count', dest='count_only', action='store_true',
+            help='Only output row count')
 
     def main(self):
+        operations = [op for op in OPERATIONS if getattr(self.args, op + '_only')]
+
+        if len(operations) > 1:
+            self.argparser.error('Only one statistic argument may be specified (mean, median, etc).')
+
+        if operations and self.args.count_only:
+            self.argparser.error('You may not specify --count and a statistical argument at the same time.')
+
+        write = lambda t: self.output_file.write(t.encode('utf-8'))
+
+        if self.args.count_only:
+            count = len(list(CSVKitReader(self.input_file)))
+
+            if not self.args.no_header_row:
+                count -= 1
+            
+            write('Row count: %i\n' % count)
+
+            return
+
         tab = table.Table.from_csv(
-            self.args.file,
+            self.input_file,
             snifflimit=self.args.snifflimit,
             column_ids=self.args.columns,
             zero_based=self.args.zero_based,
             no_header_row=self.args.no_header_row,
             **self.reader_kwargs
         )
-
-        operations = [op for op in OPERATIONS if getattr(self.args, op + '_only')]
-
-        if len(operations) > 1:
-            self.argparser.error('Only one statistic argument may be specified (mean, median, etc).')
 
         for c in tab:
             values = sorted(filter(lambda i: i is not None, c))
@@ -72,54 +92,55 @@ class CSVStat(CSVKitUtility):
                 if op == 'unique':
                     stat = len(stat)
                 elif op == 'freq':
-                    stat = ', '.join([(u'"%s": %s' % (unicode(k), count)).encode('utf-8') for k, count in stat])
+                    stat = ', '.join([('"%s": %s' % (six.text_type(k), count)) for k, count in stat])
                     stat = '{ %s }' % stat
 
                 if len(tab) == 1:
-                    self.output_file.write(unicode(stat))
+                    write(six.text_type(stat))
                 else:
-                    self.output_file.write(u'%3i. %s: %s\n' % (c.order + 1, c.name, stat))
+                    write('%3i. %s: %s\n' % (c.order + 1, c.name, stat))
             # Output all stats
             else:
                 for op in OPERATIONS:
                     stats[op] = getattr(self, 'get_%s' % op)(c, values, stats)
 
-                self.output_file.write((u'%3i. %s\n' % (c.order + 1, c.name)).encode('utf-8'))
+                write(('%3i. %s\n' % (c.order + 1, c.name)))
 
                 if c.type == None:
-                    self.output_file.write(u'\tEmpty column\n')
+                    write('\tEmpty column\n')
                     continue
                     
-                self.output_file.write(u'\t%s\n' % c.type)
-                self.output_file.write(u'\tNulls: %s\n' % stats['nulls'])
+                write('\t%s\n' % c.type)
+                write('\tNulls: %s\n' % stats['nulls'])
                 
                 if len(stats['unique']) <= MAX_UNIQUE and c.type is not bool:
-                    uniques = [unicode(u) for u in list(stats['unique'])]
-                    self.output_file.write((u'\tValues: %s\n' % u', '.join(uniques)).encode('utf-8'))
+                    uniques = [six.text_type(u) for u in list(stats['unique'])]
+                    data = u'\tValues: %s\n' % ', '.join(uniques)
+                    write(data)
                 else:
-                    if c.type not in [unicode, bool]:
-                        self.output_file.write(u'\tMin: %s\n' % stats['min'])
-                        self.output_file.write(u'\tMax: %s\n' % stats['max'])
+                    if c.type not in [six.text_type, bool]:
+                        write('\tMin: %s\n' % stats['min'])
+                        write('\tMax: %s\n' % stats['max'])
 
                         if c.type in [int, float]:
-                            self.output_file.write(u'\tSum: %s\n' % stats['sum'])
-                            self.output_file.write(u'\tMean: %s\n' % stats['mean'])
-                            self.output_file.write(u'\tMedian: %s\n' % stats['median'])
-                            self.output_file.write(u'\tStandard Deviation: %s\n' % stats['stdev'])
+                            write('\tSum: %s\n' % stats['sum'])
+                            write('\tMean: %s\n' % stats['mean'])
+                            write('\tMedian: %s\n' % stats['median'])
+                            write('\tStandard Deviation: %s\n' % stats['stdev'])
 
-                    self.output_file.write(u'\tUnique values: %i\n' % len(stats['unique']))
+                    write('\tUnique values: %i\n' % len(stats['unique']))
 
                     if len(stats['unique']) != len(values):
-                        self.output_file.write(u'\t%i most frequent values:\n' % MAX_FREQ)
+                        write('\t%i most frequent values:\n' % MAX_FREQ)
                         for value, count in stats['freq']:
-                            self.output_file.write((u'\t\t%s:\t%s\n' % (unicode(value), count)).encode('utf-8'))
+                            write(('\t\t%s:\t%s\n' % (six.text_type(value), count)))
 
-                    if c.type == unicode:
-                        self.output_file.write(u'\tMax length: %i\n' % stats['len'])
+                    if c.type == six.text_type:
+                        write('\tMax length: %i\n' % stats['len'])
 
         if not operations:
-            self.output_file.write(u'\n')
-            self.output_file.write(u'Row count: %s\n' % tab.count_rows())
+            write('\n')
+            write('Row count: %s\n' % tab.count_rows())
 
     def get_min(self, c, values, stats):
         if c.type == NoneType:
@@ -183,7 +204,7 @@ class CSVStat(CSVKitUtility):
         return freq(values) 
 
     def get_len(self, c, values, stats):
-        if c.type != unicode:
+        if c.type != six.text_type:
             return None
 
         return c.max_length()
@@ -194,11 +215,11 @@ def median(l):
     """
     length = len(l)
 
-    if len(l) % 2 == 1:
-        return l[((length + 1) / 2) - 1]
+    if length % 2 == 1:
+        return l[(length + 1) // 2 - 1]
     else:
-        a = l[(length / 2) - 1]
-        b = l[length / 2]
+        a = l[(length // 2) - 1]
+        b = l[length // 2]
     return (float(a + b)) / 2  
 
 def freq(l, n=MAX_FREQ):
@@ -208,15 +229,16 @@ def freq(l, n=MAX_FREQ):
     count = {}
 
     for x in l:
-        s = unicode(x)
-        if count.has_key(s):
+        s = six.text_type(x)
+
+        if s in count:
             count[s] += 1
         else:
             count[s] = 1
 
     # This will iterate through dictionary, return N highest
     # values as (key, value) tuples.
-    top = nlargest(n, count.iteritems(), itemgetter(1))
+    top = nlargest(n, six.iteritems(count), itemgetter(1))
 
     return top
 

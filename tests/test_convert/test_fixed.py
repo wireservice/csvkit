@@ -1,5 +1,11 @@
-import unittest
-from cStringIO import StringIO
+#!/usr/bin/env python
+
+import six
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from csvkit.convert import fixed
 
@@ -15,7 +21,7 @@ class TestFixed(unittest.TestCase):
     def test_fixed_streaming(self):
         with open('examples/testfixed', 'r') as f:
             with open('examples/testfixed_schema.csv', 'r') as schema:
-                output = StringIO()
+                output = six.StringIO()
                 fixed.fixed2csv(f, schema, output=output)
                 output = output.getvalue()
         
@@ -68,7 +74,7 @@ class TestFixed(unittest.TestCase):
 foo,1,5
 bar,6,2
 baz,8,5"""
-        f = StringIO(schema)
+        f = six.StringIO(schema)
         parser = fixed.FixedWidthRowParser(f)
         self.assertEqual('foo',parser.headers[0])
         self.assertEqual('bar',parser.headers[1])

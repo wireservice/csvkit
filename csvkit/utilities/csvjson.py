@@ -1,7 +1,15 @@
 #!/usr/bin/env python
 
-import json
 import codecs
+
+try:
+    from collections import OrderedDict
+    import json
+except ImportError:
+    from ordereddict import OrderedDict
+    import simplejson as json
+
+import six
 
 from csvkit import CSVKitReader
 from csvkit.cli import CSVKitUtility, match_column_identifier
@@ -36,10 +44,13 @@ class CSVJSON(CSVKitUtility):
         if self.args.crs and not self.args.lat:
             self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
 
-        rows = CSVKitReader(self.args.file, **self.reader_kwargs)
-        column_names = rows.next()
+        rows = CSVKitReader(self.input_file, **self.reader_kwargs)
+        column_names = next(rows)
 
-        stream = codecs.getwriter('utf-8')(self.output_file)
+        if six.PY2:
+            stream = codecs.getwriter('utf-8')(self.output_file)
+        else:
+            stream = self.output_file 
 
         # GeoJSON
         if self.args.lat and self.args.lon:
@@ -58,15 +69,19 @@ class CSVJSON(CSVKitUtility):
                 id_column = None
 
             for row in rows:
-                feature = { 'type': 'Feature' }
-                properties = {}
+                feature = OrderedDict()
+                feature['type'] = 'Feature'
+                properties = OrderedDict()
                 geoid = None
                 lat = None
                 lon = None
 
                 for i, c in enumerate(row):
                     if i == lat_column:
-                        lat = float(c)
+                        try:
+                            lat = float(c)
+                        except ValueError:
+                            lat = None
 
                         if min_lat is None or lat < min_lat:
                             min_lat = lat
@@ -74,7 +89,10 @@ class CSVJSON(CSVKitUtility):
                         if max_lat is None or lat > max_lat:
                             max_lat = lat
                     elif i == lon_column:
-                        lon = float(c)
+                        try:
+                            lon = float(c)
+                        except ValueError:
+                            lon = None
 
                         if min_lon is None or lon < min_lon:
                             min_lon = lon
@@ -89,45 +107,68 @@ class CSVJSON(CSVKitUtility):
                 if id_column is not None:
                     feature['id'] = geoid
 
-                feature['geometry'] = {
-                    'type': 'Point',
-                    'coordinates': [lon, lat]
-                }
+                feature['geometry'] = OrderedDict([ 
+                    ('type', 'Point'),
+                    ('coordinates', [lon, lat])
+                ])
 
                 feature['properties'] = properties
 
                 features.append(feature)
 
-            output = {
-                'type': 'FeatureCollection',
-                'bbox': [min_lon, min_lat, max_lon, max_lat],
-                'features': features 
-            }
+            output = OrderedDict([
+                ('type', 'FeatureCollection'),
+                ('bbox', [min_lon, min_lat, max_lon, max_lat]),
+                ('features', features)
+            ])
 
             if self.args.crs:
-                output['crs'] = {
-                    'type': 'name',
-                    'properties': {
+                output['crs'] = OrderedDict([ 
+                    ('type', 'name'),
+                    ('properties', {
                         'name': self.args.crs
-                    }
-                }
+                    })
+                ])
         # Keyed JSON
         elif self.args.key:
-            output = {}
+            output = OrderedDict()
             
             for row in rows:
-                row_dict = dict(zip(column_names, row))
-                k = row_dict[self.args.key]
+                data = OrderedDict()
+
+                for i, column in enumerate(column_names):
+                    data[column] = row[i]
+
+                k = data[self.args.key]
 
                 if k in output:
-                    raise NonUniqueKeyColumnException('Value %s is not unique in the key column.' % unicode(k))
+                    raise NonUniqueKeyColumnException('Value %s is not unique in the key column.' % six.text_type(k))
 
-                output[k] = row_dict
+                output[k] = data
         # Boring JSON
         else:
-            output = [dict(zip(column_names, row)) for row in rows]
+            output = []
 
-        json.dump(output, stream, ensure_ascii=False, indent=self.args.indent, encoding='utf-8')
+            for row in rows:
+                data = OrderedDict()
+
+                for i, column in enumerate(column_names):
+                    try:
+                        data[column] = row[i]
+                    except IndexError:
+                        data[column] = None
+
+                output.append(data)
+
+        kwargs = {
+            'ensure_ascii': False,
+            'indent': self.args.indent,
+        }
+
+        if six.PY2:
+            kwargs['encoding'] = 'utf-8'
+
+        json.dump(output, stream, **kwargs)
 
 
 def launch_new_instance():

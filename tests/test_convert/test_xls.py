@@ -1,6 +1,13 @@
-import datetime
-import unittest
+#!/usr/bin/env python
 
+import datetime
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
+
+import six
 import xlrd
 from xlrd.xldate import xldate_from_date_tuple as xldate, xldate_from_time_tuple as xltime, xldate_from_datetime_tuple as xldatetime
 
@@ -14,7 +21,7 @@ class TestXLS(unittest.TestCase):
 
     def test_text_column(self):
         normal_values = xls.normalize_text([u'This', u'', u'text'])
-        self.assertEquals(normal_values, (unicode, [u'This', None, u'text']))
+        self.assertEquals(normal_values, (six.text_type, [u'This', None, u'text']))
 
     def test_numbers_column_integral(self):
         normal_values = xls.normalize_numbers([1.0, 418000000, -817, 0.0, ''])
@@ -30,7 +37,7 @@ class TestXLS(unittest.TestCase):
             xldate((1984, 2, 23), 0),
             xldate((1907, 12, 25), 0),
             ''], 0)
-        self.assertEquals(normal_values, (datetime.date, [datetime.date(2004, 06, 05), datetime.date(1984, 02, 23), datetime.date(1907, 12, 25), None]))
+        self.assertEquals(normal_values, (datetime.date, [datetime.date(2004, 6, 5), datetime.date(1984, 2, 23), datetime.date(1907, 12, 25), None]))
 
     def test_dates_column_times(self):
         normal_values = xls.normalize_dates([
@@ -38,7 +45,7 @@ class TestXLS(unittest.TestCase):
             xltime((4, 5, 37)),
             xltime((0, 0, 0)),
             ''], 0)
-        self.assertEquals(normal_values, (datetime.time, [datetime.time(14, 30, 00), datetime.time(4, 5, 37), datetime.time(0, 0, 0), None]))
+        self.assertEquals(normal_values, (datetime.time, [datetime.time(14, 30, 0), datetime.time(4, 5, 37), datetime.time(0, 0, 0), None]))
 
     def test_dates_column_datetimes(self):
         normal_values = xls.normalize_dates([

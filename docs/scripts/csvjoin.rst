@@ -41,10 +41,15 @@ Merges two or more CSV tables together using a method analogous to SQL JOIN oper
     Note that the join operation requires reading all files into memory. Don't try
     this on very large files.
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 Examples
 ========
 
-Join examples coming soon...
+::
+
+    csvjoin -c "ColumnKey,Column Key" --outer file1.csv file2.csv
+
+This command says you have two files to outer join, file1.csv and file2.csv. The key column in file1.csv is ColumnKey, the key column in file2.csv is Column Key.
+
 

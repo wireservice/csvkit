@@ -15,7 +15,7 @@ class CSVClean(CSVKitUtility):
             help='Do not create output files. Information about what would have been done will be printed to STDERR.')
 
     def main(self):
-        reader = CSVKitReader(self.args.file, **self.reader_kwargs)
+        reader = CSVKitReader(self.input_file, **self.reader_kwargs)
 
         if self.args.dryrun:
             checker = RowChecker(reader)
@@ -32,7 +32,7 @@ class CSVClean(CSVKitUtility):
             if checker.joins:
                 self.output_file.write('%i rows would have been joined/reduced to %i rows after eliminating expected internal line breaks.\n' % (checker.rows_joined, checker.joins))
         else:
-            base, ext = splitext(self.args.file.name)
+            base, ext = splitext(self.input_file.name)
 
             with open('%s_out.csv' % base,'w') as f:
                 clean_writer = CSVKitWriter(f, **self.writer_kwargs)

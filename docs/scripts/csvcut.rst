@@ -24,13 +24,17 @@ Filters and truncates CSV files. Like unix "cut" command, but for tabular data::
       -c COLUMNS, --columns COLUMNS
                             A comma separated list of column indices or names to
                             be extracted. Defaults to all columns.
-      -l, --linenumbers     Insert a column of line numbers at the front of the
-                            output. Useful when piping to grep or as a simple
-                            primary key.
+      -C NOT_COLUMNS, --not-columns NOT_COLUMNS
+                            A comma separated list of column indices or names to
+                            be excluded. Defaults to no columns.
+      -x, --delete-empty-rows
+                            After cutting, delete rows which are completely empty.
 
-Note that csvcut does not include row filtering, for this you should pipe data to :doc:`csvgrep`.
+See also: :doc:`../common_arguments`.
 
-Also see: :doc:`common_arguments`.
+.. note::
+
+    csvcut does not implement row filtering, for this you should pipe data to :doc:`csvgrep`.
 
 Examples
 ========
@@ -56,4 +60,8 @@ Extract the first and third columns::
 Extract columns named "TOTAL" and "State Name" (in that order)::
 
     $ csvcut -c TOTAL,"State Name" examples/realdata/FY09_EDU_Recipients_by_State.csv
+
+Add line numbers to a file, making no other changes::
+
+    $ csvcut -l examples/realdata/FY09_EDU_Recipients_by_State.csv
 

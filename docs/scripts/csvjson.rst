@@ -38,7 +38,7 @@ Converts a CSV file into JSON or GeoJSON (depending on flags)::
                             with GeoJSON output. Only valid if --lat and --lon are
                             also specified.
 
-Also see: :doc:`common_arguments`.
+See also: :doc:`../common_arguments`.
 
 Examples
 ========
