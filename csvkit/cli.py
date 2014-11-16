@@ -78,7 +78,14 @@ class CSVKitUtility(object):
         self._install_exception_handler()
 
         if output_file is None:
-            self.output_file = sys.stdout
+            # Use binary output when supported for PY3
+            # Note we can't always specify `.buffer`, because sys.stdout
+            # can be swapped out with `io.StringIO` (e.g. in tests)
+            # which does not support it.
+            if hasattr(sys.stdout, 'buffer'):
+                self.output_file = sys.stdout.buffer
+            else: 
+                self.output_file = sys.stdout
         else:
             self.output_file = output_file
 
