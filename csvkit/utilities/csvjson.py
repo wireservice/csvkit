@@ -31,7 +31,27 @@ class CSVJSON(CSVKitUtility):
         self.argparser.add_argument('--crs', dest='crs', type=str, default=None,
             help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
 
+        self.argparser.add_argument('--stream', dest='streamOutput', action='store_true',
+            help='Output JSON as a stream of newline-separated objects, rather than an as an array.')
+
     def main(self):
+        if six.PY2:
+            stream = codecs.getwriter('utf-8')(self.output_file)
+        else:
+            stream = self.output_file 
+        
+        json_kwargs = {
+            'ensure_ascii': False,
+            'indent': self.args.indent,
+        }
+
+        if six.PY2:
+            json_kwargs['encoding'] = 'utf-8'
+        
+        def dump_json (data,newline=False): 
+            json.dump(data, stream, **json_kwargs) 
+            if newline: stream.write("\n")
+            
         """
         Convert CSV to JSON. 
         """
@@ -43,14 +63,12 @@ class CSVJSON(CSVKitUtility):
 
         if self.args.crs and not self.args.lat:
             self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
+        
+        if self.args.streamOutput and (self.args.lat or self.args.lon or self.args.key):
+            self.argparser.error('--stream is only allowed if --lat, --lon and --key are not specified.')
 
         rows = CSVKitReader(self.input_file, **self.reader_kwargs)
         column_names = next(rows)
-
-        if six.PY2:
-            stream = codecs.getwriter('utf-8')(self.output_file)
-        else:
-            stream = self.output_file 
 
         # GeoJSON
         if self.args.lat and self.args.lon:
@@ -129,6 +147,7 @@ class CSVJSON(CSVKitUtility):
                         'name': self.args.crs
                     })
                 ])
+            dump_json(output)
         # Keyed JSON
         elif self.args.key:
             output = OrderedDict()
@@ -145,10 +164,10 @@ class CSVJSON(CSVKitUtility):
                     raise NonUniqueKeyColumnException('Value %s is not unique in the key column.' % six.text_type(k))
 
                 output[k] = data
+            dump_json(output)
         # Boring JSON
         else:
             output = []
-
             for row in rows:
                 data = OrderedDict()
 
@@ -157,18 +176,13 @@ class CSVJSON(CSVKitUtility):
                         data[column] = row[i]
                     except IndexError:
                         data[column] = None
+                if(self.args.streamOutput):
+                    dump_json(data,newline=True)
+                else:
+                    output.append(data)
+            if not self.args.streamOutput:
+                dump_json(output)
 
-                output.append(data)
-
-        kwargs = {
-            'ensure_ascii': False,
-            'indent': self.args.indent,
-        }
-
-        if six.PY2:
-            kwargs['encoding'] = 'utf-8'
-
-        json.dump(output, stream, **kwargs)
 
 
 def launch_new_instance():
