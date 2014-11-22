@@ -54,6 +54,7 @@ class SQL2CSV(CSVKitUtility):
 
         if not self.args.no_header_row:
             output.writerow(rows._metadata.keys)
+
         for row in rows:
             output.writerow(row)
 
