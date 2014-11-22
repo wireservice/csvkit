@@ -14,7 +14,7 @@ NoneType = type(None)
 
 MAX_UNIQUE = 5
 MAX_FREQ = 5
-OPERATIONS =('min', 'max', 'sum', 'mean', 'median', 'stdev', 'nulls', 'unique', 'freq', 'len')
+OPERATIONS =('min', 'max', 'sum', 'mean', 'median', 'stdev', 'nulls', 'unique', 'freq', 'len', 'round', 'quantile')
 
 class CSVStat(CSVKitUtility):
     description = 'Print descriptive statistics for each column in a CSV file.'
@@ -47,6 +47,8 @@ class CSVStat(CSVKitUtility):
             help='Only output max value length.')
         self.argparser.add_argument('--count', dest='count_only', action='store_true',
             help='Only output row count')
+        self.argparser.add_argument('--round', dest='round', action='store_true',
+            help='Drop irrelevant digits')
 
     def main(self):
         operations = [op for op in OPERATIONS if getattr(self.args, op + '_only')]
@@ -129,9 +131,10 @@ class CSVStat(CSVKitUtility):
                     self.output_file.write('\tUnique values: %i\n' % len(stats['unique']))
 
                     if len(stats['unique']) != len(values):
-                        self.output_file.write('\t%i most frequent values:\n' % MAX_FREQ)
-                        for value, count in stats['freq']:
-                            self.output_file.write(('\t\t%s:\t%s\n' % (six.text_type(value), count)))
+                        self.output_file.write('\t%i some percentile cutoffs:\n' % MAX_FREQ)
+                        self.output_file.write('1%', '\t', '10%', '\t', '30%', '\t', '50%', '\t', '70%', '\t', '90%', '\t', '99%', '\n')
+                        self.output_file.write('%s' % stats['quantile'])
+                        
 
                     if c.type == six.text_type:
                         self.output_file.write('\tMax length: %i\n' % stats['len'])
@@ -239,6 +242,19 @@ def freq(l, n=MAX_FREQ):
     top = nlargest(n, six.iteritems(count), itemgetter(1))
 
     return top
+
+import numpy
+def quantile(input, quantile):
+    """
+    To communicate the spread or distribution of the data.
+    """
+    
+    return numpy.percentile( a=input,
+                             q=[1,10,30,50,70,90,99],
+                             interpolation='linear'
+                             )
+
+
 
 
 def launch_new_instance():
