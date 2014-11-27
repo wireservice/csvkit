@@ -33,19 +33,18 @@ def parse_object(obj, path=''):
 
     return d
 
-def json2csv(f, key=None, **kwargs):
+def ndjson2csv(f, key=None, **kwargs):
     """
     Convert a JSON document into CSV format.
 
+    Supports both JSON and "Newline-delimited JSON".
+
     The top-level element of the input must be a list or a dictionary. If it is a dictionary, a key must be provided which is an item of the dictionary which contains a list.
     """
-    js = json.load(f, object_pairs_hook=OrderedDict)
+    first_line = f.readline()
 
-    if isinstance(js, dict):
-        if not key:
-            raise TypeError('When converting a JSON document with a top-level dictionary element, a key must be specified.')
-
-        js = js[key]
+    first_row = json.loads(first_line, object_pairs_hook=OrderedDict)
+    js = itertools.chain((first_row, ), (json.loads(l, object_pairs_hook=OrderedDict) for l in f))
 
     fields = []
     flat = []

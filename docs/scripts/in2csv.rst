@@ -31,7 +31,7 @@ The header line is required though the columns may be in any order::
       -f FORMAT, --format FORMAT
                             The format of the input file. If not specified will be
                             inferred from the file type. Supported formats: csv,
-                            dbf, fixed, geojson, json, xls, xlsx.
+                            dbf, fixed, geojson, json, ndjson, xls, xlsx.
       -s SCHEMA, --schema SCHEMA
                             Specifies a CSV-formatted schema file for converting
                             fixed-width files. See documentation for details.
@@ -47,7 +47,7 @@ See also: :doc:`../common_arguments`.
 
 .. note::
 
-    The "json" format supports both standard JSON as well as "newline delimited JSON", such as is output by the many streaming APIs.
+    The "ndjson" format refers to "newline delimited JSON", such as is output by the many streaming APIs.
 
 .. note::
 

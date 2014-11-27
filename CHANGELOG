@@ -1,6 +1,8 @@
 1.0.0
 -----
 
+* Add Antonio Lima to AUTHORS.
+* Add support for ndjson. (#329)
 * Add missing docs for csvcut -C. (#227)
 * Reorganize docs so TOC works better. (#339)
 * Render docs locally with RTD theme.
