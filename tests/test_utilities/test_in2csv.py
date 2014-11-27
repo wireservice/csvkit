@@ -61,3 +61,22 @@ class TestIn2CSV(unittest.TestCase):
         target_output = open('examples/testjson_converted.csv', 'r').read()
         self.assertEqual(output_file.getvalue(), target_output)
 
+    def test_convert_json_multiline(self):
+        args = ['examples/testjson_multiline.json']
+        output_file = six.StringIO()
+        
+        utility = In2CSV(args, output_file)
+        utility.main()
+        
+        target_output = open('examples/testjson_multiline_converted.csv', 'r').read()
+        self.assertEqual(output_file.getvalue(), target_output)
+
+    def test_convert_json_multiline_document(self):
+        args = ['examples/testjson_multiline_document.json']
+        output_file = six.StringIO()
+        
+        utility = In2CSV(args, output_file)
+        utility.main()
+        
+        target_output = open('examples/testjson_multiline_document_converted.csv', 'r').read()
+        self.assertEqual(output_file.getvalue(), target_output)
