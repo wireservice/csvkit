@@ -37,9 +37,13 @@ def json2csv(f, key=None, **kwargs):
     """
     Convert a JSON document into CSV format.
 
+    Supports both JSON and "Newline-delimited JSON".
+
     The top-level element of the input must be a list or a dictionary. If it is a dictionary, a key must be provided which is an item of the dictionary which contains a list.
     """
     first_line = f.readline()
+
+    # Test for newline delimited JSON
     try:
         first_row = json.loads(first_line, object_pairs_hook=OrderedDict)
         js = itertools.chain((first_row, ), (json.loads(l, object_pairs_hook=OrderedDict) for l in f))
@@ -58,6 +62,7 @@ def json2csv(f, key=None, **kwargs):
 
     for obj in js:
         flat.append(parse_object(obj)) 
+
         for key in obj.keys():
             if key not in fields:
                 fields.append(key)
