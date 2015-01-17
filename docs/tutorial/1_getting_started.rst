@@ -54,7 +54,7 @@ You should see a CSV version of the data dumped into your terminal. All csvkit u
 csvlook: data periscope
 =======================
 
-Now that we have some data, we probably want to get some idea of what's in it. We couldn't open it in Excel or Google Docs, but wouldn't it be nice if we could just take a look in the command line? Enter csvlook::
+Now that we have some data, we probably want to get some idea of what's in it. We could open it in Excel or Google Docs, but wouldn't it be nice if we could just take a look in the command line? Enter csvlook::
 
     $ csvlook data.csv
 
