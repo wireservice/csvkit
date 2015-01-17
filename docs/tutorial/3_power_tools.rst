@@ -83,7 +83,7 @@ Frequently large datasets are distributed in many small files. At some point you
 
     $ curl -L -O https://github.com/onyxfish/csvkit/raw/master/examples/realdata/ks_1033_data.csvstack
 
-Back in :doc:`1_getting_started`, we had used in2csv to convert our Nebraska data from XLSX to CSV. However, we named our output `data.csv` for simplicity at the time. Now that we are going to be stacking multiple states, we should re-convert our Nebraska using a file naming convention matching our Kansas data::
+Back in :doc:`1_getting_started`, we had used in2csv to convert our Nebraska data from XLSX to CSV. However, we named our output `data.csv` for simplicity at the time. Now that we are going to be stacking multiple states, we should re-convert our Nebraska data using a file naming convention matching our Kansas data::
 
     $ in2csv ne_1033_data.xlsx > ne_1033_data.csv
 
