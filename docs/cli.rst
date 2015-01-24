@@ -2,7 +2,7 @@
 Command-Line Usage
 ==================
 
-csvkit is comprised of a number of individual command line utilities that be loosely divided into a few major categories: Input, Processing, and Output. Documentation and examples for each utility are described on the following pages.
+csvkit is comprised of a number of individual command line utilities that can be loosely divided into a few major categories: Input, Processing, and Output. Documentation and examples for each utility are described on the following pages.
 
 Input
 =====
