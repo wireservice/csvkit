@@ -7,6 +7,7 @@ except ImportError:
 
 from csvkit import join
 
+
 class TestJoin(unittest.TestCase):
     def setUp(self):
         self.tab1 = [
@@ -80,3 +81,15 @@ class TestJoin(unittest.TestCase):
             [u'1', u'Chicago Reader', u'second', u'1', u'first', u'0'],
             [u'1', u'Chicago Reader', u'second', u'1', u'second', u'0'],
             [u'', u'', u'', u'4', u'only', u'0']])
+
+    def test_full_outer_join_no_duplicate_column(self):
+        self.maxDiff=1000
+        self.assertEqual(join.full_outer_join(self.tab1, 0, self.tab2, 0, no_duplicate_id_column=True), [
+            ['id', 'name', 'i_work_here', 'age', 'i_work_here'],
+            [u'1', u'Chicago Reader', u'first', u'first', u'0'],
+            [u'1', u'Chicago Reader', u'first', u'second', u'0'],
+            [u'2', u'Chicago Sun-Times', u'only', u'only', u'0', u'0'],
+            [u'3', u'Chicago Tribune', u'only', u'', u''],
+            [u'1', u'Chicago Reader', u'second', u'first', u'0'],
+            [u'1', u'Chicago Reader', u'second', u'second', u'0'],
+            [u'4', u'', u'', u'only', u'0']])

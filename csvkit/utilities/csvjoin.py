@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
-from csvkit import CSVKitReader, CSVKitWriter
-from csvkit import join
+from csvkit import CSVKitReader, CSVKitWriter, join
 from csvkit.cli import CSVKitUtility, match_column_identifier
+
 
 class CSVJoin(CSVKitUtility):
     description = 'Execute a SQL-like join to merge CSV files on a specified column or columns.'
     epilog = 'Note that the join operation requires reading all files into memory. Don\'t try this on very large files.'
     override_flags = ['f', 'H']
-    
+
     def add_arguments(self):
         self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
             help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
@@ -20,6 +20,9 @@ class CSVJoin(CSVKitUtility):
             help='Perform a left outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of left outer joins, starting at the left.')
         self.argparser.add_argument('--right', dest='right_join', action='store_true',
             help='Perform a right outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of right outer joins, starting at the right.')
+        self.argparser.add_argument('--no-duplicate', dest='no_duplicate', action='store_true',
+            help='When performing full outer join, prevent duplicate id columns.')
+
 
     def main(self):
         self.input_files = []
@@ -52,13 +55,13 @@ class CSVJoin(CSVKitUtility):
             f.close()
 
         join_column_ids = []
-        
+
         if self.args.columns:
             for i, t in enumerate(tables):
                 join_column_ids.append(match_column_identifier(t[0], join_column_names[i]))
 
         jointab = []
-        
+
         if self.args.left_join:
             # Left outer join
             jointab = tables[0]
@@ -79,7 +82,7 @@ class CSVJoin(CSVKitUtility):
             jointab = tables[0]
 
             for i, t in enumerate(tables[1:]):
-                jointab = join.full_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1])
+                jointab = join.full_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1], self.args.no_duplicate)
         else:
             if self.args.columns:
                 # Inner join
@@ -109,7 +112,6 @@ class CSVJoin(CSVKitUtility):
 def launch_new_instance():
     utility = CSVJoin()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
-
