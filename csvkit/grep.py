@@ -66,8 +66,14 @@ class FilteringCSVReader(six.Iterator):
             if self.any_match and test(row[idx]):
                 return not self.inverse # True
 
-            if not self.any_match and not test(row[idx]):
-                return self.inverse # False
+            """
+            Handle bad data files?
+            """
+            try:
+	            if not self.any_match and not test(row[idx]):
+	                return self.inverse # False
+            except:
+            	return self.inverse # False
 
         return not self.inverse # True
         
