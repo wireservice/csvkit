@@ -1,4 +1,4 @@
-1.0.0
+0.9.1
 -----
 
 * Add Antonio Lima to AUTHORS.
@@ -11,6 +11,7 @@
 * Add killer examples to doc index. (#328)
 * Reorganize doc index
 * Fix broken csvkit module documentation. (#327)
+* Fix version of openpyxl to work around encoding issue. (#391, #288)
 
 0.9.0
 -----
@@ -115,7 +116,7 @@
 * Optimize writing of eight bit codecs. (#175)
 * Created csvpy. (#44)
 * Support --not-columns for excluding columns. (#137)
-* Add Jan Schulz to AUTHORS file. 
+* Add Jan Schulz to AUTHORS file.
 * Add Windows scripts. (#111, #176)
 * csvjoin, csvsql and csvstack will no longer hold open all files. (#178)
 * Added Noah Hoffman to AUTHORS.
@@ -134,7 +135,7 @@
 * Add Gregory Temchenko to AUTHORS.
 * Add --no-create option to csvsql. (#148)
 * Add Anton Ian Sipos to AUTHORS.
-* Fix broken pipe errors. (#150) 
+* Fix broken pipe errors. (#150)
 
 0.4.3
 -----

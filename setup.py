@@ -6,7 +6,7 @@ from setuptools import setup
 install_requires = [
     'xlrd>=0.7.1',
     'sqlalchemy>=0.6.6',
-    'openpyxl>=2.0.3',
+    'openpyxl==2.2.0-b1',
     'six>=1.6.1',
     'python-dateutil==2.2'
 ]
@@ -21,7 +21,7 @@ if sys.version_info[0] == 2:
 
 setup(
     name='csvkit',
-    version='1.0.0',
+    version='0.9.1',
     description='A library of utilities for working with CSV, the king of tabular file formats.',
     long_description=open('README').read(),
     author='Christopher Groskopf',
