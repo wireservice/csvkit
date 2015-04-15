@@ -8,7 +8,7 @@ Description
 Filter tabular data to only those rows where certain columns contain a given value or match a regular expression::
 
     usage: csvgrep [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-e ENCODING] [-l] [-n] [-c COLUMNS] [-r]
+                   [-p ESCAPECHAR] [-e ENCODING] [-l] [-c COLUMNS] [-r]
                    [FILE] [PATTERN]
 
     Like the unix "grep" command, but for tabular data.
@@ -19,8 +19,6 @@ Filter tabular data to only those rows where certain columns contain a given val
 
     optional arguments:
       -h, --help            show this help message and exit
-      -n, --names           Display column names and indices from the input CSV
-                            and exit.
       -c COLUMNS, --columns COLUMNS
                             A comma separated list of column indices or names to
                             be searched.
