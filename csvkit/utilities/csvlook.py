@@ -5,17 +5,19 @@ import itertools
 import six
 
 from csvkit import CSVKitReader
-from csvkit.cli import CSVKitUtility 
+from csvkit.cli import CSVKitUtility
 from csvkit.headers import make_default_headers
 
 class CSVLook(CSVKitUtility):
     description = 'Render a CSV file in the console as a fixed-width table.'
 
     def add_arguments(self):
-        pass
+        self.argparser.add_argument('-w', '--wrap', dest='wrapwidth', type=int,
+            help='Columns wrapwidth (allows to view long fields in multilines).', default=60)
 
     def main(self):
         rows = CSVKitReader(self.input_file, **self.reader_kwargs)
+        max_chars = self.args.wrapwidth
 
         # Make a default header row if none exists
         if self.args.no_header_row:
@@ -42,15 +44,16 @@ class CSVLook(CSVKitUtility):
         # Insert the column names at the top
         rows.insert(0, column_names)
 
+        # Work out column widths
         widths = []
-
         for row in rows:
             for i, v in enumerate(row):
+                lv = min(len(v), max_chars)
                 try:
-                    if len(v) > widths[i]:
-                        widths[i] = len(v)
+                    if lv > widths[i]:
+                        widths[i] = lv
                 except IndexError:
-                    widths.append(len(v))
+                    widths.append(lv)
 
         # Dashes span each width with '+' character at intersection of
         # horizontal and vertical dividers.
@@ -59,14 +62,18 @@ class CSVLook(CSVKitUtility):
         self.output_file.write('%s\n' % divider)
 
         for i, row in enumerate(rows):
-            output = []
+            # Each row is made of inner rows because of text wrapping
+            row = [d or '' for d in row]
+            n_inner_rows = int(max([len(d)-1 for d in row]) / max_chars) + 1
+            inner_rows = [[d[j*max_chars:(j+1)*max_chars] for d in row]
+                    for j in range(n_inner_rows)]
 
-            for j, d in enumerate(row):
-                if d is None:
-                    d = ''
-                output.append(' %s ' % six.text_type(d).ljust(widths[j]))
+            for inner_row in inner_rows:
+                output = []
+                for j, d in enumerate(inner_row):
+                    output.append(' %s ' % six.text_type(d).ljust(widths[j]))
 
-            self.output_file.write('| %s |\n' % ('|'.join(output)))
+                self.output_file.write('| %s |\n' % ('|'.join(output)))
 
             if (i == 0 or i == len(rows) - 1):
                 self.output_file.write('%s\n' % divider)
@@ -74,7 +81,7 @@ class CSVLook(CSVKitUtility):
 def launch_new_instance():
     utility = CSVLook()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
 
