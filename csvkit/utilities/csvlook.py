@@ -12,7 +12,8 @@ class CSVLook(CSVKitUtility):
     description = 'Render a CSV file in the console as a fixed-width table.'
 
     def add_arguments(self):
-        pass
+        self.argparser.add_argument('--truncate', type=int, dest='truncate',
+            help='Truncate the output to the first n rows.')
 
     def main(self):
         rows = CSVKitReader(self.input_file, **self.reader_kwargs)
@@ -38,6 +39,9 @@ class CSVLook(CSVKitUtility):
 
         # Convert to normal list of rows
         rows = list(rows)
+
+        if self.args.truncate is not None:
+            rows = rows[:self.args.truncate]
 
         # Insert the column names at the top
         rows.insert(0, column_names)
