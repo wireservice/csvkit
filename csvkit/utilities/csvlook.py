@@ -12,7 +12,7 @@ class CSVLook(CSVKitUtility):
     description = 'Render a CSV file in the console as a fixed-width table.'
 
     def add_arguments(self):
-        self.argparser.add_argument('--truncate', type=int, dest='truncate',
+        self.argparser.add_argument('--truncate', '-T', type=int, dest='truncate',
             help='Truncate the output to the first n rows.')
 
     def main(self):
