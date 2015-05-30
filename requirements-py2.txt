@@ -12,4 +12,5 @@ unittest2==0.5.1
 six>=1.6.1
 ordereddict>=1.1
 simplejson>=3.6.3
+PyDrive==1.0.1
 sphinx_rtd_theme
