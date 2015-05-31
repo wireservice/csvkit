@@ -120,6 +120,10 @@ class CSVJSON(CSVKitUtility):
                     elif id_column is not None and i == id_column:
                         geoid = c
                     else:
+                        try:
+                            c = float(c)
+                        except:
+                            pass
                         properties[column_names[i]] = c
 
                 if id_column is not None:
