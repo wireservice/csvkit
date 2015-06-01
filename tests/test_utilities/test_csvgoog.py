@@ -11,6 +11,7 @@ try:
 except ImportError:
     import unittest
 
+from apiclient import errors
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
@@ -28,7 +29,6 @@ class TestCSVGoog(unittest.TestCase):
         input_file = six.StringIO(output_file.getvalue())
 
         url = next(input_file)
-        print(url)
         match = re.match(r'https://docs.google.com/spreadsheets/d/(.+?)/edit', url)
         self.assertIsNotNone(match)
 
@@ -56,5 +56,5 @@ class TestCSVGoog(unittest.TestCase):
         # attempt to delete file
         try:
             matching_file.auth.service.files().delete(fileId=matching_file['id']).execute()
-        except errors.HttpError, error:
-            print 'An error occurred: %s' % error
+        except (errors.HttpError) as error:
+            print('An error occurred: %s' % error)
