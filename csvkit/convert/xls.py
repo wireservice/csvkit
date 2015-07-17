@@ -101,7 +101,8 @@ NORMALIZERS = {
     xlrd.biffh.XL_CELL_TEXT: normalize_text,
     xlrd.biffh.XL_CELL_NUMBER: normalize_numbers,
     xlrd.biffh.XL_CELL_DATE: normalize_dates,
-    xlrd.biffh.XL_CELL_BOOLEAN: normalize_booleans
+    xlrd.biffh.XL_CELL_BOOLEAN: normalize_booleans,
+    xlrd.biffh.XL_CELL_ERROR: normalize_empty
 }
 
 def determine_column_type(types):
@@ -139,6 +140,9 @@ def xls2csv(f, **kwargs):
 
         values = sheet.col_values(i)[1:]
         types = sheet.col_types(i)[1:]
+
+        values = [value if type_ != xlrd.biffh.XL_CELL_ERROR else None
+                  for value, type_ in zip(values, types)]
 
         column_type = determine_column_type(types)
         t, normal_values = NORMALIZERS[column_type](values, datemode=book.datemode)
