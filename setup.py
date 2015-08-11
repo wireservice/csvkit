@@ -8,7 +8,7 @@ install_requires = [
     'sqlalchemy>=0.6.6',
     'openpyxl==2.2.0-b1',
     'six>=1.6.1',
-    'python-dateutil==2.2'
+    'python-dateutil==2.4.2'
 ]
 
 if sys.version_info < (2, 7):
