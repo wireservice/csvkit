@@ -32,7 +32,7 @@ Reorder columns::
 
     csvcut -c column_c,column_a data.csv > new.csv
 
-Find rows with matching ells::
+Find rows with matching cells::
 
     csvgrep -c phone_number -r 555-555-\d{4}" data.csv > matching.csv
 
