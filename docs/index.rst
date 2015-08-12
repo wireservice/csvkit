@@ -34,7 +34,7 @@ Reorder columns::
 
 Find rows with matching cells::
 
-    csvgrep -c phone_number -r 555-555-\d{4}" data.csv > matching.csv
+    csvgrep -c phone_number -r "555-555-\d{4}" data.csv > matching.csv
 
 Convert to JSON::
 
