@@ -62,14 +62,14 @@ def guess_format(filename):
         # No extension: assume fixed-width
         return 'fixed'
 
-    extension = filename[last_period + 1:]
+    extension = filename[last_period + 1:].lower()
 
     if extension == 'xls':
         return extension
     elif extension == 'xlsx':
         return extension
     elif extension in ['json', 'js']:
-        return 'json' 
+        return 'json'
     elif extension == 'csv':
         return extension
     elif extension == 'fixed':
@@ -78,4 +78,3 @@ def guess_format(filename):
         return extension
 
     return None
-
