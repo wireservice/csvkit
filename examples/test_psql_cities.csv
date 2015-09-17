@@ -1,0 +1,4 @@
+city,temp_lo,temp_hi,prcp,date
+San Francisco,46,50,0.25,1994-11-27
+San Francisco,43,57,0,1994-11-29
+Hayward,37,54,,1994-11-29

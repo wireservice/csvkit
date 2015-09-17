@@ -10,7 +10,7 @@ from csvkit.convert.ndjs import ndjson2csv
 from csvkit.convert.xls import xls2csv
 from csvkit.convert.xlsx import xlsx2csv
 
-SUPPORTED_FORMATS = ['fixed', 'xls', 'xlsx', 'csv', 'json', 'geojson', 'ndjson']
+SUPPORTED_FORMATS = ['fixed', 'xls', 'xlsx', 'csv', 'json', 'geojson', 'ndjson', 'psql']
 
 # DBF is supported for Python 2 only
 if six.PY2:
@@ -45,6 +45,8 @@ def convert(f, format, schema=None, key=None, **kwargs):
         return geojson2csv(f, **kwargs)
     elif format == 'csv':
         return csv2csv(f, **kwargs)
+    elif format == 'psql':
+        return psql2csv(f, **kwargs)
     elif format == 'dbf':
         if six.PY3:
             raise ValueError('format "dbf" is not supported forthis version of Python.')

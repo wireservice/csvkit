@@ -31,7 +31,7 @@ The header line is required though the columns may be in any order::
       -f FORMAT, --format FORMAT
                             The format of the input file. If not specified will be
                             inferred from the file type. Supported formats: csv,
-                            dbf, fixed, geojson, json, ndjson, xls, xlsx.
+                            dbf, fixed, geojson, json, ndjson, xls, xlsx, psql.
       -s SCHEMA, --schema SCHEMA
                             Specifies a CSV-formatted schema file for converting
                             fixed-width files. See documentation for details.
@@ -52,6 +52,10 @@ See also: :doc:`../common_arguments`.
 .. note::
 
     DBF format is only supported when running on Python 2.
+
+.. note::
+
+    The "psql" format refers to the ASCII table output of Postgres' ``psql`` command.
 
 Examples
 ========
