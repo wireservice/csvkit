@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-This module contains csvkit's superpowered replacement for the builtin :mod:`csv` module. For Python 2 users, the greatest improvement over the standard library full unicode support. Python 3's :mod:`csv` module supports unicode internally, so this module is provided primarily for compatability purposes.
+This module contains csvkit's superpowered replacement for the builtin :mod:`csv` module. For Python 2 users, the greatest improvement over the standard library full unicode support. Python 3's :mod:`csv` module supports unicode internally, so this module is provided primarily for compatibility purposes.
 
 * Python 2: :mod:`csvkit.py2`.
 * Python 3: :mod:`csvkit.py3`.
