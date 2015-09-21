@@ -91,7 +91,7 @@ Now let's stack these two data files::
 
     $ csvstack ne_1033_data.csv ks_1033_data.csv > region.csv
 
-Using csvstat we cansee that our ``region.csv`` contains both datasets::
+Using csvstat we can see that our ``region.csv`` contains both datasets::
 
     $ csvstat -c state,acquisition_cost region.csv
       1. state
