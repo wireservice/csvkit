@@ -58,9 +58,9 @@ Let's examine summary statistics for some selected columns from our data (rememb
 
 In this example the first column, ``county`` was identified as type "unicode" (text). We see that there are ``35`` counties represented in the dataset and that ``DOUGLAS`` is far and away the most frequently occuring. A quick Google search shows that there are ``93`` counties in Nebraska, so we know that either not every county received equipment or that the data is incomplete. We can also find out that Douglas county contains Omaha, the state's largest city by far.
 
-The ``acquisition_cost`` column is type "float" (number including a decimal). We see that the largest individual cost was ``412,000``. (Probably dollars, but let's not presume.) Total acquisition costs were ``5,438,254``. 
+The ``acquisition_cost`` column is type "float" (number including a decimal). We see that the largest individual cost was ``412,000``. (Probably dollars, but let's not presume.) Total acquisition costs were ``5,438,254``.
 
-Lastly, the ``ship_date`` column shows us that the earliest data is from ``1984`` and the latest from ``2054``. From this we know that there is invalid data for at least one value, since presumably the equipment being shipped does not include time travel devices. We may also note that an unusually large amount of equipment was shipped in April, 2013. 
+Lastly, the ``ship_date`` column shows us that the earliest data is from ``1984`` and the latest from ``2054``. From this we know that there is invalid data for at least one value, since presumably the equipment being shipped does not include time travel devices. We may also note that an unusually large amount of equipment was shipped in April, 2013.
 
 As a journalist, this quick glance at the data gave me a tremendous amount of information about the dataset. Although we have to be careful about assuming to much from this quick glance (always double-check the numbers!) it can be an invaluable way to familiarize yourself with a new dataset.
 
@@ -93,7 +93,7 @@ After reviewing the summary statistics you might wonder what equipment was recei
     |  LANCASTER | IMAGE INTENSIFIER,NIGHT VISION | 6800        |
     |------------+--------------------------------+-------------|
 
-``LANCASTER`` county contains Lincoln, Nebraska, the capital of the state and it's second-largest city. The ``-m`` flag means "match" and will find text anywhere in a given column--in this case the ``county`` column. For those who need a more powerful search you can also use ``-r`` to search for a regular expression.
+``LANCASTER`` county contains Lincoln, Nebraska, the capital of the state and its second-largest city. The ``-m`` flag means "match" and will find text anywhere in a given column--in this case the ``county`` column. For those who need a more powerful search you can also use ``-r`` to search for a regular expression.
 
 csvsort: order matters
 ======================
@@ -131,5 +131,4 @@ What commands would you use to figure out if other counties also recieved large 
 Summing up
 ==========
 
-At this point you should be able to use csvkit to investigate the basic properties of a dataset. If you understand this section, you should be ready to move onto :doc:`3_power_tools`. 
-
+At this point you should be able to use csvkit to investigate the basic properties of a dataset. If you understand this section, you should be ready to move onto :doc:`3_power_tools`.
