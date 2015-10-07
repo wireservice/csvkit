@@ -1,6 +1,7 @@
 0.9.2
 -----
 
+* Add support for custom sqlalchemy dialects.
 
 
 0.9.1
