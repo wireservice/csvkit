@@ -12,7 +12,7 @@ class CSVLook(CSVKitUtility):
     description = 'Render a CSV file in the console as a fixed-width table.'
 
     def add_arguments(self):
-        self.argparser.add_argument('--cutoff', type=int, dest='cutoff',
+        self.argparser.add_argument('-c', '--cutoff', type=int, dest='cutoff',
             help='Cut off all columns after this number of characters. Intended to improve readability for CSV files with very long text in columns.')
 
     def main(self):
