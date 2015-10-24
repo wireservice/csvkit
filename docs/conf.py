@@ -20,7 +20,7 @@ extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx']
 autodoc_member_order = 'bysource'
 
 intersphinx_mapping = {
-    'python': ('http://docs.python.org/2.7', None)
+    'python': ('http://docs.python.org/3.5/', None)
 }
 
 # Add any paths that contain templates here, relative to this directory.
@@ -34,16 +34,16 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'csvkit'
-copyright = u'2014, Christopher Groskopf'
+copyright = u'2015, Christopher Groskopf'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '0.9.2'
+version = '1.0.0'
 # The full version, including alpha/beta/rc tags.
-release = '0.9.2'
+release = '1.0.0'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

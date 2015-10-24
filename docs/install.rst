@@ -5,11 +5,9 @@ Installation
 Users
 =====
 
-csvkit is works on Python versions 2.6, 2.7, 3.3 and 3.4, as well as `PyPy <http://pypy.org/>`_. It is supported on OSX and Linux. It also works--but is tested less frequently--on Windows.
+If you only want to use agate, install it this way::
 
-Installing csvkit is simple::
-
-    pip install csvkit
+    pip install agate
 
 .. note::
 
@@ -17,7 +15,7 @@ Installing csvkit is simple::
 
         sudo apt-get install python-dev python-pip python-setuptools build-essential
 
-.. note:: 
+.. note::
 
     If the installation appears to be successful but running the tools fails, try updating your version of Python setuptools::
 
@@ -27,6 +25,10 @@ Installing csvkit is simple::
 .. note::
 
     If you are using Python2 and have a recent version of pip, you may need to run pip with the additional arguments :code:`--allow-external argparse`.
+
+.. note::
+
+    Need more speed? If you're running Python 2.6 or 2.7 or you can :code:`pip install cdecimal` for a significant speed boost. This isn't installed automatically because it can create additional complications.
 
 Developers
 ==========
@@ -48,3 +50,13 @@ If you are a developer that also wants to hack on csvkit, install it this way::
 
 Before writing any code be sure to read the documentation for :doc:`contributing`.
 
+Supported platforms
+-------------------
+
+csvkit supports the following versions of Python:
+
+* Python 2.6+
+* Python 3.3+
+* `PyPy <http://pypy.org/>`_
+
+It is tested on OSX, but has been used successfully by others on both Linux and Windows.
