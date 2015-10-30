@@ -3,9 +3,8 @@
 from collections import namedtuple
 from codecs import iterdecode
 
+import agate
 import six
-
-from csvkit import CSVKitReader, CSVKitWriter
 
 def fixed2csv(f, schema, output=None, **kwargs):
     """
@@ -34,7 +33,7 @@ def fixed2csv(f, schema, output=None, **kwargs):
     except KeyError:
         encoding = None
 
-    writer = CSVKitWriter(output)
+    writer = agate.writer(output)
 
     reader = FixedWidthReader(f, schema, encoding=encoding)
     writer.writerows(reader)
@@ -79,7 +78,7 @@ class FixedWidthRowParser(object):
     def __init__(self, schema):
         self.fields = [] # A list of FixedWidthFields
 
-        schema_reader = CSVKitReader(schema)
+        schema_reader = agate.reader(schema)
         schema_decoder = SchemaDecoder(next(schema_reader))
 
         for i,row in enumerate(schema_reader):

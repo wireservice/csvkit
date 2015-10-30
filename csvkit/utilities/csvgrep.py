@@ -4,7 +4,8 @@ import re
 import sys
 from argparse import FileType
 
-from csvkit import CSVKitReader, CSVKitWriter
+import agate
+
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 from csvkit.grep import FilteringCSVReader
 
@@ -37,7 +38,7 @@ class CSVGrep(CSVKitUtility):
         if self.args.regex is None and self.args.pattern is None and self.args.matchfile is None:
             self.argparser.error('One of -r, -m or -f must be specified, unless using the -n option.')
 
-        rows = CSVKitReader(self.input_file, **self.reader_kwargs)
+        rows = agate.reader(self.input_file, **self.reader_kwargs)
         column_names = next(rows)
 
         column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based)
@@ -52,7 +53,7 @@ class CSVGrep(CSVKitUtility):
 
         patterns = dict((c, pattern) for c in column_ids)
 
-        output = CSVKitWriter(self.output_file, **self.writer_kwargs)
+        output = agate.writer(self.output_file, **self.writer_kwargs)
         output.writerow(column_names)
 
         filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse=self.args.inverse)
@@ -66,4 +67,3 @@ def launch_new_instance():
 
 if __name__ == "__main__":
     launch_new_instance()
-

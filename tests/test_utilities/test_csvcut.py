@@ -8,7 +8,8 @@ try:
 except ImportError:
     import unittest
 
-from csvkit import CSVKitReader
+import agate
+
 from csvkit.utilities.csvcut import CSVCut
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
@@ -21,7 +22,7 @@ class TestCSVCut(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['a', 'c'])
         self.assertEqual(next(reader), ['1', '3'])
@@ -34,7 +35,7 @@ class TestCSVCut(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['a', 'c'])
         self.assertEqual(next(reader), ['1', '3'])
@@ -61,7 +62,7 @@ class TestCSVCut(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['a', 'c'])
         self.assertEqual(next(reader), ['1', '3'])
@@ -74,7 +75,7 @@ class TestCSVCut(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['a', 'c'])
         self.assertEqual(next(reader), ['1', '3'])
@@ -87,7 +88,7 @@ class TestCSVCut(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['b'])
         self.assertEqual(next(reader), ['2'])
@@ -100,7 +101,7 @@ class TestCSVCut(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['a'])
         self.assertEqual(next(reader), ['1'])
@@ -127,8 +128,7 @@ class TestCSVCut(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['column2'])
         self.assertEqual(next(reader), ['2'])
-

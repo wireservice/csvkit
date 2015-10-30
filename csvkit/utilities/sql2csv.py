@@ -3,7 +3,8 @@
 from argparse import FileType
 import sys
 
-from csvkit import CSVKitWriter
+import agate
+
 from csvkit import sql
 from csvkit.cli import CSVKitUtility
 
@@ -50,7 +51,7 @@ class SQL2CSV(CSVKitUtility):
                 query += line
 
         rows = conn.execute(query)
-        output = CSVKitWriter(self.output_file, **self.writer_kwargs)
+        output = agate.writer(self.output_file, **self.writer_kwargs)
 
         if not self.args.no_header_row:
             output.writerow(rows._metadata.keys)

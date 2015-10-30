@@ -9,9 +9,9 @@ except ImportError:
     from ordereddict import OrderedDict
     import simplejson as json
 
+import agate
 import six
 
-from csvkit import CSVKitReader
 from csvkit.cli import CSVKitUtility, match_column_identifier
 from csvkit.exceptions import NonUniqueKeyColumnException
 
@@ -38,8 +38,8 @@ class CSVJSON(CSVKitUtility):
         if six.PY2:
             stream = codecs.getwriter('utf-8')(self.output_file)
         else:
-            stream = self.output_file 
-        
+            stream = self.output_file
+
         json_kwargs = {
             'ensure_ascii': False,
             'indent': self.args.indent,
@@ -47,13 +47,13 @@ class CSVJSON(CSVKitUtility):
 
         if six.PY2:
             json_kwargs['encoding'] = 'utf-8'
-        
-        def dump_json (data,newline=False): 
-            json.dump(data, stream, **json_kwargs) 
+
+        def dump_json (data,newline=False):
+            json.dump(data, stream, **json_kwargs)
             if newline: stream.write("\n")
-            
+
         """
-        Convert CSV to JSON. 
+        Convert CSV to JSON.
         """
         if self.args.lat and not self.args.lon:
             self.argparser.error('--lon is required whenever --lat is specified.')
@@ -63,11 +63,11 @@ class CSVJSON(CSVKitUtility):
 
         if self.args.crs and not self.args.lat:
             self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
-        
+
         if self.args.streamOutput and (self.args.lat or self.args.lon or self.args.key):
             self.argparser.error('--stream is only allowed if --lat, --lon and --key are not specified.')
 
-        rows = CSVKitReader(self.input_file, **self.reader_kwargs)
+        rows = agate.reader(self.input_file, **self.reader_kwargs)
         column_names = next(rows)
 
         # GeoJSON
@@ -125,7 +125,7 @@ class CSVJSON(CSVKitUtility):
                 if id_column is not None:
                     feature['id'] = geoid
 
-                feature['geometry'] = OrderedDict([ 
+                feature['geometry'] = OrderedDict([
                     ('type', 'Point'),
                     ('coordinates', [lon, lat])
                 ])
@@ -141,7 +141,7 @@ class CSVJSON(CSVKitUtility):
             ])
 
             if self.args.crs:
-                output['crs'] = OrderedDict([ 
+                output['crs'] = OrderedDict([
                     ('type', 'name'),
                     ('properties', {
                         'name': self.args.crs
@@ -151,7 +151,7 @@ class CSVJSON(CSVKitUtility):
         # Keyed JSON
         elif self.args.key:
             output = OrderedDict()
-            
+
             for row in rows:
                 data = OrderedDict()
 
@@ -188,7 +188,6 @@ class CSVJSON(CSVKitUtility):
 def launch_new_instance():
     utility = CSVJSON()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
-

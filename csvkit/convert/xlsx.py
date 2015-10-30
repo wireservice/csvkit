@@ -2,10 +2,10 @@
 
 import datetime
 
+import agate
 from openpyxl.reader.excel import load_workbook
 import six
 
-from csvkit import CSVKitWriter 
 from csvkit.typeinference import NULL_TIME
 
 def normalize_datetime(dt):
@@ -46,7 +46,7 @@ def xlsx2csv(f, output=None, **kwargs):
     if not streaming:
         output = six.StringIO()
 
-    writer = CSVKitWriter(output)
+    writer = agate.writer(output)
 
     book = load_workbook(f, use_iterators=True, data_only=True)
 
@@ -57,7 +57,7 @@ def xlsx2csv(f, output=None, **kwargs):
 
     for i, row in enumerate(sheet.iter_rows()):
         if i == 0:
-            writer.writerow([c.value for c in row]) 
+            writer.writerow([c.value for c in row])
             continue
 
         out_row = []
@@ -66,9 +66,9 @@ def xlsx2csv(f, output=None, **kwargs):
             value = c.value
 
             if value.__class__ is datetime.datetime:
-                # Handle default XLSX date as 00:00 time 
+                # Handle default XLSX date as 00:00 time
                 if value.date() == datetime.date(1904, 1, 1) and not has_date_elements(c):
-                    value = value.time() 
+                    value = value.time()
 
                     value = normalize_datetime(value)
                 elif value.time() == NULL_TIME:
@@ -92,4 +92,3 @@ def xlsx2csv(f, output=None, **kwargs):
 
     # Return empty string when streaming
     return ''
-

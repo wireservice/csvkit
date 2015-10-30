@@ -7,7 +7,8 @@ try:
 except ImportError:
     import unittest
 
-from csvkit import CSVKitReader
+import agate
+
 from csvkit.utilities.csvstack import CSVStack
 
 class TestCSVStack(unittest.TestCase):
@@ -21,7 +22,7 @@ class TestCSVStack(unittest.TestCase):
 
         # verify the stacked file's contents
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['foo', 'a', 'b', 'c'])
         self.assertEqual(next(reader)[0], 'asd')
@@ -37,7 +38,7 @@ class TestCSVStack(unittest.TestCase):
 
         # verify the stacked file's contents
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['path', 'a', 'b', 'c'])
         self.assertEqual(next(reader)[0], 'dummy.csv')
@@ -53,7 +54,7 @@ class TestCSVStack(unittest.TestCase):
 
         # verify the stacked file's contents
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['a', 'b', 'c'])
         self.assertEqual(next(reader)[0], '1')
@@ -69,7 +70,7 @@ class TestCSVStack(unittest.TestCase):
 
         # verify the stacked file's contents
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader)[0], 'column1')
         self.assertEqual(next(reader)[0], '1')

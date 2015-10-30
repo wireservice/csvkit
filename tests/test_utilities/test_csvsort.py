@@ -8,7 +8,8 @@ try:
 except ImportError:
     import unittest
 
-from csvkit import CSVKitReader
+import agate
+
 from csvkit.utilities.csvsort import CSVSort
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
@@ -21,10 +22,10 @@ class TestCSVSort(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         test_order = [u'text', u'Unicode! Σ', u'This row has blanks', u'Chicago Tribune', u'Chicago Sun-Times', u'Chicago Reader']
-        new_order = [six.text_type(r[0]) for r in reader] 
+        new_order = [six.text_type(r[0]) for r in reader]
 
         self.assertEqual(test_order, new_order)
 
@@ -36,10 +37,10 @@ class TestCSVSort(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         test_order = [u'text', u'This row has blanks', u'Unicode! Σ', u'Chicago Tribune', u'Chicago Sun-Times', u'Chicago Reader']
-        new_order = [six.text_type(r[0]) for r in reader] 
+        new_order = [six.text_type(r[0]) for r in reader]
 
         self.assertEqual(test_order, new_order)
 
@@ -65,10 +66,10 @@ class TestCSVSort(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         test_order = ['column1', '4', '1']
-        new_order = [six.text_type(r[0]) for r in reader] 
+        new_order = [six.text_type(r[0]) for r in reader]
 
         self.assertEqual(test_order, new_order)
 
@@ -80,10 +81,10 @@ class TestCSVSort(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         test_order = [u'a', u'192', u'27', u'3']
-        new_order = [six.text_type(r[0]) for r in reader] 
+        new_order = [six.text_type(r[0]) for r in reader]
 
         self.assertEqual(test_order, new_order)
 
@@ -96,10 +97,9 @@ class TestCSVSort(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         test_order = ['b', '', '1', '2']
-        new_order = [six.text_type(r[1]) for r in reader] 
+        new_order = [six.text_type(r[1]) for r in reader]
 
         self.assertEqual(test_order, new_order)
-

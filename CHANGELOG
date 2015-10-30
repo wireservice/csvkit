@@ -1,6 +1,8 @@
 1.0.0
 -----
 
+* "import csvkit as csv" will now defer to agate readers/writers.
+* CSVKitReader, CSVKitWriter, etc. have all been removed. Use agate equivalents.
 * in2csv "csv itself" conversions now use agate.Table.
 * in2csv now correctly guesses format when file has an uppercase extension.
 

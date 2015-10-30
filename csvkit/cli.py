@@ -7,9 +7,9 @@ import gzip
 import os.path
 import sys
 
+import agate
 import six
 
-from csvkit import CSVKitReader
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
 def lazy_opener(fn):
@@ -117,7 +117,7 @@ class CSVKitUtility(object):
         """
         Prepare a base argparse argument parser so that flags are consistent across different shell command tools.
         If you want to constrain which common args are present, you can pass a string for 'omitflags'. Any argument
-        whose single-letter form is contained in 'omitflags' will be left out of the configured parser. Use 'f' for 
+        whose single-letter form is contained in 'omitflags' will be left out of the configured parser. Use 'f' for
         file.
         """
         self.argparser = argparse.ArgumentParser(description=self.description, epilog=self.epilog)
@@ -169,7 +169,7 @@ class CSVKitUtility(object):
         if 'zero' not in self.override_flags:
             self.argparser.add_argument('--zero', dest='zero_based', action='store_true',
                             help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
-        
+
     def _open_input_file(self, path):
         """
         Open the input file specified on the command line.
@@ -278,7 +278,7 @@ class CSVKitUtility(object):
         except:
             zero_based=False
 
-        rows = CSVKitReader(f, **self.reader_kwargs)
+        rows = agate.reader(f, **self.reader_kwargs)
         column_names = next(rows)
 
         for i, c in enumerate(column_names):
@@ -317,15 +317,15 @@ def match_column_identifier(column_names, c, zero_based=False):
 def parse_column_identifiers(ids, column_names, zero_based=False, excluded_columns=None):
     """
     Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
-    Ranges of integers can be specified with two integers separated by a '-' or ':' character. Ranges of 
+    Ranges of integers can be specified with two integers separated by a '-' or ':' character. Ranges of
     non-integers (e.g. column names) are not supported.
-    Note: Column indices are 1-based. 
+    Note: Column indices are 1-based.
     """
     columns = []
 
-    # If not specified, start with all columns 
+    # If not specified, start with all columns
     if not ids:
-        columns = range(len(column_names))        
+        columns = range(len(column_names))
 
     if columns and not excluded_columns:
         return columns
@@ -343,7 +343,7 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
                     a,b = c.split('-',1)
                 else:
                     raise
-                
+
                 try:
                     if a:
                         a = int(a)
@@ -353,15 +353,15 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
                         b = int(b) + 1
                     else:
                         b = len(column_names) + 1
-                        
+
                 except ValueError:
                     raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
-                
+
                 for x in range(a,b):
                     columns.append(match_column_identifier(column_names, x, zero_based))
 
     excludes = []
-    
+
     if excluded_columns:
         for c in excluded_columns.split(','):
             c = c.strip()
@@ -375,7 +375,7 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
                     a,b = c.split('-',1)
                 else:
                     raise
-                
+
                 try:
                     if a:
                         a = int(a)
@@ -385,12 +385,11 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
                         b = int(b) + 1
                     else:
                         b = len(column_names)
-                        
+
                 except ValueError:
                     raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
-                
+
                 for x in range(a,b):
                     excludes.append(match_column_identifier(column_names, x, zero_based))
 
     return [c for c in columns if c not in excludes]
-

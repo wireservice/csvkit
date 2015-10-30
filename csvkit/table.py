@@ -5,7 +5,7 @@ import itertools
 
 import six
 
-from csvkit import CSVKitReader, CSVKitWriter
+from csvkit import reader, writer
 from csvkit import sniffer
 from csvkit import typeinference
 from csvkit.cli import parse_column_identifiers
@@ -24,7 +24,7 @@ class Column(list):
     def __init__(self, order, name, l, normal_type=InvalidType, blanks_as_nulls=True, infer_types=True):
         """
         Construct a column from a sequence of values.
-        
+
         If normal_type is not InvalidType, inference will be skipped and values assumed to have already been normalized.
         If infer_types is False, type inference will be skipped and the type assumed to be unicode.
         """
@@ -32,16 +32,16 @@ class Column(list):
             t = normal_type
             data = l
         elif not infer_types:
-            t = six.text_type 
+            t = six.text_type
             data = l
         else:
             t, data = typeinference.normalize_column_type(l, blanks_as_nulls=blanks_as_nulls)
-        
+
         list.__init__(self, data)
         self.order = order
-        self.name = name or '_unnamed' # empty column names don't make sense 
+        self.name = name or '_unnamed' # empty column names don't make sense
         self.type = t
-        
+
     def __str__(self):
         return str(self.__unicode__())
 
@@ -75,7 +75,7 @@ class Column(list):
     def max_length(self):
         """
         Compute maximum length of data in this column.
-        
+
         Returns 0 if the column does not of type ``unicode``.
         """
         l = 0
@@ -207,11 +207,11 @@ class Table(list):
             kwargs['dialect'] = sniffer.sniff_dialect(contents[:snifflimit])
 
         f = six.StringIO(contents)
-        rows = CSVKitReader(f, **kwargs)
+        rows = reader(f, **kwargs)
 
         if no_header_row:
             # Peek at a row to infer column names from
-            row = next(rows) 
+            row = next(rows)
 
             headers = make_default_headers(len(row))
             column_ids = parse_column_identifiers(column_ids, headers, zero_based)
@@ -222,13 +222,13 @@ class Table(list):
             rows = itertools.chain([row], rows)
         else:
             headers = next(rows)
-            
+
             if column_ids:
                 column_ids = parse_column_identifiers(column_ids, headers, zero_based)
                 headers = [headers[c] for c in column_ids]
             else:
                 column_ids = range(len(headers))
-        
+
             data_columns = [[] for c in headers]
 
         width = len(data_columns)
@@ -272,7 +272,7 @@ class Table(list):
                 else:
                     out_columns.append(c)
 
-            # Convert columns to rows 
+            # Convert columns to rows
             return list(zip(*out_columns))
         else:
             return list(zip(*self))
@@ -286,6 +286,5 @@ class Table(list):
         # Insert header row
         rows.insert(0, self.headers())
 
-        writer = CSVKitWriter(output, **kwargs)
-        writer.writerows(rows)
-
+        csv_writer = writer(output, **kwargs)
+        csv_writer.writerows(rows)
