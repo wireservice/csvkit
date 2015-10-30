@@ -2,17 +2,17 @@
 
 import six
 
-from csvkit import table
+import agate
 
 def csv2csv(f, **kwargs):
     """
     "Convert" a CSV into a new CSV by normalizing types and correcting for other anomalies.
     """
-    tab = table.Table.from_csv(f, **kwargs) 
+    table = agate.Table.from_csv(f, **kwargs)
 
-    o = six.StringIO()
-    output = tab.to_csv(o)
-    output = o.getvalue()
-    o.close()
+    output = six.StringIO()
+    table.to_csv(output)
+    result = output.getvalue()
+    output.close()
 
-    return output
+    return result

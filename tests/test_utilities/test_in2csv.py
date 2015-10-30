@@ -13,20 +13,20 @@ class TestIn2CSV(unittest.TestCase):
     def test_convert_xls(self):
         args = ['-f', 'xls', 'examples/test.xls']
         output_file = six.StringIO()
-        
+
         utility = In2CSV(args, output_file)
         utility.main()
-        
+
         target_output = open('examples/testxls_converted.csv', 'r').read()
         self.assertEqual(output_file.getvalue(), target_output)
 
     def test_convert_xlsx(self):
         args = ['-f', 'xlsx', 'examples/test.xlsx']
         output_file = six.StringIO()
-        
+
         utility = In2CSV(args, output_file)
         utility.main()
-        
+
         target_output = open('examples/testxlsx_converted.csv', 'r').read()
         self.assertEqual(output_file.getvalue(), target_output)
 
@@ -49,25 +49,24 @@ class TestIn2CSV(unittest.TestCase):
 
         output = output_file.getvalue()
 
-        self.assertTrue('column1,column2,column3' in output)
-      
+        self.assertTrue('A,B,C' in output)
+
     def test_convert_json(self):
         args = ['examples/testjson.json']
         output_file = six.StringIO()
-        
+
         utility = In2CSV(args, output_file)
         utility.main()
-        
+
         target_output = open('examples/testjson_converted.csv', 'r').read()
         self.assertEqual(output_file.getvalue(), target_output)
 
     def test_convert_ndjson(self):
         args = ['examples/testjson_multiline.json', '-f', 'ndjson']
         output_file = six.StringIO()
-        
+
         utility = In2CSV(args, output_file)
         utility.main()
-        
+
         target_output = open('examples/testjson_multiline_converted.csv', 'r').read()
         self.assertEqual(output_file.getvalue(), target_output)
-
