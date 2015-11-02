@@ -32,6 +32,7 @@ Output (and Analysis)
 .. toctree::
     :maxdepth: 1 
 
+    scripts/csvdiff
     scripts/csvformat
     scripts/csvjson
     scripts/csvlook
