@@ -11,6 +11,39 @@ from csvkit import CSVKitReader
 from csvkit.utilities.csvstack import CSVStack
 
 class TestCSVStack(unittest.TestCase):
+    def test_single_file_stack(self):
+        # stacking single file works fine
+        args = ['examples/dummy.csv']
+
+        output_file = six.StringIO()
+        utility = CSVStack(args, output_file)
+
+        utility.main()
+
+        # verify the stacked file's contents
+        input_file = six.StringIO(output_file.getvalue())
+        reader = CSVKitReader(input_file)
+
+        self.assertEqual(next(reader), ['a', 'b', 'c'])
+        self.assertEqual(next(reader)[0], '1')
+
+    def test_multiple_file_stack(self):
+        # stacking multiple files works fine
+        args = ['examples/dummy.csv', 'examples/dummy2.csv']
+
+        output_file = six.StringIO()
+        utility = CSVStack(args, output_file)
+
+        utility.main()
+
+        # verify the stacked file's contents
+        input_file = six.StringIO(output_file.getvalue())
+        reader = CSVKitReader(input_file)
+
+        self.assertEqual(next(reader), ['a', 'b', 'c'])
+        self.assertEqual(next(reader)[0], '1')
+        self.assertEqual(next(reader)[0], '1')
+
     def test_explicit_grouping(self):
         # stack two CSV files
         args = ['--groups', 'asd,sdf', '-n', 'foo', 'examples/dummy.csv', 'examples/dummy2.csv']
