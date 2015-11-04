@@ -39,7 +39,7 @@ class Column(list):
         
         list.__init__(self, data)
         self.order = order
-        self.name = name or '_unnamed' # empty column names don't make sense 
+        self.name = str(name) or '_unnamed' # empty column names don't make sense 
         self.type = t
         
     def __str__(self):
