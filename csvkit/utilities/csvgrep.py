@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import itertools
 import re
 import sys
 from argparse import FileType
@@ -7,10 +8,10 @@ from argparse import FileType
 from csvkit import CSVKitReader, CSVKitWriter
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 from csvkit.grep import FilteringCSVReader
+from csvkit.headers import make_default_headers
 
 class CSVGrep(CSVKitUtility):
     description = 'Search CSV files. Like the unix "grep" command, but for tabular data.'
-    override_flags = ['H']
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
@@ -38,7 +39,16 @@ class CSVGrep(CSVKitUtility):
             self.argparser.error('One of -r, -m or -f must be specified, unless using the -n option.')
 
         rows = CSVKitReader(self.input_file, **self.reader_kwargs)
-        column_names = next(rows)
+
+        if self.args.no_header_row:
+            row = next(rows)
+
+            column_names = make_default_headers(len(row))
+
+            # Put the row back on top
+            rows = itertools.chain([row], rows)
+        else:
+            column_names = next(rows)
 
         column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based)
 
