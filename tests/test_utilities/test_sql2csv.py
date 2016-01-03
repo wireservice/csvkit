@@ -13,7 +13,6 @@ from csvkit.utilities.sql2csv import SQL2CSV
 from csvkit.utilities.csvsql import CSVSQL
 from tests.utils import stdin_as_string
 
-@unittest.skip("hangs")
 class TestSQL2CSV(unittest.TestCase):
     def setUp(self):
         self.db_file = "foo.db"
