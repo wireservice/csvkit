@@ -10,3 +10,12 @@ docs/_build
 .coverage
 .tox
 cover
+
+## IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+
+/out/

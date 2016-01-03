@@ -23,17 +23,21 @@ def parse_object(obj, path=''):
     elif isinstance(obj, (list, tuple)):
         iterator = enumerate(obj)
     else:
-        return { path.strip('/'): obj }
+        stripped_path = path.strip('/')
+        return ([stripped_path],{stripped_path: obj})
 
     d = {}
+    f = []
 
     for key, value in iterator:
         key = six.text_type(key)
-        d.update(parse_object(value, path + key + '/'))
+        (f1,d1) = parse_object(value, path + key + '/')
+        f.extend(f1)
+        d.update(d1)
 
-    return d
+    return (f, d)
 
-def json2csv(f, key=None, **kwargs):
+def json2csv(f, field=None, **kwargs):
     """
     Convert a JSON document into CSV format.
 
@@ -42,27 +46,28 @@ def json2csv(f, key=None, **kwargs):
     js = json.load(f, object_pairs_hook=OrderedDict)
 
     if isinstance(js, dict):
-        if not key:
+        if not field:
             raise TypeError('When converting a JSON document with a top-level dictionary element, a key must be specified.')
 
-        js = js[key]
+        js = js[field]
 
     fields = []
-    flat = []
+    flats = []
 
     for obj in js:
-        flat.append(parse_object(obj)) 
+        (flat_fields, flat_key_values_dict) = parse_object(obj)
+        flats.append(flat_key_values_dict)
 
-        for key in obj.keys():
-            if key not in fields:
-                fields.append(key)
+        for field in flat_fields:
+            if field not in fields:
+                fields.append(field)
 
     o = six.StringIO()
     writer = CSVKitWriter(o)
 
     writer.writerow(fields)
 
-    for i in flat:
+    for i in flats:
         row = []
 
         for field in fields:
