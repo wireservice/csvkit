@@ -54,7 +54,7 @@ class CSVLook(CSVKitUtility):
 
         # Dashes span each width with '+' character at intersection of
         # horizontal and vertical dividers.
-        divider = '|--' + '-+-'.join('-'* w for w in widths) + '--|'
+        divider = '+--' + '-+-'.join('-'* w for w in widths) + '--+'
 
         self.output_file.write('%s\n' % divider)
 
