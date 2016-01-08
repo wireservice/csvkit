@@ -60,3 +60,23 @@ class TestCSVLook(unittest.TestCase):
         self.assertEqual(next(input_file), u'|  4 | 5 | ʤ  |\n')
         self.assertEqual(next(input_file), '|----+---+----|\n')
 
+    def test_wrapping(self):
+        args = ['-w', '5', 'examples/wrapping.csv', ]
+        output_file = six.StringIO()
+        utility = CSVLook(args, output_file)
+
+        utility.main()
+
+        input_file = six.StringIO(output_file.getvalue())
+
+        self.assertEqual(next(input_file), '|----+-------+----|\n')
+        self.assertEqual(next(input_file), '|  a | b     | c  |\n')
+        self.assertEqual(next(input_file), '|----+-------+----|\n')
+        self.assertEqual(next(input_file), '|  1 | 01234 | 3  |\n')
+        self.assertEqual(next(input_file), '|    | 56789 |    |\n')
+        self.assertEqual(next(input_file), '|  1 | 01234 | 5  |\n')
+        self.assertEqual(next(input_file), '|    | 56789 |    |\n')
+        self.assertEqual(next(input_file), '|    | 0     |    |\n')
+        self.assertEqual(next(input_file), '|  1 | 01234 | 7  |\n')
+        self.assertEqual(next(input_file), '|    | 5678  |    |\n')
+        self.assertEqual(next(input_file), '|----+-------+----|\n')
