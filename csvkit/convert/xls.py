@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import datetime
+from os.path import splitext
 
 import six
 import xlrd
@@ -125,31 +126,43 @@ def xls2csv(f, **kwargs):
     Convert an Excel .xls file to csv.
     """
     book = xlrd.open_workbook(file_contents=f.read())
+    base, ext = splitext(f.name)
 
     if 'sheet' in kwargs:
-        sheet = book.sheet_by_name(kwargs['sheet'])
+        sheet_to_operate_on = book.sheet_by_name(kwargs['sheet'])
     else:
-        sheet = book.sheet_by_index(0)
+        sheet_to_operate_on = book.sheet_by_index(0)
 
-    tab = table.Table() 
+    if kwargs.get('write_all_sheets'):
+        sheets = book.sheets()
+    else:
+        sheets = [sheet_to_operate_on]
 
-    for i in range(sheet.ncols):
-        # Trim headers
-        column_name = sheet.col_values(i)[0]
+    for sheet_index, sheet in enumerate(sheets):
+        tab = table.Table() 
 
-        values = sheet.col_values(i)[1:]
-        types = sheet.col_types(i)[1:]
+        for i in range(sheet.ncols):
+            # Trim headers
+            column_name = sheet.col_values(i)[0]
 
-        column_type = determine_column_type(types)
-        t, normal_values = NORMALIZERS[column_type](values, datemode=book.datemode)
+            values = sheet.col_values(i)[1:]
+            types = sheet.col_types(i)[1:]
 
-        column = table.Column(i, column_name, normal_values, normal_type=t)
-        tab.append(column)
+            column_type = determine_column_type(types)
+            t, normal_values = NORMALIZERS[column_type](values, datemode=book.datemode)
 
-    o = six.StringIO()
-    output = tab.to_csv(o)
-    output = o.getvalue()
-    o.close()
+            column = table.Column(i, column_name, normal_values, normal_type=t)
+            tab.append(column)
+
+        if sheet == sheet_to_operate_on:
+            o = six.StringIO()
+            tab.to_csv(o)
+            output = o.getvalue()
+            o.close()
+
+        if kwargs.get('write_all_sheets'):
+            with open('%s_%d.csv' % (base, sheet_index), 'wb') as f:
+                tab.to_csv(f)
 
     return output 
 

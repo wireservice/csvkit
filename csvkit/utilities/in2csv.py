@@ -20,7 +20,9 @@ class In2CSV(CSVKitUtility):
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
             help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('--sheet', dest='sheet',
-            help='The name of the XLSX sheet to operate on.')
+            help='The name of the Excel sheet to operate on.')
+        self.argparser.add_argument('--write-all-sheets', dest='write_all_sheets', action='store_true',
+            help='Whether to write all sheets to files.')
         self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
             help='Disable type inference when parsing the input.')
 
@@ -62,6 +64,9 @@ class In2CSV(CSVKitUtility):
 
         if self.args.sheet:
             kwargs['sheet'] = self.args.sheet
+
+        if self.args.write_all_sheets:
+            kwargs['write_all_sheets'] = True
 
         if self.args.no_inference:
             kwargs['type_inference'] = False

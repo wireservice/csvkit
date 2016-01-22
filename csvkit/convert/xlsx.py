@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import datetime
+from os.path import splitext
 
 from openpyxl.reader.excel import load_workbook
 import six
@@ -49,42 +50,63 @@ def xlsx2csv(f, output=None, **kwargs):
     writer = CSVKitWriter(output)
 
     book = load_workbook(f, use_iterators=True, data_only=True)
+    base, ext = splitext(f.name)
 
     if 'sheet' in kwargs:
-        sheet = book.get_sheet_by_name(kwargs['sheet'])
+        sheet_to_operate_on = book.get_sheet_by_name(kwargs['sheet'])
     else:
-        sheet = book.get_active_sheet()
+        sheet_to_operate_on = book.get_active_sheet()
 
-    for i, row in enumerate(sheet.iter_rows()):
-        if i == 0:
-            writer.writerow([c.value for c in row]) 
-            continue
+    if kwargs.get('write_all_sheets'):
+        sheets = book.worksheets
+    else:
+        sheets = [sheet_to_operate_on]
 
-        out_row = []
+    for sheet_index, sheet in enumerate(sheets):
+        if kwargs.get('write_all_sheets'):
+            write_rows = []
 
-        for c in row:
-            value = c.value
+        for i, row in enumerate(sheet.iter_rows()):
+            if i == 0:
+                first_row = [c.value for c in row]
+                if sheet == sheet_to_operate_on:
+                    writer.writerow(first_row)
+                if kwargs.get('write_all_sheets'):
+                    write_rows.append(first_row)
+                continue
 
-            if value.__class__ is datetime.datetime:
-                # Handle default XLSX date as 00:00 time 
-                if value.date() == datetime.date(1904, 1, 1) and not has_date_elements(c):
-                    value = value.time() 
+            out_row = []
 
-                    value = normalize_datetime(value)
-                elif value.time() == NULL_TIME:
-                    value = value.date()
-                else:
-                    value = normalize_datetime(value)
-            elif value.__class__ is float:
-                if value % 1 == 0:
-                    value = int(value)
+            for c in row:
+                value = c.value
 
-            if value.__class__ in (datetime.datetime, datetime.date, datetime.time):
-                value = value.isoformat()
+                if value.__class__ is datetime.datetime:
+                    # Handle default XLSX date as 00:00 time 
+                    if value.date() == datetime.date(1904, 1, 1) and not has_date_elements(c):
+                        value = value.time() 
 
-            out_row.append(value)
+                        value = normalize_datetime(value)
+                    elif value.time() == NULL_TIME:
+                        value = value.date()
+                    else:
+                        value = normalize_datetime(value)
+                elif value.__class__ is float:
+                    if value % 1 == 0:
+                        value = int(value)
 
-        writer.writerow(out_row)
+                if value.__class__ in (datetime.datetime, datetime.date, datetime.time):
+                    value = value.isoformat()
+
+                out_row.append(value)
+
+            if sheet == sheet_to_operate_on:
+                writer.writerow(out_row)
+            if kwargs.get('write_all_sheets'):
+                write_rows.append(out_row)
+
+        if kwargs.get('write_all_sheets'):
+            with open('%s_%d.csv' % (base, sheet_index), 'wb') as f:
+                CSVKitWriter(f).writerows(write_rows)
 
     if not streaming:
         data = output.getvalue()
