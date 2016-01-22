@@ -63,13 +63,14 @@ class FilteringCSVReader(six.Iterator):
         
     def test_row(self, row):
         for idx, test in self.patterns.items():
-            if self.any_match and test(row[idx]):
+            result = test(row[idx])
+            if result and self.any_match:
                 return not self.inverse # True
 
-            if not self.any_match and not test(row[idx]):
+            if not result and not self.any_match:
                 return self.inverse # False
 
-        return not self.inverse # True
+        return not self.any_match and not self.inverse # True
         
 def standardize_patterns(column_names, patterns):
     """
