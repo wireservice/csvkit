@@ -110,3 +110,14 @@ class TestGrep(unittest.TestCase):
             self.fail("Should be no more rows left.")
         except StopIteration:
             pass
+
+    def test_any_match_and_inverse(self):
+        fcr = FilteringCSVReader(iter(self.tab2), patterns={'age': 'only', 0: '2'}, any_match=True, inverse=True)
+        self.assertEqual(self.tab2[0], next(fcr))
+        self.assertEqual(self.tab2[1], next(fcr))
+        self.assertEqual(self.tab2[3], next(fcr))
+        try:
+            next(fcr)
+            self.fail("Should be no more rows left.")
+        except StopIteration:
+            pass
