@@ -234,6 +234,8 @@ class Table(list):
         width = len(data_columns)
 
         for i, row in enumerate(rows):
+            j = 0
+
             for j, d in enumerate(row):
                 try:
                     data_columns[j].append(row[column_ids[j]].strip())
