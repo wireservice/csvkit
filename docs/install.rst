@@ -28,7 +28,7 @@ If you only want to use agate, install it this way::
 
 .. note::
 
-    Need more speed? If you're running Python 2.6 or 2.7 or you can :code:`pip install cdecimal` for a significant speed boost. This isn't installed automatically because it can create additional complications.
+    Need more speed? If you're running Python 2.6 or 2.7 you can :code:`pip install cdecimal` for a significant speed boost. This isn't installed automatically because it can create additional complications.
 
 Developers
 ==========

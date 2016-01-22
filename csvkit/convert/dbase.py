@@ -4,9 +4,6 @@
 Note: dbf is only supported/imported for Python 2.
 """
 
-from datetime import date, datetime
-from decimal import Decimal
-
 import agate
 import dbf
 import six
@@ -19,9 +16,9 @@ def dbf2csv(f, **kwargs):
         column_names = db.field_names
         table = agate.Table(db, column_names)
 
-    o = six.StringIO()
-    output = table.to_csv(o)
-    output = o.getvalue()
-    o.close()
+    output = six.StringIO()
+    table.to_csv(output)
+    result = output.getvalue()
+    output.close()
 
-    return output
+    return result
