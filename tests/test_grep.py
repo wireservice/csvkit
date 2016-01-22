@@ -10,6 +10,7 @@ except ImportError:
 from csvkit.grep import FilteringCSVReader
 from csvkit.exceptions import ColumnIdentifierError
 
+
 class TestGrep(unittest.TestCase):
     def setUp(self):
         self.tab1 = [
@@ -24,7 +25,7 @@ class TestGrep(unittest.TestCase):
             [u'1', u'first', u'0'],
             [u'4', u'only', u'0'],
             [u'1', u'second', u'0'],
-            [u'2', u'only', u'0', u'0']] # Note extra value in this column
+            [u'2', u'only', u'0', u'0']]  # Note extra value in this column
 
     def test_pattern(self):
         fcr = FilteringCSVReader(iter(self.tab1), patterns=['1'])
@@ -50,7 +51,7 @@ class TestGrep(unittest.TestCase):
     def test_regex(self):
         pattern = re.compile(".*(Reader|Tribune).*")
         fcr = FilteringCSVReader(iter(self.tab1), patterns={1: pattern})
-        
+
         self.assertEqual(self.tab1[0], next(fcr))
         self.assertEqual(self.tab1[1], next(fcr))
         self.assertEqual(self.tab1[3], next(fcr))
@@ -60,7 +61,7 @@ class TestGrep(unittest.TestCase):
             self.fail("Should be no more rows left.")
         except StopIteration:
             pass
-        
+
     def test_inverse(self):
         fcr = FilteringCSVReader(iter(self.tab2), patterns=['1'], inverse=True)
         self.assertEqual(self.tab2[0], next(fcr))
@@ -71,7 +72,7 @@ class TestGrep(unittest.TestCase):
             self.fail("Should be no more rows left.")
         except StopIteration:
             pass
-            
+
     def test_column_names_in_patterns(self):
         fcr = FilteringCSVReader(iter(self.tab2), patterns={'age': 'only'})
         self.assertEqual(self.tab2[0], next(fcr))
@@ -95,7 +96,7 @@ class TestGrep(unittest.TestCase):
 
     def test_duplicate_column_ids_in_patterns(self):
         try:
-            fcr = FilteringCSVReader(iter(self.tab2), patterns={'age': 'only', 1: 'second'})
+            FilteringCSVReader(iter(self.tab2), patterns={'age': 'only', 1: 'second'})
             self.fail("Should be an exception.")
         except ColumnIdentifierError:
             pass
