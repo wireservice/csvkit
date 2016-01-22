@@ -86,6 +86,9 @@ class TestTable(unittest.TestCase):
         self.assertEqual(t[3][0], 'True')
         self.assertEqual(type(t[3][0]), six.text_type)
 
+    def test_from_csv_empty_file(self):
+        table.Table.from_csv(six.StringIO('\n\n'))
+
     def test_to_csv(self):
         with open('examples/testfixed_converted.csv', 'r') as f:
             contents = f.read()
