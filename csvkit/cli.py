@@ -267,7 +267,7 @@ class CSVKitUtility(object):
         """
         Pretty-prints the names and indices of all columns to a file-like object (usually sys.stdout).
         """
-        if self.args.no_header_row:
+        if getattr(self.args, 'no_header_row', None):
             raise RequiredHeaderError('You cannot use --no-header-row with the -n or --names options.')
 
         f = self.input_file

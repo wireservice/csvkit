@@ -82,3 +82,16 @@ class TestCSVGrep(unittest.TestCase):
         utility = CSVGrep(args, output_file)
 
         self.assertRaises(ColumnIdentifierError, utility.main)
+
+    def test_display_column_names(self):
+        args = ['-n', 'examples/realdata/FY09_EDU_Recipients_by_State.csv']
+        output_file = six.StringIO()
+
+        utility = CSVGrep(args, output_file)
+        utility.main()
+
+        input_file = six.StringIO(output_file.getvalue())
+        reader = CSVKitReader(input_file)
+
+        self.assertEqual(next(reader), ['  1: State Name'])
+        self.assertEqual(next(reader), ['  2: State Abbreviate'])
