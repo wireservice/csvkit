@@ -50,7 +50,8 @@ class CSVJSON(CSVKitUtility):
 
         def dump_json (data,newline=False):
             json.dump(data, stream, **json_kwargs)
-            if newline: stream.write("\n")
+            if newline:
+                stream.write("\n")
 
         """
         Convert CSV to JSON.

@@ -86,7 +86,8 @@ def standardize_patterns(column_names, patterns):
     try:
         # Dictionary of patterns
         patterns = dict((k, pattern_as_function(v)) for k, v in patterns.items() if v)
-        if not column_names: return patterns
+        if not column_names:
+            return patterns
         p2 = {}
         for k in patterns:
             if k in column_names:
