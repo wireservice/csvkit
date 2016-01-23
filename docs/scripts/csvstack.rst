@@ -21,7 +21,7 @@ Stack up the rows from multiple CSV files, optionally adding a grouping value to
     optional arguments:
       -h, --help            show this help message and exit
       -g GROUPS, --groups GROUPS
-                            A comma-seperated list of values to add as "grouping
+                            A comma-separated list of values to add as "grouping
                             factors", one for each CSV being stacked. These will
                             be added to the stacked CSV as a new column. You may
                             specify a name for the grouping column using the -n
