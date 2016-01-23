@@ -209,28 +209,26 @@ class Table(list):
         f = six.StringIO(contents)
         rows = agate.reader(f, **kwargs)
 
-        if no_header_row:
-            # Peek at a row to infer column names from
-            row = next(rows)
+        try:
+            if no_header_row:
+                # Peek at a row to infer column names from, and put it back on top
+                row = next(rows)
+                rows = itertools.chain([row], rows)
+                headers = make_default_headers(len(row))
+            else:
+                headers = next(rows)
+        except StopIteration:
+            # The file is `/dev/null`.
+            headers = []
+            pass
 
-            headers = make_default_headers(len(row))
+        if no_header_row or column_ids:
             column_ids = parse_column_identifiers(column_ids, headers, zero_based)
             headers = [headers[c] for c in column_ids]
-            data_columns = [[] for c in headers]
-
-            # Put row back on top
-            rows = itertools.chain([row], rows)
         else:
-            headers = next(rows)
+            column_ids = range(len(headers))
 
-            if column_ids:
-                column_ids = parse_column_identifiers(column_ids, headers, zero_based)
-                headers = [headers[c] for c in column_ids]
-            else:
-                column_ids = range(len(headers))
-
-            data_columns = [[] for c in headers]
-
+        data_columns = [[] for c in headers]
         width = len(data_columns)
 
         for i, row in enumerate(rows):
