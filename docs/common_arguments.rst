@@ -23,12 +23,13 @@ All utilities which accept CSV as input share a set of common command-line argum
   -z MAXFIELDSIZE, --maxfieldsize MAXFIELDSIZE
                         Maximum length of a single field in the input CSV
                         file.
-  -H, --no-header-row   Specifies that the input CSV file has no header row.
   -e ENCODING, --encoding ENCODING
+                        Specify the encoding the input CSV file.
   -S, --skipinitialspace
                         Ignore whitespace immediately following the delimiter.
+  -H, --no-header-row   Specifies that the input CSV file has no header row.
+                        Will create default headers.
   -v, --verbose         Print detailed tracebacks when errors occur.
-                        Specify the encoding the input file.
   -l, --linenumbers     Insert a column of line numbers at the front of the
                         output. Useful when piping to grep or as a simple
                         primary key.

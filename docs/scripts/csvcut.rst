@@ -8,7 +8,8 @@ Description
 Filters and truncates CSV files. Like unix "cut" command, but for tabular data::
 
     usage: csvcut [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                  [-p` ESCAPECHAR] [-e ENCODING] [-n] [-c COLUMNS] [-s] [-l]
+                  [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-H] [-v]
+                  [-l] [--zero] [-n] [-c COLUMNS] [-C NOT_COLUMNS] [-x]
                   [FILE]
 
     Filter and truncate CSV files. Like unix "cut" command, but for tabular data.

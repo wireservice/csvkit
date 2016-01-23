@@ -8,16 +8,16 @@ Description
 Generate SQL statements for a CSV file or execute those statements directly on a database. In the latter case supports both creating tables and inserting data::
 
     usage: csvsql [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                  [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-H] [-v]
-                  [-y SNIFFLIMIT]
-                  [-i {access,sybase,sqlite,informix,firebird,mysql,oracle,maxdb,postgresql,mssql}]
-                  [--db CONNECTION_STRING] [--insert]
-                  [FILE]
+                  [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-H] [-v]
+                  [--zero] [-y SNIFFLIMIT]
+                  [-i {firebird,maxdb,informix,mssql,oracle,sybase,sqlite,access,mysql,postgresql}]
+                  [--db CONNECTION_STRING] [--query QUERY] [--insert]
+                  [--tables TABLE_NAMES] [--no-constraints] [--no-create]
+                  [--blanks] [--no-inference] [--db-schema DB_SCHEMA]
+                  [FILE [FILE ...]]
 
-    Generate SQL statements for a CSV file or create execute those statements
-    directly on a database.
-
-    Generate a SQL CREATE TABLE statement for a CSV file.
+    Generate SQL statements for one or more CSV files, create execute those
+    statements directly on a database, and execute one or more SQL queries.
 
     positional arguments:
       FILE                  The CSV file(s) to operate on. If omitted, will accept
@@ -28,7 +28,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
       -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
                             Limit CSV dialect sniffing to the specified number of
                             bytes. Specify "0" to disable sniffing entirely.
-      -i {access,sybase,sqlite,informix,firebird,mysql,oracle,maxdb,postgresql,mssql}, --dialect {access,sybase,sqlite,informix,firebird,mysql,oracle,maxdb,postgresql,mssql}
+      -i {firebird,maxdb,informix,mssql,oracle,sybase,sqlite,access,mysql,postgresql}, --dialect {firebird,maxdb,informix,mssql,oracle,sybase,sqlite,access,mysql,postgresql}
                             Dialect of SQL to generate. Only valid when --db is
                             not specified.
       --db CONNECTION_STRING
@@ -39,16 +39,18 @@ Generate SQL statements for a CSV file or execute those statements directly on a
       --insert              In addition to creating the table, also insert the
                             data into the table. Only valid when --db is
                             specified.
-      --table TABLE_NAME    Specify a name for the table to be created. If
-                            omitted, the filename (minus extension) will be used.
+      --tables TABLE_NAMES  Specify one or more names for the tables to be
+                            created. If omitted, the filename (minus extension) or
+                            "stdin" will be used.
       --no-constraints      Generate a schema without length limits or null
                             checks. Useful when sampling big tables.
       --no-create           Skip creating a table. Only valid when --insert is
                             specified.
       --blanks              Do not coerce empty strings to NULL values.
       --no-inference        Disable type inference when parsing the input.
-      --db-schema           Optional name of database schema to create table(s)
-                            in. 
+      --db-schema DB_SCHEMA
+                            Optional name of database schema to create table(s)
+                            in.
 
 See also: :doc:`../common_arguments`.
 

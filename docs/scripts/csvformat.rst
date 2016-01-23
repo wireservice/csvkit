@@ -20,6 +20,7 @@ Convert a CSV file to a custom output format.::
                             input on STDIN.
 
     optional arguments:
+      -h, --help            show this help message and exit
       -D OUT_DELIMITER, --out-delimiter OUT_DELIMITER
                             Delimiting character of the output CSV file.
       -T, --out-tabs        Specifies that the output CSV file is delimited with
@@ -41,7 +42,7 @@ Convert a CSV file to a custom output format.::
                             specified.
       -M OUT_LINETERMINATOR, --out-lineterminator OUT_LINETERMINATOR
                             Character used to terminate lines in the output CSV
-                            file. 
+                            file.
 
 See also: :doc:`../common_arguments`.
 

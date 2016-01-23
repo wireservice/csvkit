@@ -8,9 +8,9 @@ Description
 Converts a CSV file into JSON or GeoJSON (depending on flags)::
 
     usage: csvjson [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-H] [-v] [-l]
+                   [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-v] [-l]
                    [--zero] [-i INDENT] [-k KEY] [--lat LAT] [--lon LON]
-                   [--crs CRS]
+                   [--crs CRS] [--stream]
                    [FILE]
 
     Convert a CSV file into JSON (or GeoJSON).
@@ -20,6 +20,7 @@ Converts a CSV file into JSON or GeoJSON (depending on flags)::
                             input on STDIN.
 
     optional arguments:
+      -h, --help            show this help message and exit
       -i INDENT, --indent INDENT
                             Indent the output JSON this many spaces. Disabled by
                             default.
