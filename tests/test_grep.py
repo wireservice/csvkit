@@ -122,3 +122,17 @@ class TestGrep(unittest.TestCase):
             self.fail("Should be no more rows left.")
         except StopIteration:
             pass
+
+    def test_multiline(self):
+        table = [
+            ['a', 'b'],
+            ['1', 'foo\nbar']
+        ]
+        fcr = FilteringCSVReader(iter(table), patterns={'b': re.compile('bar')})
+        self.assertEqual(table[0], next(fcr))
+        self.assertEqual(table[1], next(fcr))
+        try:
+            next(fcr)
+            self.fail("Should be no more rows left.")
+        except StopIteration:
+            pass
