@@ -9,6 +9,7 @@ install_requires = [
     'sqlalchemy>=0.6.6',
     'openpyxl==2.2.6',
     'six>=1.6.1',
+    'normality>=0.2.4',
     'python-dateutil==2.2',
     'dbf>=0.96.005'
 ]
