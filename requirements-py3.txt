@@ -8,5 +8,5 @@ openpyxl==2.2.0-b1
 tox>=1.3
 six>=1.6.1
 sphinx_rtd_theme
-agate>=1.0.0
+agate>=1.2.0
 dbf>=0.96.005

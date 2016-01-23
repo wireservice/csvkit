@@ -4,7 +4,7 @@ import sys
 from setuptools import setup
 
 install_requires = [
-    'agate>=1.0.0',
+    'agate>=1.2.0',
     'xlrd>=0.7.1',
     'sqlalchemy>=0.6.6',
     'openpyxl==2.2.6',
