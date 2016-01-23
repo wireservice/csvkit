@@ -43,7 +43,13 @@ Load data about financial aid recipients into Postgresql. Then find the three st
     csvsql --db "postgresql:///recipients" --table "fy09" --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
     sql2csv --db "postgresql:///recipients" --query "select * from fy09 where \"State Name\" != '' order by fy09.\"TOTAL\" limit 3"
 
+SQLAlchemy_ connection string `can have parameters`__. For instance, you could set the correct encoding as::
+
+    $ sql2csv --db 'mysql://user:pass@host/database?encoding=utf8' --query "select name from users"
+
 You can even use it as a simple SQL calculator (in this example an in-memory sqlite database is used as the default)::
 
     sql2csv --query "select 300 * 47 % 14 * 27 + 7000"
 
+.. _SQLAlchemy: http://www.sqlalchemy.org
+__ http://docs.sqlalchemy.org/en/rel_1_0/core/engines.html#engine-creation-api
