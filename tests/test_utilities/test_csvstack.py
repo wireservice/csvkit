@@ -23,7 +23,7 @@ class TestCSVStack(unittest.TestCase):
 
         # verify the stacked file's contents
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['a', 'b', 'c'])
         self.assertEqual(next(reader)[0], '1')
@@ -39,7 +39,7 @@ class TestCSVStack(unittest.TestCase):
 
         # verify the stacked file's contents
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['a', 'b', 'c'])
         self.assertEqual(next(reader)[0], '1')
