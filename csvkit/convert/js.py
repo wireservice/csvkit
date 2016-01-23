@@ -7,8 +7,6 @@ except ImportError:
     from ordereddict import OrderedDict
     import simplejson as json
 
-import itertools
-
 import agate
 import six
 
