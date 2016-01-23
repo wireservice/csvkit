@@ -29,7 +29,7 @@ Getting the data
 
 Let's start by creating a clean workspace::
 
-    mkdir csvkit_tutorial 
+    mkdir csvkit_tutorial
     cd csvkit_tutorial
 
 Now let's fetch the data::
@@ -98,7 +98,7 @@ Now that we understand ``in2csv``, ``csvlook`` and ``csvcut`` we can demonstrate
 
     csvcut -c county,item_name,quantity data.csv | csvlook | head
 
-All csvkit utilities accept an input file as "standard in", in addition to as a filename. This means that we can make the output of one csvkit utility become the input of the next. In this case, the output of ``csvcut`` becomes the input to ``csvlook``. This also means we can use this output with standard unix commands such as ``head``, which prints only the first ten lines of it's input. Here, the output of ``csvlook`` becomes the input of ``head``.
+All csvkit utilities accept an input file as "standard in", in addition to as a filename. This means that we can make the output of one csvkit utility become the input of the next. In this case, the output of ``csvcut`` becomes the input to ``csvlook``. This also means we can use this output with standard unix commands such as ``head``, which prints only the first ten lines of its input. Here, the output of ``csvlook`` becomes the input of ``head``.
 
 Pipeability is a core feature of csvkit. Of course, you can always write your output to a file using ``>``, but many times it makes more sense to use pipes for speed and brevity.
 
