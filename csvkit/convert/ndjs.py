@@ -8,9 +8,9 @@ except ImportError:
     import simplejson as json
 
 import itertools
-import six
 
-from csvkit import CSVKitWriter
+import agate
+import six
 
 def parse_object(obj, path=''):
     """
@@ -50,14 +50,14 @@ def ndjson2csv(f, key=None, **kwargs):
     flat = []
 
     for obj in js:
-        flat.append(parse_object(obj)) 
+        flat.append(parse_object(obj))
 
         for key in obj.keys():
             if key not in fields:
                 fields.append(key)
 
     o = six.StringIO()
-    writer = CSVKitWriter(o)
+    writer = agate.writer(o)
 
     writer.writerow(fields)
 
@@ -73,4 +73,3 @@ def ndjson2csv(f, key=None, **kwargs):
     o.close()
 
     return output
-

@@ -3,9 +3,10 @@
 import os
 import sys
 
+import agate
+
 from csvkit import sql
 from csvkit import table
-from csvkit import CSVKitWriter
 from csvkit.cli import CSVKitUtility
 
 class CSVSQL(CSVKitUtility):
@@ -144,7 +145,7 @@ class CSVSQL(CSVKitUtility):
 
                 # Output result of last query as CSV
                 try:
-                    output = CSVKitWriter(self.output_file, **self.writer_kwargs)
+                    output = agate.writer(self.output_file, **self.writer_kwargs)
                     if not self.args.no_header_row:
                         output.writerow(rows._metadata.keys)
                     for row in rows:

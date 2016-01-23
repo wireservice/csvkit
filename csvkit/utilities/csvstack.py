@@ -2,7 +2,8 @@
 
 import os
 
-from csvkit import CSVKitReader, CSVKitWriter
+import agate
+
 from csvkit.cli import CSVKitUtility
 from csvkit.headers import make_default_headers
 
@@ -30,7 +31,7 @@ class CSVStack(CSVKitUtility):
             self.argparser.error('You must specify at least two files to stack.')
 
         if self.args.group_by_filenames:
-            groups = [os.path.split(f.name)[1] for f in self.input_files] 
+            groups = [os.path.split(f.name)[1] for f in self.input_files]
         elif self.args.groups:
             groups = self.args.groups.split(',')
 
@@ -38,13 +39,13 @@ class CSVStack(CSVKitUtility):
                 self.argparser.error('The number of grouping values must be equal to the number of CSV files being stacked.')
         else:
             groups = None
-                
+
         group_name = self.args.group_name if self.args.group_name else 'group'
 
-        output = CSVKitWriter(self.output_file, **self.writer_kwargs)
+        output = agate.writer(self.output_file, **self.writer_kwargs)
 
         for i, f in enumerate(self.input_files):
-            rows = CSVKitReader(f, **self.reader_kwargs)
+            rows = agate.reader(f, **self.reader_kwargs)
 
             # If we have header rows, use them
             if not self.args.no_header_row:
@@ -83,7 +84,6 @@ class CSVStack(CSVKitUtility):
 def launch_new_instance():
     utility = CSVStack()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
-

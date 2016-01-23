@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from csvkit import CSVKitReader, CSVKitWriter
+import agate
+
 from csvkit import join
 from csvkit.cli import CSVKitUtility, match_column_identifier
 
@@ -8,7 +9,7 @@ class CSVJoin(CSVKitUtility):
     description = 'Execute a SQL-like join to merge CSV files on a specified column or columns.'
     epilog = 'Note that the join operation requires reading all files into memory. Don\'t try this on very large files.'
     override_flags = ['f', 'H']
-    
+
     def add_arguments(self):
         self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
             help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
@@ -48,17 +49,17 @@ class CSVJoin(CSVKitUtility):
         tables = []
 
         for f in self.input_files:
-            tables.append(list(CSVKitReader(f, **self.reader_kwargs)))
+            tables.append(list(agate.reader(f, **self.reader_kwargs)))
             f.close()
 
         join_column_ids = []
-        
+
         if self.args.columns:
             for i, t in enumerate(tables):
                 join_column_ids.append(match_column_identifier(t[0], join_column_names[i]))
 
         jointab = []
-        
+
         if self.args.left_join:
             # Left outer join
             jointab = tables[0]
@@ -94,7 +95,7 @@ class CSVJoin(CSVKitUtility):
                 for t in tables[1:]:
                     jointab = join.sequential_join(jointab, t)
 
-        output = CSVKitWriter(self.output_file, **self.writer_kwargs)
+        output = agate.writer(self.output_file, **self.writer_kwargs)
 
         for row in jointab:
             output.writerow(row)
@@ -109,7 +110,6 @@ class CSVJoin(CSVKitUtility):
 def launch_new_instance():
     utility = CSVJoin()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
-

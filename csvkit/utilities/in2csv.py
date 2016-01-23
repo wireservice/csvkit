@@ -67,7 +67,7 @@ class In2CSV(CSVKitUtility):
             kwargs['type_inference'] = False
 
         if filetype == 'csv' and self.args.no_header_row:
-            kwargs['no_header_row'] = True
+            kwargs['header'] = False
 
         # Fixed width can be processed as a stream
         if filetype == 'fixed':
@@ -80,7 +80,6 @@ class In2CSV(CSVKitUtility):
 def launch_new_instance():
     utility = In2CSV()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
-

@@ -4,11 +4,13 @@ import sys
 from setuptools import setup
 
 install_requires = [
+    'agate>=1.0.0',
     'xlrd>=0.7.1',
     'sqlalchemy>=0.6.6',
-    'openpyxl==2.2.0-b1',
+    'openpyxl==2.2.6',
     'six>=1.6.1',
-    'python-dateutil==2.2'
+    'python-dateutil==2.2',
+    'dbf>=0.96.005'
 ]
 
 if sys.version_info < (2, 7):
@@ -16,16 +18,13 @@ if sys.version_info < (2, 7):
     install_requires.append('ordereddict>=1.1')
     install_requires.append('simplejson>=3.6.3')
 
-if sys.version_info[0] == 2:
-    install_requires.append('dbf==0.94.003')
-
 setup(
     name='csvkit',
-    version='0.9.2',
+    version='1.0.0',
     description='A library of utilities for working with CSV, the king of tabular file formats.',
     long_description=open('README').read(),
     author='Christopher Groskopf',
-    author_email='staringmonkey@gmail.com',
+    author_email='chrisgroskopf@gmail.com',
     url='http://csvkit.rtfd.org/',
     license='MIT',
     classifiers=[

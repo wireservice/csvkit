@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from csvkit import CSVKitReader, CSVKitWriter
-from csvkit.cli import CSVKitUtility 
+import agate
+
+from csvkit.cli import CSVKitUtility
 
 class CSVFormat(CSVKitUtility):
     description = 'Convert a CSV file to a custom output format.'
@@ -49,16 +50,15 @@ class CSVFormat(CSVKitUtility):
         return kwargs
 
     def main(self):
-        reader = CSVKitReader(self.input_file, **self.reader_kwargs)
+        reader = agate.reader(self.input_file, **self.reader_kwargs)
 
-        writer = CSVKitWriter(self.output_file, **self.writer_kwargs)
+        writer = agate.writer(self.output_file, **self.writer_kwargs)
 
         writer.writerows(reader)
 
 def launch_new_instance():
     utility = CSVFormat()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
-

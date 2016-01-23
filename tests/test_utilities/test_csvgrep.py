@@ -7,7 +7,8 @@ try:
 except ImportError:
     import unittest
 
-from csvkit import CSVKitReader
+import agate
+
 from csvkit.utilities.csvgrep import CSVGrep
 from csvkit.exceptions import ColumnIdentifierError
 
@@ -20,7 +21,7 @@ class TestCSVGrep(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['a', 'b', 'c'])
         self.assertEqual(next(reader), ['1', '2', '3'])
@@ -33,7 +34,7 @@ class TestCSVGrep(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['a', 'b', 'c'])
 
@@ -45,7 +46,7 @@ class TestCSVGrep(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['a', 'b', 'c'])
         self.assertEqual(next(reader), ['1', '2', '3'])
@@ -58,7 +59,7 @@ class TestCSVGrep(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['a', 'b', 'c'])
         self.assertEqual(next(reader), ['1', '2', '3'])
@@ -71,7 +72,7 @@ class TestCSVGrep(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['State Name', 'State Abbreviate', 'Code', 'Montgomery GI Bill-Active Duty', 'Montgomery GI Bill- Selective Reserve', 'Dependents\' Educational Assistance', 'Reserve Educational Assistance Program', 'Post-Vietnam Era Veteran\'s Educational Assistance Program', 'TOTAL', ''])
         self.assertEqual(next(reader), ['ILLINOIS', 'IL', '17', '15,659', '2,491', '2,025', '1,770', '19', '21,964', ''])

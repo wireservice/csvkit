@@ -2,14 +2,15 @@
 
 import os
 
-from csvkit import CSVKitWriter
+import agate
+
 from csvkit import table
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
 class CSVSort(CSVKitUtility):
     description = 'Sort CSV files. Like unix "sort" command, but for tabular data.'
 
-    def add_arguments(self):        
+    def add_arguments(self):
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
             help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
@@ -40,16 +41,16 @@ class CSVSort(CSVKitUtility):
             infer_types=(not self.args.no_inference),
             **self.reader_kwargs
         )
-        
+
         column_ids = parse_column_identifiers(self.args.columns, tab.headers(), self.args.zero_based)
 
-        rows = tab.to_rows(serialize_dates=True) 
+        rows = tab.to_rows(serialize_dates=True)
         sorter = lambda r: [(r[c] is not None, r[c]) for c in column_ids]
         rows.sort(key=sorter, reverse=self.args.reverse)
-        
+
         rows.insert(0, tab.headers())
 
-        output = CSVKitWriter(self.output_file, **self.writer_kwargs)
+        output = agate.writer(self.output_file, **self.writer_kwargs)
 
         for row in rows:
             output.writerow(row)
@@ -57,7 +58,6 @@ class CSVSort(CSVKitUtility):
 def launch_new_instance():
     utility = CSVSort()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
-

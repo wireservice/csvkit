@@ -2,10 +2,10 @@
 
 import itertools
 
+import agate
 import six
 
-from csvkit import CSVKitReader
-from csvkit.cli import CSVKitUtility 
+from csvkit.cli import CSVKitUtility
 from csvkit.headers import make_default_headers
 
 class CSVLook(CSVKitUtility):
@@ -15,7 +15,7 @@ class CSVLook(CSVKitUtility):
         pass
 
     def main(self):
-        rows = CSVKitReader(self.input_file, **self.reader_kwargs)
+        rows = agate.reader(self.input_file, **self.reader_kwargs)
 
         # Make a default header row if none exists
         if self.args.no_header_row:
@@ -74,7 +74,6 @@ class CSVLook(CSVKitUtility):
 def launch_new_instance():
     utility = CSVLook()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
-

@@ -11,7 +11,8 @@ Used and modified with permission.
 
 import itertools
 
-from csvkit import CSVKitReader, CSVKitWriter
+import agate
+
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 from csvkit.headers import make_default_headers
 
@@ -33,7 +34,7 @@ class CSVCut(CSVKitUtility):
             self.print_column_names()
             return
 
-        rows = CSVKitReader(self.input_file, **self.reader_kwargs)
+        rows = agate.reader(self.input_file, **self.reader_kwargs)
 
         if self.args.no_header_row:
             row = next(rows)
@@ -46,7 +47,7 @@ class CSVCut(CSVKitUtility):
             column_names = next(rows)
 
         column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based, self.args.not_columns)
-        output = CSVKitWriter(self.output_file, **self.writer_kwargs)
+        output = agate.writer(self.output_file, **self.writer_kwargs)
 
         output.writerow([column_names[c] for c in column_ids])
 
@@ -65,4 +66,3 @@ def launch_new_instance():
 
 if __name__ == "__main__":
     launch_new_instance()
-
