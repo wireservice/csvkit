@@ -8,19 +8,20 @@ import agate
 from csvkit import sql
 from csvkit.cli import CSVKitUtility
 
+
 class SQL2CSV(CSVKitUtility):
     description = 'Execute an SQL query on a database and output the result to a CSV file.'
     override_flags = 'f,b,d,e,H,p,q,S,t,u,z,zero'.split(',')
 
     def add_arguments(self):
         self.argparser.add_argument('--db', dest='connection_string', default='sqlite://',
-            help='An sqlalchemy connection string to connect to a database.',)
+                                    help='An sqlalchemy connection string to connect to a database.',)
         self.argparser.add_argument('file', metavar="FILE", nargs='?', type=FileType('rt'), default=sys.stdin,
-            help='The file to use as SQL query. If both FILE and QUERY are omitted, query will be read from STDIN.')
+                                    help='The file to use as SQL query. If both FILE and QUERY are omitted, query will be read from STDIN.')
         self.argparser.add_argument('--query', default=None,
-            help="The SQL query to execute. If specified, it overrides FILE and STDIN.")
+                                    help="The SQL query to execute. If specified, it overrides FILE and STDIN.")
         self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
-            help='Do not output column names.')
+                                    help='Do not output column names.')
 
         self.argparser.set_defaults(
             delimiter=None,
@@ -60,6 +61,7 @@ class SQL2CSV(CSVKitUtility):
             output.writerow(row)
 
         conn.close()
+
 
 def launch_new_instance():
     utility = SQL2CSV()

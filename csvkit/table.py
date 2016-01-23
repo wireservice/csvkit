@@ -11,16 +11,19 @@ from csvkit import typeinference
 from csvkit.cli import parse_column_identifiers
 from csvkit.headers import make_default_headers
 
+
 class InvalidType(object):
     """
     Dummy object type for Column initialization, since None is being used as a valid value.
     """
     pass
 
+
 class Column(list):
     """
     A normalized data column and inferred annotations (nullable, etc.).
     """
+
     def __init__(self, order, name, l, normal_type=InvalidType, blanks_as_nulls=True, infer_types=True):
         """
         Construct a column from a sequence of values.
@@ -39,7 +42,7 @@ class Column(list):
 
         list.__init__(self, data)
         self.order = order
-        self.name = name or '_unnamed' # empty column names don't make sense
+        self.name = name or '_unnamed'  # empty column names don't make sense
         self.type = t
 
     def __str__(self):
@@ -84,14 +87,16 @@ class Column(list):
             l = max([len(d) if d else 0 for d in self])
 
             if self.has_nulls():
-                l = max(l, 4) # "None"
+                l = max(l, 4)  # "None"
 
         return l
+
 
 class Table(list):
     """
     A normalized data table and inferred annotations (nullable, etc.).
     """
+
     def __init__(self, columns=[], name='new_table'):
         """
         Generic constructor. You should normally use a from_* method to create a Table.
@@ -270,7 +275,7 @@ class Table(list):
             for c in self:
                 # Stringify datetimes, dates, and times
                 if c.type in [datetime.datetime, datetime.date, datetime.time]:
-                    out_columns.append([six.text_type(v.isoformat()) if v != None else None for v in c])
+                    out_columns.append([six.text_type(v.isoformat()) if v is not None else None for v in c])
                 else:
                     out_columns.append(c)
 

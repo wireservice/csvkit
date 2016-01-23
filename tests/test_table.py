@@ -11,9 +11,11 @@ except ImportError:
     import unittest
     from unittest.case import SkipTest
 
-from csvkit import table 
+from csvkit import table
+
 
 class TestColumn(unittest.TestCase):
+
     def setUp(self):
         self.c = table.Column(0, u'test', [u'test', u'column', None])
         self.c2 = table.Column(0, u'test', [0, 1, 42], normal_type=int)
@@ -46,7 +48,9 @@ class TestColumn(unittest.TestCase):
         self.assertEqual(self.c2.max_length(), 0)
         self.assertEqual(self.c3.max_length(), 0)
 
+
 class TestTable(unittest.TestCase):
+
     def test_from_csv(self):
         with open('examples/testfixed_converted.csv', 'r') as f:
             t = table.Table.from_csv(f)
@@ -57,7 +61,7 @@ class TestTable(unittest.TestCase):
 
         self.assertEqual(t[2][0], 40)
         self.assertEqual(type(t[2][0]), int)
-        
+
         self.assertEqual(t[3][0], True)
         self.assertEqual(type(t[3][0]), bool)
 
@@ -81,10 +85,10 @@ class TestTable(unittest.TestCase):
         self.assertEqual(type(t), table.Table)
         self.assertEqual(type(t[0]), table.Column)
         self.assertEqual(len(t), 8)
-        
+
         self.assertEqual(t[2][0], '40')
         self.assertEqual(type(t[2][0]), six.text_type)
- 
+
         self.assertEqual(t[3][0], 'True')
         self.assertEqual(type(t[3][0]), six.text_type)
 
@@ -100,7 +104,7 @@ class TestTable(unittest.TestCase):
             table.Table.from_csv(f).to_csv(o)
             conversion = o.getvalue()
             o.close()
-        
+
         self.assertEqual(contents, conversion)
 
     def test_table_append(self):
@@ -166,7 +170,7 @@ class TestTable(unittest.TestCase):
     def test_table_reverse(self):
         t = table.Table()
         self.assertRaises(NotImplementedError, t.reverse)
-    
+
     def test_table_count_rows(self):
         c = table.Column(0, u'test', [u'test', u'column', u''])
         c_short = table.Column(0, u'test', [u'test'])
@@ -204,4 +208,3 @@ class TestTable(unittest.TestCase):
         self.assertEqual(t.row(1), [u'column', None, None])
         self.assertEqual(t.row(2), [None, None, None])
         self.assertEqual(t.row(3), [None, None, u'way out here'])
-

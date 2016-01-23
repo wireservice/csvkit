@@ -18,6 +18,7 @@ if six.PY2:
 
     SUPPORTED_FORMATS.append('dbf')
 
+
 def convert(f, format, schema=None, key=None, **kwargs):
     """
     Convert a file of a specified format to CSV.
@@ -51,6 +52,7 @@ def convert(f, format, schema=None, key=None, **kwargs):
         return dbf2csv(f, **kwargs)
     else:
         raise ValueError('format "%s" is not supported' % format)
+
 
 def guess_format(filename):
     """

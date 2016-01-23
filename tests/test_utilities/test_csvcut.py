@@ -13,7 +13,9 @@ import agate
 from csvkit.utilities.csvcut import CSVCut
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
+
 class TestCSVCut(unittest.TestCase):
+
     def test_simple(self):
         args = ['-c', '1,3', 'examples/dummy.csv']
         output_file = six.StringIO()

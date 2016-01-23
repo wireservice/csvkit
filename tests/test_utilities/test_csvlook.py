@@ -10,7 +10,9 @@ except ImportError:
 
 from csvkit.utilities.csvlook import CSVLook
 
+
 class TestCSVLook(unittest.TestCase):
+
     def test_simple(self):
         args = ['examples/dummy3.csv']
         output_file = six.StringIO()
@@ -59,4 +61,3 @@ class TestCSVLook(unittest.TestCase):
         self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')
         self.assertEqual(next(input_file), u'|  4 | 5 | ʤ  |\n')
         self.assertEqual(next(input_file), '|----+---+----|\n')
-

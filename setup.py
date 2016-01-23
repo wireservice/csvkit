@@ -52,7 +52,7 @@ setup(
         'csvkit.convert',
         'csvkit.utilities'
     ],
-    entry_points ={
+    entry_points={
         'console_scripts': [
             'csvclean = csvkit.utilities.csvclean:launch_new_instance',
             'csvcut = csvkit.utilities.csvcut:launch_new_instance',
@@ -70,5 +70,5 @@ setup(
             'sql2csv = csvkit.utilities.sql2csv:launch_new_instance'
         ]
     },
-    install_requires = install_requires
+    install_requires=install_requires
 )

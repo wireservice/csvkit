@@ -9,7 +9,9 @@ except ImportError:
 
 from csvkit.utilities.csvjoin import CSVJoin
 
+
 class TestCSVJoin(unittest.TestCase):
+
     def test_sequential(self):
         args = ['examples/join_a.csv', 'examples/join_b.csv']
         output_file = six.StringIO()
@@ -76,4 +78,3 @@ class TestCSVJoin(unittest.TestCase):
 
         with open('examples/join_short.csv') as f:
             self.assertEqual(output.readlines(), f.readlines())
-

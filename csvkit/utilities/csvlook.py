@@ -8,6 +8,7 @@ import six
 from csvkit.cli import CSVKitUtility
 from csvkit.headers import make_default_headers
 
+
 class CSVLook(CSVKitUtility):
     description = 'Render a CSV file in the console as a fixed-width table.'
 
@@ -35,7 +36,6 @@ class CSVLook(CSVKitUtility):
             column_names.insert(0, 'line_number')
             rows = [list(itertools.chain([str(i + 1)], row)) for i, row in enumerate(rows)]
 
-
         # Convert to normal list of rows
         rows = list(rows)
 
@@ -54,7 +54,7 @@ class CSVLook(CSVKitUtility):
 
         # Dashes span each width with '+' character at intersection of
         # horizontal and vertical dividers.
-        divider = '|--' + '-+-'.join('-'* w for w in widths) + '--|'
+        divider = '|--' + '-+-'.join('-' * w for w in widths) + '--|'
 
         self.output_file.write('%s\n' % divider)
 
@@ -70,6 +70,7 @@ class CSVLook(CSVKitUtility):
 
             if (i == 0 or i == len(rows) - 1):
                 self.output_file.write('%s\n' % divider)
+
 
 def launch_new_instance():
     utility = CSVLook()

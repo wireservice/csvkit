@@ -8,6 +8,7 @@ import agate
 import dbf
 import six
 
+
 def dbf2csv(f, **kwargs):
     """
     Convert a dBASE .dbf file to csv.

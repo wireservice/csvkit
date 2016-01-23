@@ -13,7 +13,9 @@ import agate
 from csvkit.utilities.csvsort import CSVSort
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
+
 class TestCSVSort(unittest.TestCase):
+
     def test_sort_string_reverse(self):
         args = ['-c', '1', '-r', 'examples/testxls_converted.csv']
         output_file = six.StringIO()

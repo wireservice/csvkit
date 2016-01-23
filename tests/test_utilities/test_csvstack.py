@@ -11,7 +11,9 @@ import agate
 
 from csvkit.utilities.csvstack import CSVStack
 
+
 class TestCSVStack(unittest.TestCase):
+
     def test_single_file_stack(self):
         # stacking single file works fine
         args = ['examples/dummy.csv']

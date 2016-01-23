@@ -7,19 +7,20 @@ import agate
 from csvkit.cli import CSVKitUtility
 from csvkit.headers import make_default_headers
 
+
 class CSVStack(CSVKitUtility):
     description = 'Stack up the rows from multiple CSV files, optionally adding a grouping value.'
     override_flags = ['f']
 
     def add_arguments(self):
         self.argparser.add_argument(metavar="FILE", nargs='+', dest='input_paths', default=['-'],
-            help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
+                                    help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-g', '--groups', dest='groups',
-            help='A comma-separated list of values to add as "grouping factors", one for each CSV being stacked. These will be added to the stacked CSV as a new column. You may specify a name for the grouping column using the -n flag.')
+                                    help='A comma-separated list of values to add as "grouping factors", one for each CSV being stacked. These will be added to the stacked CSV as a new column. You may specify a name for the grouping column using the -n flag.')
         self.argparser.add_argument('-n', '--group-name', dest='group_name',
-            help='A name for the grouping column, e.g. "year". Only used when also specifying -g.')
+                                    help='A name for the grouping column, e.g. "year". Only used when also specifying -g.')
         self.argparser.add_argument('--filenames', dest='group_by_filenames', action='store_true',
-            help='Use the filename of each input file as its grouping value. When specified, -g will be ignored.')
+                                    help='Use the filename of each input file as its grouping value. When specified, -g will be ignored.')
 
     def main(self):
         self.input_files = []
@@ -80,6 +81,7 @@ class CSVStack(CSVKitUtility):
                 output.writerow(row)
 
             f.close()
+
 
 def launch_new_instance():
     utility = CSVStack()

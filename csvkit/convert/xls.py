@@ -8,17 +8,20 @@ import xlrd
 from csvkit import table
 from csvkit.exceptions import XLSDataError
 
+
 def normalize_empty(values, **kwargs):
     """
     Normalize a column which contains only empty cells.
     """
     return None, [None] * len(values)
 
+
 def normalize_text(values, **kwargs):
     """
     Normalize a column of text cells.
     """
     return six.text_type, [six.text_type(v) if v else None for v in values]
+
 
 def normalize_numbers(values, **kwargs):
     """
@@ -38,6 +41,7 @@ def normalize_numbers(values, **kwargs):
         # Convert blanks to None
         return float, [v if v else None for v in values]
 
+
 def normalize_dates(values, datemode=0, **kwargs):
     """
     Normalize a column of date cells.
@@ -54,7 +58,7 @@ def normalize_dates(values, datemode=0, **kwargs):
         v_tuple = xlrd.xldate_as_tuple(v, datemode)
 
         if v_tuple == (0, 0, 0, 0, 0, 0):
-            # Midnight 
+            # Midnight
             normal_values.append(datetime.time(*v_tuple[3:]))
             normal_types_set.add(datetime.time)
         elif v_tuple[3:] == (0, 0, 0):
@@ -72,7 +76,7 @@ def normalize_dates(values, datemode=0, **kwargs):
 
     if len(normal_types_set) == 1:
         # No special handling if column contains only one type
-        pass 
+        pass
     elif normal_types_set == set([datetime.datetime, datetime.date]):
         # If a mix of dates and datetimes, up-convert dates to datetimes
         for i, v in enumerate(normal_values):
@@ -90,11 +94,12 @@ def normalize_dates(values, datemode=0, **kwargs):
     # Natural serialization of dates and times by csv.writer is insufficent so they get converted back to strings at this point
     return normal_types_set.pop(), normal_values
 
+
 def normalize_booleans(values, **kwargs):
     """
     Normalize a column of boolean cells.
     """
-    return bool, [bool(v) if v != '' else None for v in values] 
+    return bool, [bool(v) if v != '' else None for v in values]
 
 NORMALIZERS = {
     xlrd.biffh.XL_CELL_EMPTY: normalize_empty,
@@ -103,6 +108,7 @@ NORMALIZERS = {
     xlrd.biffh.XL_CELL_DATE: normalize_dates,
     xlrd.biffh.XL_CELL_BOOLEAN: normalize_booleans
 }
+
 
 def determine_column_type(types):
     """
@@ -120,6 +126,7 @@ def determine_column_type(types):
     except KeyError:
         return xlrd.biffh.XL_CELL_EMPTY
 
+
 def xls2csv(f, **kwargs):
     """
     Convert an Excel .xls file to csv.
@@ -131,7 +138,7 @@ def xls2csv(f, **kwargs):
     else:
         sheet = book.sheet_by_index(0)
 
-    tab = table.Table() 
+    tab = table.Table()
 
     for i in range(sheet.ncols):
         # Trim headers
@@ -151,5 +158,4 @@ def xls2csv(f, **kwargs):
     output = o.getvalue()
     o.close()
 
-    return output 
-
+    return output
