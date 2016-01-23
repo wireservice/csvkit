@@ -9,8 +9,11 @@ from csvkit import sql
 from csvkit import table
 from csvkit.cli import CSVKitUtility
 
+
 class CSVSQL(CSVKitUtility):
-    description = 'Generate SQL statements for one or more CSV files, create execute those statements directly on a database, and execute one or more SQL queries.'
+    description = ("Generate SQL statements for one or more CSV files, create "
+                   "execute those statements directly on a database, and "
+                   "execute one or more SQL queries.")
     override_flags = ['l', 'f']
 
     def add_arguments(self):
@@ -155,6 +158,7 @@ class CSVSQL(CSVKitUtility):
 
             trans.commit()
             conn.close()
+
 
 def launch_new_instance():
     utility = CSVSQL()
