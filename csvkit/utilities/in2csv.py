@@ -64,7 +64,7 @@ class In2CSV(CSVKitUtility):
             kwargs['sheet'] = self.args.sheet
 
         if self.args.no_inference:
-            kwargs['type_inference'] = False
+            kwargs['infer_types'] = False
 
         if filetype == 'csv' and self.args.no_header_row:
             kwargs['header'] = False
