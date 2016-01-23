@@ -12,16 +12,12 @@ class TestXLS(unittest.TestCase):
         with open('examples/test.xls', 'rb') as f:
             output = xls.xls2csv(f)
 
-        print(output)
-        print('------')
-
         with open('examples/testxls_converted.csv', 'r') as f:
-            print(f.read())
             self.assertEquals(f.read(), output)
 
     def test_xls_with_sheet(self):
         with open('examples/sheets.xls', 'rb') as f:
-            output = xls.xls2csv(f, sheet='Sheet2')
+            output = xls.xls2csv(f, sheet='data')
 
-        with open('examples/sheetsxls_converted.csv', 'r') as f:
+        with open('examples/testxls_converted.csv', 'r') as f:
             self.assertEquals(f.read(), output)
