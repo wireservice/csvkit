@@ -24,6 +24,7 @@ Fixes:
 * in2csv correctly guesses format when file has an uppercase extension.
 * in2csv sets the correct flag for --no-inference.
 * in2csv again supports nested JSON objects (fixes regression).
+* csvgrep can match multiline values.
 * csvgrep supports --no-header-row.
 * csvstack supports stacking a single file.
 * FilteringCSVReader's any_match argument works correctly.
