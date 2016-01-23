@@ -1,4 +1,6 @@
+sudo: false
 language: python
+cache: pip
 python:
   - "2.7"
   - "pypy"
@@ -12,6 +14,7 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then pip install -r requirements-py3.txt; fi
   - if [[ $TRAVIS_PYTHON_VERSION == "3.5" ]]; then pip install -r requirements-py3.txt; fi
   - pip install coveralls
-script: nosetests --with-coverage --cover-package=csvkit
+script:
+  - nosetests --with-coverage --cover-package=csvkit
 after_success:
   coveralls
