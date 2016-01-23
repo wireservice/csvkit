@@ -67,7 +67,6 @@ Table of contents
     install
     tutorial
     cli 
-    lib
     contributing
     release 
 
