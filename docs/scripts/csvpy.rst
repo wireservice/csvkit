@@ -35,14 +35,14 @@ Examples
 
 Basic use::
 
-    $ csvpy examples/dummy.csv
+    csvpy examples/dummy.csv
     Welcome! "examples/dummy.csv" has been loaded in a reader object named "reader".
     >>> reader.next()
     [u'a', u'b', u'c']
 
 As a dictionary::
 
-    $ csvpy --dict examples/dummy.csv -v
+    csvpy --dict examples/dummy.csv -v
     Welcome! "examples/dummy.csv" has been loaded in a DictReader object named "reader".
     >>> reader.next()
     {u'a': u'1', u'c': u'3', u'b': u'2'}

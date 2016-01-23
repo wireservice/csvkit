@@ -70,3 +70,13 @@ class TestIn2CSV(unittest.TestCase):
 
         target_output = open('examples/testjson_multiline_converted.csv', 'r').read()
         self.assertEqual(output_file.getvalue(), target_output)
+
+    def test_convert_nested_json(self):
+        args = ['examples/testjson_nested.json']
+        output_file = six.StringIO()
+
+        utility = In2CSV(args, output_file)
+        utility.main()
+
+        target_output = open('examples/testjson_nested_converted.csv', 'r').read()
+        self.assertEqual(output_file.getvalue(), target_output)

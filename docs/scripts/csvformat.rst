@@ -51,9 +51,9 @@ Examples
 
 Convert  "standard" CSV file to a pipe-delimited one::
 
-    $ csvformat -D "|" examples/dummy.csv
+    csvformat -D "|" examples/dummy.csv
 
 Convert to ridiculous line-endings::
 
-    $ csvformat -M "\r" examples/dummy.csv
+    csvformat -M "\r" examples/dummy.csv
 

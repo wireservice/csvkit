@@ -19,7 +19,7 @@ csvkit is to tabular data what the standard Unix text processing suite (grep, se
 
 As there is no formally defined CSV format, csvkit encourages well-known formatting standards:
 
-* Output favors compatability with the widest range of applications. This means that quoting is done with double-quotes and only when necessary, columns are separated with commas, and lines are terminated with unix style line endings ("\\n").
+* Output favors compatibility with the widest range of applications. This means that quoting is done with double-quotes and only when necessary, columns are separated with commas, and lines are terminated with unix style line endings ("\\n").
 
 * Data that is modified or generated will prefer consistency over brevity. Floats always include at least one decimal place, even if they are round. Dates and times are written in ISO8601 format.
 
@@ -36,7 +36,7 @@ Contributors should use the following roadmap to guide them through the process 
 #. As you're coding, periodically merge in work from the master branch and verify you haven't broken anything by running the test suite.
 #. Write documentation for user-facing features.
 #. Once it works, is tested, and has documentation, submit a pull request on Github.
-#. Wait for it to either be merged or to recieve a comment about what needs to be fixed.
+#. Wait for it to either be merged or to receive a comment about what needs to be fixed.
 #. Rejoice.
 
 Legalese

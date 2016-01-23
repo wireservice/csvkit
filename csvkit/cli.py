@@ -155,7 +155,7 @@ class CSVKitUtility(object):
                 help='Ignore whitespace immediately following the delimiter.')
         if 'H' not in self.override_flags:
             self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
-                help='Specifies that the input CSV file has no header row. Will create default headers.')
+                help='Specifies that the input CSV file has no header row. Will create default headers (A,B,C,...).')
         if 'v' not in self.override_flags:
             self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
                 help='Print detailed tracebacks when errors occur.')

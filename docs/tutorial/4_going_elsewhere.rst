@@ -7,7 +7,7 @@ csvjson: going online
 
 Very frequently one of the last steps in any data analysis is to get the data onto the web for display as a table, map or chart. CSV is rarely the ideal format for this. More often than not what you want is JSON and that's where :doc:`/scripts/csvjson` comes in. ``csvjson`` takes an input CSV and outputs neatly formatted JSON. For the sake of illustration, let's use ``csvcut`` and ``csvgrep`` to convert just a small slice of our data::
 
-    $ csvcut -c county,item_name data.csv | csvgrep -c county -m "GREELEY" | csvjson --indent 4 
+    csvcut -c county,item_name data.csv | csvgrep -c county -m "GREELEY" | csvjson --indent 4 
     [
         {
             "county": "GREELEY",
@@ -25,7 +25,7 @@ Very frequently one of the last steps in any data analysis is to get the data on
 
 A common usage of turning a CSV into a JSON file is for usage as a lookup table in the browser. This can be illustrated with the ACS data we looked at earlier, which contains a unique ``fips`` code for each county::
 
-    $ csvjson --indent 4 --key fips acs2012_5yr_population.csv | head
+    csvjson --indent 4 --key fips acs2012_5yr_population.csv | head
     {
         "31001": {
             "fips": "31001",
@@ -44,7 +44,7 @@ csvpy: going into code
 
 For the programmers out there, the command line is rarely as functional as just writing a little bit of code. :doc:`/scripts/csvpy` exists just to make a programmer's life easier. Invoking it simply launches a Python interactive terminal, with the data preloaded into a CSV reader::
 
-    $ csvpy data.csv
+    csvpy data.csv
     Welcome! "data.csv" has been loaded in a reader object named "reader".
     >>> print len(list(reader))
     1037
@@ -59,19 +59,19 @@ It is a foundational principle of csvkit that it always outputs cleanly formatte
 
 Pipe-delimited::
 
-    $ csvformat -D \| data.csv
+    csvformat -D \| data.csv
 
 Tab-delimited::
 
-    $ csvformat -T data.csv
+    csvformat -T data.csv
 
 Quote every cell::
 
-    $ csvformat -U 1 data.csv
+    csvformat -U 1 data.csv
 
 Ampersand-delimited, dollar-signs for quotes, quote all strings, and asterisk for line endings::
 
-    $ csvformat -D \& -Q \$ -U 2 -M \* data.csv
+    csvformat -D \& -Q \$ -U 2 -M \* data.csv
 
 You get the picture.
 

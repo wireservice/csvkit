@@ -3,9 +3,9 @@
 import datetime
 import itertools
 
+import agate
 import six
 
-from csvkit import reader, writer
 from csvkit import sniffer
 from csvkit import typeinference
 from csvkit.cli import parse_column_identifiers
@@ -207,7 +207,7 @@ class Table(list):
             kwargs['dialect'] = sniffer.sniff_dialect(contents[:snifflimit])
 
         f = six.StringIO(contents)
-        rows = reader(f, **kwargs)
+        rows = agate.reader(f, **kwargs)
 
         if no_header_row:
             # Peek at a row to infer column names from
@@ -288,5 +288,5 @@ class Table(list):
         # Insert header row
         rows.insert(0, self.headers())
 
-        csv_writer = writer(output, **kwargs)
+        csv_writer = agate.writer(output, **kwargs)
         csv_writer.writerows(rows)

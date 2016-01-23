@@ -22,7 +22,7 @@ setup(
     name='csvkit',
     version='1.0.0',
     description='A library of utilities for working with CSV, the king of tabular file formats.',
-    long_description=open('README').read(),
+    long_description=open('README.md').read(),
     author='Christopher Groskopf',
     author_email='chrisgroskopf@gmail.com',
     url='http://csvkit.rtfd.org/',

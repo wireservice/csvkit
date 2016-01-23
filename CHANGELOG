@@ -7,11 +7,27 @@ This is a major release of csvkit. The entire backend has been rewritten to leve
 
 If you have built data workflows on top of csvkit you should not upgrade without thorough testing.
 
-* in2csv DBF conversion now works with Python 3.
-* "import csvkit as csv" will now defer to agate readers/writers.
+Backwards-incompatible changes:
+
 * CSVKitReader, CSVKitWriter, CSVKitDictReader, and CSVKitDictWriter have been removed. Use agate.reader, agate.writer, agate.DictReader and agate.DictWriter.
+* Drop Python 2.6 support.
+
+Improvements:
+
+* "import csvkit as csv" will now defer to agate readers/writers.
 * in2csv "csv itself" conversions now use agate.Table.
-* in2csv now correctly guesses format when file has an uppercase extension.
+* Documentation: Update utility usage, remove shell prompts, document connection string, correct typos.
+
+Fixes:
+
+* in2csv DBF conversion works with Python 3.
+* in2csv correctly guesses format when file has an uppercase extension.
+* in2csv sets the correct flag for --no-inference.
+* in2csv again supports nested JSON objects (fixes regression).
+* csvgrep supports --no-header-row.
+* csvstack supports stacking a single file.
+* FilteringCSVReader's any_match argument works correctly.
+* A file of two empty rows won't raise an error.
 
 0.9.1
 -----
