@@ -12,16 +12,10 @@ class CustomException(Exception):
 
     def __str__(self):
         return self.msg
-        
+
 class ColumnIdentifierError(CustomException):
     """
     Exception raised when the user supplies an invalid column identifier.
-    """
-    pass
-
-class XLSDataError(CustomException):
-    """
-    Exception raised when there is a problem converting XLS data.
     """
     pass
 
