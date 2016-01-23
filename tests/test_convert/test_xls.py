@@ -14,7 +14,9 @@ from xlrd.xldate import xldate_from_date_tuple as xldate, xldate_from_time_tuple
 from csvkit.exceptions import XLSDataError
 from csvkit.convert import xls
 
+
 class TestXLS(unittest.TestCase):
+
     def test_empty_column(self):
         normal_values = xls.normalize_empty(['', '', ''])
         self.assertEquals(normal_values, (None, [None, None, None]))
@@ -80,16 +82,16 @@ class TestXLS(unittest.TestCase):
 
     def test_determine_column_type_multiple(self):
         column_type = xls.determine_column_type([xlrd.biffh.XL_CELL_NUMBER, xlrd.biffh.XL_CELL_TEXT, xlrd.biffh.XL_CELL_EMPTY])
-        self.assertEquals(column_type, xlrd.biffh.XL_CELL_TEXT) 
+        self.assertEquals(column_type, xlrd.biffh.XL_CELL_TEXT)
 
     def test_determine_column_type_empty(self):
         column_type = xls.determine_column_type([xlrd.biffh.XL_CELL_EMPTY, xlrd.biffh.XL_CELL_EMPTY, xlrd.biffh.XL_CELL_EMPTY])
-        self.assertEquals(column_type, xlrd.biffh.XL_CELL_EMPTY) 
+        self.assertEquals(column_type, xlrd.biffh.XL_CELL_EMPTY)
 
     def test_xls(self):
         with open('examples/test.xls', 'rb') as f:
             output = xls.xls2csv(f)
-        
+
         with open('examples/testxls_converted.csv', 'r') as f:
             self.assertEquals(f.read(), output)
 

@@ -12,7 +12,9 @@ import agate
 from csvkit.utilities.csvgrep import CSVGrep
 from csvkit.exceptions import ColumnIdentifierError
 
+
 class TestCSVGrep(unittest.TestCase):
+
     def test_match(self):
         args = ['-c', '1', '-m', '1', 'examples/dummy.csv']
         output_file = six.StringIO()

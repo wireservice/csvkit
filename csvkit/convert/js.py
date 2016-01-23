@@ -10,6 +10,7 @@ except ImportError:
 import agate
 import six
 
+
 def parse_object(obj, path=''):
     """
     Recursively parse JSON objects and a dictionary of paths/keys and values.
@@ -21,7 +22,7 @@ def parse_object(obj, path=''):
     elif isinstance(obj, (list, tuple)):
         iterator = enumerate(obj)
     else:
-        return { path.strip('/'): obj }
+        return {path.strip('/'): obj}
 
     d = {}
 
@@ -30,6 +31,7 @@ def parse_object(obj, path=''):
         d.update(parse_object(value, path + key + '/'))
 
     return d
+
 
 def json2csv(f, key=None, **kwargs):
     """

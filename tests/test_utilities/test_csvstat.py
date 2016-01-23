@@ -9,7 +9,9 @@ except ImportError:
 
 from csvkit.utilities.csvstat import CSVStat
 
+
 class TestCSVStat(unittest.TestCase):
+
     def test_runs(self):
         args = ['examples/test_utf8.csv']
         output_file = six.StringIO()
@@ -46,4 +48,3 @@ class TestCSVStat(unittest.TestCase):
         stats = output_file.getvalue()
 
         self.assertEqual(stats, 'Row count: 1\n')
-

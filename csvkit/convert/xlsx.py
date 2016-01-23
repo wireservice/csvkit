@@ -8,6 +8,7 @@ import six
 
 from csvkit.typeinference import NULL_TIME
 
+
 def normalize_datetime(dt):
     if dt.microsecond == 0:
         return dt
@@ -21,6 +22,7 @@ def normalize_datetime(dt):
 
     return dt
 
+
 def has_date_elements(cell):
     """
     Try to use formatting to determine if a cell contains only time info.
@@ -28,11 +30,12 @@ def has_date_elements(cell):
     See: http://office.microsoft.com/en-us/excel-help/number-format-codes-HP005198679.aspx
     """
     if 'd' in cell.number_format or \
-        'y' in cell.number_format:
+            'y' in cell.number_format:
 
         return True
 
     return False
+
 
 def xlsx2csv(f, output=None, **kwargs):
     """

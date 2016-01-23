@@ -15,24 +15,25 @@ import six
 from csvkit.cli import CSVKitUtility, match_column_identifier
 from csvkit.exceptions import NonUniqueKeyColumnException
 
+
 class CSVJSON(CSVKitUtility):
     description = 'Convert a CSV file into JSON (or GeoJSON).'
     override_flags = ['H']
 
     def add_arguments(self):
         self.argparser.add_argument('-i', '--indent', dest='indent', type=int, default=None,
-            help='Indent the output JSON this many spaces. Disabled by default.')
+                                    help='Indent the output JSON this many spaces. Disabled by default.')
         self.argparser.add_argument('-k', '--key', dest='key', type=str, default=None,
-            help='Output JSON as an array of objects keyed by a given column, KEY, rather than as a list. All values in the column must be unique. If --lat and --lon are also specified, this column will be used as GeoJSON Feature ID.')
+                                    help='Output JSON as an array of objects keyed by a given column, KEY, rather than as a list. All values in the column must be unique. If --lat and --lon are also specified, this column will be used as GeoJSON Feature ID.')
         self.argparser.add_argument('--lat', dest='lat', type=str, default=None,
-            help='A column index or name containing a latitude. Output will be GeoJSON instead of JSON. Only valid if --lon is also specified.')
+                                    help='A column index or name containing a latitude. Output will be GeoJSON instead of JSON. Only valid if --lon is also specified.')
         self.argparser.add_argument('--lon', dest='lon', type=str, default=None,
-            help='A column index or name containing a longitude. Output will be GeoJSON instead of JSON. Only valid if --lat is also specified.')
+                                    help='A column index or name containing a longitude. Output will be GeoJSON instead of JSON. Only valid if --lat is also specified.')
         self.argparser.add_argument('--crs', dest='crs', type=str, default=None,
-            help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
+                                    help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
 
         self.argparser.add_argument('--stream', dest='streamOutput', action='store_true',
-            help='Output JSON as a stream of newline-separated objects, rather than an as an array.')
+                                    help='Output JSON as a stream of newline-separated objects, rather than an as an array.')
 
     def main(self):
         if six.PY2:
@@ -48,7 +49,7 @@ class CSVJSON(CSVKitUtility):
         if six.PY2:
             json_kwargs['encoding'] = 'utf-8'
 
-        def dump_json (data,newline=False):
+        def dump_json(data, newline=False):
             json.dump(data, stream, **json_kwargs)
             if newline:
                 stream.write("\n")
@@ -178,12 +179,11 @@ class CSVJSON(CSVKitUtility):
                     except IndexError:
                         data[column] = None
                 if(self.args.streamOutput):
-                    dump_json(data,newline=True)
+                    dump_json(data, newline=True)
                 else:
                     output.append(data)
             if not self.args.streamOutput:
                 dump_json(output)
-
 
 
 def launch_new_instance():

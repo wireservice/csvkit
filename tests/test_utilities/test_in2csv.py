@@ -9,7 +9,9 @@ except ImportError:
 
 from csvkit.utilities.in2csv import In2CSV
 
+
 class TestIn2CSV(unittest.TestCase):
+
     def test_convert_xls(self):
         args = ['-f', 'xls', 'examples/test.xls']
         output_file = six.StringIO()

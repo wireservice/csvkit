@@ -15,7 +15,9 @@ from csvkit.exceptions import InvalidValueForTypeException, InvalidValueForTypeL
 
 NoneType = type(None)
 
+
 class TestNormalizeType(unittest.TestCase):
+
     def test_nulls(self):
         self.assertEqual((NoneType, [None, None, None, None, None, None]), typeinference.normalize_column_type([u'n/a', u'NA', u'.', u'null', u'none', u'']))
 
@@ -32,10 +34,10 @@ class TestNormalizeType(unittest.TestCase):
         else:
             raise AssertionError('Expected InvalidValueForTypeException')
 
-    def test_ints(self): 
+    def test_ints(self):
         self.assertEqual((int, [1, -87, 418000000, None]), typeinference.normalize_column_type([u'1', u'-87', u'418000000', u'']))
 
-    def test_ints_coerce(self): 
+    def test_ints_coerce(self):
         self.assertEqual((int, [1, -87, 418000000, None]), typeinference.normalize_column_type([u'1', u'-87', u'418000000', u''], normal_type=int))
 
     def test_ints_coerce_fail(self):
@@ -66,7 +68,7 @@ class TestNormalizeType(unittest.TestCase):
 
     def test_comma_ints(self):
         self.assertEqual((int, [1, -87, 418000000, None]), typeinference.normalize_column_type([u'1', u'-87', u'418,000,000', u'']))
-    
+
     def test_floats(self):
         self.assertEqual((float, [1.01, -87.413, 418000000.0, None]), typeinference.normalize_column_type([u'1.01', u'-87.413', u'418000000.0', u'']))
 
@@ -82,7 +84,7 @@ class TestNormalizeType(unittest.TestCase):
             self.assertEqual(e.normal_type, float)
         else:
             raise AssertionError('Expected InvalidValueForTypeException')
-        
+
     def test_comma_floats(self):
         self.assertEqual((float, [1.01, -87.413, 418000000.0, None]), typeinference.normalize_column_type([u'1.01', u'-87.413', u'418,000,000.0', u'']))
 
@@ -238,7 +240,7 @@ class TestNormalizeType(unittest.TestCase):
             [u'c', u'100', u'100.9999', u''],
             [u'd', u'2', u'5.3', u'']
         ]
-        
+
         try:
             typeinference.normalize_table(data, normal_types, accumulate_errors=True)
             self.assertEqual(True, False)
@@ -250,4 +252,3 @@ class TestNormalizeType(unittest.TestCase):
             self.assertEqual(e.errors[2].index, 0)
             self.assertEqual(e.errors[2].value, '2.1')
             self.assertEqual(e.errors[2].normal_type, int)
-

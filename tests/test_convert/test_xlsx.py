@@ -8,7 +8,9 @@ except ImportError:
 from csvkit.convert import xlsx
 from datetime import datetime
 
+
 class TestXLSX(unittest.TestCase):
+
     def test_xlsx(self):
         with open('examples/test.xlsx', 'rb') as f:
             output = xlsx.xlsx2csv(f)
@@ -38,4 +40,3 @@ class TestXLSX(unittest.TestCase):
 
         dt = datetime(2013, 8, 22, 9, 51, 59, 5000)
         self.assertEqual(dt, xlsx.normalize_datetime(dt))
-
