@@ -109,29 +109,30 @@ class CSVSQL(CSVKitUtility):
 
             f.close()
 
-            if connection_string:
-                sql_table = sql.make_table(
-                    csv_table,
-                    table_name,
-                    self.args.no_constraints,
-                    self.args.db_schema,
-                    metadata
-                )
+            if csv_table:
+                if connection_string:
+                    sql_table = sql.make_table(
+                        csv_table,
+                        table_name,
+                        self.args.no_constraints,
+                        self.args.db_schema,
+                        metadata
+                    )
 
-                # Create table
-                if not self.args.no_create:
-                    sql_table.create()
+                    # Create table
+                    if not self.args.no_create:
+                        sql_table.create()
 
-                # Insert data
-                if do_insert and csv_table.count_rows() > 0:
-                    insert = sql_table.insert()
-                    headers = csv_table.headers()
-                    conn.execute(insert, [dict(zip(headers, row)) for row in csv_table.to_rows()])
+                    # Insert data
+                    if do_insert and csv_table.count_rows() > 0:
+                        insert = sql_table.insert()
+                        headers = csv_table.headers()
+                        conn.execute(insert, [dict(zip(headers, row)) for row in csv_table.to_rows()])
 
-            # Output SQL statements
-            else:
-                sql_table = sql.make_table(csv_table, table_name, self.args.no_constraints)
-                self.output_file.write('%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect))
+                # Output SQL statements
+                else:
+                    sql_table = sql.make_table(csv_table, table_name, self.args.no_constraints)
+                    self.output_file.write('%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect))
 
         if connection_string:
             if query:
