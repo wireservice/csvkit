@@ -92,7 +92,7 @@ class TestCSVGrep(unittest.TestCase):
         utility.main()
 
         input_file = six.StringIO(output_file.getvalue())
-        reader = CSVKitReader(input_file)
+        reader = agate.reader(input_file)
 
         self.assertEqual(next(reader), ['  1: State Name'])
         self.assertEqual(next(reader), ['  2: State Abbreviate'])
