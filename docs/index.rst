@@ -5,7 +5,7 @@ csvkit |release|
 About
 =====
 
-.. include:: ../README
+.. include:: ../README.rst
 
 Why csvkit?
 ===========
