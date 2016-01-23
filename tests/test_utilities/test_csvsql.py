@@ -93,6 +93,11 @@ class TestCSVSQL(unittest.TestCase):
             self.assertTrue('CREATE TABLE stdin' in sql)
             self.assertTrue('CREATE TABLE dummy' in sql)
 
+    def test_empty_file(self):
+        with stdin_as_string(six.StringIO()):
+            utility = CSVSQL(['--query', 'select 1'], six.StringIO())
+            utility.main()
+
     def test_query(self):
         args = ['--query', 'select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species', 'examples/iris.csv', 'examples/irismeta.csv']
         output_file = six.StringIO()
