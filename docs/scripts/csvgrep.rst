@@ -8,10 +8,12 @@ Description
 Filter tabular data to only those rows where certain columns contain a given value or match a regular expression::
 
     usage: csvgrep [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-e ENCODING] [-l] [-n] [-c COLUMNS] [-r]
-                   [FILE] [PATTERN]
+                   [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-v] [-l]
+                   [--zero] [-n] [-c COLUMNS] [-m PATTERN] [-r REGEX]
+                   [-f MATCHFILE] [-i]
+                   [FILE]
 
-    Like the unix "grep" command, but for tabular data.
+    Search CSV files. Like the unix "grep" command, but for tabular data.
 
     positional arguments:
       FILE                  The CSV file to operate on. If omitted, will accept

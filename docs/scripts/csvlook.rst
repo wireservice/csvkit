@@ -8,7 +8,8 @@ Description
 Renders a CSV to the command line in a readable, fixed-width format::
 
     usage: csvlook [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p` ESCAPECHAR] [-e ENCODING]
+                   [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-H] [-v]
+                   [-l] [--zero]
                    [FILE]
 
     Render a CSV file in the console as a fixed-width table.

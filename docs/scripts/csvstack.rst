@@ -8,13 +8,15 @@ Description
 Stack up the rows from multiple CSV files, optionally adding a grouping value to each row::
 
     usage: csvstack [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                    [-p` ESCAPECHAR] [-e ENCODING] [-g GROUPS] [-n GROUP_NAME]
-                    FILES [FILES ...]
+                    [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-H] [-v]
+                    [-l] [--zero] [-g GROUPS] [-n GROUP_NAME] [--filenames]
+                    FILE [FILE ...]
 
     Stack up the rows from multiple CSV files, optionally adding a grouping value.
 
     positional arguments:
-      FILES
+      FILE                  The CSV file(s) to operate on. If omitted, will accept
+                            input on STDIN.
 
     optional arguments:
       -h, --help            show this help message and exit

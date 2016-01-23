@@ -17,7 +17,9 @@ Converting fixed width requires that you provide a schema file with the "-s" opt
 The header line is required though the columns may be in any order::
 
     usage: in2csv [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                  [-p` ESCAPECHAR] [-e ENCODING] [-f FORMAT] [-s SCHEMA]
+                  [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-H] [-v]
+                  [-l] [--zero] [-f FILETYPE] [-s SCHEMA] [-k KEY] [-y SNIFFLIMIT]
+                  [--sheet SHEET] [--no-inference]
                   [FILE]
 
     Convert common, but less awesome, tabular data formats to CSV.
@@ -28,10 +30,10 @@ The header line is required though the columns may be in any order::
 
     optional arguments:
       -h, --help            show this help message and exit
-      -f FORMAT, --format FORMAT
+      -f FILETYPE, --format FILETYPE
                             The format of the input file. If not specified will be
                             inferred from the file type. Supported formats: csv,
-                            dbf, fixed, geojson, json, ndjson, xls, xlsx.
+                            fixed, geojson, json, ndjson, xls, xlsx.
       -s SCHEMA, --schema SCHEMA
                             Specifies a CSV-formatted schema file for converting
                             fixed-width files. See documentation for details.

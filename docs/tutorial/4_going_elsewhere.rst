@@ -45,12 +45,12 @@ csvpy: going into code
 For the programmers out there, the command line is rarely as functional as just writing a little bit of code. :doc:`/scripts/csvpy` exists just to make a programmer's life easier. Invoking it simply launches a Python interactive terminal, with the data preloaded into a CSV reader::
 
     $ csvpy data.csv
-    Welcome! "data.csv" has been loaded in a CSVKitReader object named "reader".
+    Welcome! "data.csv" has been loaded in a reader object named "reader".
     >>> print len(list(reader))
     1037
     >>> quit()
 
-In addition to being a time-saver, because this uses csvkit's internal :class:`CSVKitReader` the reader is Unicode aware.
+In addition to being a time-saver, because this uses agate, the reader is Unicode aware.
 
 csvformat: for legacy systems
 =============================

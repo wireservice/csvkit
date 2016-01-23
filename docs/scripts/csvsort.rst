@@ -8,7 +8,9 @@ Description
 Sort CSV files. Like unix "sort" command, but for tabular data::
 
     usage: csvsort [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p` ESCAPECHAR] [-e ENCODING] [-n] [-c COLUMNS] [-r]
+                   [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-H] [-v]
+                   [-l] [--zero] [-y SNIFFLIMIT] [-n] [-c COLUMNS] [-r]
+                   [--no-inference]
                    [FILE]
 
     Sort CSV files. Like unix "sort" command, but for tabular data.
@@ -22,7 +24,6 @@ Sort CSV files. Like unix "sort" command, but for tabular data::
       -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
                             Limit CSV dialect sniffing to the specified number of
                             bytes. Specify "0" to disable sniffing entirely.
-                            Specify the encoding the input file.
       -n, --names           Display column names and indices from the input CSV
                             and exit.
       -c COLUMNS, --columns COLUMNS
@@ -30,7 +31,7 @@ Sort CSV files. Like unix "sort" command, but for tabular data::
                             sort by. Defaults to all columns.
       -r, --reverse         Sort in descending order.
       --no-inference        Disable type inference when parsing the input.
- 
+
 See also: :doc:`../common_arguments`.
 
 Examples
