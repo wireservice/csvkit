@@ -56,7 +56,7 @@ Let's examine summary statistics for some selected columns from our data (rememb
 
 ``csvstat`` algorithmically infers the type of each column in the data and then performs basic statistics on it. The particular statistics computed depend on the type of the column.
 
-In this example the first column, ``county`` was identified as type "unicode" (text). We see that there are ``35`` counties represented in the dataset and that ``DOUGLAS`` is far and away the most frequently occuring. A quick Google search shows that there are ``93`` counties in Nebraska, so we know that either not every county received equipment or that the data is incomplete. We can also find out that Douglas county contains Omaha, the state's largest city by far.
+In this example the first column, ``county`` was identified as type "unicode" (text). We see that there are ``35`` counties represented in the dataset and that ``DOUGLAS`` is far and away the most frequently occurring. A quick Google search shows that there are ``93`` counties in Nebraska, so we know that either not every county received equipment or that the data is incomplete. We can also find out that Douglas county contains Omaha, the state's largest city by far.
 
 The ``acquisition_cost`` column is type "float" (number including a decimal). We see that the largest individual cost was ``412,000``. (Probably dollars, but let's not presume.) Total acquisition costs were ``5,438,254``. 
 
@@ -93,7 +93,7 @@ After reviewing the summary statistics you might wonder what equipment was recei
     |  LANCASTER | IMAGE INTENSIFIER,NIGHT VISION | 6800        |
     |------------+--------------------------------+-------------|
 
-``LANCASTER`` county contains Lincoln, Nebraska, the capital of the state and it's second-largest city. The ``-m`` flag means "match" and will find text anywhere in a given column--in this case the ``county`` column. For those who need a more powerful search you can also use ``-r`` to search for a regular expression.
+``LANCASTER`` county contains Lincoln, Nebraska, the capital of the state and its second-largest city. The ``-m`` flag means "match" and will find text anywhere in a given column--in this case the ``county`` column. For those who need a more powerful search you can also use ``-r`` to search for a regular expression.
 
 csvsort: order matters
 ======================
@@ -126,7 +126,7 @@ Now let's use :doc:`/scripts/csvsort` to sort the rows by the ``total_cost`` col
 
 Two interesting things should jump out about this sorted data: that ``LANCASTER`` county got a very expensive ``MINE RESISTANT VEHICLE`` and that it also go three other ``LIGHT ARMORED VEHICLE``.
 
-What commands would you use to figure out if other counties also recieved large numbers of vehicles?
+What commands would you use to figure out if other counties also received large numbers of vehicles?
 
 Summing up
 ==========
