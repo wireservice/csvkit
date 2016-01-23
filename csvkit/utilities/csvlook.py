@@ -12,7 +12,9 @@ class CSVLook(CSVKitUtility):
     description = 'Render a CSV file in the console as a fixed-width table.'
 
     def add_arguments(self):
-        pass
+        self.argparser.add_argument(
+            '-L', '--linestyle', dest='linestyle', default="ascii",
+            help='output table line style, one of ascii or unicode')
 
     def main(self):
         rows = agate.reader(self.input_file, **self.reader_kwargs)
@@ -52,11 +54,43 @@ class CSVLook(CSVKitUtility):
                 except IndexError:
                     widths.append(len(v))
 
-        # Dashes span each width with '+' character at intersection of
-        # horizontal and vertical dividers.
-        divider = '|--' + '-+-'.join('-'* w for w in widths) + '--|'
+        if self.args.linestyle == 'unicode':
+            l_h = b"\342\224\200".decode('utf-8')
+            l_v = b"\342\224\202".decode('utf-8')
+            # [t]op [b]ottom [l]eft [r]ight
+            # direction indicates which edges have 'spokes'
+            # corners
+            l_br = b"\342\224\214".decode('utf-8')
+            l_tr = b"\342\224\224".decode('utf-8')
+            l_bl = b"\342\224\220".decode('utf-8')
+            l_tl = b"\342\224\230".decode('utf-8')
+            # cross, internal intersection
+            l_tblr = b"\342\224\274".decode('utf-8')
+            # outer edge intersections
+            l_tbl = b"\342\224\244".decode('utf-8')
+            l_tbr = b"\342\224\234".decode('utf-8')
+            l_tlr = b"\342\224\264".decode('utf-8')
+            l_blr = b"\342\224\254".decode('utf-8')
+            top_divider = \
+                l_br+l_h+l_h + \
+                (l_h+l_blr+l_h).join(l_h * w for w in widths) + \
+                l_h+l_h+l_bl
+            mid_divider =\
+                l_tbr+l_h+l_h + \
+                (l_h+l_tblr+l_h).join(l_h * w for w in widths) + \
+                l_h+l_h+l_tbl
+            bot_divider = \
+                l_tr+l_h+l_h + \
+                (l_h+l_tlr+l_h).join(l_h * w for w in widths) + \
+                l_h+l_h+l_tl
+        else:
+            # Dashes span each width with '+' character at
+            # intersection of horizontal and vertical dividers.
+            top_divider = mid_divider = bot_divider = \
+                '|--' + '-+-'.join('-'* w for w in widths) + '--|'
+            l_v = '|'
 
-        self.output_file.write('%s\n' % divider)
+        self.output_file.write('%s\n' % top_divider)
 
         for i, row in enumerate(rows):
             output = []
@@ -66,10 +100,12 @@ class CSVLook(CSVKitUtility):
                     d = ''
                 output.append(' %s ' % six.text_type(d).ljust(widths[j]))
 
-            self.output_file.write('| %s |\n' % ('|'.join(output)))
+            self.output_file.write((l_v + ' %s ' + l_v + '\n') % (l_v.join(output)))
 
-            if (i == 0 or i == len(rows) - 1):
-                self.output_file.write('%s\n' % divider)
+            if (i == 0):
+                self.output_file.write('%s\n' % mid_divider)
+            elif i == (len(rows) - 1):
+                self.output_file.write('%s\n' % bot_divider)
 
 def launch_new_instance():
     utility = CSVLook()
