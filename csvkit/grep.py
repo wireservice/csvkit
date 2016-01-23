@@ -119,5 +119,5 @@ class regex_callable(object):
         self.pattern = pattern
         
     def __call__(self, arg):
-        return self.pattern.match(arg)
+        return self.pattern.search(arg)
 
