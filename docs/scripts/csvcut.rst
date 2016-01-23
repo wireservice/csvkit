@@ -42,7 +42,7 @@ Examples
 
 Print the indices and names of all columns::
 
-    $ csvcut -n examples/realdata/FY09_EDU_Recipients_by_State.csv 
+    csvcut -n examples/realdata/FY09_EDU_Recipients_by_State.csv 
       1: State Name
       2: State Abbreviate
       3: Code
@@ -56,13 +56,13 @@ Print the indices and names of all columns::
 
 Extract the first and third columns::
 
-    $ csvcut -c 1,3 examples/realdata/FY09_EDU_Recipients_by_State.csv
+    csvcut -c 1,3 examples/realdata/FY09_EDU_Recipients_by_State.csv
 
 Extract columns named "TOTAL" and "State Name" (in that order)::
 
-    $ csvcut -c TOTAL,"State Name" examples/realdata/FY09_EDU_Recipients_by_State.csv
+    csvcut -c TOTAL,"State Name" examples/realdata/FY09_EDU_Recipients_by_State.csv
 
 Add line numbers to a file, making no other changes::
 
-    $ csvcut -l examples/realdata/FY09_EDU_Recipients_by_State.csv
+    csvcut -l examples/realdata/FY09_EDU_Recipients_by_State.csv
 

@@ -11,7 +11,7 @@ In the previous section we saw how we could use ``csvlook`` and ``csvcut`` to pe
 
 Let's examine summary statistics for some selected columns from our data (remember you can use ``csvcut -n data.csv`` to see the columns in the data)::
 
-    $ csvcut -c county,acquisition_cost,ship_date data.csv | csvstat
+    csvcut -c county,acquisition_cost,ship_date data.csv | csvstat
       1. county
             <type 'unicode'>
             Nulls: False
@@ -69,7 +69,7 @@ csvgrep: find the data you need
 
 After reviewing the summary statistics you might wonder what equipment was received by a particular county. To get a simple answer to the question we can use :doc:`/scripts/csvgrep` to search for the state's name amongst the rows. Let's also use ``csvcut`` to just look at the columns we care about and ``csvlook`` to format the output::
 
-    $ csvcut -c county,item_name,total_cost data.csv | csvgrep -c county -m LANCASTER | csvlook
+    csvcut -c county,item_name,total_cost data.csv | csvgrep -c county -m LANCASTER | csvlook
     |------------+--------------------------------+-------------|
     |  county    | item_name                      | total_cost  |
     |------------+--------------------------------+-------------|
@@ -100,7 +100,7 @@ csvsort: order matters
 
 Now let's use :doc:`/scripts/csvsort` to sort the rows by the ``total_cost`` column, in reverse (descending) order::
 
-    $ csvcut -c county,item_name,total_cost data.csv | csvgrep -c county -m LANCASTER | csvsort -c total_cost -r | csvlook
+    csvcut -c county,item_name,total_cost data.csv | csvgrep -c county -m LANCASTER | csvsort -c total_cost -r | csvlook
     |------------+--------------------------------+-------------|
     |  county    | item_name                      | total_cost  |
     |------------+--------------------------------+-------------|

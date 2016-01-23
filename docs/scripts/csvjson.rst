@@ -48,7 +48,7 @@ Examples
 
 Convert veteran's education dataset to JSON keyed by state abbreviation::
 
-    $ csvjson -k "State Abbreviate" -i 4 examples/realdata/FY09_EDU_Recipients_by_State.csv
+    csvjson -k "State Abbreviate" -i 4 examples/realdata/FY09_EDU_Recipients_by_State.csv
 
 Results in a JSON document like::
 
@@ -72,7 +72,7 @@ Results in a JSON document like::
 
 Converting locations of public art into GeoJSON::
 
-    $ csvjson --lat latitude --lon longitude --k slug --crs EPSG:4269 -i 4 examples/test_geo.csv
+    csvjson --lat latitude --lon longitude --k slug --crs EPSG:4269 -i 4 examples/test_geo.csv
 
 Results in a GeoJSON document like::
 

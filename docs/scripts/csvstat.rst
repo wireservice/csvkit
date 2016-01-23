@@ -47,11 +47,11 @@ Examples
 
 Basic use::
 
-    $ csvstat examples/realdata/FY09_EDU_Recipients_by_State.csv 
+    csvstat examples/realdata/FY09_EDU_Recipients_by_State.csv 
 
 When an statistic name is passed, only that stat will be printed::
 
-    $ csvstat --freq examples/realdata/FY09_EDU_Recipients_by_State.csv
+    csvstat --freq examples/realdata/FY09_EDU_Recipients_by_State.csv
 
       1. State Name: None
       2. State Abbreviate: None
@@ -66,7 +66,7 @@ When an statistic name is passed, only that stat will be printed::
  
 If a single stat *and* a single column are requested, only a value will be returned::
 
-    $ csvstat -c 4 --freq examples/realdata/FY09_EDU_Recipients_by_State.csv
+    csvstat -c 4 --freq examples/realdata/FY09_EDU_Recipients_by_State.csv
 
     3548.0
 

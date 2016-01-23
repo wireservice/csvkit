@@ -34,16 +34,16 @@ Examples
 
 Load sample data into a table using :doc:`csvsql` and then query it using `sql2csv`::
 
-    $ csvsql --db "sqlite:///dummy.db" --table "test" --insert examples/dummy.csv
-    $ sql2csv --db "sqlite:///dummy.db" --query "select * from test"
+    csvsql --db "sqlite:///dummy.db" --table "test" --insert examples/dummy.csv
+    sql2csv --db "sqlite:///dummy.db" --query "select * from test"
 
 Load data about financial aid recipients into Postgresql. Then find the three states that received the most, while also filtering out empty rows::
 
-    $ createdb recipients
-    $ csvsql --db "postgresql:///recipients" --table "fy09" --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
-    $ sql2csv --db "postgresql:///recipients" --query "select * from fy09 where \"State Name\" != '' order by fy09.\"TOTAL\" limit 3"
+    createdb recipients
+    csvsql --db "postgresql:///recipients" --table "fy09" --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
+    sql2csv --db "postgresql:///recipients" --query "select * from fy09 where \"State Name\" != '' order by fy09.\"TOTAL\" limit 3"
 
 You can even use it as a simple SQL calculator (in this example an in-memory sqlite database is used as the default)::
 
-    $ sql2csv --query "select 300 * 47 % 14 * 27 + 7000"
+    sql2csv --query "select 300 * 47 % 14 * 27 + 7000"
 
