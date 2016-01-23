@@ -147,7 +147,7 @@ By default, ``csvsql`` will generate a create table statement for your data. You
             margin_of_error INTEGER NOT NULL
     );
 
-Here we have the sqlite "create table" statement for our joined data. You'll see that, like ``csvstat``, ``csvsql`` has done it's best to infer the column types.
+Here we have the sqlite "create table" statement for our joined data. You'll see that, like ``csvstat``, ``csvsql`` has done its best to infer the column types.
 
 Often you won't care about storing the SQL statements locally. You can also use ``csvsql`` to create the table directly in the database on your local machine. If you add the ``--insert`` option the data will also be imported::
 
