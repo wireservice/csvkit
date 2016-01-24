@@ -10,7 +10,9 @@ install_requires = [
     'openpyxl==2.2.6',
     'six>=1.6.1',
     'python-dateutil==2.2',
-    'dbf>=0.96.005'
+    'dbf>=0.96.005',
+    'Unidecode>=0.04.19',
+    'normality>=0.2.4'
 ]
 
 if sys.version_info < (2, 7):
