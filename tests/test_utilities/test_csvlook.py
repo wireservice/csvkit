@@ -1,16 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
+
 import six
 
 try:
     import unittest2 as unittest
+    from mock import patch
 except ImportError:
     import unittest
+    from unittest.mock import patch
 
-from csvkit.utilities.csvlook import CSVLook
+from csvkit.utilities.csvlook import CSVLook, launch_new_instance
 
 class TestCSVLook(unittest.TestCase):
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', ['csvlook', 'examples/dummy.csv']):
+            launch_new_instance()
+
     def test_simple(self):
         args = ['examples/dummy3.csv']
         output_file = six.StringIO()

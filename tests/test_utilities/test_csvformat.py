@@ -1,17 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
+
 import six
 
 try:
     import unittest2 as unittest
+    from mock import patch
 except ImportError:
     import unittest
+    from unittest.mock import patch
 
-from csvkit.utilities.csvformat import CSVFormat
+from csvkit.utilities.csvformat import CSVFormat, launch_new_instance
 from tests.utils import stdin_as_string
 
 class TestCSVFormat(unittest.TestCase):
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', ['csvformat', 'examples/dummy.csv']):
+            launch_new_instance()
+
     def test_delimiter(self):
         args = ['-D', '|', 'examples/dummy.csv']
         output_file = six.StringIO()

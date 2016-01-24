@@ -1,19 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
+
+import agate
 import six
 
 try:
     import unittest2 as unittest
+    from mock import patch
 except ImportError:
     import unittest
+    from unittest.mock import patch
 
-import agate
-
-from csvkit.utilities.csvsort import CSVSort
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
+from csvkit.utilities.csvsort import CSVSort, launch_new_instance
 
 class TestCSVSort(unittest.TestCase):
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', ['csvsort', 'examples/dummy.csv']):
+            launch_new_instance()
+
     def test_sort_string_reverse(self):
         args = ['-c', '1', '-r', 'examples/testxls_converted.csv']
         output_file = six.StringIO()

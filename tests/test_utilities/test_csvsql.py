@@ -1,16 +1,24 @@
 #!/usr/bin/env python
 
+import sys
+
 import six
 
 try:
     import unittest2 as unittest
+    from mock import patch
 except ImportError:
     import unittest
+    from unittest.mock import patch
 
-from csvkit.utilities.csvsql import CSVSQL
+from csvkit.utilities.csvsql import CSVSQL, launch_new_instance
 from tests.utils import stdin_as_string
 
 class TestCSVSQL(unittest.TestCase):
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', ['csvsql', 'examples/dummy.csv']):
+            launch_new_instance()
+
     def test_create_table(self):
         args = ['--table', 'foo', 'examples/testfixed_converted.csv']
         output_file = six.StringIO()

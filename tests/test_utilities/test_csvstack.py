@@ -1,17 +1,24 @@
 #!/usr/bin/env python
 
+import sys
+
+import agate
 import six
 
 try:
     import unittest2 as unittest
+    from mock import patch
 except ImportError:
     import unittest
+    from unittest.mock import patch
 
-import agate
-
-from csvkit.utilities.csvstack import CSVStack
+from csvkit.utilities.csvstack import CSVStack, launch_new_instance
 
 class TestCSVStack(unittest.TestCase):
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', ['csvstack', 'examples/dummy.csv']):
+            launch_new_instance()
+
     def test_single_file_stack(self):
         # stacking single file works fine
         args = ['examples/dummy.csv']

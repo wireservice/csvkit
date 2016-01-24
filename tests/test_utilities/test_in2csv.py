@@ -1,15 +1,23 @@
 #!/usr/bin/env python
 
+import sys
+
 import six
 
 try:
     import unittest2 as unittest
+    from mock import patch
 except ImportError:
     import unittest
+    from unittest.mock import patch
 
-from csvkit.utilities.in2csv import In2CSV
+from csvkit.utilities.in2csv import In2CSV, launch_new_instance
 
 class TestIn2CSV(unittest.TestCase):
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', ['in2csv', 'examples/dummy.csv']):
+            launch_new_instance()
+
     def test_convert_xls(self):
         args = ['-f', 'xls', 'examples/test.xls']
         output_file = six.StringIO()

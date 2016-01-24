@@ -1,18 +1,25 @@
 #!/usr/bin/env python
 
+import sys
+
+import agate
 import six
 
 try:
     import unittest2 as unittest
+    from mock import patch
 except ImportError:
     import unittest
+    from unittest.mock import patch
 
-import agate
-
-from csvkit.utilities.csvgrep import CSVGrep
 from csvkit.exceptions import ColumnIdentifierError
+from csvkit.utilities.csvgrep import CSVGrep, launch_new_instance
 
 class TestCSVGrep(unittest.TestCase):
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', ['csvgrep', '-c', '1', '-m', '1', 'examples/dummy.csv']):
+            launch_new_instance()
+
     def test_match(self):
         args = ['-c', '1', '-m', '1', 'examples/dummy.csv']
         output_file = six.StringIO()

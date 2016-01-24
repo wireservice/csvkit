@@ -1,15 +1,23 @@
 #!/usr/bin/env python
 
+import sys
+
 import six
 
 try:
     import unittest2 as unittest
+    from mock import patch
 except ImportError:
     import unittest
+    from unittest.mock import patch
 
-from csvkit.utilities.csvstat import CSVStat
+from csvkit.utilities.csvstat import CSVStat, launch_new_instance
 
 class TestCSVStat(unittest.TestCase):
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', ['csvstack', 'examples/dummy.csv']):
+            launch_new_instance()
+
     def test_runs(self):
         args = ['examples/test_utf8.csv']
         output_file = six.StringIO()

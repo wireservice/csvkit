@@ -1,17 +1,24 @@
 #!/usr/bin/env python
 
 import os
+import sys
 
 import six
 
 try:
     import unittest2 as unittest
+    from mock import patch
 except ImportError:
     import unittest
+    from unittest.mock import patch
 
-from csvkit.utilities.csvclean import CSVClean
+from csvkit.utilities.csvclean import CSVClean, launch_new_instance
 
 class TestCSVClean(unittest.TestCase):
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', ['csvclean', 'examples/bad.csv']):
+            launch_new_instance()
+
     def test_simple(self):
         args = ['examples/bad.csv']
         output_file = six.StringIO()
