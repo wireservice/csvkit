@@ -1,19 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
+
+import agate
 import six
 
 try:
     import unittest2 as unittest
+    from mock import patch
 except ImportError:
     import unittest
+    from unittest.mock import patch
 
-import agate
-
-from csvkit.utilities.csvcut import CSVCut
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
+from csvkit.utilities.csvcut import CSVCut, launch_new_instance
 
 class TestCSVCut(unittest.TestCase):
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', ['csvcut', 'examples/dummy.csv']):
+            launch_new_instance()
+
     def test_simple(self):
         args = ['-c', '1,3', 'examples/dummy.csv']
         output_file = six.StringIO()

@@ -1,15 +1,23 @@
 #!/usr/bin/env python
 
+import sys
+
 import six
 
 try:
     import unittest2 as unittest
+    from mock import patch
 except ImportError:
     import unittest
+    from unittest.mock import patch
 
-from csvkit.utilities.csvjoin import CSVJoin
+from csvkit.utilities.csvjoin import CSVJoin, launch_new_instance
 
 class TestCSVJoin(unittest.TestCase):
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', ['csvjoin', 'examples/join_a.csv', 'examples/join_b.csv']):
+            launch_new_instance()
+
     def test_sequential(self):
         args = ['examples/join_a.csv', 'examples/join_b.csv']
         output_file = six.StringIO()

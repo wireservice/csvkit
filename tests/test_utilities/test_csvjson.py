@@ -1,18 +1,25 @@
 #!/usr/bin/env python
 
 import json
+import sys
 
 import six
 
 try:
     import unittest2 as unittest
+    from mock import patch
 except ImportError:
     import unittest
+    from unittest.mock import patch
 
 from csvkit.exceptions import NonUniqueKeyColumnException
-from csvkit.utilities.csvjson import CSVJSON
+from csvkit.utilities.csvjson import CSVJSON, launch_new_instance
 
 class TestCSVJSON(unittest.TestCase):
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', ['csvjson', 'examples/dummy.csv']):
+            launch_new_instance()
+
     def test_simple(self):
         args = ['examples/dummy.csv']
         output_file = six.StringIO()
