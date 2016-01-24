@@ -4,13 +4,17 @@ import os
 import sys
 
 import agate
+from normality import slugify
 
 from csvkit import sql
 from csvkit import table
 from csvkit.cli import CSVKitUtility
 
+
 class CSVSQL(CSVKitUtility):
-    description = 'Generate SQL statements for one or more CSV files, create execute those statements directly on a database, and execute one or more SQL queries.'
+    description = ("Generate SQL statements for one or more CSV files, create "
+                   "execute those statements directly on a database, and "
+                   "execute one or more SQL queries.")
     override_flags = ['l', 'f']
 
     def add_arguments(self):
@@ -21,6 +25,8 @@ class CSVSQL(CSVKitUtility):
             help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=sql.DIALECTS,
             help='Dialect of SQL to generate. Only valid when --db is not specified.')
+        self.argparser.add_argument('-n', '--normalize-columns', dest='normalize_columns', action='store_true',
+            help='Normalize the headers before generating column names.')
         self.argparser.add_argument('--db', dest='connection_string',
             help='If present, a sqlalchemy connection string to use to directly execute generated SQL on a database.')
         self.argparser.add_argument('--query', default=None,
@@ -115,7 +121,8 @@ class CSVSQL(CSVKitUtility):
                     table_name,
                     self.args.no_constraints,
                     self.args.db_schema,
-                    metadata
+                    self.args.normalize_columns,
+                    metadata,
                 )
 
                 # Create table
@@ -126,11 +133,14 @@ class CSVSQL(CSVKitUtility):
                 if do_insert and csv_table.count_rows() > 0:
                     insert = sql_table.insert()
                     headers = csv_table.headers()
+                    if self.args.normalize_columns:
+                        headers = [slugify(h, sep='_') for h in headers]
                     conn.execute(insert, [dict(zip(headers, row)) for row in csv_table.to_rows()])
 
             # Output SQL statements
             else:
-                sql_table = sql.make_table(csv_table, table_name, self.args.no_constraints)
+                sql_table = sql.make_table(csv_table, table_name,
+                                           self.args.no_constraints)
                 self.output_file.write('%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect))
 
         if connection_string:
@@ -155,6 +165,7 @@ class CSVSQL(CSVKitUtility):
 
             trans.commit()
             conn.close()
+
 
 def launch_new_instance():
     utility = CSVSQL()
