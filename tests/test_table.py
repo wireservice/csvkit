@@ -91,6 +91,10 @@ class TestTable(unittest.TestCase):
     def test_from_csv_empty_file(self):
         table.Table.from_csv(six.StringIO('\n\n'))
 
+    def test_from_csv_dev_null(self):
+        with open('/dev/null', 'r') as f:
+            table.Table.from_csv(f)
+
     def test_to_csv(self):
         raise SkipTest
         with open('examples/testfixed_converted.csv', 'r') as f:
