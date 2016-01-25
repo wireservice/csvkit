@@ -2,7 +2,6 @@
 
 import itertools
 import re
-import sys
 from argparse import FileType
 
 import agate

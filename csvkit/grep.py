@@ -11,9 +11,9 @@ class FilteringCSVReader(six.Iterator):
     If 'header' is False, then all rows must pass the filter; by default, the first row will be passed
     through untested.
 
-    The value of patterns may be either a sequence or a dictionary.  Items in the sequence and values in the 
-    dictionary may be strings, regular expressions, or functions.  For each row in the wrapped iterator, 
-    these values will be used as tests, and the row will only be yielded by the filter if all values pass 
+    The value of patterns may be either a sequence or a dictionary.  Items in the sequence and values in the
+    dictionary may be strings, regular expressions, or functions.  For each row in the wrapped iterator,
+    these values will be used as tests, and the row will only be yielded by the filter if all values pass
     their corresponding tests.  This behavior can be toggled so that all rows which pass any of the tests
     will be yielded by specifying "any_match=True" in the constructor.
 
@@ -21,10 +21,10 @@ class FilteringCSVReader(six.Iterator):
     or not the filtering reader yields a prospective row.  To test for explicitly blank, use a regular
     expression such as "^$" or "^\s*$"
 
-    If patterns is a dictionary, the keys can be integers identifying indices in the input rows, or, if 'header' 
+    If patterns is a dictionary, the keys can be integers identifying indices in the input rows, or, if 'header'
     is True (as it is by default), they can be strings matching column names in the first row of the reader.
 
-    If patterns is a sequence, then it is assumed that they will be applied to the 
+    If patterns is a sequence, then it is assumed that they will be applied to the
     equivalently positioned values in the test rows.
 
     By specifying 'inverse=True', only rows which do not match the patterns will be passed by the filter. The header,
@@ -80,9 +80,9 @@ class FilteringCSVReader(six.Iterator):
 
 def standardize_patterns(column_names, patterns):
     """
-    Given patterns in any of the permitted input forms, return a dict whose keys 
+    Given patterns in any of the permitted input forms, return a dict whose keys
     are column indices and whose values are functions which return a boolean value whether the value passes.
-    If patterns is a dictionary and any of its keys are values in column_names, the returned dictionary will 
+    If patterns is a dictionary and any of its keys are values in column_names, the returned dictionary will
     have those keys replaced with the integer position of that value in column_names
     """
     try:

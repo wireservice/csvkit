@@ -5,8 +5,6 @@ try:
 except ImportError:
     import unittest
 
-import six
-
 from csvkit.convert import dbase
 
 

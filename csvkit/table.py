@@ -273,7 +273,7 @@ class Table(list):
             for c in self:
                 # Stringify datetimes, dates, and times
                 if c.type in [datetime.datetime, datetime.date, datetime.time]:
-                    out_columns.append([six.text_type(v.isoformat()) if v != None else None for v in c])
+                    out_columns.append([six.text_type(v.isoformat()) if v is not None else None for v in c])
                 else:
                     out_columns.append(c)
 

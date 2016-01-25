@@ -106,7 +106,7 @@ class CSVStat(CSVKitUtility):
 
                 self.output_file.write(('%3i. %s\n' % (c.order + 1, c.name)))
 
-                if c.type == None:
+                if c.type is None:
                     self.output_file.write('\tEmpty column\n')
                     continue
 
