@@ -44,13 +44,17 @@ Generate summary statistics::
 
     csvstat data.csv
 
+Make plots::
+
+    csvplot data.csv
+
 Query with SQL::
 
     csvsql --query "select name from data where age > 30" data.csv > old_folks.csv
 
 Import into PostgreSQL::
 
-    csvsql --db postgresql:///database --insert data.csv 
+    csvsql --db postgresql:///database --insert data.csv
 
 Extract data from PostgreSQL:::
 
@@ -62,14 +66,14 @@ Table of contents
 =================
 
 .. toctree::
-    :maxdepth: 3 
-    
+    :maxdepth: 3
+
     install
     tutorial
-    cli 
+    cli
     lib
     contributing
-    release 
+    release
 
 Authors
 =======
