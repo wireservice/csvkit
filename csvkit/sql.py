@@ -3,6 +3,8 @@
 import datetime
 
 import six
+import normality
+from unidecode import unidecode
 
 from sqlalchemy import Column, MetaData, Table, create_engine
 from sqlalchemy import BigInteger, Boolean, Date, DateTime, Float, Integer, String, Time
@@ -27,7 +29,12 @@ NULL_COLUMN_MAX_LENGTH = 32
 SQL_INTEGER_MAX = 2147483647
 SQL_INTEGER_MIN = -2147483647
 
-def make_column(column, no_constraints=False):
+
+def normalize_name(name):
+    return normality.slugify(unidecode(name), sep='_')
+
+
+def make_column(column, no_constraints=False, normalize_columns=False):
     """
     Creates a sqlalchemy column from a csvkit Column.
     """
@@ -66,7 +73,11 @@ def make_column(column, no_constraints=False):
 
         sql_column_kwargs['nullable'] = column.has_nulls()
 
-    return Column(column.name, sql_column_type(**sql_type_kwargs), **sql_column_kwargs)
+    column_name = column.name
+    if normalize_columns:
+        column_name = normalize_name(column.name)
+
+    return Column(column_name, sql_column_type(**sql_type_kwargs), **sql_column_kwargs)
 
 def get_connection(connection_string):
     engine = create_engine(connection_string)
@@ -74,7 +85,7 @@ def get_connection(connection_string):
 
     return engine, metadata
 
-def make_table(csv_table, name='table_name', no_constraints=False, db_schema=None, metadata=None):
+def make_table(csv_table, name='table_name', no_constraints=False, db_schema=None, normalize_columns=False, metadata=None):
     """
     Creates a sqlalchemy table from a csvkit Table.
     """
@@ -84,7 +95,7 @@ def make_table(csv_table, name='table_name', no_constraints=False, db_schema=Non
     sql_table = Table(csv_table.name, metadata, schema=db_schema)
 
     for column in csv_table:
-        sql_table.append_column(make_column(column, no_constraints))
+        sql_table.append_column(make_column(column, no_constraints, normalize_columns))
 
     return sql_table
 

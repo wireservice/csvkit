@@ -29,6 +29,8 @@ class CSVSQL(CSVKitUtility):
             help='In addition to creating the table, also insert the data into the table. Only valid when --db is specified.')
         self.argparser.add_argument('--tables', dest='table_names',
             help='Specify one or more names for the tables to be created. If omitted, the filename (minus extension) or "stdin" will be used.')
+        self.argparser.add_argument('-n', '--normalize-columns', dest='normalize_columns', action='store_true',
+            help='Normalize the headers before generating column names.')
         self.argparser.add_argument('--no-constraints', dest='no_constraints', action='store_true',
             help='Generate a schema without length limits or null checks. Useful when sampling big tables.')
         self.argparser.add_argument('--no-create', dest='no_create', action='store_true',
@@ -115,6 +117,7 @@ class CSVSQL(CSVKitUtility):
                     table_name,
                     self.args.no_constraints,
                     self.args.db_schema,
+                    self.args.normalize_columns,
                     metadata
                 )
 
@@ -125,7 +128,7 @@ class CSVSQL(CSVKitUtility):
                 # Insert data
                 if do_insert and csv_table.count_rows() > 0:
                     insert = sql_table.insert()
-                    headers = csv_table.headers()
+                    headers = [sql.normalize_name(h) for h in csv_table.headers()]
                     conn.execute(insert, [dict(zip(headers, row)) for row in csv_table.to_rows()])
 
             # Output SQL statements

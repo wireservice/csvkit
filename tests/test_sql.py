@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding: utf-8
 
 try:
     import unittest2 as unittest
@@ -100,6 +101,19 @@ u"""CREATE TABLE test_table (
 \tdatetime DATETIME, 
 \tempty_column VARCHAR
 );""")
+
+    def test_make_create_table_statement_normalize_names(self):
+        csv_table = table.Table([
+            table.Column(0, u'äää H!HU', [u'Chicago Reader', u'Chicago Sun-Times', u'Chicago Tribune', u'Row with blanks'])],
+            name='test_table')
+        sql_table = sql.make_table(csv_table, 'csvsql', True, None, True)
+        statement = sql.make_create_table_statement(sql_table)
+
+        self.assertEqual(statement, 
+u"""CREATE TABLE test_table (
+\taaa_h_hu VARCHAR
+);""")
+
 
     def test_make_create_table_statement_with_schema(self):
         sql_table = sql.make_table(self.csv_table, 'csvsql', db_schema='test_schema')
