@@ -16,7 +16,9 @@ except ImportError:
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 from csvkit.utilities.csvsort import CSVSort, launch_new_instance
 
+
 class TestCSVSort(unittest.TestCase):
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvsort', 'examples/dummy.csv']):
             launch_new_instance()

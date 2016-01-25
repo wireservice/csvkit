@@ -14,7 +14,9 @@ except ImportError:
 
 from csvkit.utilities.csvstack import CSVStack, launch_new_instance
 
+
 class TestCSVStack(unittest.TestCase):
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvstack', 'examples/dummy.csv']):
             launch_new_instance()

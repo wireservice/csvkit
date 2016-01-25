@@ -9,6 +9,7 @@ from csvkit import sql
 from csvkit import table
 from csvkit.cli import CSVKitUtility
 
+
 class CSVSQL(CSVKitUtility):
     description = 'Generate SQL statements for one or more CSV files, create execute those statements directly on a database, and execute one or more SQL queries.'
     override_flags = ['l', 'f']
@@ -16,29 +17,29 @@ class CSVSQL(CSVKitUtility):
     def add_arguments(self):
 
         self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
-            help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
+                                    help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
-            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
+                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=sql.DIALECTS,
-            help='Dialect of SQL to generate. Only valid when --db is not specified.')
+                                    help='Dialect of SQL to generate. Only valid when --db is not specified.')
         self.argparser.add_argument('--db', dest='connection_string',
-            help='If present, a sqlalchemy connection string to use to directly execute generated SQL on a database.')
+                                    help='If present, a sqlalchemy connection string to use to directly execute generated SQL on a database.')
         self.argparser.add_argument('--query', default=None,
-            help='Execute one or more SQL queries delimited by ";" and output the result of the last query as CSV.')
+                                    help='Execute one or more SQL queries delimited by ";" and output the result of the last query as CSV.')
         self.argparser.add_argument('--insert', dest='insert', action='store_true',
-            help='In addition to creating the table, also insert the data into the table. Only valid when --db is specified.')
+                                    help='In addition to creating the table, also insert the data into the table. Only valid when --db is specified.')
         self.argparser.add_argument('--tables', dest='table_names',
-            help='Specify one or more names for the tables to be created. If omitted, the filename (minus extension) or "stdin" will be used.')
+                                    help='Specify one or more names for the tables to be created. If omitted, the filename (minus extension) or "stdin" will be used.')
         self.argparser.add_argument('--no-constraints', dest='no_constraints', action='store_true',
-            help='Generate a schema without length limits or null checks. Useful when sampling big tables.')
+                                    help='Generate a schema without length limits or null checks. Useful when sampling big tables.')
         self.argparser.add_argument('--no-create', dest='no_create', action='store_true',
-            help='Skip creating a table. Only valid when --insert is specified.')
+                                    help='Skip creating a table. Only valid when --insert is specified.')
         self.argparser.add_argument('--blanks', dest='blanks', action='store_true',
-            help='Do not coerce empty strings to NULL values.')
+                                    help='Do not coerce empty strings to NULL values.')
         self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
-            help='Disable type inference when parsing the input.')
+                                    help='Disable type inference when parsing the input.')
         self.argparser.add_argument('--db-schema', dest='db_schema',
-            help='Optional name of database schema to create table(s) in.')
+                                    help='Optional name of database schema to create table(s) in.')
 
     def main(self):
         connection_string = self.args.connection_string
@@ -155,6 +156,7 @@ class CSVSQL(CSVKitUtility):
 
             trans.commit()
             conn.close()
+
 
 def launch_new_instance():
     utility = CSVSQL()

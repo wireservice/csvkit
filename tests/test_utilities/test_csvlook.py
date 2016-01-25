@@ -14,7 +14,9 @@ except ImportError:
 
 from csvkit.utilities.csvlook import CSVLook, launch_new_instance
 
+
 class TestCSVLook(unittest.TestCase):
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvlook', 'examples/dummy.csv']):
             launch_new_instance()
@@ -67,4 +69,3 @@ class TestCSVLook(unittest.TestCase):
         self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')
         self.assertEqual(next(input_file), u'|  4 | 5 | ʤ  |\n')
         self.assertEqual(next(input_file), '|----+---+----|\n')
-

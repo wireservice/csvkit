@@ -6,6 +6,7 @@ import six
 
 agateexcel.patch()
 
+
 def xlsx2csv(f, **kwargs):
     """
     Convert an Excel .xlsx file to csv.

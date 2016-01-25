@@ -16,7 +16,9 @@ except ImportError:
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 from csvkit.utilities.csvcut import CSVCut, launch_new_instance
 
+
 class TestCSVCut(unittest.TestCase):
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvcut', 'examples/dummy.csv']):
             launch_new_instance()

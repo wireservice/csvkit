@@ -12,6 +12,7 @@ from csvkit.exceptions import ColumnIdentifierError
 
 
 class TestGrep(unittest.TestCase):
+
     def setUp(self):
         self.tab1 = [
             ['id', 'name', 'i_work_here'],

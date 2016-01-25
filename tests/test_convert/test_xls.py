@@ -7,7 +7,9 @@ except ImportError:
 
 from csvkit.convert import xls
 
+
 class TestXLS(unittest.TestCase):
+
     def test_xls(self):
         with open('examples/test.xls', 'rb') as f:
             output = xls.xls2csv(f)

@@ -13,7 +13,9 @@ except ImportError:
 
 from csvkit.utilities.in2csv import In2CSV, launch_new_instance
 
+
 class TestIn2CSV(unittest.TestCase):
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['in2csv', 'examples/dummy.csv']):
             launch_new_instance()

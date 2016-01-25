@@ -14,7 +14,9 @@ except ImportError:
 from csvkit.utilities.csvsql import CSVSQL, launch_new_instance
 from tests.utils import stdin_as_string
 
+
 class TestCSVSQL(unittest.TestCase):
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvsql', 'examples/dummy.csv']):
             launch_new_instance()
@@ -44,7 +46,7 @@ class TestCSVSQL(unittest.TestCase):
         utility = CSVSQL(args, output_file)
         utility.main()
 
-        sql =  output_file.getvalue()
+        sql = output_file.getvalue()
 
         self.assertTrue('CREATE TABLE foo' in sql)
         self.assertTrue('text VARCHAR(17) NOT NULL' in sql)

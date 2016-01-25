@@ -16,7 +16,9 @@ from csvkit.utilities.csvsql import CSVSQL
 from csvkit.utilities.sql2csv import SQL2CSV, launch_new_instance
 from tests.utils import stdin_as_string
 
+
 class TestSQL2CSV(unittest.TestCase):
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['sql2csv', '--query', 'select 1']):
             launch_new_instance()

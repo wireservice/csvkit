@@ -15,7 +15,9 @@ except ImportError:
 from csvkit.utilities.csvformat import CSVFormat, launch_new_instance
 from tests.utils import stdin_as_string
 
+
 class TestCSVFormat(unittest.TestCase):
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvformat', 'examples/dummy.csv']):
             launch_new_instance()
@@ -62,7 +64,7 @@ class TestCSVFormat(unittest.TestCase):
     def test_escapechar(self):
         args = ['-P', '#', '-U', '3']
         output_file = six.StringIO()
-    
+
         input_file = six.StringIO('a,b,c\n1"2,3,4\n')
 
         with stdin_as_string(input_file):
@@ -84,4 +86,3 @@ class TestCSVFormat(unittest.TestCase):
         output = output_file.getvalue()
 
         self.assertEqual(output, 'a,b,cXYZ1,2,3XYZ')
-

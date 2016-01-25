@@ -13,7 +13,9 @@ except ImportError:
 
 from csvkit.utilities.csvstat import CSVStat, launch_new_instance
 
+
 class TestCSVStat(unittest.TestCase):
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvstack', 'examples/dummy.csv']):
             launch_new_instance()
@@ -54,4 +56,3 @@ class TestCSVStat(unittest.TestCase):
         stats = output_file.getvalue()
 
         self.assertEqual(stats, 'Row count: 1\n')
-

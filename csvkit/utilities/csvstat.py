@@ -15,7 +15,8 @@ NoneType = type(None)
 
 MAX_UNIQUE = 5
 MAX_FREQ = 5
-OPERATIONS =('min', 'max', 'sum', 'mean', 'median', 'stdev', 'nulls', 'unique', 'freq', 'len')
+OPERATIONS = ('min', 'max', 'sum', 'mean', 'median', 'stdev', 'nulls', 'unique', 'freq', 'len')
+
 
 class CSVStat(CSVKitUtility):
     description = 'Print descriptive statistics for each column in a CSV file.'
@@ -23,31 +24,31 @@ class CSVStat(CSVKitUtility):
 
     def add_arguments(self):
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
-            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
+                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
-            help='A comma separated list of column indices or names to be examined. Defaults to all columns.')
+                                    help='A comma separated list of column indices or names to be examined. Defaults to all columns.')
         self.argparser.add_argument('--max', dest='max_only', action='store_true',
-            help='Only output max.')
+                                    help='Only output max.')
         self.argparser.add_argument('--min', dest='min_only', action='store_true',
-            help='Only output min.')
+                                    help='Only output min.')
         self.argparser.add_argument('--sum', dest='sum_only', action='store_true',
-            help='Only output sum.')
+                                    help='Only output sum.')
         self.argparser.add_argument('--mean', dest='mean_only', action='store_true',
-            help='Only output mean.')
+                                    help='Only output mean.')
         self.argparser.add_argument('--median', dest='median_only', action='store_true',
-            help='Only output median.')
+                                    help='Only output median.')
         self.argparser.add_argument('--stdev', dest='stdev_only', action='store_true',
-            help='Only output standard deviation.')
+                                    help='Only output standard deviation.')
         self.argparser.add_argument('--nulls', dest='nulls_only', action='store_true',
-            help='Only output whether column contains nulls.')
+                                    help='Only output whether column contains nulls.')
         self.argparser.add_argument('--unique', dest='unique_only', action='store_true',
-            help='Only output unique values.')
+                                    help='Only output unique values.')
         self.argparser.add_argument('--freq', dest='freq_only', action='store_true',
-            help='Only output frequent values.')
+                                    help='Only output frequent values.')
         self.argparser.add_argument('--len', dest='len_only', action='store_true',
-            help='Only output max value length.')
+                                    help='Only output max value length.')
         self.argparser.add_argument('--count', dest='count_only', action='store_true',
-            help='Only output row count')
+                                    help='Only output row count')
 
     def main(self):
         operations = [op for op in OPERATIONS if getattr(self.args, op + '_only')]
@@ -208,6 +209,7 @@ class CSVStat(CSVKitUtility):
 
         return c.max_length()
 
+
 def median(l):
     """
     Compute the median of a list.
@@ -220,6 +222,7 @@ def median(l):
         a = l[(length // 2) - 1]
         b = l[length // 2]
     return (float(a + b)) / 2
+
 
 def freq(l, n=MAX_FREQ):
     """

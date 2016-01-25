@@ -12,11 +12,13 @@ import six
 
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
+
 def lazy_opener(fn):
     def wrapped(self, *args, **kwargs):
         self._lazy_open()
         fn(*args, **kwargs)
     return wrapped
+
 
 class LazyFile(six.Iterator):
     """
@@ -26,6 +28,7 @@ class LazyFile(six.Iterator):
     Currently this implements only the minimum methods to be useful,
     but it could easily be expanded.
     """
+
     def __init__(self, init, *args, **kwargs):
         self.init = init
         self.f = None
@@ -55,6 +58,7 @@ class LazyFile(six.Iterator):
             self._is_lazy_opened = True
 
         return next(self.f)
+
 
 class CSVKitUtility(object):
     description = ''
@@ -94,7 +98,7 @@ class CSVKitUtility(object):
             import signal
             signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         except (ImportError, AttributeError):
-            #Do nothing on platforms that don't have signals or don't have SIGPIPE
+            # Do nothing on platforms that don't have signals or don't have SIGPIPE
             pass
 
     def add_arguments(self):
@@ -125,50 +129,50 @@ class CSVKitUtility(object):
         # Input
         if 'f' not in self.override_flags:
             self.argparser.add_argument(metavar="FILE", nargs='?', dest='input_path',
-                help='The CSV file to operate on. If omitted, will accept input on STDIN.')
+                                        help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         if 'd' not in self.override_flags:
             self.argparser.add_argument('-d', '--delimiter', dest='delimiter',
-                help='Delimiting character of the input CSV file.')
+                                        help='Delimiting character of the input CSV file.')
         if 't' not in self.override_flags:
             self.argparser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
-                help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
+                                        help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
         if 'q' not in self.override_flags:
             self.argparser.add_argument('-q', '--quotechar', dest='quotechar',
-                help='Character used to quote strings in the input CSV file.')
+                                        help='Character used to quote strings in the input CSV file.')
         if 'u' not in self.override_flags:
-            self.argparser.add_argument('-u', '--quoting', dest='quoting', type=int, choices=[0,1,2,3],
-                help='Quoting style used in the input CSV file. 0 = Quote Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 = Quote None.')
+            self.argparser.add_argument('-u', '--quoting', dest='quoting', type=int, choices=[0, 1, 2, 3],
+                                        help='Quoting style used in the input CSV file. 0 = Quote Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 = Quote None.')
         if 'b' not in self.override_flags:
             self.argparser.add_argument('-b', '--doublequote', dest='doublequote', action='store_true',
-                help='Whether or not double quotes are doubled in the input CSV file.')
+                                        help='Whether or not double quotes are doubled in the input CSV file.')
         if 'p' not in self.override_flags:
             self.argparser.add_argument('-p', '--escapechar', dest='escapechar',
-                help='Character used to escape the delimiter if --quoting 3 ("Quote None") is specified and to escape the QUOTECHAR if --doublequote is not specified.')
+                                        help='Character used to escape the delimiter if --quoting 3 ("Quote None") is specified and to escape the QUOTECHAR if --doublequote is not specified.')
         if 'z' not in self.override_flags:
             self.argparser.add_argument('-z', '--maxfieldsize', dest='maxfieldsize', type=int,
-                help='Maximum length of a single field in the input CSV file.')
+                                        help='Maximum length of a single field in the input CSV file.')
         if 'e' not in self.override_flags:
             self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
-                help='Specify the encoding the input CSV file.')
+                                        help='Specify the encoding the input CSV file.')
         if 'S' not in self.override_flags:
             self.argparser.add_argument('-S', '--skipinitialspace', dest='skipinitialspace', default=False, action='store_true',
-                help='Ignore whitespace immediately following the delimiter.')
+                                        help='Ignore whitespace immediately following the delimiter.')
         if 'H' not in self.override_flags:
             self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
-                help='Specifies that the input CSV file has no header row. Will create default headers (A,B,C,...).')
+                                        help='Specifies that the input CSV file has no header row. Will create default headers (A,B,C,...).')
         if 'v' not in self.override_flags:
             self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
-                help='Print detailed tracebacks when errors occur.')
+                                        help='Print detailed tracebacks when errors occur.')
 
         # Output
         if 'l' not in self.override_flags:
             self.argparser.add_argument('-l', '--linenumbers', dest='line_numbers', action='store_true',
-                                help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple primary key.')
+                                        help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple primary key.')
 
         # Input/Output
         if 'zero' not in self.override_flags:
             self.argparser.add_argument('--zero', dest='zero_based', action='store_true',
-                            help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
+                                        help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
 
     def _open_input_file(self, path):
         """
@@ -179,7 +183,7 @@ class CSVKitUtility(object):
             kwargs = {}
         else:
             mode = 'rt'
-            kwargs = { 'encoding': self.args.encoding }
+            kwargs = {'encoding': self.args.encoding}
 
         if not path or path == '-':
             f = sys.stdin
@@ -274,9 +278,9 @@ class CSVKitUtility(object):
         output = self.output_file
 
         try:
-            zero_based=self.args.zero_based
+            zero_based = self.args.zero_based
         except:
-            zero_based=False
+            zero_based = False
 
         rows = agate.reader(f, **self.reader_kwargs)
         column_names = next(rows)
@@ -314,6 +318,7 @@ def match_column_identifier(column_names, c, zero_based=False):
 
     return c
 
+
 def parse_column_identifiers(ids, column_names, zero_based=False, excluded_columns=None):
     """
     Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
@@ -338,9 +343,9 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
                 columns.append(match_column_identifier(column_names, c, zero_based))
             except ColumnIdentifierError:
                 if ':' in c:
-                    a,b = c.split(':',1)
+                    a, b = c.split(':', 1)
                 elif '-' in c:
-                    a,b = c.split('-',1)
+                    a, b = c.split('-', 1)
                 else:
                     raise
 
@@ -357,7 +362,7 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
                 except ValueError:
                     raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
 
-                for x in range(a,b):
+                for x in range(a, b):
                     columns.append(match_column_identifier(column_names, x, zero_based))
 
     excludes = []
@@ -370,9 +375,9 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
                 excludes.append(match_column_identifier(column_names, c, zero_based))
             except ColumnIdentifierError:
                 if ':' in c:
-                    a,b = c.split(':',1)
+                    a, b = c.split(':', 1)
                 elif '-' in c:
-                    a,b = c.split('-',1)
+                    a, b = c.split('-', 1)
                 else:
                     raise
 
@@ -389,7 +394,7 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
                 except ValueError:
                     raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
 
-                for x in range(a,b):
+                for x in range(a, b):
                     excludes.append(match_column_identifier(column_names, x, zero_based))
 
     return [c for c in columns if c not in excludes]

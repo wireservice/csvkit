@@ -14,7 +14,9 @@ except ImportError:
 
 from csvkit.utilities.csvclean import CSVClean, launch_new_instance
 
+
 class TestCSVClean(unittest.TestCase):
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvclean', 'examples/bad.csv']):
             launch_new_instance()
@@ -35,7 +37,7 @@ class TestCSVClean(unittest.TestCase):
                 self.assertEqual(next(f)[0], '1')
                 self.assertEqual(next(f)[0], '2')
                 self.assertRaises(StopIteration, next, f)
-                
+
             with open('examples/bad_out.csv') as f:
                 next(f)
                 self.assertEqual(next(f)[0], '0')
@@ -59,4 +61,3 @@ class TestCSVClean(unittest.TestCase):
 
         self.assertEqual(next(output)[:6], 'Line 1')
         self.assertEqual(next(output)[:6], 'Line 2')
-

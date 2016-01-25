@@ -78,8 +78,8 @@ htmlhelp_basename = 'csvkitdoc'
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-#    ('scripts/csvcut', 'csvcut', u'csvcut Documentation',
-#     [u'Christopher Groskopf'], 1),
+    #    ('scripts/csvcut', 'csvcut', u'csvcut Documentation',
+    #     [u'Christopher Groskopf'], 1),
 ]
 
 for filename in os.listdir('scripts'):

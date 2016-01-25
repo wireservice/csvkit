@@ -13,7 +13,9 @@ except ImportError:
 
 from csvkit.utilities.csvjoin import CSVJoin, launch_new_instance
 
+
 class TestCSVJoin(unittest.TestCase):
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvjoin', 'examples/join_a.csv', 'examples/join_b.csv']):
             launch_new_instance()
@@ -84,4 +86,3 @@ class TestCSVJoin(unittest.TestCase):
 
         with open('examples/join_short.csv') as f:
             self.assertEqual(output.readlines(), f.readlines())
-

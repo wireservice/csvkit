@@ -4,6 +4,7 @@ import six
 
 import agate
 
+
 def csv2csv(f, **kwargs):
     """
     "Convert" a CSV into a new CSV by normalizing types and correcting for other anomalies.

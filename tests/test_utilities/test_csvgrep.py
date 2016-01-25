@@ -15,7 +15,9 @@ except ImportError:
 from csvkit.exceptions import ColumnIdentifierError
 from csvkit.utilities.csvgrep import CSVGrep, launch_new_instance
 
+
 class TestCSVGrep(unittest.TestCase):
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvgrep', '-c', '1', '-m', '1', 'examples/dummy.csv']):
             launch_new_instance()

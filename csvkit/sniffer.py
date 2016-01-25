@@ -4,6 +4,7 @@ import csv
 
 POSSIBLE_DELIMITERS = [',', '\t', ';', ' ', ':', '|']
 
+
 def sniff_dialect(sample):
     """
     A functional version of ``csv.Sniffer().sniff``, that extends the
@@ -15,4 +16,3 @@ def sniff_dialect(sample):
         dialect = None
 
     return dialect
-
