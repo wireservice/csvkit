@@ -108,3 +108,14 @@ class TestSQL2CSV(unittest.TestCase):
 
         self.assertTrue('line_number,a,b,c' in csv)
         self.assertTrue('1,1,2,3' in csv)
+
+    def test_wilcard(self):
+        self.csvsql('examples/dummy.csv')
+        args = ['--db', "sqlite:///" + self.db_file, '--query', "select * from foo where a LIKE '%'"]
+        output_file = six.StringIO()
+        utility = SQL2CSV(args, output_file)
+        utility.main()
+        csv = output_file.getvalue()
+
+        self.assertTrue('a,b,c' in csv)
+        self.assertTrue('1,2,3' in csv)
