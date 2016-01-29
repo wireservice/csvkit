@@ -25,7 +25,7 @@ The header line is required though the columns may be in any order::
     Convert common, but less awesome, tabular data formats to CSV.
 
     positional arguments:
-      FILE                  The CSV file to operate on. If omitted, will accept
+      FILE                  The non-CSV file to operate on. If omitted, will accept
                             input on STDIN.
 
     optional arguments:
