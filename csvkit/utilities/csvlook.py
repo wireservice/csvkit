@@ -13,7 +13,8 @@ class CSVLook(CSVKitUtility):
     description = 'Render a CSV file in the console as a fixed-width table.'
 
     def add_arguments(self):
-        pass
+        self.argparser.add_argument('-c', '--cutoff', type=int, dest='cutoff',
+            help='Cut off all columns after this number of characters. Intended to improve readability for CSV files with very long text in columns.')
 
     def main(self):
         rows = agate.reader(self.input_file, **self.reader_kwargs)
@@ -48,9 +49,15 @@ class CSVLook(CSVKitUtility):
             for i, v in enumerate(row):
                 try:
                     if len(v) > widths[i]:
-                        widths[i] = len(v)
+                        if self.args.cutoff:
+                            widths[i] = min(len(v), self.args.cutoff)
+                        else:
+                            widths[i] = len(v)
                 except IndexError:
-                    widths.append(len(v))
+                    if self.args.cutoff:
+                        widths.append(min(len(v), self.args.cutoff))
+                    else:
+                        widths.append(len(v))
 
         # Dashes span each width with '+' character at intersection of
         # horizontal and vertical dividers.
@@ -64,6 +71,8 @@ class CSVLook(CSVKitUtility):
             for j, d in enumerate(row):
                 if d is None:
                     d = ''
+                if self.args.cutoff:
+                    d = d[0:self.args.cutoff]
                 output.append(' %s ' % six.text_type(d).ljust(widths[j]))
 
             self.output_file.write('| %s |\n' % ('|'.join(output)))
