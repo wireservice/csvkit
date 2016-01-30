@@ -8,7 +8,7 @@ import agate
 
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 from csvkit.grep import FilteringCSVReader
-from csvkit.headers import make_default_headers
+from csvkit.table import make_default_headers
 
 
 class CSVGrep(CSVKitUtility):

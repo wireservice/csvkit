@@ -5,7 +5,7 @@ import os
 import agate
 
 from csvkit.cli import CSVKitUtility
-from csvkit.headers import make_default_headers
+from csvkit.table import make_default_headers
 
 
 class CSVStack(CSVKitUtility):

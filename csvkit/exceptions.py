@@ -49,13 +49,6 @@ class LengthMismatchError(CSVTestException):
         return len(self.row)
 
 
-class CSVJSONException(CustomException):
-    """
-    Exception raised when there is a problem converting data to CSV.
-    """
-    pass
-
-
 class InvalidValueForTypeException(CustomException):
     """
     Exception raised when a value can not be normalized to a specified type.
@@ -67,18 +60,6 @@ class InvalidValueForTypeException(CustomException):
         self.normal_type = normal_type
         msg = 'Unable to convert "%s" to type %s (at index %i)' % (value, normal_type, index)
         super(InvalidValueForTypeException, self).__init__(msg)
-
-
-class InvalidValueForTypeListException(CustomException):
-    """
-    Exception raised when one or more InvalidValueForTypeException
-    has been raised while accumulating errors.
-    """
-
-    def __init__(self, errors):
-        self.errors = errors
-        msg = 'Encountered errors converting values in %i columns' % len(errors)
-        super(InvalidValueForTypeListException, self).__init__(msg)
 
 
 class RequiredHeaderError(CustomException):
