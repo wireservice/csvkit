@@ -32,7 +32,7 @@ class TestIn2CSV(unittest.TestCase):
     def test_convert_csv(self):
         self.assertConverted('csv', 'examples/testfixed_converted.csv', 'examples/testfixed_converted.csv')
 
-    def test_convert_csv(self):
+    def test_convert_dbf(self):
         self.assertConverted('dbf', 'examples/testdbf.dbf', 'examples/testdbf_converted.csv')
 
     def test_convert_json(self):
@@ -53,7 +53,7 @@ class TestIn2CSV(unittest.TestCase):
     def test_convert_xlsx(self):
         self.assertConverted('xlsx', 'examples/test.xlsx', 'examples/testxlsx_converted.csv')
 
-    def test_convert_xlsx(self):
+    def test_convert_xlsx_with_sheet(self):
         self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_converted.csv', ['--sheet', 'data'])
 
     def test_csv_no_headers(self):

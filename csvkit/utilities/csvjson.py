@@ -13,7 +13,6 @@ import agate
 import six
 
 from csvkit.cli import CSVKitUtility, match_column_identifier
-from csvkit.exceptions import NonUniqueKeyColumnException
 
 
 class CSVJSON(CSVKitUtility):

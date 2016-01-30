@@ -56,10 +56,6 @@ class CSVJSONException(CustomException):
     pass
 
 
-class NonUniqueKeyColumnException(CSVJSONException):
-    pass
-
-
 class InvalidValueForTypeException(CustomException):
     """
     Exception raised when a value can not be normalized to a specified type.

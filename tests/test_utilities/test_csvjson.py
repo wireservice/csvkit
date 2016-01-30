@@ -12,7 +12,6 @@ except ImportError:
     import unittest
     from unittest.mock import patch
 
-from csvkit.exceptions import NonUniqueKeyColumnException
 from csvkit.utilities.csvjson import CSVJSON, launch_new_instance
 
 
