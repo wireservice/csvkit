@@ -104,68 +104,6 @@ class Table(list):
         list.__init__(self, columns)
         self.name = name
 
-    def __str__(self):
-        return str(self.__unicode__())
-
-    def __unicode__(self):
-        """
-        Stringify a description of all columns in this table.
-        """
-        return '\n'.join([six.text_type(c) for c in self])
-
-    def _reindex_columns(self):
-        """
-        Update order properties of all columns in table.
-        """
-        for i, c in enumerate(self):
-            c.order = i
-
-    def _deduplicate_column_name(self, column):
-        while column.name in self.headers():
-            try:
-                i = column.name.rindex('_')
-                counter = int(column.name[i + 1:])
-                column.name = '%s_%i' % (column.name[:i], counter + 1)
-            except:
-                column.name += '_2'
-
-        return column.name
-
-    def append(self, column):
-        """Implements list append."""
-        self._deduplicate_column_name(column)
-
-        list.append(self, column)
-        column.index = len(self) - 1
-
-    def insert(self, i, column):
-        """Implements list insert."""
-        self._deduplicate_column_name(column)
-
-        list.insert(self, i, column)
-        self._reindex_columns()
-
-    def extend(self, columns):
-        """Implements list extend."""
-        for c in columns:
-            self._deduplicate_column_name(c)
-
-        list.extend(self, columns)
-        self._reindex_columns()
-
-    def remove(self, column):
-        """Implements list remove."""
-        list.remove(self, column)
-        self._reindex_columns()
-
-    def sort(self):
-        """Forbids list sort."""
-        raise NotImplementedError()
-
-    def reverse(self):
-        """Forbids list reverse."""
-        raise NotImplementedError()
-
     def headers(self):
         return [c.name for c in self]
 
@@ -176,20 +114,6 @@ class Table(list):
             return max(lengths)
 
         return 0
-
-    def row(self, i):
-        """
-        Fetch a row of data from this table.
-        """
-        if i < 0:
-            raise IndexError('Negative row numbers are not valid.')
-
-        if i >= self.count_rows():
-            raise IndexError('Row number exceeds the number of rows in the table.')
-
-        row_data = [c[i] for c in self]
-
-        return row_data
 
     @classmethod
     def from_csv(cls, f, name='from_csv_table', snifflimit=None, column_ids=None, blanks_as_nulls=True, zero_based=False, infer_types=True, no_header_row=False, **kwargs):
@@ -281,15 +205,3 @@ class Table(list):
             return list(zip(*out_columns))
         else:
             return list(zip(*self))
-
-    def to_csv(self, output, **kwargs):
-        """
-        Serializes the table to CSV and writes it to any file-like object.
-        """
-        rows = self.to_rows(serialize_dates=True)
-
-        # Insert header row
-        rows.insert(0, self.headers())
-
-        csv_writer = agate.writer(output, **kwargs)
-        csv_writer.writerows(rows)
