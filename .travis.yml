@@ -14,6 +14,8 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then pip install -r requirements-py3.txt; fi
   - if [[ $TRAVIS_PYTHON_VERSION == "3.5" ]]; then pip install -r requirements-py3.txt; fi
   - pip install coveralls
+before_script:
+  - psql -U postgres -c 'CREATE DATABASE dummy_test'
 script:
   - nosetests --with-coverage --cover-package=csvkit
 after_success:

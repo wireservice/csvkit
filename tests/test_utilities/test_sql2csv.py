@@ -24,7 +24,7 @@ class TestSQL2CSV(unittest.TestCase):
             launch_new_instance()
 
     def setUp(self):
-        self.db_file = "foo.db"
+        self.db_file = 'foo.db'
 
     def tearDown(self):
         try:
@@ -32,11 +32,14 @@ class TestSQL2CSV(unittest.TestCase):
         except OSError:
             pass
 
-    def csvsql(self, csv_file):
+    def csvsql(self, csv_file, db=None):
         """
         Load test data into the DB and return it as a string for comparison.
         """
-        args = ['--db', "sqlite:///" + self.db_file, '--table', 'foo', '--insert', csv_file]
+        if not db:
+            db = 'sqlite:///' + self.db_file
+
+        args = ['--db', db, '--table', 'foo', '--insert', csv_file]
 
         utility = CSVSQL(args)
         utility.main()
@@ -56,7 +59,7 @@ class TestSQL2CSV(unittest.TestCase):
 
     def test_stdin(self):
         output_file = six.StringIO()
-        input_file = six.StringIO("select cast(3.1415 * 13.37 as integer) as answer")
+        input_file = six.StringIO('select cast(3.1415 * 13.37 as integer) as answer')
 
         with stdin_as_string(input_file):
             utility = SQL2CSV([], output_file)
@@ -69,7 +72,7 @@ class TestSQL2CSV(unittest.TestCase):
     def test_stdin_with_query(self):
         args = ['--query', 'select 6*9 as question']
         output_file = six.StringIO()
-        input_file = six.StringIO("select cast(3.1415 * 13.37 as integer) as answer")
+        input_file = six.StringIO('select cast(3.1415 * 13.37 as integer) as answer')
 
         with stdin_as_string(input_file):
             utility = SQL2CSV(args, output_file)
@@ -81,7 +84,7 @@ class TestSQL2CSV(unittest.TestCase):
 
     def test_unicode(self):
         target_output = self.csvsql('examples/test_utf8.csv')
-        args = ['--db', "sqlite:///" + self.db_file, '--query', 'select * from foo']
+        args = ['--db', 'sqlite:///' + self.db_file, '--query', 'select * from foo']
         output_file = six.StringIO()
 
         utility = SQL2CSV(args, output_file)
@@ -91,7 +94,7 @@ class TestSQL2CSV(unittest.TestCase):
 
     def test_no_header_row(self):
         self.csvsql('examples/dummy.csv')
-        args = ['--db', "sqlite:///" + self.db_file, '--no-header-row', '--query', 'select * from foo']
+        args = ['--db', 'sqlite:///' + self.db_file, '--no-header-row', '--query', 'select * from foo']
         output_file = six.StringIO()
         utility = SQL2CSV(args, output_file)
         utility.main()
@@ -102,7 +105,7 @@ class TestSQL2CSV(unittest.TestCase):
 
     def test_linenumbers(self):
         self.csvsql('examples/dummy.csv')
-        args = ['--db', "sqlite:///" + self.db_file, '--linenumbers', '--query', 'select * from foo']
+        args = ['--db', 'sqlite:///' + self.db_file, '--linenumbers', '--query', 'select * from foo']
         output_file = six.StringIO()
         utility = SQL2CSV(args, output_file)
         utility.main()
@@ -111,13 +114,24 @@ class TestSQL2CSV(unittest.TestCase):
         self.assertTrue('line_number,a,b,c' in csv)
         self.assertTrue('1,1,2,3' in csv)
 
-    def test_wilcard(self):
-        self.csvsql('examples/dummy.csv')
-        args = ['--db', "sqlite:///" + self.db_file, '--query', "select * from foo where a LIKE '%'"]
+    def test_wilcard_on_sqlite(self):
+        self.csvsql('examples/iris.csv')
+        args = ['--db', 'sqlite:///' + self.db_file, '--query', "select * from foo where species LIKE '%'"]
         output_file = six.StringIO()
         utility = SQL2CSV(args, output_file)
         utility.main()
         csv = output_file.getvalue()
 
-        self.assertTrue('a,b,c' in csv)
-        self.assertTrue('1,2,3' in csv)
+        self.assertTrue('sepal_length,sepal_width,petal_length,petal_width,species' in csv)
+        self.assertTrue('5.1,3.5,1.4,0.2,Iris-setosa' in csv)
+
+    def test_wilcard_on_postgresql(self):
+        self.csvsql('examples/iris.csv', 'postgres:///dummy_test')
+        args = ['--db', 'postgres:///dummy_test', '--query', "select * from foo where species LIKE '%'"]
+        output_file = six.StringIO()
+        utility = SQL2CSV(args, output_file)
+        utility.main()
+        csv = output_file.getvalue()
+
+        self.assertTrue('sepal_length,sepal_width,petal_length,petal_width,species' in csv)
+        self.assertTrue('5.1,3.5,1.4,0.2,Iris-setosa' in csv)
