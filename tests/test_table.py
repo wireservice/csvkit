@@ -6,10 +6,8 @@ import six
 
 try:
     import unittest2 as unittest
-    from unittest2.case import SkipTest
 except ImportError:
     import unittest
-    from unittest.case import SkipTest
 
 from csvkit import table
 

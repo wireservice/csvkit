@@ -1,15 +1,36 @@
 #!/usr/bin/env python
 
+import csv
 import datetime
 import itertools
 
 import agate
 import six
 
-from csvkit import sniffer
 from csvkit import typeinference
 from csvkit.cli import parse_column_identifiers
-from csvkit.headers import make_default_headers
+
+POSSIBLE_DELIMITERS = [',', '\t', ';', ' ', ':', '|']
+
+
+def make_default_headers(n):
+    """
+    Make a set of simple, default headers for files that are missing them.
+    """
+    return ['column%i' % (i + 1) for i in range(n)]
+
+
+def sniff_dialect(sample):
+    """
+    A functional version of ``csv.Sniffer().sniff``, that extends the
+    list of possible delimiters to include some seen in the wild.
+    """
+    try:
+        dialect = csv.Sniffer().sniff(sample, POSSIBLE_DELIMITERS)
+    except:
+        dialect = None
+
+    return dialect
 
 
 class InvalidType(object):
@@ -131,9 +152,9 @@ class Table(list):
 
         # snifflimit == 0 means do not sniff
         if snifflimit is None:
-            kwargs['dialect'] = sniffer.sniff_dialect(contents)
+            kwargs['dialect'] = sniff_dialect(contents)
         elif snifflimit > 0:
-            kwargs['dialect'] = sniffer.sniff_dialect(contents[:snifflimit])
+            kwargs['dialect'] = sniff_dialect(contents[:snifflimit])
 
         f = six.StringIO(contents)
         rows = agate.reader(f, **kwargs)
