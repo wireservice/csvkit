@@ -5,12 +5,12 @@ from setuptools import setup
 
 install_requires = [
     'agate>=1.2.0',
-    'xlrd>=0.7.1',
-    'sqlalchemy>=0.6.6',
+    'dbf>=0.96.005',
     'openpyxl==2.2.6',
-    'six>=1.6.1',
     'python-dateutil==2.2',
-    'dbf>=0.96.005'
+    'six>=1.6.1',
+    'sqlalchemy>=0.6.6',
+    'xlrd>=0.7.1',
 ]
 
 if sys.version_info < (2, 7):
