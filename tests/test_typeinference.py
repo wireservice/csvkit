@@ -11,7 +11,7 @@ import six
 
 from csvkit import typeinference
 
-from csvkit.exceptions import InvalidValueForTypeException, InvalidValueForTypeListException
+from csvkit.exceptions import InvalidValueForTypeException
 
 NoneType = type(None)
 

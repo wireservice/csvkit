@@ -5,7 +5,7 @@ import datetime
 from dateutil.parser import parse
 import six
 
-from csvkit.exceptions import InvalidValueForTypeException, InvalidValueForTypeListException
+from csvkit.exceptions import InvalidValueForTypeException
 
 NoneType = type(None)
 
