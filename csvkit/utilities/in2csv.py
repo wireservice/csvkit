@@ -6,7 +6,7 @@ from csvkit.cli import CSVKitUtility
 
 class In2CSV(CSVKitUtility):
     description = 'Convert common, but less awesome, tabular data formats to CSV.'
-    epilog = 'Some command line flags only pertain to specific input formats.'
+    epilog = 'Some command-line flags only pertain to specific input formats.'
     override_flags = ['f']
 
     def add_arguments(self):

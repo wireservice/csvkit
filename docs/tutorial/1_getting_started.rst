@@ -94,7 +94,7 @@ We can also refer to columns by their names to make our lives easier::
 Putting it together with pipes
 ==============================
 
-Now that we understand ``in2csv``, ``csvlook`` and ``csvcut`` we can demonstrate the power of csvkit's when combined with the standard command line "pipe". Try this command::
+Now that we understand ``in2csv``, ``csvlook`` and ``csvcut`` we can demonstrate the power of csvkit's when combined with the standard command-line "pipe". Try this command::
 
     csvcut -c county,item_name,quantity data.csv | csvlook | head
 
