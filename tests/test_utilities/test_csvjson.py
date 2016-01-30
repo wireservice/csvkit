@@ -44,13 +44,7 @@ class TestCSVJSON(unittest.TestCase):
         js = json.loads(content)
 
         self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})
-        self.assertEqual(content, """[
-    {
-        "a": true,
-        "b": 2.0,
-        "c": 3.0
-    }
-]""")
+        self.assertRegexpMatches(content, '        "a": true,')
 
     def test_keying(self):
         args = ['-k', 'a', 'examples/dummy.csv']
