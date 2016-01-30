@@ -68,17 +68,9 @@ def guess_format(filename):
 
     extension = filename[last_period + 1:].lower()
 
-    if extension == 'xls':
-        return extension
-    elif extension == 'xlsx':
+    if extension in ('csv', 'dbf', 'fixed', 'xls', 'xlsx'):
         return extension
     elif extension in ['json', 'js']:
         return 'json'
-    elif extension == 'csv':
-        return extension
-    elif extension == 'fixed':
-        return extension
-    elif extension == 'dbf':
-        return extension
 
     return None
