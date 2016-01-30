@@ -115,6 +115,11 @@ class TestSQL(unittest.TestCase):
 \tempty_column VARCHAR(32)
 );""")
 
+    def test_make_create_table_statement_with_dialects(self):
+        for dialect in sql.DIALECTS:
+            sql_table = sql.make_table(self.csv_table, 'csvsql', db_schema='test_schema')
+            statement = sql.make_create_table_statement(sql_table, dialect)
+
     def make_insert_statement(self):
         sql_table = sql.make_table(self.csv_table, 'csvsql')
         statement = sql.make_insert_statement(sql_table, self.csv_table._prepare_rows_for_serialization()[0])

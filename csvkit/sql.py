@@ -1,27 +1,17 @@
 #!/usr/bin/env python
 
 import datetime
+from pkg_resources import iter_entry_points
 
 import six
 
-from sqlalchemy import Column, MetaData, Table, create_engine
+from sqlalchemy import Column, MetaData, Table, create_engine, dialects
 from sqlalchemy import BigInteger, Boolean, Date, DateTime, Float, Integer, String, Time
 from sqlalchemy.schema import CreateTable
 
 NoneType = type(None)
 
-DIALECTS = {
-    'access': 'access.base',
-    'firebird': 'firebird.kinterbasdb',
-    'informix': 'informix.informixdb',
-    'maxdb': 'maxdb.sapdb',
-    'mssql': 'mssql.pyodbc',
-    'mysql': 'mysql.mysqlconnector',
-    'oracle': 'oracle.cx_oracle',
-    'postgresql': 'postgresql.psycopg2',
-    'sqlite': 'sqlite.pysqlite',
-    'sybase': 'sybase.pyodbc'
-}
+DIALECTS = dialects.__all__ + tuple(e.name for e in iter_entry_points('sqlalchemy.dialects'))
 
 NULL_COLUMN_MAX_LENGTH = 32
 SQL_INTEGER_MAX = 2147483647
@@ -97,8 +87,7 @@ def make_create_table_statement(sql_table, dialect=None):
     Generates a CREATE TABLE statement for a sqlalchemy table.
     """
     if dialect:
-        module = __import__('sqlalchemy.dialects.%s' % DIALECTS[dialect], fromlist=['dialect'])
-        sql_dialect = module.dialect()
+        sql_dialect = dialects.registry.load(dialect)()
     else:
         sql_dialect = None
 

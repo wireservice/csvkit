@@ -26,6 +26,7 @@ Fixes:
 * in2csv again supports nested JSON objects (fixes regression).
 * csvgrep can match multiline values.
 * csvgrep supports --no-header-row.
+* csvsql supports custom SQLAlchemy dialects.
 * csvstack supports stacking a single file.
 * FilteringCSVReader's any_match argument works correctly.
 * A file of two empty rows won't raise an error.
