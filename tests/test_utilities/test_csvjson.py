@@ -31,7 +31,7 @@ class TestCSVJSON(unittest.TestCase):
 
         js = json.loads(output_file.getvalue())
 
-        self.assertDictEqual(js[0], {"a": "1", "c": "3", "b": "2"})
+        self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})
 
     def test_indentation(self):
         args = ['-i', '4', 'examples/dummy.csv']
@@ -40,9 +40,17 @@ class TestCSVJSON(unittest.TestCase):
         utility = CSVJSON(args, output_file)
         utility.main()
 
-        js = json.loads(output_file.getvalue())
+        content = output_file.getvalue()
+        js = json.loads(content)
 
-        self.assertDictEqual(js[0], {"a": "1", "c": "3", "b": "2"})
+        self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})
+        self.assertEqual(content, """[
+    {
+        "a": true,
+        "b": 2.0,
+        "c": 3.0
+    }
+]""")
 
     def test_keying(self):
         args = ['-k', 'a', 'examples/dummy.csv']
@@ -53,7 +61,7 @@ class TestCSVJSON(unittest.TestCase):
 
         js = json.loads(output_file.getvalue())
 
-        self.assertDictEqual(js, {"1": {"a": "1", "c": "3", "b": "2"}})
+        self.assertDictEqual(js, {'true': {'a': True, 'c': 3.0, 'b': 2.0}})
 
     def test_duplicate_keys(self):
         args = ['-k', 'a', 'examples/dummy3.csv']
@@ -61,7 +69,7 @@ class TestCSVJSON(unittest.TestCase):
 
         utility = CSVJSON(args, output_file)
 
-        self.assertRaises(NonUniqueKeyColumnException, utility.main)
+        self.assertRaisesRegexp(ValueError, 'Value True is not unique in the key column\.', utility.main)
 
     def test_geojson(self):
         args = ['--lat', 'latitude', '--lon', 'longitude', 'examples/test_geo.csv']
@@ -141,5 +149,5 @@ class TestCSVJSON(unittest.TestCase):
 
         result = list(map(json.loads, output_file.getvalue().splitlines()))
         self.assertEqual(len(result), 2)
-        self.assertDictEqual(result[0], {"a": "1", "c": "3", "b": "2"})
-        self.assertDictEqual(result[1], {"a": "1", "c": "5", "b": "4"})
+        self.assertDictEqual(result[0], {'a': True, 'c': 3.0, 'b': 2.0})
+        self.assertDictEqual(result[1], {'a': True, 'c': 5.0, 'b': 4.0})
