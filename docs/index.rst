@@ -67,6 +67,7 @@ Table of contents
     install
     tutorial
     cli 
+    tricks
     contributing
     release 
 
