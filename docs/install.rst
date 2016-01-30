@@ -40,3 +40,4 @@ csvkit supports the following versions of Python:
 * `PyPy <http://pypy.org/>`_
 
 It is tested on OS X, but has been used successfully by others on both Linux and Windows.
+

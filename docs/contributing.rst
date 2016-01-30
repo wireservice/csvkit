@@ -61,3 +61,4 @@ Legalese
 To the extent that contributors care, they should keep the following legal mumbo-jumbo in mind:
 
 The source of csvkit and therefore of any contributions are licensed under the permissive `MIT license <http://www.opensource.org/licenses/mit-license.php>`_. By submitting a patch or pull request you are agreeing to release your contribution under this license. You will be acknowledged in the AUTHORS file. As the owner of your specific contributions you retain the right to privately relicense your specific contributions (and no others), however, the released version of the code can never be retracted or relicensed.
+
