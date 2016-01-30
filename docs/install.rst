@@ -30,28 +30,8 @@ If you only want to use agate, install it this way::
 
     Need more speed? If you're running Python 2.7 you can :code:`pip install cdecimal` for a significant speed boost. This isn't installed automatically because it can create additional complications.
 
-Developers
-==========
-
-If you are a developer that also wants to hack on csvkit, install it this way::
-
-    git clone git://github.com/onyxfish/csvkit.git
-    cd csvkit
-    mkvirtualenv csvkit
-
-    # If running Python 2
-    pip install -r requirements-py2.txt
-
-    # If running Python 3
-    pip install -r requirements-py3.txt
-
-    python setup.py develop
-    tox
-
-Before writing any code be sure to read the documentation for :doc:`contributing`.
-
 Supported platforms
--------------------
+===================
 
 csvkit supports the following versions of Python:
 
@@ -59,4 +39,4 @@ csvkit supports the following versions of Python:
 * Python 3.3+
 * `PyPy <http://pypy.org/>`_
 
-It is tested on OSX, but has been used successfully by others on both Linux and Windows.
+It is tested on OS X, but has been used successfully by others on both Linux and Windows.
