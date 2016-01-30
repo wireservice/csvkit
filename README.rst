@@ -26,9 +26,9 @@
     :target: https://pypi.python.org/pypi/csvkit
     :alt: Support Python versions
 
-csvkit is a suite of utilities for converting to and working with CSV, the king of tabular file formats.
+csvkit is a suite of command-line tools for converting to and working with CSV, the king of tabular file formats.
 
-It is inspired by pdftk, gdal and the original csvcut utility by Joe Germuska and Aaron Bycoffe.
+It is inspired by pdftk, gdal and the original csvcut tool by Joe Germuska and Aaron Bycoffe.
 
 Important links:
 
