@@ -30,12 +30,12 @@ class TestCSVLook(unittest.TestCase):
 
         input_file = six.StringIO(output_file.getvalue())
 
-        self.assertEqual(next(input_file), '|----+---+----|\n')
-        self.assertEqual(next(input_file), '|  a | b | c  |\n')
-        self.assertEqual(next(input_file), '|----+---+----|\n')
-        self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')
-        self.assertEqual(next(input_file), '|  1 | 4 | 5  |\n')
-        self.assertEqual(next(input_file), '|----+---+----|\n')
+        self.assertEqual(next(input_file), '|-------+---+----|\n')
+        self.assertEqual(next(input_file), '|     A | B | C  |\n')
+        self.assertEqual(next(input_file), '|-------+---+----|\n')
+        self.assertEqual(next(input_file), '|  True | 2 | 3  |\n')
+        self.assertEqual(next(input_file), '|  True | 4 | 5  |\n')
+        self.assertEqual(next(input_file), '|-------+---+----|\n')
 
     def test_no_header(self):
         args = ['--no-header-row', 'examples/no_header_row3.csv']
@@ -46,12 +46,12 @@ class TestCSVLook(unittest.TestCase):
 
         input_file = six.StringIO(output_file.getvalue())
 
-        self.assertEqual(next(input_file), '|----------+---------+----------|\n')
-        self.assertEqual(next(input_file), '|  column1 | column2 | column3  |\n')
-        self.assertEqual(next(input_file), '|----------+---------+----------|\n')
-        self.assertEqual(next(input_file), '|  1       | 2       | 3        |\n')
-        self.assertEqual(next(input_file), '|  4       | 5       | 6        |\n')
-        self.assertEqual(next(input_file), '|----------+---------+----------|\n')
+        self.assertEqual(next(input_file), '|----+---+----|\n')
+        self.assertEqual(next(input_file), '|  A | B | C  |\n')
+        self.assertEqual(next(input_file), '|----+---+----|\n')
+        self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')
+        self.assertEqual(next(input_file), '|  4 | 5 | 6  |\n')
+        self.assertEqual(next(input_file), '|----+---+----|\n')
 
     def test_unicode(self):
         args = ['examples/test_utf8.csv']
@@ -64,7 +64,7 @@ class TestCSVLook(unittest.TestCase):
         input_file = six.StringIO(output_file.getvalue())
 
         self.assertEqual(next(input_file), '|----+---+----|\n')
-        self.assertEqual(next(input_file), '|  a | b | c  |\n')
+        self.assertEqual(next(input_file), '|  A | B | C  |\n')
         self.assertEqual(next(input_file), '|----+---+----|\n')
         self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')
         self.assertEqual(next(input_file), u'|  4 | 5 | ʤ  |\n')

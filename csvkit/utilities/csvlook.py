@@ -36,40 +36,7 @@ class CSVLook(CSVKitUtility):
             column_names.insert(0, 'line_number')
             rows = [list(itertools.chain([str(i + 1)], row)) for i, row in enumerate(rows)]
 
-        # Convert to normal list of rows
-        rows = list(rows)
-
-        # Insert the column names at the top
-        rows.insert(0, column_names)
-
-        widths = []
-
-        for row in rows:
-            for i, v in enumerate(row):
-                try:
-                    if len(v) > widths[i]:
-                        widths[i] = len(v)
-                except IndexError:
-                    widths.append(len(v))
-
-        # Dashes span each width with '+' character at intersection of
-        # horizontal and vertical dividers.
-        divider = '|--' + '-+-'.join('-' * w for w in widths) + '--|'
-
-        self.output_file.write('%s\n' % divider)
-
-        for i, row in enumerate(rows):
-            output = []
-
-            for j, d in enumerate(row):
-                if d is None:
-                    d = ''
-                output.append(' %s ' % six.text_type(d).ljust(widths[j]))
-
-            self.output_file.write('| %s |\n' % ('|'.join(output)))
-
-            if (i == 0 or i == len(rows) - 1):
-                self.output_file.write('%s\n' % divider)
+        agate.Table(list(rows)).print_table(output=self.output_file)
 
 
 def launch_new_instance():
