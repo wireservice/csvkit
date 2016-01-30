@@ -1,77 +1,56 @@
 #!/usr/bin/env python
 
-try:
-    from collections import OrderedDict
-    import json
-except ImportError:
-    from ordereddict import OrderedDict
-    import simplejson as json
-
 import agate
 import six
 
 
-def parse_object(obj, path=''):
+def json2csv(f, key=None, newline=False, **kwargs):
     """
-    Recursively parse JSON objects and a dictionary of paths/keys and values.
+    Create a new table from a JSON file. Contents should be an array
+    containing a dictionary for each "row". Nested objects or lists will
+    also be parsed. For example, this object:
 
-    Inspired by JSONPipe (https://github.com/dvxhouse/jsonpipe).
+    .. code-block:: javascript
+
+        {
+            'one': {
+                'a': 1,
+                'b': 2,
+                'c': 3
+            },
+            'two': [4, 5, 6],
+            'three': 'd'
+        }
+
+    Would generate these columns and values:
+
+    .. code-block:: python
+
+        {
+            'one/a': 1,
+            'one/b': 2,
+            'one/c': 3,
+            'two.0': 4,
+            'two.1': 5,
+            'two.2': 6,
+            'three': 'd'
+        }
+
+    Column names and types will be inferred from the data. Not all rows are
+    required to have the same keys. Missing elements will be filled in with
+    null.
+
+    If the file contains a top-level dictionary you may specify what
+    property contains the row list using the `key` parameter.
     """
-    if isinstance(obj, dict):
-        iterator = obj.items()
-    elif isinstance(obj, (list, tuple)):
-        iterator = enumerate(obj)
-    else:
-        return {path.strip('/'): obj}
 
-    d = OrderedDict()
+    # The documentation above is copied from `agate.Table.from_json`.
 
-    for key, value in iterator:
-        key = six.text_type(key)
-        d.update(parse_object(value, path + key + '/'))
+    table = agate.Table.from_json(f, key=key, newline=newline, **kwargs)
 
-    return d
+    output = six.StringIO()
+    table.to_csv(output)
+    result = output.getvalue()
+    output.close()
 
-
-def json2csv(f, key=None, **kwargs):
-    """
-    Convert a JSON document into CSV format.
-
-    The top-level element of the input must be a list or a dictionary. If it is a dictionary, a key must be provided which is an item of the dictionary which contains a list.
-    """
-    js = json.load(f, object_pairs_hook=OrderedDict)
-
-    if isinstance(js, dict):
-        if not key:
-            raise TypeError('When converting a JSON document with a top-level dictionary element, a key must be specified.')
-
-        js = js[key]
-
-    fields = []
-    flat = []
-
-    for obj in js:
-        parsed_object = parse_object(obj)
-        flat.append(parsed_object)
-
-        for key in parsed_object.keys():
-            if key not in fields:
-                fields.append(key)
-
-    o = six.StringIO()
-    writer = agate.writer(o)
-
-    writer.writerow(fields)
-
-    for i in flat:
-        row = []
-
-        for field in fields:
-            row.append(i.get(field, None))
-
-        writer.writerow(row)
-
-    output = o.getvalue()
-    o.close()
-
-    return output
+    return result

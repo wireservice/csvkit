@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
-import six
-
 import agate
+import six
 
 
 def csv2csv(f, **kwargs):
