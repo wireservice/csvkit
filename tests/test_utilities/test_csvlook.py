@@ -69,3 +69,19 @@ class TestCSVLook(unittest.TestCase):
         self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')
         self.assertEqual(next(input_file), u'|  4 | 5 | ʤ  |\n')
         self.assertEqual(next(input_file), '|----+---+----|\n')
+
+    def test_linenumbers(self):
+        args = ['--linenumbers', 'examples/dummy3.csv']
+        output_file = six.StringIO()
+        utility = CSVLook(args, output_file)
+
+        utility.main()
+
+        input_file = six.StringIO(output_file.getvalue())
+
+        self.assertEqual(next(input_file), '|----+------+---+----|\n')
+        self.assertEqual(next(input_file), '|  A |    B | C | D  |\n')
+        self.assertEqual(next(input_file), '|----+------+---+----|\n')
+        self.assertEqual(next(input_file), '|  1 | True | 2 | 3  |\n')
+        self.assertEqual(next(input_file), '|  2 | True | 4 | 5  |\n')
+        self.assertEqual(next(input_file), '|----+------+---+----|\n')
