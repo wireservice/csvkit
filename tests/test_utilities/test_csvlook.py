@@ -47,8 +47,9 @@ class TestCSVLook(unittest.TestCase):
         input_file = six.StringIO(output_file.getvalue())
 
         self.assertEqual(next(input_file), '|----+---+----|\n')
-        self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')
+        self.assertEqual(next(input_file), '|  A | B | C  |\n')
         self.assertEqual(next(input_file), '|----+---+----|\n')
+        self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')
         self.assertEqual(next(input_file), '|  4 | 5 | 6  |\n')
         self.assertEqual(next(input_file), '|----+---+----|\n')
 
@@ -78,9 +79,9 @@ class TestCSVLook(unittest.TestCase):
 
         input_file = six.StringIO(output_file.getvalue())
 
-        self.assertEqual(next(input_file), '|----+------+---+----|\n')
-        self.assertEqual(next(input_file), '|  A |    B | C | D  |\n')
-        self.assertEqual(next(input_file), '|----+------+---+----|\n')
-        self.assertEqual(next(input_file), '|  1 | True | 2 | 3  |\n')
-        self.assertEqual(next(input_file), '|  2 | True | 4 | 5  |\n')
-        self.assertEqual(next(input_file), '|----+------+---+----|\n')
+        self.assertEqual(next(input_file), '|---------------+------+---+----|\n')
+        self.assertEqual(next(input_file), '|  line_numbers |    a | b | c  |\n')
+        self.assertEqual(next(input_file), '|---------------+------+---+----|\n')
+        self.assertEqual(next(input_file), '|             1 | True | 2 | 3  |\n')
+        self.assertEqual(next(input_file), '|             2 | True | 4 | 5  |\n')
+        self.assertEqual(next(input_file), '|---------------+------+---+----|\n')
