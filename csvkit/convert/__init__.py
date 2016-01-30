@@ -6,7 +6,6 @@ from csvkit.convert.csvitself import csv2csv
 from csvkit.convert.fixed import fixed2csv
 from csvkit.convert.geojs import geojson2csv
 from csvkit.convert.js import json2csv
-from csvkit.convert.ndjs import ndjson2csv
 from csvkit.convert.xls import xls2csv
 from csvkit.convert.xlsx import xlsx2csv
 
@@ -41,7 +40,7 @@ def convert(f, format, schema=None, key=None, **kwargs):
     elif format == 'json':
         return json2csv(f, key, **kwargs)
     elif format == 'ndjson':
-        return ndjson2csv(f, **kwargs)
+        return json2csv(f, key, newline=True, **kwargs)
     elif format == 'geojson':
         return geojson2csv(f, **kwargs)
     elif format == 'csv':
