@@ -12,6 +12,13 @@ except ImportError:
     import unittest
     from unittest.mock import patch
 
+try:
+    import psycopg2
+    postgresql_scheme = 'postgresql'
+except ImportError:
+    # @see http://docs.sqlalchemy.org/en/latest/dialects/postgresql.html#module-sqlalchemy.dialects.postgresql.psycopg2cffi
+    postgresql_scheme = 'postgresql+psycopg2cffi'
+
 from csvkit.utilities.csvsql import CSVSQL
 from csvkit.utilities.sql2csv import SQL2CSV, launch_new_instance
 from tests.utils import stdin_as_string
@@ -126,8 +133,10 @@ class TestSQL2CSV(unittest.TestCase):
         self.assertTrue('5.1,3.5,1.4,0.2,Iris-setosa' in csv)
 
     def test_wilcard_on_postgresql(self):
-        self.csvsql('examples/iris.csv', 'postgres:///dummy_test')
-        args = ['--db', 'postgres:///dummy_test', '--query', "select * from foo where species LIKE '%'"]
+        db = postgresql_scheme + ':///dummy_test'
+
+        self.csvsql('examples/iris.csv', db)
+        args = ['--db', db, '--query', "select * from foo where species LIKE '%'"]
         output_file = six.StringIO()
         utility = SQL2CSV(args, output_file)
         utility.main()
