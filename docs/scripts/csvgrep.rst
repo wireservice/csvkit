@@ -13,7 +13,7 @@ Filter tabular data to only those rows where certain columns contain a given val
                    [-f MATCHFILE] [-i]
                    [FILE]
 
-    Search CSV files. Like the unix "grep" command, but for tabular data.
+    Search CSV files. Like the Unix "grep" command, but for tabular data.
 
     positional arguments:
       FILE                  The CSV file to operate on. If omitted, will accept

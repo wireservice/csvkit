@@ -9,7 +9,7 @@ from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
 
 class CSVSort(CSVKitUtility):
-    description = 'Sort CSV files. Like unix "sort" command, but for tabular data.'
+    description = 'Sort CSV files. Like the Unix "sort" command, but for tabular data.'
 
     def add_arguments(self):
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
