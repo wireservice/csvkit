@@ -1,11 +1,11 @@
+coverage>=3.5.1b1
+dbf>=0.96.005
 nose>=1.1.2
 python-dateutil>=2.2
-SQLAlchemy>=0.9.3
-sphinx>=1.0.7
-coverage>=3.5.1b1
-tox>=1.3
 six>=1.6.1
+sphinx>=1.0.7
 sphinx_rtd_theme
-dbf>=0.96.005
-git+git://github.com/onyxfish/agate.git#egg=agate
+SQLAlchemy>=0.9.3
+tox>=1.3
 git+git://github.com/onyxfish/agate-excel.git#egg=agate-excel
+git+git://github.com/onyxfish/agate.git#egg=agate
