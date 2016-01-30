@@ -3,7 +3,7 @@
 
 class CustomException(Exception):
     """
-    A base exception that handles pretty-printing errors for command-line utilities.
+    A base exception that handles pretty-printing errors for command-line tools.
     """
 
     def __init__(self, msg):

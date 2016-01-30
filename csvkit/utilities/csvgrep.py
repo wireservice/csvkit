@@ -12,7 +12,7 @@ from csvkit.headers import make_default_headers
 
 
 class CSVGrep(CSVKitUtility):
-    description = 'Search CSV files. Like the unix "grep" command, but for tabular data.'
+    description = 'Search CSV files. Like the Unix "grep" command, but for tabular data.'
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',

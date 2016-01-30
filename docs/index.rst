@@ -64,9 +64,9 @@ Table of contents
 .. toctree::
     :maxdepth: 3 
     
-    install
     tutorial
     cli 
+    tricks
     contributing
     release 
 

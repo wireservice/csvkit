@@ -78,6 +78,6 @@ You get the picture.
 Summing up
 ==========
 
-Thus concludes the csvkit tutorial. At this point, I hope, you have a sense a breadth of possibilities these tools open up with a relative small number of command line tools. Of course, this tutorial has only scratched the surface of the available options, so remember to check the documentation for each tool as well.
+Thus concludes the csvkit tutorial. At this point, I hope, you have a sense a breadth of possibilities these tools open up with a relative small number of command-line tools. Of course, this tutorial has only scratched the surface of the available options, so remember to check the documentation for each tool as well.
 
 So armed, go forth and expand the empire of the king of tabular file formats.

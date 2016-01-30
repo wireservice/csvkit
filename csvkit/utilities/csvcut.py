@@ -18,7 +18,7 @@ from csvkit.headers import make_default_headers
 
 
 class CSVCut(CSVKitUtility):
-    description = 'Filter and truncate CSV files. Like unix "cut" command, but for tabular data.'
+    description = 'Filter and truncate CSV files. Like the Unix "cut" command, but for tabular data.'
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',

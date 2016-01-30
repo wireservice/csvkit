@@ -34,6 +34,6 @@ Basic use::
 
     csvlook examples/testfixed_converted.csv
 
-This utility is especially useful as a final operation when piping through other utilities::
+This tool is especially useful as a final operation when piping through other tools::
 
     csvcut -c 9,1 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvlook

@@ -5,7 +5,7 @@ Getting started
 About this tutorial
 ===================
 
-There is no better way to learn how to use a new tool than to see it applied in a real world situation. This tutorial will explain the workings of most of the csvkit utilities (including some nifty tricks) in the context of analyzing a real dataset.
+There is no better way to learn how to use a new tool than to see it applied in a real world situation. This tutorial will explain the workings of most of the csvkit tools (including some nifty tricks) in the context of analyzing a real dataset.
 
 The data will be using is a subset of the United States Defense Logistic Agency Law Enforcement Support Office's (LESO) 1033 Program dataset, which describes how surplus military arms have been distributed to local police forces. This data was widely cited in the aftermath of the Ferguson, Missouri protests. The particular data we are using comes from an `NPR report <http://www.npr.org/2014/09/02/342494225/mraps-and-bayonets-what-we-know-about-the-pentagons-1033-program>`_ analyzing the data.
 
@@ -43,7 +43,7 @@ For purposes of this tutorial, I've converted this data to Excel format. (NPR pu
 
     in2csv ne_1033_data.xlsx
 
-You should see a CSV version of the data dumped into your terminal. All csvkit utilities write to the terminal output ("standard out") by default. This isn't very useful, so let's write it to a file instead::
+You should see a CSV version of the data dumped into your terminal. All csvkit tools write to the terminal output ("standard out") by default. This isn't very useful, so let's write it to a file instead::
 
     in2csv ne_1033_data.xlsx > data.csv
 
@@ -94,11 +94,11 @@ We can also refer to columns by their names to make our lives easier::
 Putting it together with pipes
 ==============================
 
-Now that we understand ``in2csv``, ``csvlook`` and ``csvcut`` we can demonstrate the power of csvkit's when combined with the standard command line "pipe". Try this command::
+Now that we understand ``in2csv``, ``csvlook`` and ``csvcut`` we can demonstrate the power of csvkit's when combined with the standard command-line "pipe". Try this command::
 
     csvcut -c county,item_name,quantity data.csv | csvlook | head
 
-All csvkit utilities accept an input file as "standard in", in addition to as a filename. This means that we can make the output of one csvkit utility become the input of the next. In this case, the output of ``csvcut`` becomes the input to ``csvlook``. This also means we can use this output with standard unix commands such as ``head``, which prints only the first ten lines of its input. Here, the output of ``csvlook`` becomes the input of ``head``.
+All csvkit tools accept an input file as "standard in", in addition to as a filename. This means that we can make the output of one csvkit tool become the input of the next. In this case, the output of ``csvcut`` becomes the input to ``csvlook``. This also means we can use this output with standard Unix commands such as ``head``, which prints only the first ten lines of its input. Here, the output of ``csvlook`` becomes the input of ``head``.
 
 Pipeability is a core feature of csvkit. Of course, you can always write your output to a file using ``>``, but many times it makes more sense to use pipes for speed and brevity.
 
@@ -109,6 +109,6 @@ Of course, we can also pipe ``in2csv``, combining all our previous operations in
 Summing up
 ==========
 
-All the csvkit utilities work standard input and output. Any utility can be piped into another and into another and then at some point down the road redirected to a file. In this way they form a data processing "pipeline" of sorts, allowing you to do non-trivial, repeatable work without creating dozens of intermediary files.
+All the csvkit tools work standard input and output. Any tool can be piped into another and into another and then at some point down the road redirected to a file. In this way they form a data processing "pipeline" of sorts, allowing you to do non-trivial, repeatable work without creating dozens of intermediary files.
 
 Make sense? If you think you've got it figured out, you can move on to :doc:`2_examining_the_data`.
