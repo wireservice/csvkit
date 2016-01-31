@@ -59,26 +59,19 @@ class TestSQL2CSV(CSVKitTestCase):
         self.assertTrue('54' in csv)
 
     def test_stdin(self):
-        output_file = six.StringIO()
         input_file = six.StringIO('select cast(3.1415 * 13.37 as integer) as answer')
 
         with stdin_as_string(input_file):
-            utility = SQL2CSV([], output_file)
-            utility.main()
-            csv = output_file.getvalue()
+            csv = self.get_output([])
 
             self.assertTrue('answer' in csv)
             self.assertTrue('42' in csv)
 
     def test_stdin_with_query(self):
-        args = ['--query', 'select 6*9 as question']
-        output_file = six.StringIO()
         input_file = six.StringIO('select cast(3.1415 * 13.37 as integer) as answer')
 
         with stdin_as_string(input_file):
-            utility = SQL2CSV(args, output_file)
-            utility.main()
-            csv = output_file.getvalue()
+            csv = self.get_output(['--query', 'select 6*9 as question'])
 
             self.assertTrue('question' in csv)
             self.assertTrue('42' not in csv)
