@@ -12,11 +12,13 @@ except ImportError:
     import unittest
     from unittest.mock import patch
 
-from csvkit.exceptions import ColumnIdentifierError
 from csvkit.utilities.csvgrep import CSVGrep, launch_new_instance
+from tests import ColumnsTests, NamesTests
 
 
-class TestCSVGrep(unittest.TestCase):
+class TestCSVGrep(unittest.TestCase, NamesTests, ColumnsTests):
+    Utility = CSVGrep
+    columns_args = ['-m', '1']
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvgrep', '-c', '1', '-m', '1', 'examples/dummy.csv']):
@@ -85,23 +87,3 @@ class TestCSVGrep(unittest.TestCase):
 
         self.assertEqual(next(reader), ['State Name', 'State Abbreviate', 'Code', 'Montgomery GI Bill-Active Duty', 'Montgomery GI Bill- Selective Reserve', 'Dependents\' Educational Assistance', 'Reserve Educational Assistance Program', 'Post-Vietnam Era Veteran\'s Educational Assistance Program', 'TOTAL', ''])
         self.assertEqual(next(reader), ['ILLINOIS', 'IL', '17', '15,659', '2,491', '2,025', '1,770', '19', '21,964', ''])
-
-    def test_invalid_column(self):
-        args = ['-c', '0', '-m', '1', 'examples/dummy.csv']
-        output_file = six.StringIO()
-        utility = CSVGrep(args, output_file)
-
-        self.assertRaises(ColumnIdentifierError, utility.main)
-
-    def test_display_column_names(self):
-        args = ['-n', 'examples/realdata/FY09_EDU_Recipients_by_State.csv']
-        output_file = six.StringIO()
-
-        utility = CSVGrep(args, output_file)
-        utility.main()
-
-        input_file = six.StringIO(output_file.getvalue())
-        reader = agate.reader(input_file)
-
-        self.assertEqual(next(reader), ['  1: State Name'])
-        self.assertEqual(next(reader), ['  2: State Abbreviate'])
