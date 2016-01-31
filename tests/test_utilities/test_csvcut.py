@@ -17,7 +17,7 @@ from csvkit.utilities.csvcut import CSVCut, launch_new_instance
 from tests import ColumnsTests, NamesTests
 
 
-class TestCSVCut(unittest.TestCase, NamesTests, ColumnsTests):
+class TestCSVCut(unittest.TestCase, ColumnsTests, NamesTests):
     Utility = CSVCut
 
     def test_launch_new_instance(self):

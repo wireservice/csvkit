@@ -17,7 +17,7 @@ from csvkit.utilities.csvsort import CSVSort, launch_new_instance
 from tests import ColumnsTests, NamesTests
 
 
-class TestCSVSort(unittest.TestCase, NamesTests, ColumnsTests):
+class TestCSVSort(unittest.TestCase, ColumnsTests, NamesTests):
     Utility = CSVSort
 
     def test_launch_new_instance(self):

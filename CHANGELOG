@@ -29,6 +29,7 @@ Fixes:
 * csvsql supports custom SQLAlchemy dialects.
 * csvsql correctly escapes `%` characters in SQL queries.
 * csvstack supports stacking a single file.
+* csvstat supports --names.
 * FilteringCSVReader's any_match argument works correctly.
 * A file of two empty rows won't raise an error.
 
