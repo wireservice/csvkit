@@ -213,23 +213,10 @@ class CSVKitUtility(object):
         elif self.args.delimiter:
             kwargs['delimiter'] = self.args.delimiter
 
-        if self.args.quotechar:
-            kwargs['quotechar'] = self.args.quotechar
-
-        if self.args.quoting:
-            kwargs['quoting'] = self.args.quoting
-
-        if self.args.doublequote:
-            kwargs['doublequote'] = self.args.doublequote
-
-        if self.args.escapechar:
-            kwargs['escapechar'] = self.args.escapechar
-
-        if self.args.maxfieldsize:
-            kwargs['maxfieldsize'] = self.args.maxfieldsize
-
-        if self.args.skipinitialspace:
-            kwargs['skipinitialspace'] = self.args.skipinitialspace
+        for arg in ('quotechar', 'quoting', 'doublequote', 'escapechar', 'maxfieldsize', 'skipinitialspace'):
+            value = getattr(self.args, arg)
+            if value:
+                kwargs[arg] = value
 
         if six.PY2 and self.args.encoding:
             kwargs['encoding'] = self.args.encoding
