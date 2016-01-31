@@ -5,12 +5,11 @@ from setuptools import setup
 
 install_requires = [
     'agate>=1.2.0',
+    'agate-excel>=0.1.0',
     'dbf>=0.96.005',
-    'openpyxl==2.2.6',
     'python-dateutil==2.2',
     'six>=1.6.1',
     'sqlalchemy>=0.6.6',
-    'xlrd>=0.7.1',
 ]
 
 if sys.version_info < (2, 7):
