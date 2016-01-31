@@ -16,7 +16,7 @@ from csvkit.utilities.csvgrep import CSVGrep, launch_new_instance
 from tests import ColumnsTests, NamesTests
 
 
-class TestCSVGrep(unittest.TestCase, NamesTests, ColumnsTests):
+class TestCSVGrep(unittest.TestCase, ColumnsTests, NamesTests):
     Utility = CSVGrep
     columns_args = ['-m', '1']
 

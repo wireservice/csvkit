@@ -12,9 +12,11 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvstat import CSVStat, launch_new_instance
+from tests import ColumnsTests, NamesTests
 
 
-class TestCSVStat(unittest.TestCase):
+class TestCSVStat(unittest.TestCase, ColumnsTests, NamesTests):
+    Utility = CSVStat
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvstack', 'examples/dummy.csv']):

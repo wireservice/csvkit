@@ -25,6 +25,8 @@ class CSVStat(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
+        self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
+                                    help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
                                     help='A comma separated list of column indices or names to be examined. Defaults to all columns.')
         self.argparser.add_argument('--max', dest='max_only', action='store_true',
@@ -51,6 +53,10 @@ class CSVStat(CSVKitUtility):
                                     help='Only output row count')
 
     def main(self):
+        if self.args.names_only:
+            self.print_column_names()
+            return
+
         operations = [op for op in OPERATIONS if getattr(self.args, op + '_only')]
 
         if len(operations) > 1:
