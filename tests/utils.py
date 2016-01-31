@@ -1,8 +1,15 @@
 #!/usr/bin/env python
 
-import six
 import sys
 from contextlib import contextmanager
+
+import agate
+import six
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
@@ -21,6 +28,20 @@ def stdin_as_string(str):
     sys.stdin = str
     yield
     sys.stdin = temp
+
+
+class CSVKitTestCase(unittest.TestCase):
+    def assertRows(self, args, rows):
+        output_file = six.StringIO()
+
+        utility = self.Utility(args, output_file)
+        utility.main()
+
+        input_file = six.StringIO(output_file.getvalue())
+
+        reader = agate.reader(input_file)
+        for row in rows:
+            self.assertEqual(next(reader), row)
 
 
 class NamesTests(object):

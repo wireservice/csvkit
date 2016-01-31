@@ -3,34 +3,17 @@
 
 import sys
 
-import agate
-import six
-
 try:
-    import unittest2 as unittest
     from mock import patch
 except ImportError:
-    import unittest
     from unittest.mock import patch
 
 from csvkit.utilities.csvcut import CSVCut, launch_new_instance
-from tests.utils import ColumnsTests, NamesTests
+from tests.utils import CSVKitTestCase, ColumnsTests, NamesTests
 
 
-class TestCSVCut(unittest.TestCase, ColumnsTests, NamesTests):
+class TestCSVCut(CSVKitTestCase, ColumnsTests, NamesTests):
     Utility = CSVCut
-
-    def assertRows(self, args, rows):
-        output_file = six.StringIO()
-        utility = CSVCut(args, output_file)
-
-        utility.main()
-
-        input_file = six.StringIO(output_file.getvalue())
-        reader = agate.reader(input_file)
-
-        for row in rows:
-            self.assertEqual(next(reader), row)
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvcut', 'examples/dummy.csv']):
