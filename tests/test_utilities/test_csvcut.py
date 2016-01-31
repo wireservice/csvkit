@@ -46,7 +46,7 @@ class TestCSVCut(unittest.TestCase):
         input_file = six.StringIO(output_file.getvalue())
         reader = agate.reader(input_file)
 
-        self.assertEqual(next(reader), ['a', 'c'])
+        self.assertEqual(next(reader), ['foo', 'baz'])
         self.assertEqual(next(reader), ['1', '3'])
         self.assertEqual(next(reader), ['4', u'ʤ'])
 
