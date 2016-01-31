@@ -33,21 +33,30 @@ def stdin_as_string(str):
 class CSVKitTestCase(unittest.TestCase):
     def get_output(self, args):
         output_file = six.StringIO()
-
         utility = self.Utility(args, output_file)
         utility.main()
+        return output_file.getvalue()
 
-        return six.StringIO(output_file.getvalue())
+    def get_output_as_io(self, args):
+        return six.StringIO(self.get_output(args))
+
+    def get_output_as_list(self, args):
+        return self.get_output(args).split('\n')
 
     def assertRows(self, args, rows):
-        reader = agate.reader(self.get_output(args))
+        reader = agate.reader(self.get_output_as_io(args))
         for row in rows:
             self.assertEqual(next(reader), row)
+
+    def assertLines(self, args, rows):
+        lines = self.get_output_as_list(args)
+        for i, row in enumerate(rows):
+            self.assertEqual(lines[i], row)
 
 
 class NamesTests(object):
     def test_names(self):
-        output = self.get_output(['-n', 'examples/dummy.csv'])
+        output = self.get_output_as_io(['-n', 'examples/dummy.csv'])
 
         self.assertEqual(next(output), '  1: a\n')
         self.assertEqual(next(output), '  2: b\n')

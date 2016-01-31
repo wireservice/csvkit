@@ -15,34 +15,23 @@ from tests.utils import CSVKitTestCase, stdin_as_string
 
 
 class TestCSVFormat(CSVKitTestCase):
+    Utility = CSVFormat
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvformat', 'examples/dummy.csv']):
             launch_new_instance()
 
     def test_delimiter(self):
-        args = ['-D', '|', 'examples/dummy.csv']
-        output_file = six.StringIO()
-
-        utility = CSVFormat(args, output_file)
-        utility.main()
-
-        lines = output_file.getvalue().split('\n')
-
-        self.assertEqual(lines[0], 'a|b|c')
-        self.assertEqual(lines[1], '1|2|3')
+        self.assertLines(['-D', '|', 'examples/dummy.csv'], [
+            'a|b|c',
+            '1|2|3',
+        ])
 
     def test_tab_delimiter(self):
-        args = ['-T', 'examples/dummy.csv']
-        output_file = six.StringIO()
-
-        utility = CSVFormat(args, output_file)
-        utility.main()
-
-        lines = output_file.getvalue().split('\n')
-
-        self.assertEqual(lines[0], 'a\tb\tc')
-        self.assertEqual(lines[1], '1\t2\t3')
+        self.assertLines(['-T', 'examples/dummy.csv'], [
+            'a\tb\tc',
+            '1\t2\t3',
+        ])
 
     def test_quoting(self):
         args = ['-Q', '*', '-U', '0', '-B']
@@ -75,12 +64,6 @@ class TestCSVFormat(CSVKitTestCase):
             self.assertEqual(lines[1], '1#"2,3,4')
 
     def test_lineterminator(self):
-        args = ['-M', 'XYZ', 'examples/dummy.csv']
-        output_file = six.StringIO()
-
-        utility = CSVFormat(args, output_file)
-        utility.main()
-
-        output = output_file.getvalue()
-
-        self.assertEqual(output, 'a,b,cXYZ1,2,3XYZ')
+        self.assertLines(['-M', 'XYZ', 'examples/dummy.csv'], [
+            'a,b,cXYZ1,2,3XYZ',
+        ])
