@@ -2,8 +2,6 @@
 
 import sys
 
-import six
-
 try:
     from mock import patch
 except ImportError:
@@ -54,4 +52,5 @@ class TestIn2CSV(CSVKitTestCase):
     def test_csv_no_headers(self):
         self.assertLines(['--no-header-row', 'examples/no_header_row.csv'], [
             'A,B,C',
+            'True,2,3',
         ])

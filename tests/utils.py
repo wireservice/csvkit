@@ -50,11 +50,15 @@ class CSVKitTestCase(unittest.TestCase):
         reader = self.get_output_as_reader(args)
         for row in rows:
             self.assertEqual(next(reader), row)
+        self.assertRaises(StopIteration, next, reader)
 
-    def assertLines(self, args, rows):
+    def assertLines(self, args, rows, newline_at_eof=True):
         lines = self.get_output_as_list(args)
+        if newline_at_eof:
+            rows.append('')
         for i, row in enumerate(rows):
             self.assertEqual(lines[i], row)
+        self.assertEqual(len(lines), len(rows))
 
 
 class NamesTests(object):

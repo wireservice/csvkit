@@ -3,7 +3,6 @@
 
 import sys
 
-import agate
 import six
 
 try:

@@ -54,4 +54,4 @@ class TestCSVFormat(CSVKitTestCase):
     def test_lineterminator(self):
         self.assertLines(['-M', 'XYZ', 'examples/dummy.csv'], [
             'a,b,cXYZ1,2,3XYZ',
-        ])
+        ], newline_at_eof=False)

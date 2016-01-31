@@ -2,9 +2,6 @@
 
 import sys
 
-import agate
-import six
-
 try:
     from mock import patch
 except ImportError:

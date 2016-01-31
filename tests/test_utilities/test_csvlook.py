@@ -3,8 +3,6 @@
 
 import sys
 
-import six
-
 try:
     from mock import patch
 except ImportError:
