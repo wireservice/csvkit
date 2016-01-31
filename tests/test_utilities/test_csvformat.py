@@ -34,34 +34,22 @@ class TestCSVFormat(CSVKitTestCase):
         ])
 
     def test_quoting(self):
-        args = ['-Q', '*', '-U', '0', '-B']
-        output_file = six.StringIO()
-
         input_file = six.StringIO('a,b,c\n1*2,3,4\n')
 
         with stdin_as_string(input_file):
-            utility = CSVFormat(args, output_file)
-            utility.main()
-
-            lines = output_file.getvalue().split('\n')
-
-            self.assertEqual(lines[0], 'a,b,c')
-            self.assertEqual(lines[1], '*1**2*,3,4')
+            self.assertLines(['-Q', '*', '-U', '0', '-B'], [
+                'a,b,c',
+                '*1**2*,3,4',
+            ])
 
     def test_escapechar(self):
-        args = ['-P', '#', '-U', '3']
-        output_file = six.StringIO()
-
         input_file = six.StringIO('a,b,c\n1"2,3,4\n')
 
         with stdin_as_string(input_file):
-            utility = CSVFormat(args, output_file)
-            utility.main()
-
-            lines = output_file.getvalue().split('\n')
-
-            self.assertEqual(lines[0], 'a,b,c')
-            self.assertEqual(lines[1], '1#"2,3,4')
+            self.assertLines(['-P', '#', '-U', '3'], [
+                'a,b,c',
+                '1#"2,3,4',
+            ])
 
     def test_lineterminator(self):
         self.assertLines(['-M', 'XYZ', 'examples/dummy.csv'], [

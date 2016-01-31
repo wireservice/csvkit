@@ -53,16 +53,10 @@ class TestCSVSQL(CSVKitTestCase):
         self.assertTrue('"C" INTEGER NOT NULL' in sql)
 
     def test_stdin(self):
-        args = ['--table', 'foo']
-        output_file = six.StringIO()
-
         input_file = six.StringIO('a,b,c\n1,2,3\n')
 
         with stdin_as_string(input_file):
-            utility = CSVSQL(args, output_file)
-            utility.main()
-
-            sql = output_file.getvalue()
+            sql = self.get_output(['--table', 'foo'])
 
             self.assertTrue('CREATE TABLE foo' in sql)
             self.assertTrue('a INTEGER NOT NULL' in sql)
@@ -70,31 +64,19 @@ class TestCSVSQL(CSVKitTestCase):
             self.assertTrue('c INTEGER NOT NULL' in sql)
 
     def test_stdin_and_filename(self):
-        args = ['examples/dummy.csv']
-        output_file = six.StringIO()
-
         input_file = six.StringIO("a,b,c\n1,2,3\n")
 
         with stdin_as_string(input_file):
-            utility = CSVSQL(args, output_file)
-            utility.main()
-
-            sql = output_file.getvalue()
+            sql = self.get_output(['examples/dummy.csv'])
 
             self.assertTrue('CREATE TABLE stdin' in sql)
             self.assertTrue('CREATE TABLE dummy' in sql)
 
     def test_query(self):
-        args = ['--query', 'select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species', 'examples/iris.csv', 'examples/irismeta.csv']
-        output_file = six.StringIO()
-
         input_file = six.StringIO("a,b,c\n1,2,3\n")
 
         with stdin_as_string(input_file):
-            utility = CSVSQL(args, output_file)
-            utility.main()
-
-            sql = output_file.getvalue()
+            sql = self.get_output(['--query', 'select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species', 'examples/iris.csv', 'examples/irismeta.csv'])
 
             if six.PY2:
                 self.assertTrue('usda_id,mean_sepal_length' in sql)
