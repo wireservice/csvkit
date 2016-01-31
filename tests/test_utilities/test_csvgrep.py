@@ -16,7 +16,7 @@ class TestCSVGrep(CSVKitTestCase, ColumnsTests, NamesTests):
     columns_args = ['-m', '1']
 
     def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', ['csvgrep', '-c', '1', '-m', '1', 'examples/dummy.csv']):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), '-c', '1', '-m', '1', 'examples/dummy.csv']):
             launch_new_instance()
 
     def test_match(self):

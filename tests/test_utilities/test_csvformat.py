@@ -18,7 +18,7 @@ class TestCSVFormat(CSVKitTestCase):
     Utility = CSVFormat
 
     def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', ['csvformat', 'examples/dummy.csv']):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
     def test_delimiter(self):

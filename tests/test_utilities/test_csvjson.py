@@ -18,7 +18,7 @@ class TestCSVJSON(CSVKitTestCase):
     Utility = CSVJSON
 
     def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', ['csvjson', 'examples/dummy.csv']):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
     def test_simple(self):

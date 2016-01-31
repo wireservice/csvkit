@@ -26,7 +26,7 @@ class TestSQL2CSV(CSVKitTestCase):
     Utility = SQL2CSV
 
     def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', ['sql2csv', '--query', 'select 1']):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), '--query', 'select 1']):
             launch_new_instance()
 
     def setUp(self):

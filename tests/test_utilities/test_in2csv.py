@@ -19,7 +19,7 @@ class TestIn2CSV(CSVKitTestCase):
         self.assertEqual(output, open(output_filename, 'r').read())
 
     def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', ['in2csv', 'examples/dummy.csv']):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
     def test_convert_csv(self):

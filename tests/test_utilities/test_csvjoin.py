@@ -15,7 +15,7 @@ class TestCSVJoin(CSVKitTestCase):
     Utility = CSVJoin
 
     def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', ['csvjoin', 'examples/join_a.csv', 'examples/join_b.csv']):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/join_a.csv', 'examples/join_b.csv']):
             launch_new_instance()
 
     def test_sequential(self):

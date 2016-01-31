@@ -18,7 +18,7 @@ class TestCSVClean(CSVKitTestCase):
     Utility = CSVClean
 
     def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', ['csvclean', 'examples/bad.csv']):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/bad.csv']):
             launch_new_instance()
 
     def test_simple(self):
