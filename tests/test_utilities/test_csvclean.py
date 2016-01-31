@@ -15,6 +15,7 @@ from tests.utils import CSVKitTestCase
 
 
 class TestCSVClean(CSVKitTestCase):
+    Utility = CSVClean
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvclean', 'examples/bad.csv']):
@@ -47,16 +48,8 @@ class TestCSVClean(CSVKitTestCase):
             os.remove('examples/bad_out.csv')
 
     def test_dry_run(self):
-        args = ['-n', 'examples/bad.csv']
-        output_file = six.StringIO()
-
-        utility = CSVClean(args, output_file)
-        utility.main()
-
+        output = self.get_output_as_io(['-n', 'examples/bad.csv'])
         self.assertFalse(os.path.exists('examples/bad_err.csv'))
         self.assertFalse(os.path.exists('examples/bad_out.csv'))
-
-        output = six.StringIO(output_file.getvalue())
-
         self.assertEqual(next(output)[:6], 'Line 1')
         self.assertEqual(next(output)[:6], 'Line 2')
