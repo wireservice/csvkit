@@ -15,62 +15,32 @@ from tests.utils import CSVKitTestCase
 
 
 class TestCSVJSON(CSVKitTestCase):
+    Utility = CSVJSON
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvjson', 'examples/dummy.csv']):
             launch_new_instance()
 
     def test_simple(self):
-        args = ['examples/dummy.csv']
-        output_file = six.StringIO()
-
-        utility = CSVJSON(args, output_file)
-        utility.main()
-
-        js = json.loads(output_file.getvalue())
-
+        js = json.loads(self.get_output(['examples/dummy.csv']))
         self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})
 
     def test_indentation(self):
-        args = ['-i', '4', 'examples/dummy.csv']
-        output_file = six.StringIO()
-
-        utility = CSVJSON(args, output_file)
-        utility.main()
-
-        content = output_file.getvalue()
-        js = json.loads(content)
-
+        output = self.get_output(['-i', '4', 'examples/dummy.csv'])
+        js = json.loads(output)
         self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})
-        self.assertRegexpMatches(content, '        "a": true,')
+        self.assertRegexpMatches(output, '        "a": true,')
 
     def test_keying(self):
-        args = ['-k', 'a', 'examples/dummy.csv']
-        output_file = six.StringIO()
-
-        utility = CSVJSON(args, output_file)
-        utility.main()
-
-        js = json.loads(output_file.getvalue())
-
+        js = json.loads(self.get_output(['-k', 'a', 'examples/dummy.csv']))
         self.assertDictEqual(js, {'true': {'a': True, 'c': 3.0, 'b': 2.0}})
 
     def test_duplicate_keys(self):
-        args = ['-k', 'a', 'examples/dummy3.csv']
-        output_file = six.StringIO()
-
-        utility = CSVJSON(args, output_file)
-
+        utility = CSVJSON(['-k', 'a', 'examples/dummy3.csv'], six.StringIO())
         self.assertRaisesRegexp(ValueError, 'Value True is not unique in the key column\.', utility.main)
 
     def test_geojson(self):
-        args = ['--lat', 'latitude', '--lon', 'longitude', 'examples/test_geo.csv']
-        output_file = six.StringIO()
-
-        utility = CSVJSON(args, output_file)
-        utility.main()
-
-        geojson = json.loads(output_file.getvalue())
+        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', 'examples/test_geo.csv']))
 
         self.assertEqual(geojson['type'], 'FeatureCollection')
         self.assertFalse('crs' in geojson)
@@ -89,13 +59,7 @@ class TestCSVJSON(CSVKitTestCase):
             self.assertTrue(isinstance(geometry['coordinates'][1], float))
 
     def test_geojson_with_id(self):
-        args = ['--lat', 'latitude', '--lon', 'longitude', '-k', 'slug', 'examples/test_geo.csv']
-        output_file = six.StringIO()
-
-        utility = CSVJSON(args, output_file)
-        utility.main()
-
-        geojson = json.loads(output_file.getvalue())
+        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', '-k', 'slug', 'examples/test_geo.csv']))
 
         self.assertEqual(geojson['type'], 'FeatureCollection')
         self.assertFalse('crs' in geojson)
@@ -114,13 +78,7 @@ class TestCSVJSON(CSVKitTestCase):
             self.assertTrue(isinstance(geometry['coordinates'][1], float))
 
     def test_geojson_with_crs(self):
-        args = ['--lat', 'latitude', '--lon', 'longitude', '--crs', 'EPSG:4269', 'examples/test_geo.csv']
-        output_file = six.StringIO()
-
-        utility = CSVJSON(args, output_file)
-        utility.main()
-
-        geojson = json.loads(output_file.getvalue())
+        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', '--crs', 'EPSG:4269', 'examples/test_geo.csv']))
 
         self.assertEqual(geojson['type'], 'FeatureCollection')
         self.assertTrue('crs' in geojson)
@@ -133,13 +91,8 @@ class TestCSVJSON(CSVKitTestCase):
         self.assertEqual(crs['properties']['name'], 'EPSG:4269')
 
     def test_json_streaming(self):
-        args = ['--stream', 'examples/dummy3.csv']
-        output_file = six.StringIO()
-
-        utility = CSVJSON(args, output_file)
-        utility.main()
-
-        result = list(map(json.loads, output_file.getvalue().splitlines()))
+        output = self.get_output(['--stream', 'examples/dummy3.csv'])
+        result = list(map(json.loads, output.splitlines()))
         self.assertEqual(len(result), 2)
         self.assertDictEqual(result[0], {'a': True, 'c': 3.0, 'b': 2.0})
         self.assertDictEqual(result[1], {'a': True, 'c': 5.0, 'b': 4.0})
