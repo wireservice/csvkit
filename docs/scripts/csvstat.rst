@@ -25,6 +25,8 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
       -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
                             Limit CSV dialect sniffing to the specified number of
                             bytes. Specify "0" to disable sniffing entirely.
+      -n, --names           Display column names and indices from the input CSV
+                            and exit.
       -c COLUMNS, --columns COLUMNS
                             A comma separated list of column indices or names to
                             be examined. Defaults to all columns.
