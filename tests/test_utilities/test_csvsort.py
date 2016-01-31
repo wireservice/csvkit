@@ -13,11 +13,12 @@ except ImportError:
     import unittest
     from unittest.mock import patch
 
-from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 from csvkit.utilities.csvsort import CSVSort, launch_new_instance
+from tests import ColumnsTests, NamesTests
 
 
-class TestCSVSort(unittest.TestCase):
+class TestCSVSort(unittest.TestCase, NamesTests, ColumnsTests):
+    Utility = CSVSort
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvsort', 'examples/dummy.csv']):
@@ -52,20 +53,6 @@ class TestCSVSort(unittest.TestCase):
         new_order = [six.text_type(r[0]) for r in reader]
 
         self.assertEqual(test_order, new_order)
-
-    def test_invalid_column(self):
-        args = ['-c', '0', 'examples/dummy.csv']
-        output_file = six.StringIO()
-        utility = CSVSort(args, output_file)
-
-        self.assertRaises(ColumnIdentifierError, utility.main)
-
-    def test_invalid_options(self):
-        args = ['-n', '--no-header-row', 'examples/dummy.csv']
-        output_file = six.StringIO()
-        utility = CSVSort(args, output_file)
-
-        self.assertRaises(RequiredHeaderError, utility.main)
 
     def test_no_header_row(self):
         args = ['--no-header-row', '-c', '1', '-r', 'examples/no_header_row3.csv']
