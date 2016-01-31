@@ -13,7 +13,7 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvgrep import CSVGrep, launch_new_instance
-from tests import ColumnsTests, NamesTests
+from tests.utils import ColumnsTests, NamesTests
 
 
 class TestCSVGrep(unittest.TestCase, ColumnsTests, NamesTests):
