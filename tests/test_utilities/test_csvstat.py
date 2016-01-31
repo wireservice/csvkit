@@ -43,8 +43,8 @@ class TestCSVStat(unittest.TestCase):
 
         stats = output_file.getvalue()
 
-        self.assertFalse('column1' in stats)
-        self.assertTrue('column2' in stats)
+        self.assertFalse('A' in stats)
+        self.assertTrue('B' in stats)
 
     def test_count_only(self):
         args = ['--count', 'examples/dummy.csv']

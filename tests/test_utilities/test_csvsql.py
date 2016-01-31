@@ -67,9 +67,9 @@ class TestCSVSQL(unittest.TestCase):
         sql = output_file.getvalue()
 
         self.assertTrue('CREATE TABLE foo' in sql)
-        self.assertTrue('column1 INTEGER NOT NULL' in sql)
-        self.assertTrue('column2 INTEGER NOT NULL' in sql)
-        self.assertTrue('column3 INTEGER NOT NULL' in sql)
+        self.assertTrue('"A" INTEGER NOT NULL' in sql)
+        self.assertTrue('"B" INTEGER NOT NULL' in sql)
+        self.assertTrue('"C" INTEGER NOT NULL' in sql)
 
     def test_stdin(self):
         args = ['--table', 'foo']

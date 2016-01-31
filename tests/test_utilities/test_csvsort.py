@@ -77,7 +77,7 @@ class TestCSVSort(unittest.TestCase):
         input_file = six.StringIO(output_file.getvalue())
         reader = agate.reader(input_file)
 
-        test_order = ['column1', '4', '1']
+        test_order = ['A', '4', '1']
         new_order = [six.text_type(r[0]) for r in reader]
 
         self.assertEqual(test_order, new_order)
