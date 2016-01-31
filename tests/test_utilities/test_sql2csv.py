@@ -6,10 +6,8 @@ import sys
 import six
 
 try:
-    import unittest2 as unittest
     from mock import patch
 except ImportError:
-    import unittest
     from unittest.mock import patch
 
 try:
@@ -21,10 +19,10 @@ except ImportError:
 
 from csvkit.utilities.csvsql import CSVSQL
 from csvkit.utilities.sql2csv import SQL2CSV, launch_new_instance
-from tests.utils import stdin_as_string
+from tests.utils import CSVKitTestCase, stdin_as_string
 
 
-class TestSQL2CSV(unittest.TestCase):
+class TestSQL2CSV(CSVKitTestCase):
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['sql2csv', '--query', 'select 1']):

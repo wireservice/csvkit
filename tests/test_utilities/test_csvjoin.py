@@ -5,16 +5,15 @@ import sys
 import six
 
 try:
-    import unittest2 as unittest
     from mock import patch
 except ImportError:
-    import unittest
     from unittest.mock import patch
 
 from csvkit.utilities.csvjoin import CSVJoin, launch_new_instance
+from tests.utils import CSVKitTestCase
 
 
-class TestCSVJoin(unittest.TestCase):
+class TestCSVJoin(CSVKitTestCase):
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvjoin', 'examples/join_a.csv', 'examples/join_b.csv']):

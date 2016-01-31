@@ -31,32 +31,27 @@ def stdin_as_string(str):
 
 
 class CSVKitTestCase(unittest.TestCase):
-    def assertRows(self, args, rows):
+    def get_output(self, args):
         output_file = six.StringIO()
 
         utility = self.Utility(args, output_file)
         utility.main()
 
-        input_file = six.StringIO(output_file.getvalue())
+        return six.StringIO(output_file.getvalue())
 
-        reader = agate.reader(input_file)
+    def assertRows(self, args, rows):
+        reader = agate.reader(self.get_output(args))
         for row in rows:
             self.assertEqual(next(reader), row)
 
 
 class NamesTests(object):
     def test_names(self):
-        args = ['-n', 'examples/dummy.csv']
-        output_file = six.StringIO()
+        output = self.get_output(['-n', 'examples/dummy.csv'])
 
-        utility = self.Utility(args, output_file)
-        utility.main()
-
-        input_file = six.StringIO(output_file.getvalue())
-
-        self.assertEqual(next(input_file), '  1: a\n')
-        self.assertEqual(next(input_file), '  2: b\n')
-        self.assertEqual(next(input_file), '  3: c\n')
+        self.assertEqual(next(output), '  1: a\n')
+        self.assertEqual(next(output), '  2: b\n')
+        self.assertEqual(next(output), '  3: c\n')
 
     def test_invalid_options(self):
         args = ['-n', '--no-header-row', 'examples/dummy.csv']

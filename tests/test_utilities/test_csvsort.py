@@ -7,17 +7,15 @@ import agate
 import six
 
 try:
-    import unittest2 as unittest
     from mock import patch
 except ImportError:
-    import unittest
     from unittest.mock import patch
 
 from csvkit.utilities.csvsort import CSVSort, launch_new_instance
-from tests.utils import ColumnsTests, NamesTests
+from tests.utils import CSVKitTestCase, ColumnsTests, NamesTests
 
 
-class TestCSVSort(unittest.TestCase, ColumnsTests, NamesTests):
+class TestCSVSort(CSVKitTestCase, ColumnsTests, NamesTests):
     Utility = CSVSort
 
     def test_launch_new_instance(self):

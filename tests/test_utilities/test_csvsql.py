@@ -5,17 +5,15 @@ import sys
 import six
 
 try:
-    import unittest2 as unittest
     from mock import patch
 except ImportError:
-    import unittest
     from unittest.mock import patch
 
 from csvkit.utilities.csvsql import CSVSQL, launch_new_instance
-from tests.utils import stdin_as_string
+from tests.utils import CSVKitTestCase, stdin_as_string
 
 
-class TestCSVSQL(unittest.TestCase):
+class TestCSVSQL(CSVKitTestCase):
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvsql', 'examples/dummy.csv']):

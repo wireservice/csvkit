@@ -6,17 +6,15 @@ import sys
 import six
 
 try:
-    import unittest2 as unittest
     from mock import patch
 except ImportError:
-    import unittest
     from unittest.mock import patch
 
 from csvkit.utilities.csvformat import CSVFormat, launch_new_instance
-from tests.utils import stdin_as_string
+from tests.utils import CSVKitTestCase, stdin_as_string
 
 
-class TestCSVFormat(unittest.TestCase):
+class TestCSVFormat(CSVKitTestCase):
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvformat', 'examples/dummy.csv']):

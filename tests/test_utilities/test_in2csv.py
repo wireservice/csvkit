@@ -5,16 +5,15 @@ import sys
 import six
 
 try:
-    import unittest2 as unittest
     from mock import patch
 except ImportError:
-    import unittest
     from unittest.mock import patch
 
 from csvkit.utilities.in2csv import In2CSV, launch_new_instance
+from tests.utils import CSVKitTestCase
 
 
-class TestIn2CSV(unittest.TestCase):
+class TestIn2CSV(CSVKitTestCase):
     def assertConverted(self, input_format, input_filename, output_filename, additional_args=[]):
         args = ['-f', input_format, input_filename] + additional_args
         output_file = six.StringIO()

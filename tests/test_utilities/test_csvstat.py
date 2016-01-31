@@ -5,17 +5,15 @@ import sys
 import six
 
 try:
-    import unittest2 as unittest
     from mock import patch
 except ImportError:
-    import unittest
     from unittest.mock import patch
 
 from csvkit.utilities.csvstat import CSVStat, launch_new_instance
-from tests.utils import ColumnsTests, NamesTests
+from tests.utils import CSVKitTestCase, ColumnsTests, NamesTests
 
 
-class TestCSVStat(unittest.TestCase, ColumnsTests, NamesTests):
+class TestCSVStat(CSVKitTestCase, ColumnsTests, NamesTests):
     Utility = CSVStat
 
     def test_launch_new_instance(self):
