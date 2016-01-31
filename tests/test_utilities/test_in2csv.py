@@ -14,15 +14,11 @@ from tests.utils import CSVKitTestCase
 
 
 class TestIn2CSV(CSVKitTestCase):
+    Utility = In2CSV
+
     def assertConverted(self, input_format, input_filename, output_filename, additional_args=[]):
-        args = ['-f', input_format, input_filename] + additional_args
-        output_file = six.StringIO()
-
-        utility = In2CSV(args, output_file)
-        utility.main()
-
-        target_output = open(output_filename, 'r').read()
-        self.assertEqual(output_file.getvalue(), target_output)
+        output = self.get_output(['-f', input_format, input_filename] + additional_args)
+        self.assertEqual(output, open(output_filename, 'r').read())
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['in2csv', 'examples/dummy.csv']):
@@ -56,12 +52,6 @@ class TestIn2CSV(CSVKitTestCase):
         self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_converted.csv', ['--sheet', 'data'])
 
     def test_csv_no_headers(self):
-        args = ['--no-header-row', 'examples/no_header_row.csv']
-        output_file = six.StringIO()
-
-        utility = In2CSV(args, output_file)
-        utility.main()
-
-        output = output_file.getvalue()
-
-        self.assertTrue('A,B,C' in output)
+        self.assertLines(['--no-header-row', 'examples/no_header_row.csv'], [
+            'A,B,C',
+        ])
