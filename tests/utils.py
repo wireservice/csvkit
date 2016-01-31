@@ -43,8 +43,11 @@ class CSVKitTestCase(unittest.TestCase):
     def get_output_as_list(self, args):
         return self.get_output(args).split('\n')
 
+    def get_output_as_reader(self, args):
+        return agate.reader(self.get_output_as_io(args))
+
     def assertRows(self, args, rows):
-        reader = agate.reader(self.get_output_as_io(args))
+        reader = self.get_output_as_reader(args)
         for row in rows:
             self.assertEqual(next(reader), row)
 
