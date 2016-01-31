@@ -114,6 +114,6 @@ class TestCSVStack(unittest.TestCase):
         input_file = six.StringIO(output_file.getvalue())
         reader = agate.reader(input_file)
 
-        self.assertEqual(next(reader)[0], 'column1')
+        self.assertEqual(next(reader)[0], 'A')
         self.assertEqual(next(reader)[0], '1')
         self.assertEqual(next(reader)[0], '4')
