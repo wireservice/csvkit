@@ -14,19 +14,14 @@ from tests.utils import CSVKitTestCase, stdin_as_string
 
 
 class TestCSVSQL(CSVKitTestCase):
+    Utility = CSVSQL
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', ['csvsql', 'examples/dummy.csv']):
             launch_new_instance()
 
     def test_create_table(self):
-        args = ['--table', 'foo', 'examples/testfixed_converted.csv']
-        output_file = six.StringIO()
-
-        utility = CSVSQL(args, output_file)
-        utility.main()
-
-        sql = output_file.getvalue()
+        sql = self.get_output(['--table', 'foo', 'examples/testfixed_converted.csv'])
 
         self.assertTrue('CREATE TABLE foo' in sql)
         self.assertTrue('text VARCHAR(17) NOT NULL' in sql)
@@ -38,13 +33,7 @@ class TestCSVSQL(CSVKitTestCase):
         self.assertTrue('datetime DATETIME' in sql)
 
     def test_no_inference(self):
-        args = ['--table', 'foo', '--no-inference', 'examples/testfixed_converted.csv']
-        output_file = six.StringIO()
-
-        utility = CSVSQL(args, output_file)
-        utility.main()
-
-        sql = output_file.getvalue()
+        sql = self.get_output(['--table', 'foo', '--no-inference', 'examples/testfixed_converted.csv'])
 
         self.assertTrue('CREATE TABLE foo' in sql)
         self.assertTrue('text VARCHAR(17) NOT NULL' in sql)
@@ -56,13 +45,7 @@ class TestCSVSQL(CSVKitTestCase):
         self.assertTrue('datetime VARCHAR(19) NOT NULL' in sql)
 
     def test_no_header_row(self):
-        args = ['--table', 'foo', '--no-header-row', 'examples/no_header_row.csv']
-        output_file = six.StringIO()
-
-        utility = CSVSQL(args, output_file)
-        utility.main()
-
-        sql = output_file.getvalue()
+        sql = self.get_output(['--table', 'foo', '--no-header-row', 'examples/no_header_row.csv'])
 
         self.assertTrue('CREATE TABLE foo' in sql)
         self.assertTrue('"A" INTEGER NOT NULL' in sql)
