@@ -17,42 +17,20 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, NamesTests):
     Utility = CSVStat
 
     def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', ['csvstack', 'examples/dummy.csv']):
+        with patch.object(sys, 'argv', ['csvstat', 'examples/dummy.csv']):
             launch_new_instance()
 
     def test_runs(self):
-        args = ['examples/test_utf8.csv']
-        output_file = six.StringIO()
-
-        utility = CSVStat(args, output_file)
-        utility.main()
+        self.get_output(['examples/test_utf8.csv'])
 
     def test_encoding(self):
-        args = ['-e', 'latin1', 'examples/test_latin1.csv']
-        output_file = six.StringIO()
-
-        utility = CSVStat(args, output_file)
-        utility.main()
+        self.get_output(['-e', 'latin1', 'examples/test_latin1.csv'])
 
     def test_no_header_row(self):
-        args = ['-H', '-c', '2', 'examples/no_header_row.csv']
-        output_file = six.StringIO()
-
-        utility = CSVStat(args, output_file)
-        utility.main()
-
-        stats = output_file.getvalue()
-
-        self.assertFalse('A' in stats)
-        self.assertTrue('B' in stats)
+        output = self.get_output(['-H', '-c', '2', 'examples/no_header_row.csv'])
+        self.assertFalse('A' in output)
+        self.assertTrue('B' in output)
 
     def test_count_only(self):
-        args = ['--count', 'examples/dummy.csv']
-        output_file = six.StringIO()
-
-        utility = CSVStat(args, output_file)
-        utility.main()
-
-        stats = output_file.getvalue()
-
-        self.assertEqual(stats, 'Row count: 1\n')
+        output = self.get_output(['--count', 'examples/dummy.csv'])
+        self.assertEqual(output, 'Row count: 1\n')
