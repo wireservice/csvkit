@@ -37,6 +37,24 @@ class TestCSVLook(unittest.TestCase):
         self.assertEqual(next(input_file), '|  1 | 4 | 5  |\n')
         self.assertEqual(next(input_file), '|----+---+----|\n')
 
+    def test_truncate(self):
+        args = ['examples/dummy4.csv', '--truncate', '3']
+        output_file = six.StringIO()
+        utility = CSVLook(args, output_file)
+
+        utility.main()
+
+        input_file = six.StringIO(output_file.getvalue())
+
+        self.assertEqual(next(input_file), '|----+---+----|\n')
+        self.assertEqual(next(input_file), '|  a | b | c  |\n')
+        self.assertEqual(next(input_file), '|----+---+----|\n')
+        self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')
+        self.assertEqual(next(input_file), '|  1 | 4 | 5  |\n')
+        self.assertEqual(next(input_file), '|  6 | 7 | 8  |\n')
+        self.assertEqual(next(input_file), '|----+---+----|\n')
+        self.assertRaises(StopIteration, next, input_file)
+
     def test_no_header(self):
         args = ['--no-header-row', 'examples/no_header_row3.csv']
         output_file = six.StringIO()
