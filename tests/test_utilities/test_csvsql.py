@@ -72,6 +72,11 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
             self.assertTrue('CREATE TABLE stdin' in sql)
             self.assertTrue('CREATE TABLE dummy' in sql)
 
+    def test_empty_with_query(self):
+        with stdin_as_string(six.StringIO()):
+            utility = CSVSQL(['--query', 'select 1'], six.StringIO())
+            utility.main()
+
     def test_query(self):
         input_file = six.StringIO("a,b,c\n1,2,3\n")
 
