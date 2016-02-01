@@ -57,11 +57,12 @@ class SQL2CSV(CSVKitUtility):
         rows = conn.execute(query.replace('%', '%%'))
         output = agate.writer(self.output_file, **self.writer_kwargs)
 
-        if not self.args.no_header_row:
-            output.writerow(rows._metadata.keys)
+        if rows.returns_rows:
+            if not self.args.no_header_row:
+                output.writerow(rows._metadata.keys)
 
-        for row in rows:
-            output.writerow(row)
+            for row in rows:
+                output.writerow(row)
 
         conn.close()
 
