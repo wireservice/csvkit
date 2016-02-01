@@ -37,13 +37,12 @@ def sequential_join(left_table, right_table):
     for left_row in left_rows:
         try:
             right_row = next(right_rows)
+            output.append(left_row + right_row)
         except StopIteration:
-            output.append(left_row + ([u''] * len(right_headers)))
-
-        output.append(left_row + right_row)
+            output.append(left_row + [u''] * len(right_headers))
 
     for right_row in right_rows:
-        output.append(([u''] * len(left_headers)) + right_row)
+        output.append([u''] * len(left_headers) + right_row)
 
     return output
 
