@@ -293,15 +293,15 @@ def match_column_identifier(column_names, c, zero_based=False):
                 c -= 1
         # Fail out if neither a column name nor an integer
         except:
-            raise ColumnIdentifierError('Column identifier "%s" is neither an integer, nor a existing column\'s name.' % c)
+            raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name." % c)
 
         # Fail out if index is 0-based
         if c < 0:
-            raise ColumnIdentifierError('Column 0 is not valid; columns are 1-based.')
+            raise ColumnIdentifierError("Column 0 is invalid. Columns are 1-based.")
 
         # Fail out if index is out of range
         if c >= len(column_names):
-            raise ColumnIdentifierError('Index %i is beyond the last named column, "%s" at index %i.' % (c, column_names[-1], len(column_names) - 1))
+            raise ColumnIdentifierError("Column %i is invalid. The last column is '%s' at index %i." % (c, column_names[-1], len(column_names) - 1))
 
     return c
 
@@ -313,6 +313,9 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
     non-integers (e.g. column names) are not supported.
     Note: Column indices are 1-based.
     """
+    if not column_names:
+        return []
+
     if not ids and not excluded_columns:
         return range(len(column_names))
 
