@@ -8,10 +8,10 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvstat import CSVStat, launch_new_instance
-from tests.utils import CSVKitTestCase, ColumnsTests, NamesTests
+from tests.utils import CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests
 
 
-class TestCSVStat(CSVKitTestCase, ColumnsTests, NamesTests):
+class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
     Utility = CSVStat
 
     def test_launch_new_instance(self):

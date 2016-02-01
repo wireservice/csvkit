@@ -8,11 +8,12 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvjoin import CSVJoin, launch_new_instance
-from tests.utils import CSVKitTestCase
+from tests.utils import CSVKitTestCase, EmptyFileTests
 
 
-class TestCSVJoin(CSVKitTestCase):
+class TestCSVJoin(CSVKitTestCase, EmptyFileTests):
     Utility = CSVJoin
+    default_args = ['examples/dummy.csv', '-']
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/join_a.csv', 'examples/join_b.csv']):

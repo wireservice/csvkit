@@ -8,11 +8,12 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvstack import CSVStack, launch_new_instance
-from tests.utils import CSVKitTestCase
+from tests.utils import CSVKitTestCase, EmptyFileTests
 
 
-class TestCSVStack(CSVKitTestCase):
+class TestCSVStack(CSVKitTestCase, EmptyFileTests):
     Utility = CSVStack
+    default_args = ['-']
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):

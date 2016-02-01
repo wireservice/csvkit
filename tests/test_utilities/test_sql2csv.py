@@ -19,10 +19,10 @@ except ImportError:
 
 from csvkit.utilities.csvsql import CSVSQL
 from csvkit.utilities.sql2csv import SQL2CSV, launch_new_instance
-from tests.utils import CSVKitTestCase, stdin_as_string
+from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 
 
-class TestSQL2CSV(CSVKitTestCase):
+class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
     Utility = SQL2CSV
 
     def test_launch_new_instance(self):
