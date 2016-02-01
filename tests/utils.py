@@ -61,6 +61,14 @@ class CSVKitTestCase(unittest.TestCase):
         self.assertEqual(len(lines), len(rows))
 
 
+class EmptyFileTests(object):
+    def test_empty(self):
+        with open('examples/empty.csv') as f:
+            with stdin_as_string(f):
+                utility = self.Utility(getattr(self, 'default_args', []))
+                utility.main()
+
+
 class NamesTests(object):
     def test_names(self):
         output = self.get_output_as_io(['-n', 'examples/dummy.csv'])

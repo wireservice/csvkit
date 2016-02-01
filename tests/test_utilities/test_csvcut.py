@@ -9,10 +9,10 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvcut import CSVCut, launch_new_instance
-from tests.utils import CSVKitTestCase, ColumnsTests, NamesTests
+from tests.utils import CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests
 
 
-class TestCSVCut(CSVKitTestCase, ColumnsTests, NamesTests):
+class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
     Utility = CSVCut
 
     def test_launch_new_instance(self):

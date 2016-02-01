@@ -313,16 +313,12 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
     non-integers (e.g. column names) are not supported.
     Note: Column indices are 1-based.
     """
-    columns = []
+    if not ids and not excluded_columns:
+        return range(len(column_names))
 
-    # If not specified, start with all columns
-    if not ids:
-        columns = range(len(column_names))
+    if ids:
+        columns = []
 
-    if columns and not excluded_columns:
-        return columns
-
-    if not columns:
         for c in ids.split(','):
             c = c.strip()
 
@@ -351,6 +347,8 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
 
                 for x in range(a, b):
                     columns.append(match_column_identifier(column_names, x, zero_based))
+    else:
+        columns = range(len(column_names))
 
     excludes = []
 
