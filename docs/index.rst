@@ -5,7 +5,7 @@ csvkit |release|
 About
 =====
 
-.. include:: ../README
+.. include:: ../README.rst
 
 Why csvkit?
 ===========
@@ -52,7 +52,7 @@ Import into PostgreSQL::
 
     csvsql --db postgresql:///database --insert data.csv 
 
-Extract data from PostgreSQL:::
+Extract data from PostgreSQL::
 
     sql2csv --db postgresql:///database --query "select * from data" > extract.csv
 
@@ -64,12 +64,23 @@ Table of contents
 .. toctree::
     :maxdepth: 3 
     
-    install
     tutorial
     cli 
-    lib
+    tricks
     contributing
     release 
+
+Citation
+========
+
+When citing csvkit in publications, you may use this BibTeX entry::
+
+    @Manual{,
+      title = {csvkit},
+      author = {Christopher Groskopf and contributors},
+      year = 2015,
+      url = {https://csvkit.readthedocs.org/}
+    }
 
 Authors
 =======

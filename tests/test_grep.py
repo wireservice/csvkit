@@ -12,6 +12,7 @@ from csvkit.exceptions import ColumnIdentifierError
 
 
 class TestGrep(unittest.TestCase):
+
     def setUp(self):
         self.tab1 = [
             ['id', 'name', 'i_work_here'],
@@ -117,6 +118,20 @@ class TestGrep(unittest.TestCase):
         self.assertEqual(self.tab2[0], next(fcr))
         self.assertEqual(self.tab2[1], next(fcr))
         self.assertEqual(self.tab2[3], next(fcr))
+        try:
+            next(fcr)
+            self.fail("Should be no more rows left.")
+        except StopIteration:
+            pass
+
+    def test_multiline(self):
+        table = [
+            ['a', 'b'],
+            ['1', 'foo\nbar']
+        ]
+        fcr = FilteringCSVReader(iter(table), patterns={'b': re.compile('bar')})
+        self.assertEqual(table[0], next(fcr))
+        self.assertEqual(table[1], next(fcr))
         try:
             next(fcr)
             self.fail("Should be no more rows left.")

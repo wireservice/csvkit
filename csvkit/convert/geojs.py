@@ -10,6 +10,7 @@ except ImportError:
 import agate
 import six
 
+
 def geojson2csv(f, key=None, **kwargs):
     """
     Convert a GeoJSON document into CSV format.

@@ -10,7 +10,9 @@ from csvkit import table
 
 from sqlalchemy import BigInteger, Boolean, Date, DateTime, Float, Integer, String, Time
 
+
 class TestSQL(unittest.TestCase):
+
     def setUp(self):
         self.csv_table = table.Table([
             table.Column(0, u'text', [u'Chicago Reader', u'Chicago Sun-Times', u'Chicago Tribune', u'Row with blanks']),
@@ -64,7 +66,7 @@ class TestSQL(unittest.TestCase):
     def test_make_column_string_length(self):
         c = sql.make_column(table.Column(0, 'test', [u'this', u'is', u'test', u'data', u'that', u'is', u'awesome']))
         self.assertEqual(c.type.length, 7)
-    
+
     def test_column_has_nulls(self):
         c = sql.make_column(table.Column(0, 'test', [u'1', u'-87', u'418000000', u'']))
         self.assertEqual(c.key, 'test')
@@ -81,8 +83,8 @@ class TestSQL(unittest.TestCase):
         sql_table = sql.make_table(self.csv_table, 'csvsql')
         statement = sql.make_create_table_statement(sql_table)
 
-        self.assertEqual(statement, 
-u"""CREATE TABLE test_table (
+        self.assertEqual(statement,
+                         u"""CREATE TABLE test_table (
 \ttext VARCHAR(17) NOT NULL, 
 \tinteger INTEGER, 
 \tdatetime DATETIME, 
@@ -93,8 +95,8 @@ u"""CREATE TABLE test_table (
         sql_table = sql.make_table(self.csv_table, 'csvsql', True)
         statement = sql.make_create_table_statement(sql_table)
 
-        self.assertEqual(statement, 
-u"""CREATE TABLE test_table (
+        self.assertEqual(statement,
+                         u"""CREATE TABLE test_table (
 \ttext VARCHAR, 
 \tinteger INTEGER, 
 \tdatetime DATETIME, 
@@ -105,16 +107,20 @@ u"""CREATE TABLE test_table (
         sql_table = sql.make_table(self.csv_table, 'csvsql', db_schema='test_schema')
         statement = sql.make_create_table_statement(sql_table)
 
-        self.assertEqual(statement, 
-u"""CREATE TABLE test_schema.test_table (
+        self.assertEqual(statement,
+                         u"""CREATE TABLE test_schema.test_table (
 \ttext VARCHAR(17) NOT NULL, 
 \tinteger INTEGER, 
 \tdatetime DATETIME, 
 \tempty_column VARCHAR(32)
 );""")
 
+    def test_make_create_table_statement_with_dialects(self):
+        for dialect in sql.DIALECTS:
+            sql_table = sql.make_table(self.csv_table, 'csvsql', db_schema='test_schema')
+            statement = sql.make_create_table_statement(sql_table, dialect)
+
     def make_insert_statement(self):
         sql_table = sql.make_table(self.csv_table, 'csvsql')
         statement = sql.make_insert_statement(sql_table, self.csv_table._prepare_rows_for_serialization()[0])
         self.assertEqual(statement, u'INSERT INTO test_table (text, integer, datetime, empty_column) VALUES (\'Chicago Reader\', 40, \'2008-01-01T04:40:00\', NULL);')
-

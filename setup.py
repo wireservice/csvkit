@@ -5,12 +5,11 @@ from setuptools import setup
 
 install_requires = [
     'agate>=1.2.0',
-    'xlrd>=0.7.1',
-    'sqlalchemy>=0.6.6',
-    'openpyxl==2.2.6',
-    'six>=1.6.1',
+    'agate-excel>=0.1.0',
+    'dbf>=0.96.005',
     'python-dateutil==2.2',
-    'dbf>=0.96.005'
+    'six>=1.6.1',
+    'sqlalchemy>=0.6.6',
 ]
 
 if sys.version_info < (2, 7):
@@ -21,8 +20,8 @@ if sys.version_info < (2, 7):
 setup(
     name='csvkit',
     version='1.0.0',
-    description='A library of utilities for working with CSV, the king of tabular file formats.',
-    long_description=open('README').read(),
+    description='A suite of command-line tools for working with CSV, the king of tabular file formats.',
+    long_description=open('README.rst').read(),
     author='Christopher Groskopf',
     author_email='chrisgroskopf@gmail.com',
     url='http://csvkit.rtfd.org/',
@@ -37,10 +36,10 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Scientific/Engineering :: Information Analysis',
@@ -52,7 +51,7 @@ setup(
         'csvkit.convert',
         'csvkit.utilities'
     ],
-    entry_points ={
+    entry_points={
         'console_scripts': [
             'csvclean = csvkit.utilities.csvclean:launch_new_instance',
             'csvcut = csvkit.utilities.csvcut:launch_new_instance',
@@ -70,5 +69,5 @@ setup(
             'sql2csv = csvkit.utilities.sql2csv:launch_new_instance'
         ]
     },
-    install_requires = install_requires
+    install_requires=install_requires
 )

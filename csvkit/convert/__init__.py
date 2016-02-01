@@ -1,22 +1,17 @@
 #!/usr/bin/env python
 
+import agate
+import agateexcel
+import dbf
 import six
 
-from csvkit.convert.csvitself import csv2csv
 from csvkit.convert.fixed import fixed2csv
 from csvkit.convert.geojs import geojson2csv
-from csvkit.convert.js import json2csv
-from csvkit.convert.ndjs import ndjson2csv
-from csvkit.convert.xls import xls2csv
-from csvkit.convert.xlsx import xlsx2csv
 
-SUPPORTED_FORMATS = ['fixed', 'xls', 'xlsx', 'csv', 'json', 'geojson', 'ndjson']
+agateexcel.patch()
 
-# DBF is supported for Python 2 only
-if six.PY2:
-    from csvkit.convert.dbase import dbf2csv
+SUPPORTED_FORMATS = ['csv', 'dbf', 'geojson', 'json', 'ndjson', 'fixed', 'xls', 'xlsx']
 
-    SUPPORTED_FORMATS.append('dbf')
 
 def convert(f, format, schema=None, key=None, **kwargs):
     """
@@ -33,24 +28,33 @@ def convert(f, format, schema=None, key=None, **kwargs):
             raise ValueError('schema must not be null when format is "fixed"')
 
         return fixed2csv(f, schema, **kwargs)
-    elif format == 'xls':
-        return xls2csv(f, **kwargs)
-    elif format == 'xlsx':
-        return xlsx2csv(f, **kwargs)
-    elif format == 'json':
-        return json2csv(f, key, **kwargs)
-    elif format == 'ndjson':
-        return ndjson2csv(f, **kwargs)
     elif format == 'geojson':
         return geojson2csv(f, **kwargs)
-    elif format == 'csv':
-        return csv2csv(f, **kwargs)
-    elif format == 'dbf':
-        if six.PY3:
-            raise ValueError('format "dbf" is not supported forthis version of Python.')
-        return dbf2csv(f, **kwargs)
+    elif format in ('csv', 'dbf', 'json', 'ndjson', 'xls', 'xlsx'):
+        if format == 'csv':
+            table = agate.Table.from_csv(f, **kwargs)
+        elif format == 'json':
+            table = agate.Table.from_json(f, key=key, **kwargs)
+        elif format == 'ndjson':
+            table = agate.Table.from_json(f, key=key, newline=True, **kwargs)
+        elif format == 'xls':
+            table = agate.Table.from_xls(f, sheet=kwargs.get('sheet', None))
+        elif format == 'xlsx':
+            table = agate.Table.from_xlsx(f, sheet=kwargs.get('sheet', None))
+        elif format == 'dbf':
+            with dbf.Table(f.name) as db:
+                column_names = db.field_names
+                table = agate.Table(db, column_names)
+
+        output = six.StringIO()
+        table.to_csv(output)
+        result = output.getvalue()
+        output.close()
+
+        return result
     else:
         raise ValueError('format "%s" is not supported' % format)
+
 
 def guess_format(filename):
     """
@@ -64,17 +68,9 @@ def guess_format(filename):
 
     extension = filename[last_period + 1:].lower()
 
-    if extension == 'xls':
-        return extension
-    elif extension == 'xlsx':
+    if extension in ('csv', 'dbf', 'fixed', 'xls', 'xlsx'):
         return extension
     elif extension in ['json', 'js']:
         return 'json'
-    elif extension == 'csv':
-        return extension
-    elif extension == 'fixed':
-        return extension
-    elif extension == 'dbf':
-        return extension
 
     return None

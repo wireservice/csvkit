@@ -7,20 +7,21 @@ import agate
 from csvkit import table
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
+
 class CSVSort(CSVKitUtility):
-    description = 'Sort CSV files. Like unix "sort" command, but for tabular data.'
+    description = 'Sort CSV files. Like the Unix "sort" command, but for tabular data.'
 
     def add_arguments(self):
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
-            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
+                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
-            help='Display column names and indices from the input CSV and exit.')
+                                    help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
-            help='A comma separated list of column indices or names to sort by. Defaults to all columns.')
+                                    help='A comma separated list of column indices or names to sort by. Defaults to all columns.')
         self.argparser.add_argument('-r', '--reverse', dest='reverse', action='store_true',
-            help='Sort in descending order.')
+                                    help='Sort in descending order.')
         self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
-            help='Disable type inference when parsing the input.')
+                                    help='Disable type inference when parsing the input.')
 
     def main(self):
         if self.args.names_only:
@@ -54,6 +55,7 @@ class CSVSort(CSVKitUtility):
 
         for row in rows:
             output.writerow(row)
+
 
 def launch_new_instance():
     utility = CSVSort()

@@ -122,7 +122,7 @@ If you supply the ``-g`` flag then ``csvstack`` can also add a "grouping column"
 csvsql and sql2csv: ultimate power
 ==================================
 
-Sometimes (almost always), the command line isn't enough. It would be crazy to try to do all your analysis using command line tools. Often times, the correct tool for data analysis is SQL. :doc:`/scripts/csvsql` and :doc:`/scripts/sql2csv` form a bridge that eases migrating your data into and out of a SQL database. For smaller datasets ``csvsql`` can also leverage `sqlite <https://www.sqlite.org/>`_ to allow execution of ad hoc SQL queries without ever touching a database.
+Sometimes (almost always), the command-line isn't enough. It would be crazy to try to do all your analysis using command-line tools. Often times, the correct tool for data analysis is SQL. :doc:`/scripts/csvsql` and :doc:`/scripts/sql2csv` form a bridge that eases migrating your data into and out of a SQL database. For smaller datasets ``csvsql`` can also leverage `sqlite <https://www.sqlite.org/>`_ to allow execution of ad hoc SQL queries without ever touching a database.
 
 By default, ``csvsql`` will generate a create table statement for your data. You can specify what sort of database you are using with the ``-i`` flag::
 
@@ -153,7 +153,7 @@ Often you won't care about storing the SQL statements locally. You can also use 
 
     csvsql --db sqlite:///leso.db --insert joined.csv
 
-How can we check that our data was imported successfully? We could use the sqlite command line interface, but rather than worry about the specifics of another tool, we can also use ``sql2csv``::
+How can we check that our data was imported successfully? We could use the sqlite command-line interface, but rather than worry about the specifics of another tool, we can also use ``sql2csv``::
 
     sql2csv --db sqlite:///leso.db --query "select * from joined"
 
