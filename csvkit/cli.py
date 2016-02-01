@@ -293,7 +293,7 @@ def match_column_identifier(column_names, c, zero_based=False):
                 c -= 1
         # Fail out if neither a column name nor an integer
         except:
-            raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name." % c)
+            raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name. Column names are: %s" % (c, repr(column_names)[1:-1]))
 
         # Fail out if index is 0-based
         if c < 0:
