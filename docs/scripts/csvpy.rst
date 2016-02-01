@@ -22,7 +22,7 @@ Loads a CSV file into a :class:`agate.Reader` object and then drops into a Pytho
       -h, --help            show this help message and exit
       --dict                Use a CSV DictReader instead of a normal reader.
 
-This utility will automatically use the IPython shell if it is installed, otherwise it will use the running Python shell.
+This tool will automatically use the IPython shell if it is installed, otherwise it will use the running Python shell.
 
 .. note::
 

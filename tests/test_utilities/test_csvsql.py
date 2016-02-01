@@ -1,24 +1,27 @@
 #!/usr/bin/env python
 
+import sys
+
 import six
 
 try:
-    import unittest2 as unittest
+    from mock import patch
 except ImportError:
-    import unittest
+    from unittest.mock import patch
 
-from csvkit.utilities.csvsql import CSVSQL
-from tests.utils import stdin_as_string
+from csvkit.utilities.csvsql import CSVSQL, launch_new_instance
+from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 
-class TestCSVSQL(unittest.TestCase):
+
+class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
+    Utility = CSVSQL
+
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
+            launch_new_instance()
+
     def test_create_table(self):
-        args = ['--table', 'foo', 'examples/testfixed_converted.csv']
-        output_file = six.StringIO()
-
-        utility = CSVSQL(args, output_file)
-        utility.main()
-
-        sql = output_file.getvalue()
+        sql = self.get_output(['--table', 'foo', 'examples/testfixed_converted.csv'])
 
         self.assertTrue('CREATE TABLE foo' in sql)
         self.assertTrue('text VARCHAR(17) NOT NULL' in sql)
@@ -30,13 +33,7 @@ class TestCSVSQL(unittest.TestCase):
         self.assertTrue('datetime DATETIME' in sql)
 
     def test_no_inference(self):
-        args = ['--table', 'foo', '--no-inference', 'examples/testfixed_converted.csv']
-        output_file = six.StringIO()
-
-        utility = CSVSQL(args, output_file)
-        utility.main()
-
-        sql =  output_file.getvalue()
+        sql = self.get_output(['--table', 'foo', '--no-inference', 'examples/testfixed_converted.csv'])
 
         self.assertTrue('CREATE TABLE foo' in sql)
         self.assertTrue('text VARCHAR(17) NOT NULL' in sql)
@@ -48,30 +45,18 @@ class TestCSVSQL(unittest.TestCase):
         self.assertTrue('datetime VARCHAR(19) NOT NULL' in sql)
 
     def test_no_header_row(self):
-        args = ['--table', 'foo', '--no-header-row', 'examples/no_header_row.csv']
-        output_file = six.StringIO()
-
-        utility = CSVSQL(args, output_file)
-        utility.main()
-
-        sql = output_file.getvalue()
+        sql = self.get_output(['--table', 'foo', '--no-header-row', 'examples/no_header_row.csv'])
 
         self.assertTrue('CREATE TABLE foo' in sql)
-        self.assertTrue('column1 INTEGER NOT NULL' in sql)
-        self.assertTrue('column2 INTEGER NOT NULL' in sql)
-        self.assertTrue('column3 INTEGER NOT NULL' in sql)
+        self.assertTrue('"A" INTEGER NOT NULL' in sql)
+        self.assertTrue('"B" INTEGER NOT NULL' in sql)
+        self.assertTrue('"C" INTEGER NOT NULL' in sql)
 
     def test_stdin(self):
-        args = ['--table', 'foo']
-        output_file = six.StringIO()
-
         input_file = six.StringIO('a,b,c\n1,2,3\n')
 
         with stdin_as_string(input_file):
-            utility = CSVSQL(args, output_file)
-            utility.main()
-
-            sql = output_file.getvalue()
+            sql = self.get_output(['--table', 'foo'])
 
             self.assertTrue('CREATE TABLE foo' in sql)
             self.assertTrue('a INTEGER NOT NULL' in sql)
@@ -79,16 +64,10 @@ class TestCSVSQL(unittest.TestCase):
             self.assertTrue('c INTEGER NOT NULL' in sql)
 
     def test_stdin_and_filename(self):
-        args = ['examples/dummy.csv']
-        output_file = six.StringIO()
-
         input_file = six.StringIO("a,b,c\n1,2,3\n")
 
         with stdin_as_string(input_file):
-            utility = CSVSQL(args, output_file)
-            utility.main()
-
-            sql = output_file.getvalue()
+            sql = self.get_output(['examples/dummy.csv'])
 
             self.assertTrue('CREATE TABLE stdin' in sql)
             self.assertTrue('CREATE TABLE dummy' in sql)
@@ -99,16 +78,10 @@ class TestCSVSQL(unittest.TestCase):
             utility.main()
 
     def test_query(self):
-        args = ['--query', 'select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species', 'examples/iris.csv', 'examples/irismeta.csv']
-        output_file = six.StringIO()
-
         input_file = six.StringIO("a,b,c\n1,2,3\n")
 
         with stdin_as_string(input_file):
-            utility = CSVSQL(args, output_file)
-            utility.main()
-
-            sql = output_file.getvalue()
+            sql = self.get_output(['--query', 'select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species', 'examples/iris.csv', 'examples/irismeta.csv'])
 
             if six.PY2:
                 self.assertTrue('usda_id,mean_sepal_length' in sql)

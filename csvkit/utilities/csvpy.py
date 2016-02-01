@@ -4,13 +4,14 @@ import agate
 
 from csvkit.cli import CSVKitUtility
 
+
 class CSVPy(CSVKitUtility):
     description = 'Load a CSV file into a CSV reader and then drop into a Python shell.'
     override_flags = ['l', 'zero', 'H']
 
     def add_arguments(self):
         self.argparser.add_argument('--dict', dest='as_dict', action='store_true',
-            help='Use a CSV DictReader instead of a normal reader.')
+                                    help='Use a CSV DictReader instead of a normal reader.')
 
     def main(self):
         # Attempt reading filename, will cause lazy loader to access file and raise error if it does not exist
@@ -31,7 +32,8 @@ class CSVPy(CSVKitUtility):
             ipy()
         except ImportError:
             import code
-            code.interact(welcome_message, local={ 'reader': reader })
+            code.interact(welcome_message, local={'reader': reader})
+
 
 def launch_new_instance():
     utility = CSVPy()

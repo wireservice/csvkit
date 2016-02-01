@@ -6,6 +6,7 @@ from codecs import iterdecode
 import agate
 import six
 
+
 def fixed2csv(f, schema, output=None, **kwargs):
     """
     Convert a fixed-width file to csv using a CSV-formatted schema description.
@@ -45,6 +46,7 @@ def fixed2csv(f, schema, output=None, **kwargs):
     # Return empty string when streaming
     return ''
 
+
 class FixedWidthReader(six.Iterator):
     """
     Given a fixed-width file and a schema file, produce an analog to a csv
@@ -58,6 +60,7 @@ class FixedWidthReader(six.Iterator):
     in the 'start' column are assumed to be "zero-based" unless the first value
     is "1" in which case all values are assumed to be "one-based."
     """
+
     def __init__(self, f, schema, encoding=None):
         if encoding is not None:
             f = iterdecode(f, encoding)
@@ -78,6 +81,7 @@ class FixedWidthReader(six.Iterator):
 
 FixedWidthField = namedtuple('FixedWidthField', ['name', 'start', 'length'])
 
+
 class FixedWidthRowParser(object):
     """
     Instantiated with a schema, able to return a sequence of trimmed strings
@@ -85,17 +89,18 @@ class FixedWidthRowParser(object):
     columns are, as long as they are headed with the literal names 'column',
     'start', and 'length'.
     """
+
     def __init__(self, schema):
-        self.fields = [] # A list of FixedWidthFields
+        self.fields = []  # A list of FixedWidthFields
 
         schema_reader = agate.reader(schema)
         schema_decoder = SchemaDecoder(next(schema_reader))
 
-        for i,row in enumerate(schema_reader):
+        for i, row in enumerate(schema_reader):
             try:
                 self.fields.append(schema_decoder(row))
             except Exception as e:
-                raise ValueError("Error reading schema at line %i: %s" % (i + 2,e))
+                raise ValueError("Error reading schema at line %i: %s" % (i + 2, e))
 
     def parse(self, line):
         values = []
@@ -105,17 +110,17 @@ class FixedWidthRowParser(object):
 
         return values
 
-
     def parse_dict(self, line):
         """
         Convenience method returns a dict. Equivalent to
         ``dict(zip(self.headers,self.parse(line)))``.
         """
-        return dict(zip(self.headers,self.parse(line)))
+        return dict(zip(self.headers, self.parse(line)))
 
     @property
     def headers(self):
         return [field.name for field in self.fields]
+
 
 class SchemaDecoder(object):
     """

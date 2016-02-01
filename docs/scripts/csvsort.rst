@@ -5,7 +5,7 @@ csvsort
 Description
 ===========
 
-Sort CSV files. Like unix "sort" command, but for tabular data::
+Sort CSV files. Like the Unix "sort" command, but for tabular data::
 
     usage: csvsort [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                    [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-H] [-v]
@@ -13,7 +13,7 @@ Sort CSV files. Like unix "sort" command, but for tabular data::
                    [--no-inference]
                    [FILE]
 
-    Sort CSV files. Like unix "sort" command, but for tabular data.
+    Sort CSV files. Like the Unix "sort" command, but for tabular data.
 
     positional arguments:
       FILE                  The CSV file to operate on. If omitted, will accept

@@ -13,7 +13,7 @@ import agate
 import six
 
 from csvkit.cli import CSVKitUtility, match_column_identifier
-from csvkit.exceptions import NonUniqueKeyColumnException
+
 
 class CSVJSON(CSVKitUtility):
     description = 'Convert a CSV file into JSON (or GeoJSON).'
@@ -21,18 +21,18 @@ class CSVJSON(CSVKitUtility):
 
     def add_arguments(self):
         self.argparser.add_argument('-i', '--indent', dest='indent', type=int, default=None,
-            help='Indent the output JSON this many spaces. Disabled by default.')
+                                    help='Indent the output JSON this many spaces. Disabled by default.')
         self.argparser.add_argument('-k', '--key', dest='key', type=str, default=None,
-            help='Output JSON as an array of objects keyed by a given column, KEY, rather than as a list. All values in the column must be unique. If --lat and --lon are also specified, this column will be used as GeoJSON Feature ID.')
+                                    help='Output JSON as an array of objects keyed by a given column, KEY, rather than as a list. All values in the column must be unique. If --lat and --lon are also specified, this column will be used as GeoJSON Feature ID.')
         self.argparser.add_argument('--lat', dest='lat', type=str, default=None,
-            help='A column index or name containing a latitude. Output will be GeoJSON instead of JSON. Only valid if --lon is also specified.')
+                                    help='A column index or name containing a latitude. Output will be GeoJSON instead of JSON. Only valid if --lon is also specified.')
         self.argparser.add_argument('--lon', dest='lon', type=str, default=None,
-            help='A column index or name containing a longitude. Output will be GeoJSON instead of JSON. Only valid if --lat is also specified.')
+                                    help='A column index or name containing a longitude. Output will be GeoJSON instead of JSON. Only valid if --lat is also specified.')
         self.argparser.add_argument('--crs', dest='crs', type=str, default=None,
-            help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
+                                    help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
 
         self.argparser.add_argument('--stream', dest='streamOutput', action='store_true',
-            help='Output JSON as a stream of newline-separated objects, rather than an as an array.')
+                                    help='Output JSON as a stream of newline-separated objects, rather than an as an array.')
 
     def main(self):
         if six.PY2:
@@ -48,7 +48,7 @@ class CSVJSON(CSVKitUtility):
         if six.PY2:
             json_kwargs['encoding'] = 'utf-8'
 
-        def dump_json (data,newline=False):
+        def dump_json(data, newline=False):
             json.dump(data, stream, **json_kwargs)
             if newline:
                 stream.write("\n")
@@ -68,11 +68,11 @@ class CSVJSON(CSVKitUtility):
         if self.args.streamOutput and (self.args.lat or self.args.lon or self.args.key):
             self.argparser.error('--stream is only allowed if --lat, --lon and --key are not specified.')
 
-        rows = agate.reader(self.input_file, **self.reader_kwargs)
-        column_names = next(rows)
-
         # GeoJSON
         if self.args.lat and self.args.lon:
+            rows = agate.reader(self.input_file, **self.reader_kwargs)
+            column_names = next(rows)
+
             features = []
             min_lon = None
             min_lat = None
@@ -149,41 +149,9 @@ class CSVJSON(CSVKitUtility):
                     })
                 ])
             dump_json(output)
-        # Keyed JSON
-        elif self.args.key:
-            output = OrderedDict()
-
-            for row in rows:
-                data = OrderedDict()
-
-                for i, column in enumerate(column_names):
-                    data[column] = row[i]
-
-                k = data[self.args.key]
-
-                if k in output:
-                    raise NonUniqueKeyColumnException('Value %s is not unique in the key column.' % six.text_type(k))
-
-                output[k] = data
-            dump_json(output)
-        # Boring JSON
         else:
-            output = []
-            for row in rows:
-                data = OrderedDict()
-
-                for i, column in enumerate(column_names):
-                    try:
-                        data[column] = row[i]
-                    except IndexError:
-                        data[column] = None
-                if(self.args.streamOutput):
-                    dump_json(data,newline=True)
-                else:
-                    output.append(data)
-            if not self.args.streamOutput:
-                dump_json(output)
-
+            table = agate.Table.from_csv(self.input_file)
+            table.to_json(stream, key=self.args.key, newline=self.args.streamOutput, indent=self.args.indent)
 
 
 def launch_new_instance():

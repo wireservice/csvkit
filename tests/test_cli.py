@@ -7,7 +7,9 @@ except ImportError:
 
 from csvkit.cli import match_column_identifier, parse_column_identifiers
 
+
 class TestCli(unittest.TestCase):
+
     def setUp(self):
         self.headers = ['id', 'name', 'i_work_here', '1', 'more-header-values', 'stuff', 'blueberry']
 
@@ -24,24 +26,24 @@ class TestCli(unittest.TestCase):
         self.assertEqual(1, match_column_identifier(self.headers, '1', zero_based=True))
 
     def test_parse_column_identifiers(self):
-        self.assertEqual([2, 0, 1], parse_column_identifiers(' i_work_here, 1,name  ', self.headers))
-        self.assertEqual([2, 1, 1], parse_column_identifiers(' i_work_here, 1,name  ', self.headers, zero_based=True))
+        self.assertEqual([2, 0, 1], parse_column_identifiers('i_work_here,1,name', self.headers))
+        self.assertEqual([2, 1, 1], parse_column_identifiers('i_work_here,1,name', self.headers, zero_based=True))
 
     def test_range_notation(self):
-        self.assertEqual([0,1,2], parse_column_identifiers('1:3', self.headers))
-        self.assertEqual([1,2,3], parse_column_identifiers('1:3', self.headers, zero_based=True))
-        self.assertEqual([1,2,3], parse_column_identifiers('2-4', self.headers))        
-        self.assertEqual([2,3,4], parse_column_identifiers('2-4', self.headers, zero_based=True))
-        self.assertEqual([0,1,2,3], parse_column_identifiers('1,2:4', self.headers))        
-        self.assertEqual([1,2,3,4], parse_column_identifiers('1,2:4', self.headers, zero_based=True))
-        self.assertEqual([4,2,5], parse_column_identifiers('more-header-values,3,stuff', self.headers))
-        self.assertEqual([4,3,5], parse_column_identifiers('more-header-values,3,stuff', self.headers,zero_based=True))
+        self.assertEqual([0, 1, 2], parse_column_identifiers('1:3', self.headers))
+        self.assertEqual([1, 2, 3], parse_column_identifiers('1:3', self.headers, zero_based=True))
+        self.assertEqual([1, 2, 3], parse_column_identifiers('2-4', self.headers))
+        self.assertEqual([2, 3, 4], parse_column_identifiers('2-4', self.headers, zero_based=True))
+        self.assertEqual([0, 1, 2, 3], parse_column_identifiers('1,2:4', self.headers))
+        self.assertEqual([1, 2, 3, 4], parse_column_identifiers('1,2:4', self.headers, zero_based=True))
+        self.assertEqual([4, 2, 5], parse_column_identifiers('more-header-values,3,stuff', self.headers))
+        self.assertEqual([4, 3, 5], parse_column_identifiers('more-header-values,3,stuff', self.headers, zero_based=True))
 
     def test_range_notation_open_ended(self):
-        self.assertEqual([0,1,2], parse_column_identifiers(':3', self.headers))
+        self.assertEqual([0, 1, 2], parse_column_identifiers(':3', self.headers))
 
-        target = list(range(3,len(self.headers))) # protect against devs adding to self.headers
+        target = list(range(3, len(self.headers)))  # protect against devs adding to self.headers
         target.insert(0, 0)
-        self.assertEqual(target, parse_column_identifiers('1,4:', self.headers))        
+        self.assertEqual(target, parse_column_identifiers('1,4:', self.headers))
 
         self.assertEqual(list(range(0, len(self.headers))), parse_column_identifiers('1:', self.headers))

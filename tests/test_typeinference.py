@@ -11,11 +11,13 @@ import six
 
 from csvkit import typeinference
 
-from csvkit.exceptions import InvalidValueForTypeException, InvalidValueForTypeListException
+from csvkit.exceptions import InvalidValueForTypeException
 
 NoneType = type(None)
 
+
 class TestNormalizeType(unittest.TestCase):
+
     def test_nulls(self):
         self.assertEqual((NoneType, [None, None, None, None, None, None]), typeinference.normalize_column_type([u'n/a', u'NA', u'.', u'null', u'none', u'']))
 
@@ -32,10 +34,10 @@ class TestNormalizeType(unittest.TestCase):
         else:
             raise AssertionError('Expected InvalidValueForTypeException')
 
-    def test_ints(self): 
+    def test_ints(self):
         self.assertEqual((int, [1, -87, 418000000, None]), typeinference.normalize_column_type([u'1', u'-87', u'418000000', u'']))
 
-    def test_ints_coerce(self): 
+    def test_ints_coerce(self):
         self.assertEqual((int, [1, -87, 418000000, None]), typeinference.normalize_column_type([u'1', u'-87', u'418000000', u''], normal_type=int))
 
     def test_ints_coerce_fail(self):
@@ -66,7 +68,7 @@ class TestNormalizeType(unittest.TestCase):
 
     def test_comma_ints(self):
         self.assertEqual((int, [1, -87, 418000000, None]), typeinference.normalize_column_type([u'1', u'-87', u'418,000,000', u'']))
-    
+
     def test_floats(self):
         self.assertEqual((float, [1.01, -87.413, 418000000.0, None]), typeinference.normalize_column_type([u'1.01', u'-87.413', u'418000000.0', u'']))
 
@@ -82,7 +84,7 @@ class TestNormalizeType(unittest.TestCase):
             self.assertEqual(e.normal_type, float)
         else:
             raise AssertionError('Expected InvalidValueForTypeException')
-        
+
     def test_comma_floats(self):
         self.assertEqual((float, [1.01, -87.413, 418000000.0, None]), typeinference.normalize_column_type([u'1.01', u'-87.413', u'418,000,000.0', u'']))
 
@@ -185,69 +187,3 @@ class TestNormalizeType(unittest.TestCase):
         This obscure test named after Jeremy Singer-Vine, who discovered it.
         """
         self.assertEqual((six.text_type, [u'P', u'H', u'H']), typeinference.normalize_column_type([u'P', u'H', u'H']))
-
-    def test_normalize_table(self):
-        expected_types = [six.text_type, int, float, NoneType]
-        data = [
-            [u'a', u'1', u'2.1', u''],
-            [u'b', u'5', u'4.1'],
-            [u'c', u'100', u'100.9999', u''],
-            [u'd', u'2', u'5.3', u'']
-        ]
-        types, columns = typeinference.normalize_table(data)
-
-        self.assertEqual(4, len(types))
-        self.assertEqual(4, len(columns))
-
-        for i, tup in enumerate(zip(columns, types, expected_types)):
-            c, t, et = tup
-            self.assertEqual(et, t)
-            for row, normalized in zip(data, c):
-                if t is NoneType:
-                    self.assertTrue(normalized is None)
-                else:
-                    self.assertEqual(t(row[i]), normalized)
-
-    def test_normalize_table_known_types(self):
-        normal_types = [six.text_type, int, float, NoneType]
-        data = [
-            [u'a', u'1', u'2.1', u''],
-            [u'b', u'5', u'4.1'],
-            [u'c', u'100', u'100.9999', u''],
-            [u'd', u'2', u'5.3', u'']
-        ]
-        types, columns = typeinference.normalize_table(data, normal_types)
-
-        self.assertEqual(4, len(types))
-        self.assertEqual(4, len(columns))
-
-        for i, tup in enumerate(zip(columns, types, normal_types)):
-            c, t, et = tup
-            self.assertEqual(et, t)
-            for row, normalized in zip(data, c):
-                if t is NoneType:
-                    self.assertTrue(normalized is None)
-                else:
-                    self.assertEqual(t(row[i]), normalized)
-
-    def test_normalize_table_known_types_invalid(self):
-        normal_types = [bool, int, int, NoneType]
-        data = [
-            [u'a', u'1', u'2.1', u''],
-            [u'b', u'5', u'4.1'],
-            [u'c', u'100', u'100.9999', u''],
-            [u'd', u'2', u'5.3', u'']
-        ]
-        
-        try:
-            typeinference.normalize_table(data, normal_types, accumulate_errors=True)
-            self.assertEqual(True, False)
-        except InvalidValueForTypeListException as e:
-            self.assertEqual(len(e.errors), 2)
-            self.assertEqual(e.errors[0].index, 0)
-            self.assertEqual(e.errors[0].value, 'a')
-            self.assertEqual(e.errors[0].normal_type, bool)
-            self.assertEqual(e.errors[2].index, 0)
-            self.assertEqual(e.errors[2].value, '2.1')
-            self.assertEqual(e.errors[2].normal_type, int)
-

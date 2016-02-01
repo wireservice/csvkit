@@ -7,13 +7,14 @@ import agate
 from csvkit.cli import CSVKitUtility
 from csvkit.cleanup import RowChecker
 
+
 class CSVClean(CSVKitUtility):
     description = 'Fix common errors in a CSV file.'
     override_flags = ['H']
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--dry-run', dest='dryrun', action='store_true',
-            help='Do not create output files. Information about what would have been done will be printed to STDERR.')
+                                    help='Do not create output files. Information about what would have been done will be printed to STDERR.')
 
     def main(self):
         reader = agate.reader(self.input_file, **self.reader_kwargs)
@@ -35,7 +36,7 @@ class CSVClean(CSVKitUtility):
         else:
             base, ext = splitext(self.input_file.name)
 
-            with open('%s_out.csv' % base,'w') as f:
+            with open('%s_out.csv' % base, 'w') as f:
                 clean_writer = agate.writer(f, **self.writer_kwargs)
 
                 checker = RowChecker(reader)
@@ -59,7 +60,7 @@ class CSVClean(CSVKitUtility):
                     for e in checker.errors:
                         error_writer.writerow(self._format_error_row(e))
 
-                self.output_file.write('%i error%s logged to %s\n' % (error_count,'' if error_count == 1 else 's', error_filename))
+                self.output_file.write('%i error%s logged to %s\n' % (error_count, '' if error_count == 1 else 's', error_filename))
             else:
                 self.output_file.write('No errors.\n')
 
@@ -71,6 +72,7 @@ class CSVClean(CSVKitUtility):
         row.extend(error.row)
 
         return row
+
 
 def launch_new_instance():
     utility = CSVClean()

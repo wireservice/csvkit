@@ -1,4 +1,6 @@
+sudo: false
 language: python
+cache: pip
 python:
   - "2.7"
   - "pypy"
@@ -6,12 +8,15 @@ python:
   - "3.4"
   - "3.5"
 install:
-  - if [[ $TRAVIS_PYTHON_VERSION == "2.7" ]]; then pip install -r requirements-py2.txt; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == "pypy" ]]; then pip install -r requirements-py2.txt; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == "3.3" ]]; then pip install -r requirements-py3.txt; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then pip install -r requirements-py3.txt; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == "3.5" ]]; then pip install -r requirements-py3.txt; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "2.7" ]]; then pip install psycopg2 -r requirements-py2.txt; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "pypy" ]]; then pip install psycopg2cffi -r requirements-py2.txt; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.3" ]]; then pip install psycopg2 -r requirements-py3.txt; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then pip install psycopg2 -r requirements-py3.txt; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.5" ]]; then pip install psycopg2 -r requirements-py3.txt; fi
   - pip install coveralls
-script: nosetests --with-coverage --cover-package=csvkit
+before_script:
+  - psql -U postgres -c 'CREATE DATABASE dummy_test'
+script:
+  - nosetests --with-coverage --cover-package=csvkit
 after_success:
   coveralls

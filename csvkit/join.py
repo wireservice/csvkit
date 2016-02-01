@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
+
 def _get_ordered_keys(rows, column_index):
     """
     Get ordered keys from rows, given the key column index.
     """
     return [r[column_index] for r in rows]
+
 
 def _get_mapped_keys(rows, column_index):
     mapped_keys = {}
@@ -18,6 +20,7 @@ def _get_mapped_keys(rows, column_index):
             mapped_keys[key] = [r]
 
     return mapped_keys
+
 
 def sequential_join(left_table, right_table):
     """
@@ -34,15 +37,15 @@ def sequential_join(left_table, right_table):
     for left_row in left_rows:
         try:
             right_row = next(right_rows)
+            output.append(left_row + right_row)
         except StopIteration:
-            output.append(left_row + ([u''] * len(right_headers)))
-
-        output.append(left_row + right_row)
+            output.append(left_row + [u''] * len(right_headers))
 
     for right_row in right_rows:
-        output.append(([u''] * len(left_headers)) + right_row)
+        output.append([u''] * len(left_headers) + right_row)
 
     return output
+
 
 def inner_join(left_table, left_column_id, right_table, right_column_id):
     """
@@ -54,7 +57,7 @@ def inner_join(left_table, left_column_id, right_table, right_column_id):
     right_headers = right_table[0]
     left_rows = left_table[1:]
     right_rows = right_table[1:]
-    
+
     # Map right rows to keys
     right_mapped_keys = _get_mapped_keys(right_rows, right_column_id)
 
@@ -73,6 +76,7 @@ def inner_join(left_table, left_column_id, right_table, right_column_id):
                 output.append(left_row + right_row)
 
     return output
+
 
 def full_outer_join(left_table, left_column_id, right_table, right_column_id):
     """
@@ -110,9 +114,10 @@ def full_outer_join(left_table, left_column_id, right_table, right_column_id):
         right_key = right_row[right_column_id]
 
         if right_key not in left_ordered_keys:
-            output.append(([u''] * len(left_headers)) + right_row) 
+            output.append(([u''] * len(left_headers)) + right_row)
 
     return output
+
 
 def left_outer_join(left_table, left_column_id, right_table, right_column_id):
     """
@@ -144,6 +149,7 @@ def left_outer_join(left_table, left_column_id, right_table, right_column_id):
             output.append(left_row + ([u''] * len(right_headers)))
 
     return output
+
 
 def right_outer_join(left_table, left_column_id, right_table, right_column_id):
     """
@@ -179,7 +185,6 @@ def right_outer_join(left_table, left_column_id, right_table, right_column_id):
         right_key = right_row[right_column_id]
 
         if right_key not in left_ordered_keys:
-            output.append(([u''] * len(left_headers)) + right_row) 
+            output.append(([u''] * len(left_headers)) + right_row)
 
     return output
-

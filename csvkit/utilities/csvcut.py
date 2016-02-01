@@ -14,20 +14,21 @@ import itertools
 import agate
 
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
-from csvkit.headers import make_default_headers
+from csvkit.table import make_default_headers
+
 
 class CSVCut(CSVKitUtility):
-    description = 'Filter and truncate CSV files. Like unix "cut" command, but for tabular data.'
+    description = 'Filter and truncate CSV files. Like the Unix "cut" command, but for tabular data.'
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
-            help='Display column names and indices from the input CSV and exit.')
+                                    help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
-            help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
+                                    help='A comma separated list of column indices or names to be extracted. Defaults to all columns.')
         self.argparser.add_argument('-C', '--not-columns', dest='not_columns',
-            help='A comma separated list of column indices or names to be excluded. Defaults to no columns.')
+                                    help='A comma separated list of column indices or names to be excluded. Defaults to no columns.')
         self.argparser.add_argument('-x', '--delete-empty-rows', dest='delete_empty', action='store_true',
-            help='After cutting, delete rows which are completely empty.')
+                                    help='After cutting, delete rows which are completely empty.')
 
     def main(self):
         if self.args.names_only:
@@ -59,6 +60,7 @@ class CSVCut(CSVKitUtility):
                     continue
 
             output.writerow(out_row)
+
 
 def launch_new_instance():
     utility = CSVCut()

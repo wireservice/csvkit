@@ -25,8 +25,8 @@ The header line is required though the columns may be in any order::
     Convert common, but less awesome, tabular data formats to CSV.
 
     positional arguments:
-      FILE                  The CSV file to operate on. If omitted, will accept
-                            input on STDIN.
+      FILE                  The file to operate on. If omitted, will accept input
+                            on STDIN.
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -76,9 +76,10 @@ Standardize the formatting of a CSV file (quoting, line endings, etc.)::
 
     in2csv examples/realdata/FY09_EDU_Recipients_by_State.csv
 
-Fetch csvkit's open issues from the Github API, convert the JSON response into a CSV and write it to a file::
+Fetch csvkit's open issues from the GitHub API, convert the JSON response into a CSV and write it to a file::
 
     curl https://api.github.com/repos/onyxfish/csvkit/issues?state=open | in2csv -f json -v > issues.csv 
+
 Convert a DBase DBF file to an equivalent CSV::
 
     in2csv examples/testdbf.dbf > testdbf_converted.csv
@@ -86,4 +87,3 @@ Convert a DBase DBF file to an equivalent CSV::
 Fetch the ten most recent robberies in Oakland, convert the GeoJSON response into a CSV and write it to a file::
 
     curl "http://oakland.crimespotting.org/crime-data?format=json&type=robbery&count=10" | in2csv -f geojson > robberies.csv
-

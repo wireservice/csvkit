@@ -5,12 +5,11 @@ from setuptools import setup
 
 install_requires = [
     'agate>=1.2.0',
-    'xlrd>=0.7.1',
-    'sqlalchemy>=0.6.6',
-    'openpyxl==2.2.6',
-    'six>=1.6.1',
+    'agate-excel>=0.1.0',
+    'dbf>=0.96.005',
     'python-dateutil==2.2',
-    'dbf>=0.96.005'
+    'six>=1.6.1',
+    'sqlalchemy>=0.6.6',
 ]
 
 if sys.version_info < (2, 7):
@@ -21,7 +20,7 @@ if sys.version_info < (2, 7):
 setup(
     name='csvkit',
     version='1.0.0',
-    description='A library of utilities for working with CSV, the king of tabular file formats.',
+    description='A suite of command-line tools for working with CSV, the king of tabular file formats.',
     long_description=open('README.rst').read(),
     author='Christopher Groskopf',
     author_email='chrisgroskopf@gmail.com',
@@ -52,7 +51,7 @@ setup(
         'csvkit.convert',
         'csvkit.utilities'
     ],
-    entry_points ={
+    entry_points={
         'console_scripts': [
             'csvclean = csvkit.utilities.csvclean:launch_new_instance',
             'csvcut = csvkit.utilities.csvcut:launch_new_instance',
@@ -70,5 +69,5 @@ setup(
             'sql2csv = csvkit.utilities.sql2csv:launch_new_instance'
         ]
     },
-    install_requires = install_requires
+    install_requires=install_requires
 )

@@ -7,7 +7,9 @@ except ImportError:
 
 from csvkit import join
 
+
 class TestJoin(unittest.TestCase):
+
     def setUp(self):
         self.tab1 = [
             ['id', 'name', 'i_work_here'],
@@ -21,7 +23,7 @@ class TestJoin(unittest.TestCase):
             [u'1', u'first', u'0'],
             [u'4', u'only', u'0'],
             [u'1', u'second', u'0'],
-            [u'2', u'only', u'0', u'0']] # Note extra value in this column
+            [u'2', u'only', u'0', u'0']]  # Note extra value in this column
 
     def test_get_ordered_keys(self):
         self.assertEqual(join._get_ordered_keys(self.tab1[1:], 0), [u'1', u'2', u'3', u'1'])
