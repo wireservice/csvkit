@@ -293,7 +293,7 @@ def match_column_identifier(column_names, c, zero_based=False):
                 c -= 1
         # Fail out if neither a column name nor an integer
         except:
-            raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name." % c)
+            raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name. Column names are: %s" % (c, repr(column_names)[1:-1]))
 
         # Fail out if index is 0-based
         if c < 0:
@@ -323,8 +323,6 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
         columns = []
 
         for c in ids.split(','):
-            c = c.strip()
-
             try:
                 columns.append(match_column_identifier(column_names, c, zero_based))
             except ColumnIdentifierError:
@@ -357,8 +355,6 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
 
     if excluded_columns:
         for c in excluded_columns.split(','):
-            c = c.strip()
-
             try:
                 excludes.append(match_column_identifier(column_names, c, zero_based))
             except ColumnIdentifierError:
