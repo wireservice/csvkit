@@ -9,10 +9,10 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvlook import CSVLook, launch_new_instance
-from tests.utils import CSVKitTestCase
+from tests.utils import CSVKitTestCase, EmptyFileTests
 
 
-class TestCSVLook(CSVKitTestCase):
+class TestCSVLook(CSVKitTestCase, EmptyFileTests):
     Utility = CSVLook
 
     def test_launch_new_instance(self):

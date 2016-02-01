@@ -10,10 +10,10 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvsql import CSVSQL, launch_new_instance
-from tests.utils import CSVKitTestCase, stdin_as_string
+from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 
 
-class TestCSVSQL(CSVKitTestCase):
+class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
     Utility = CSVSQL
 
     def test_launch_new_instance(self):

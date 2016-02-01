@@ -11,10 +11,10 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvsort import CSVSort, launch_new_instance
-from tests.utils import CSVKitTestCase, ColumnsTests, NamesTests
+from tests.utils import CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests
 
 
-class TestCSVSort(CSVKitTestCase, ColumnsTests, NamesTests):
+class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
     Utility = CSVSort
 
     def test_launch_new_instance(self):

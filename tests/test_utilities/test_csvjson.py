@@ -11,10 +11,10 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvjson import CSVJSON, launch_new_instance
-from tests.utils import CSVKitTestCase
+from tests.utils import CSVKitTestCase, EmptyFileTests
 
 
-class TestCSVJSON(CSVKitTestCase):
+class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
     Utility = CSVJSON
 
     def test_launch_new_instance(self):

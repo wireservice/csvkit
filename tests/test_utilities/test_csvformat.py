@@ -11,10 +11,10 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvformat import CSVFormat, launch_new_instance
-from tests.utils import CSVKitTestCase, stdin_as_string
+from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 
 
-class TestCSVFormat(CSVKitTestCase):
+class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
     Utility = CSVFormat
 
     def test_launch_new_instance(self):

@@ -8,11 +8,12 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.in2csv import In2CSV, launch_new_instance
-from tests.utils import CSVKitTestCase
+from tests.utils import CSVKitTestCase, EmptyFileTests
 
 
-class TestIn2CSV(CSVKitTestCase):
+class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     Utility = In2CSV
+    default_args = ['-f', 'csv']
 
     def assertConverted(self, input_format, input_filename, output_filename, additional_args=[]):
         output = self.get_output(['-f', input_format, input_filename] + additional_args)
