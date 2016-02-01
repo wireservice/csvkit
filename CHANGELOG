@@ -31,7 +31,7 @@ Fixes:
 * csvstack supports stacking a single file.
 * csvstat supports --names.
 * FilteringCSVReader's any_match argument works correctly.
-* A file of two empty rows won't raise an error.
+* All tools handle empty files without error.
 
 0.9.1
 -----
