@@ -323,8 +323,6 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
         columns = []
 
         for c in ids.split(','):
-            c = c.strip()
-
             try:
                 columns.append(match_column_identifier(column_names, c, zero_based))
             except ColumnIdentifierError:
@@ -357,8 +355,6 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
 
     if excluded_columns:
         for c in excluded_columns.split(','):
-            c = c.strip()
-
             try:
                 excludes.append(match_column_identifier(column_names, c, zero_based))
             except ColumnIdentifierError:
