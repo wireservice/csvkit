@@ -13,7 +13,7 @@ agateexcel.patch()
 SUPPORTED_FORMATS = ['csv', 'dbf', 'fixed', 'geojson', 'json', 'ndjson', 'xls', 'xlsx']
 
 
-def convert(f, format, schema=None, key=None, **kwargs):
+def convert(f, format, schema=None, key=None, output=None, **kwargs):
     """
     Convert a file of a specified format to CSV.
     """
@@ -27,9 +27,9 @@ def convert(f, format, schema=None, key=None, **kwargs):
         if not schema:
             raise ValueError('schema must not be null when format is "fixed"')
 
-        return fixed2csv(f, schema, **kwargs)
+        output.write(fixed2csv(f, schema, output=output, **kwargs))
     elif format == 'geojson':
-        return geojson2csv(f, **kwargs)
+        output.write(geojson2csv(f, **kwargs))
     elif format in ('csv', 'dbf', 'json', 'ndjson', 'xls', 'xlsx'):
         if format == 'csv':
             table = agate.Table.from_csv(f, **kwargs)
@@ -46,12 +46,7 @@ def convert(f, format, schema=None, key=None, **kwargs):
                 column_names = db.field_names
                 table = agate.Table(db, column_names)
 
-        output = six.StringIO()
         table.to_csv(output)
-        result = output.getvalue()
-        output.close()
-
-        return result
     else:
         raise ValueError('format "%s" is not supported' % format)
 
