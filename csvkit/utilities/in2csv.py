@@ -74,9 +74,7 @@ class In2CSV(CSVKitUtility):
         if filetype == 'fixed':
             kwargs['output'] = self.output_file
 
-        data = convert.convert(self.input_file, filetype, **kwargs)
-
-        self.output_file.write(data)
+        convert.convert(self.input_file, filetype, output=self.output_file, **kwargs)
 
 
 def launch_new_instance():
