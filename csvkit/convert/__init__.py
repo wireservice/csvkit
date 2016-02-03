@@ -27,7 +27,7 @@ def convert(f, format, schema=None, key=None, output=None, **kwargs):
         if not schema:
             raise ValueError('schema must not be null when format is "fixed"')
 
-        output.write(fixed2csv(f, schema, **kwargs))
+        output.write(fixed2csv(f, schema, output=output, **kwargs))
     elif format == 'geojson':
         output.write(geojson2csv(f, **kwargs))
     elif format in ('csv', 'dbf', 'json', 'ndjson', 'xls', 'xlsx'):
