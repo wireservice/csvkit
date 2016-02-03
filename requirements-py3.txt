@@ -1,4 +1,4 @@
-git+git://github.com/jpmckinney/agate.git@empty#egg=agate
+git+git://github.com/onyxfish/agate.git#egg=agate
 git+git://github.com/onyxfish/agate-excel.git#egg=agate-excel
 dbf>=0.96.005
 python-dateutil>=2.2
