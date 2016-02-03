@@ -72,13 +72,7 @@ class In2CSV(CSVKitUtility):
         if filetype == 'csv' and self.args.no_header_row:
             kwargs['header'] = False
 
-        # Fixed width can be processed as a stream
-        if filetype == 'fixed':
-            kwargs['output'] = self.output_file
-
-        data = convert.convert(self.input_file, filetype, **kwargs)
-
-        self.output_file.write(data)
+        convert.convert(self.input_file, filetype, output=self.output_file, **kwargs)
 
 
 def launch_new_instance():
