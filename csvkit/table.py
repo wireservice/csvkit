@@ -137,7 +137,7 @@ class Table(list):
         return 0
 
     @classmethod
-    def from_csv(cls, f, name='from_csv_table', snifflimit=None, column_ids=None, blanks_as_nulls=True, zero_based=False, infer_types=True, no_header_row=False, **kwargs):
+    def from_csv(cls, f, name='from_csv_table', sniff_limit=None, column_ids=None, blanks_as_nulls=True, zero_based=False, infer_types=True, no_header_row=False, **kwargs):
         """
         Creates a new Table from a file-like object containing CSV data.
 
@@ -150,11 +150,11 @@ class Table(list):
         # which are not seekable and thus must be buffered
         contents = f.read()
 
-        # snifflimit == 0 means do not sniff
-        if snifflimit is None:
+        # sniff_limit == 0 means do not sniff
+        if sniff_limit is None:
             kwargs['dialect'] = sniff_dialect(contents)
-        elif snifflimit > 0:
-            kwargs['dialect'] = sniff_dialect(contents[:snifflimit])
+        elif sniff_limit > 0:
+            kwargs['dialect'] = sniff_dialect(contents[:sniff_limit])
 
         f = six.StringIO(contents)
         rows = agate.reader(f, **kwargs)
