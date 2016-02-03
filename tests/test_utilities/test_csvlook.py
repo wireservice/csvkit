@@ -48,3 +48,13 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             u'|    4 |   5 | ʤ    |',
             '|------+-----+------|',
         ])
+
+    def test_linenumbers(self):
+        self.assertLines(['--linenumbers', 'examples/dummy3.csv'], [
+            '|---------------+------+---+----|',
+            '|  line_numbers |    a | b | c  |',
+            '|---------------+------+---+----|',
+            '|             1 | True | 2 | 3  |',
+            '|             2 | True | 4 | 5  |',
+            '|---------------+------+---+----|',
+        ])

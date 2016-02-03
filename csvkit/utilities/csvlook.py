@@ -12,7 +12,7 @@ class CSVLook(CSVKitUtility):
         pass
 
     def main(self):
-        agate.Table.from_csv(self.input_file, header=not self.args.no_header_row, **self.reader_kwargs).print_table(output=self.output_file, **self.writer_kwargs)
+        agate.Table.from_csv(self.input_file, header=not self.args.no_header_row, line_numbers=self.args.line_numbers, **self.reader_kwargs).print_table(output=self.output_file)
 
 
 def launch_new_instance():
