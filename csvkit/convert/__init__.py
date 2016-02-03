@@ -10,7 +10,7 @@ from csvkit.convert.geojs import geojson2csv
 
 agateexcel.patch()
 
-SUPPORTED_FORMATS = ['csv', 'dbf', 'geojson', 'json', 'ndjson', 'fixed', 'xls', 'xlsx']
+SUPPORTED_FORMATS = ['csv', 'dbf', 'fixed', 'geojson', 'json', 'ndjson', 'xls', 'xlsx']
 
 
 def convert(f, format, schema=None, key=None, **kwargs):
