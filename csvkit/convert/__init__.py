@@ -27,9 +27,9 @@ def convert(f, format, schema=None, key=None, output=None, **kwargs):
         if not schema:
             raise ValueError('schema must not be null when format is "fixed"')
 
-        output_file.write(fixed2csv(f, schema, **kwargs))
+        output.write(fixed2csv(f, schema, **kwargs))
     elif format == 'geojson':
-        output_file.write(geojson2csv(f, **kwargs))
+        output.write(geojson2csv(f, **kwargs))
     elif format in ('csv', 'dbf', 'json', 'ndjson', 'xls', 'xlsx'):
         if format == 'csv':
             table = agate.Table.from_csv(f, **kwargs)
