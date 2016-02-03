@@ -14,7 +14,7 @@ import itertools
 import agate
 
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
-from csvkit.headers import make_default_headers
+from csvkit.table import make_default_headers
 
 
 class CSVCut(CSVKitUtility):

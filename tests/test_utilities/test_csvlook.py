@@ -3,85 +3,58 @@
 
 import sys
 
-import six
-
 try:
-    import unittest2 as unittest
     from mock import patch
 except ImportError:
-    import unittest
     from unittest.mock import patch
 
 from csvkit.utilities.csvlook import CSVLook, launch_new_instance
+from tests.utils import CSVKitTestCase, EmptyFileTests
 
 
-class TestCSVLook(unittest.TestCase):
+class TestCSVLook(CSVKitTestCase, EmptyFileTests):
+    Utility = CSVLook
 
     def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', ['csvlook', 'examples/dummy.csv']):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
     def test_simple(self):
-        args = ['examples/dummy3.csv']
-        output_file = six.StringIO()
-        utility = CSVLook(args, output_file)
-
-        utility.main()
-
-        input_file = six.StringIO(output_file.getvalue())
-
-        self.assertEqual(next(input_file), '|-------+---+----|\n')
-        self.assertEqual(next(input_file), '|     a | b | c  |\n')
-        self.assertEqual(next(input_file), '|-------+---+----|\n')
-        self.assertEqual(next(input_file), '|  True | 2 | 3  |\n')
-        self.assertEqual(next(input_file), '|  True | 4 | 5  |\n')
-        self.assertEqual(next(input_file), '|-------+---+----|\n')
+        self.assertLines(['examples/dummy3.csv'], [
+            '|-------+---+----|',
+            '|     a | b | c  |',
+            '|-------+---+----|',
+            '|  True | 2 | 3  |',
+            '|  True | 4 | 5  |',
+            '|-------+---+----|',
+        ])
 
     def test_no_header(self):
-        args = ['--no-header-row', 'examples/no_header_row3.csv']
-        output_file = six.StringIO()
-        utility = CSVLook(args, output_file)
-
-        utility.main()
-
-        input_file = six.StringIO(output_file.getvalue())
-
-        self.assertEqual(next(input_file), '|----+---+----|\n')
-        self.assertEqual(next(input_file), '|  A | B | C  |\n')
-        self.assertEqual(next(input_file), '|----+---+----|\n')
-        self.assertEqual(next(input_file), '|  1 | 2 | 3  |\n')
-        self.assertEqual(next(input_file), '|  4 | 5 | 6  |\n')
-        self.assertEqual(next(input_file), '|----+---+----|\n')
+        self.assertLines(['--no-header-row', 'examples/no_header_row3.csv'], [
+            '|----+---+----|',
+            '|  A | B | C  |',
+            '|----+---+----|',
+            '|  1 | 2 | 3  |',
+            '|  4 | 5 | 6  |',
+            '|----+---+----|',
+        ])
 
     def test_unicode(self):
-        args = ['examples/test_utf8.csv']
-
-        output_file = six.StringIO()
-        utility = CSVLook(args, output_file)
-
-        utility.main()
-
-        input_file = six.StringIO(output_file.getvalue())
-
-        self.assertEqual(next(input_file), '|------+-----+------|\n')
-        self.assertEqual(next(input_file), '|  foo | bar | baz  |\n')
-        self.assertEqual(next(input_file), '|------+-----+------|\n')
-        self.assertEqual(next(input_file), '|    1 |   2 | 3    |\n')
-        self.assertEqual(next(input_file), u'|    4 |   5 | ʤ    |\n')
-        self.assertEqual(next(input_file), '|------+-----+------|\n')
+        self.assertLines(['examples/test_utf8.csv'], [
+            '|------+-----+------|',
+            '|  foo | bar | baz  |',
+            '|------+-----+------|',
+            '|    1 |   2 | 3    |',
+            u'|    4 |   5 | ʤ    |',
+            '|------+-----+------|',
+        ])
 
     def test_linenumbers(self):
-        args = ['--linenumbers', 'examples/dummy3.csv']
-        output_file = six.StringIO()
-        utility = CSVLook(args, output_file)
-
-        utility.main()
-
-        input_file = six.StringIO(output_file.getvalue())
-
-        self.assertEqual(next(input_file), '|---------------+------+---+----|\n')
-        self.assertEqual(next(input_file), '|  line_numbers |    a | b | c  |\n')
-        self.assertEqual(next(input_file), '|---------------+------+---+----|\n')
-        self.assertEqual(next(input_file), '|             1 | True | 2 | 3  |\n')
-        self.assertEqual(next(input_file), '|             2 | True | 4 | 5  |\n')
-        self.assertEqual(next(input_file), '|---------------+------+---+----|\n')
+        self.assertLines(['--linenumbers', 'examples/dummy3.csv'], [
+            '|---------------+------+---+----|',
+            '|  line_numbers |    a | b | c  |',
+            '|---------------+------+---+----|',
+            '|             1 | True | 2 | 3  |',
+            '|             2 | True | 4 | 5  |',
+            '|---------------+------+---+----|',
+        ])

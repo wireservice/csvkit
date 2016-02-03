@@ -9,6 +9,7 @@ If you have built data workflows on top of csvkit you should not upgrade without
 
 Backwards-incompatible changes:
 
+* When using the --columns or --not-columns options, you must not have spaces around the comma-separated values, unless the column names contain spaces.
 * CSVKitReader, CSVKitWriter, CSVKitDictReader, and CSVKitDictWriter have been removed. Use agate.reader, agate.writer, agate.DictReader and agate.DictWriter.
 * Drop Python 2.6 support.
 
@@ -29,8 +30,9 @@ Fixes:
 * csvsql supports custom SQLAlchemy dialects.
 * csvsql correctly escapes `%` characters in SQL queries.
 * csvstack supports stacking a single file.
+* csvstat supports --names.
 * FilteringCSVReader's any_match argument works correctly.
-* A file of two empty rows won't raise an error.
+* All tools handle empty files without error.
 
 0.9.1
 -----

@@ -6,19 +6,19 @@ import sys
 import six
 
 try:
-    import unittest2 as unittest
     from mock import patch
 except ImportError:
-    import unittest
     from unittest.mock import patch
 
 from csvkit.utilities.csvclean import CSVClean, launch_new_instance
+from tests.utils import CSVKitTestCase, EmptyFileTests
 
 
-class TestCSVClean(unittest.TestCase):
+class TestCSVClean(CSVKitTestCase, EmptyFileTests):
+    Utility = CSVClean
 
     def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', ['csvclean', 'examples/bad.csv']):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/bad.csv']):
             launch_new_instance()
 
     def test_simple(self):
@@ -48,16 +48,8 @@ class TestCSVClean(unittest.TestCase):
             os.remove('examples/bad_out.csv')
 
     def test_dry_run(self):
-        args = ['-n', 'examples/bad.csv']
-        output_file = six.StringIO()
-
-        utility = CSVClean(args, output_file)
-        utility.main()
-
+        output = self.get_output_as_io(['-n', 'examples/bad.csv'])
         self.assertFalse(os.path.exists('examples/bad_err.csv'))
         self.assertFalse(os.path.exists('examples/bad_out.csv'))
-
-        output = six.StringIO(output_file.getvalue())
-
         self.assertEqual(next(output)[:6], 'Line 1')
         self.assertEqual(next(output)[:6], 'Line 2')

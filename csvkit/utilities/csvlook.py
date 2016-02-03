@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 
-import itertools
-
 import agate
 
 from csvkit.cli import CSVKitUtility
-from csvkit.headers import make_default_headers
 
 
 class CSVLook(CSVKitUtility):

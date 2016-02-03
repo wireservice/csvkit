@@ -2,57 +2,33 @@
 
 import sys
 
-import six
-
 try:
-    import unittest2 as unittest
     from mock import patch
 except ImportError:
-    import unittest
     from unittest.mock import patch
 
 from csvkit.utilities.csvstat import CSVStat, launch_new_instance
+from tests.utils import CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests
 
 
-class TestCSVStat(unittest.TestCase):
+class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
+    Utility = CSVStat
 
     def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', ['csvstack', 'examples/dummy.csv']):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
     def test_runs(self):
-        args = ['examples/test_utf8.csv']
-        output_file = six.StringIO()
-
-        utility = CSVStat(args, output_file)
-        utility.main()
+        self.get_output(['examples/test_utf8.csv'])
 
     def test_encoding(self):
-        args = ['-e', 'latin1', 'examples/test_latin1.csv']
-        output_file = six.StringIO()
-
-        utility = CSVStat(args, output_file)
-        utility.main()
+        self.get_output(['-e', 'latin1', 'examples/test_latin1.csv'])
 
     def test_no_header_row(self):
-        args = ['-H', '-c', '2', 'examples/no_header_row.csv']
-        output_file = six.StringIO()
-
-        utility = CSVStat(args, output_file)
-        utility.main()
-
-        stats = output_file.getvalue()
-
-        self.assertFalse('column1' in stats)
-        self.assertTrue('column2' in stats)
+        output = self.get_output(['-H', '-c', '2', 'examples/no_header_row.csv'])
+        self.assertFalse('A' in output)
+        self.assertTrue('B' in output)
 
     def test_count_only(self):
-        args = ['--count', 'examples/dummy.csv']
-        output_file = six.StringIO()
-
-        utility = CSVStat(args, output_file)
-        utility.main()
-
-        stats = output_file.getvalue()
-
-        self.assertEqual(stats, 'Row count: 1\n')
+        output = self.get_output(['--count', 'examples/dummy.csv'])
+        self.assertEqual(output, 'Row count: 1\n')
