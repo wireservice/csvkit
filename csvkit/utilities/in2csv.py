@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import agate
+
 from csvkit import convert
 from csvkit.cli import CSVKitUtility
 
@@ -23,7 +25,7 @@ class In2CSV(CSVKitUtility):
         self.argparser.add_argument('--sheet', dest='sheet',
                                     help='The name of the XLSX sheet to operate on.')
         self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
-                                    help='Disable type inference when parsing the input.')
+                                    help='Disable type inference when parsing CSV input.')
 
     def main(self):
         if self.args.filetype:
@@ -65,7 +67,7 @@ class In2CSV(CSVKitUtility):
             kwargs['sheet'] = self.args.sheet
 
         if self.args.no_inference:
-            kwargs['infer_types'] = False
+            kwargs['column_types'] = agate.TypeTester(limit=0)
 
         if filetype == 'csv' and self.args.no_header_row:
             kwargs['header'] = False

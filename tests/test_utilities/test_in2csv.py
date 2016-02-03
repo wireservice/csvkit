@@ -2,13 +2,15 @@
 
 import sys
 
+import six
+
 try:
     from mock import patch
 except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.in2csv import In2CSV, launch_new_instance
-from tests.utils import CSVKitTestCase, EmptyFileTests
+from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 
 
 class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
@@ -55,3 +57,27 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
             'A,B,C',
             'True,2,3',
         ])
+
+    def test_csv_no_inference(self):
+        self.assertLines(['--no-inference', 'examples/dummy.csv'], [
+            'a,b,c',
+            '1,2,3',
+        ])
+
+    def test_json_no_inference(self):
+        input_file = six.StringIO('[{"a": 1, "b": 2, "c": 3}]')
+
+        with stdin_as_string(input_file):
+            self.assertLines(['--no-inference', '-f', 'json'], [
+                'a,b,c',
+                '1,2,3',
+            ])
+
+    def test_ndjson_no_inference(self):
+        input_file = six.StringIO('{"a": 1, "b": 2, "c": 3}')
+
+        with stdin_as_string(input_file):
+            self.assertLines(['--no-inference', '-f', 'ndjson'], [
+                'a,b,c',
+                '1,2,3',
+            ])
