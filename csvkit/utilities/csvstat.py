@@ -23,8 +23,6 @@ class CSVStat(CSVKitUtility):
     override_flags = ['l']
 
     def add_arguments(self):
-        self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
-                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                                     help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
@@ -51,6 +49,8 @@ class CSVStat(CSVKitUtility):
                                     help='Only output max value length.')
         self.argparser.add_argument('--count', dest='count_only', action='store_true',
                                     help='Only output row count')
+        self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
+                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
 
     def main(self):
         if self.args.names_only:

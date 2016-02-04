@@ -4,6 +4,7 @@ import argparse
 import bz2
 import codecs
 import gzip
+import itertools
 import os.path
 import sys
 
@@ -254,6 +255,21 @@ class CSVKitUtility(object):
 
         sys.excepthook = handler
 
+    def get_rows_and_column_names_and_column_ids(self):
+        rows = agate.reader(self.input_file, **self.reader_kwargs)
+
+        if self.args.no_header_row:
+            # Peek at a row to get the number of columns.
+            row = next(rows)
+            rows = itertools.chain([row], rows)
+            column_names = make_default_headers(len(row))
+        else:
+            column_names = next(rows)
+
+        column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based, getattr(self.args, 'not_columns', None))
+
+        return rows, column_names, column_ids
+
     def print_column_names(self):
         """
         Pretty-prints the names and indices of all columns to a file-like object (usually sys.stdout).
@@ -276,6 +292,13 @@ class CSVKitUtility(object):
             if not zero_based:
                 i += 1
             output.write('%3i: %s\n' % (i, c))
+
+
+def make_default_headers(n):
+    """
+    Make a set of simple, default headers for files that are missing them.
+    """
+    return tuple(agate.utils.letter_name(i) for i in range(n))
 
 
 def match_column_identifier(column_names, c, zero_based=False):

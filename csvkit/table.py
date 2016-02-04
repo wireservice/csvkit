@@ -8,16 +8,9 @@ import agate
 import six
 
 from csvkit import typeinference
-from csvkit.cli import parse_column_identifiers
+from csvkit.cli import parse_column_identifiers, make_default_headers
 
 POSSIBLE_DELIMITERS = [',', '\t', ';', ' ', ':', '|']
-
-
-def make_default_headers(n):
-    """
-    Make a set of simple, default headers for files that are missing them.
-    """
-    return tuple(agate.utils.letter_name(i) for i in range(n))
 
 
 def sniff_dialect(sample):

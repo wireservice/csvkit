@@ -16,6 +16,10 @@ Backwards-incompatible changes:
 Improvements:
 
 * "import csvkit as csv" will now defer to agate readers/writers.
+* csvgrep supports --no-header-row.
+* csvlook supports --snifflimit and --no-inference.
+* csvsql supports custom SQLAlchemy dialects.
+* csvstat supports --names.
 * in2csv "csv itself" conversions now use agate.Table.
 * Documentation: Update tool usage, remove shell prompts, document connection string, correct typos.
 
@@ -26,12 +30,8 @@ Fixes:
 * in2csv sets the correct flag for --no-inference.
 * in2csv again supports nested JSON objects (fixes regression).
 * csvgrep can match multiline values.
-* csvgrep supports --no-header-row.
-* csvlook supports --snifflimit and --no-inference.
-* csvsql supports custom SQLAlchemy dialects.
 * csvsql correctly escapes `%` characters in SQL queries.
 * csvstack supports stacking a single file.
-* csvstat supports --names.
 * FilteringCSVReader's any_match argument works correctly.
 * All tools handle empty files without error.
 
