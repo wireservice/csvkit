@@ -27,6 +27,7 @@ Fixes:
 * in2csv again supports nested JSON objects (fixes regression).
 * csvgrep can match multiline values.
 * csvgrep supports --no-header-row.
+* csvlook supports --snifflimit and --no-inference.
 * csvsql supports custom SQLAlchemy dialects.
 * csvsql correctly escapes `%` characters in SQL queries.
 * csvstack supports stacking a single file.
