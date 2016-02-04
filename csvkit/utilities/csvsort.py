@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
-import os
-
 import agate
+import six
 
-from csvkit import table
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
 
@@ -12,7 +10,7 @@ class CSVSort(CSVKitUtility):
     description = 'Sort CSV files. Like the Unix "sort" command, but for tabular data.'
 
     def add_arguments(self):
-        self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
+        self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                                     help='Display column names and indices from the input CSV and exit.')
@@ -28,33 +26,15 @@ class CSVSort(CSVKitUtility):
             self.print_column_names()
             return
 
-        if self.input_file.name != '<stdin>':
-            # Use filename as table name
-            table_name = os.path.splitext(os.path.split(self.input_file.name)[1])[0]
+        if self.args.no_inference:
+            column_types = agate.TypeTester(limit=0)
         else:
-            table_name = 'csvsql_table'
+            column_types = None
 
-        tab = table.Table.from_csv(
-            self.input_file,
-            name=table_name,
-            snifflimit=self.args.snifflimit,
-            no_header_row=self.args.no_header_row,
-            infer_types=(not self.args.no_inference),
-            **self.reader_kwargs
-        )
-
-        column_ids = parse_column_identifiers(self.args.columns, tab.headers(), self.args.zero_based)
-
-        rows = tab.to_rows(serialize_dates=True)
-        sorter = lambda r: [(r[c] is not None, r[c]) for c in column_ids]
-        rows.sort(key=sorter, reverse=self.args.reverse)
-
-        rows.insert(0, tab.headers())
-
-        output = agate.writer(self.output_file, **self.writer_kwargs)
-
-        for row in rows:
-            output.writerow(row)
+        table = agate.Table.from_csv(self.input_file, sniff_limit=self.args.sniff_limit, header=not self.args.no_header_row, column_types=column_types, **self.reader_kwargs)
+        column_ids = parse_column_identifiers(self.args.columns, table.column_names, self.args.zero_based)
+        table = table.order_by(lambda r: [(r[c] is not None, r[c]) for c in column_ids], reverse=self.args.reverse)
+        table.to_csv(self.output_file, **self.writer_kwargs)
 
 
 def launch_new_instance():
