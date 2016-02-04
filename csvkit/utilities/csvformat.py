@@ -33,28 +33,16 @@ class CSVFormat(CSVKitUtility):
         elif self.args.out_delimiter:
             kwargs['delimiter'] = self.args.out_delimiter
 
-        if self.args.out_quotechar:
-            kwargs['quotechar'] = self.args.out_quotechar
-
-        if self.args.out_quoting:
-            kwargs['quoting'] = self.args.out_quoting
-
-        if self.args.out_doublequote:
-            kwargs['doublequote'] = self.args.out_doublequote
-
-        if self.args.out_escapechar:
-            kwargs['escapechar'] = self.args.out_escapechar
-
-        if self.args.out_lineterminator:
-            kwargs['lineterminator'] = self.args.out_lineterminator
+        for arg in ('quotechar', 'quoting', 'doublequote', 'escapechar', 'lineterminator'):
+            value = getattr(self.args, 'out_%s' % arg)
+            if value:
+                kwargs[arg] = value
 
         return kwargs
 
     def main(self):
         reader = agate.reader(self.input_file, **self.reader_kwargs)
-
         writer = agate.writer(self.output_file, **self.writer_kwargs)
-
         writer.writerows(reader)
 
 
