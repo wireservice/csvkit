@@ -3,7 +3,6 @@
 import agate
 import agateexcel
 import dbf
-import six
 
 from csvkit.convert.fixed import fixed2csv
 from csvkit.convert.geojs import geojson2csv
