@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 
-import itertools
 import re
 from argparse import FileType
 
 import agate
 
-from csvkit.cli import CSVKitUtility, parse_column_identifiers
+from csvkit.cli import CSVKitUtility
 from csvkit.grep import FilteringCSVReader
-from csvkit.table import make_default_headers
 
 
 class CSVGrep(CSVKitUtility):
@@ -39,19 +37,7 @@ class CSVGrep(CSVKitUtility):
         if self.args.regex is None and self.args.pattern is None and self.args.matchfile is None:
             self.argparser.error('One of -r, -m or -f must be specified, unless using the -n option.')
 
-        rows = agate.reader(self.input_file, **self.reader_kwargs)
-
-        if self.args.no_header_row:
-            row = next(rows)
-
-            column_names = make_default_headers(len(row))
-
-            # Put the row back on top
-            rows = itertools.chain([row], rows)
-        else:
-            column_names = next(rows)
-
-        column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based)
+        rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids()
 
         if self.args.regex:
             pattern = re.compile(self.args.regex)
@@ -61,12 +47,11 @@ class CSVGrep(CSVKitUtility):
         else:
             pattern = self.args.pattern
 
-        patterns = dict((c, pattern) for c in column_ids)
+        patterns = dict((column_id, pattern) for column_id in column_ids)
+        filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse=self.args.inverse)
 
         output = agate.writer(self.output_file, **self.writer_kwargs)
         output.writerow(column_names)
-
-        filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse=self.args.inverse)
 
         for row in filter_reader:
             output.writerow(row)

@@ -9,12 +9,9 @@ https://gist.github.com/561347/9846ebf8d0a69b06681da9255ffe3d3f59ec2c97
 Used and modified with permission.
 """
 
-import itertools
-
 import agate
 
-from csvkit.cli import CSVKitUtility, parse_column_identifiers
-from csvkit.table import make_default_headers
+from csvkit.cli import CSVKitUtility
 
 
 class CSVCut(CSVKitUtility):
@@ -35,31 +32,15 @@ class CSVCut(CSVKitUtility):
             self.print_column_names()
             return
 
-        rows = agate.reader(self.input_file, **self.reader_kwargs)
+        rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids()
 
-        if self.args.no_header_row:
-            row = next(rows)
-
-            column_names = make_default_headers(len(row))
-
-            # Put the row back on top
-            rows = itertools.chain([row], rows)
-        else:
-            column_names = next(rows)
-
-        column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based, self.args.not_columns)
         output = agate.writer(self.output_file, **self.writer_kwargs)
-
-        output.writerow([column_names[c] for c in column_ids])
+        output.writerow([column_names[column_id] for column_id in column_ids])
 
         for row in rows:
-            out_row = [row[c] if c < len(row) else None for c in column_ids]
-
-            if self.args.delete_empty:
-                if ''.join(out_row) == '':
-                    continue
-
-            output.writerow(out_row)
+            out_row = [row[column_id] if column_id < len(row) else None for column_id in column_ids]
+            if not self.args.delete_empty or ''.join(out_row):
+                output.writerow(out_row)
 
 
 def launch_new_instance():
