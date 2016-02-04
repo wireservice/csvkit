@@ -18,7 +18,7 @@ class CSVSQL(CSVKitUtility):
 
         self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
                                     help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
-        self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
+        self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=sql.DIALECTS,
                                     help='Dialect of SQL to generate. Only valid when --db is not specified.')
@@ -101,7 +101,7 @@ class CSVSQL(CSVKitUtility):
             csv_table = table.Table.from_csv(
                 f,
                 name=table_name,
-                snifflimit=self.args.snifflimit,
+                sniff_limit=self.args.sniff_limit,
                 blanks_as_nulls=(not self.args.blanks),
                 infer_types=(not self.args.no_inference),
                 no_header_row=self.args.no_header_row,
