@@ -20,10 +20,10 @@ class In2CSV(CSVKitUtility):
                                     help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
         self.argparser.add_argument('-k', '--key', dest='key',
                                     help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
-        self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
-                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('--sheet', dest='sheet',
                                     help='The name of the XLSX sheet to operate on.')
+        self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
+                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
                                     help='Disable type inference when parsing CSV input.')
 

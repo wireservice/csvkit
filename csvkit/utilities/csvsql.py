@@ -18,8 +18,6 @@ class CSVSQL(CSVKitUtility):
 
         self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
                                     help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
-        self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
-                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=sql.DIALECTS,
                                     help='Dialect of SQL to generate. Only valid when --db is not specified.')
         self.argparser.add_argument('--db', dest='connection_string',
@@ -36,10 +34,12 @@ class CSVSQL(CSVKitUtility):
                                     help='Skip creating a table. Only valid when --insert is specified.')
         self.argparser.add_argument('--blanks', dest='blanks', action='store_true',
                                     help='Do not coerce empty strings to NULL values.')
-        self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
-                                    help='Disable type inference when parsing the input.')
         self.argparser.add_argument('--db-schema', dest='db_schema',
                                     help='Optional name of database schema to create table(s) in.')
+        self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
+                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
+        self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
+                                    help='Disable type inference when parsing the input.')
 
     def main(self):
         connection_string = self.args.connection_string

@@ -30,7 +30,6 @@ class CSVJSON(CSVKitUtility):
                                     help='A column index or name containing a longitude. Output will be GeoJSON instead of JSON. Only valid if --lat is also specified.')
         self.argparser.add_argument('--crs', dest='crs', type=str, default=None,
                                     help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
-
         self.argparser.add_argument('--stream', dest='streamOutput', action='store_true',
                                     help='Output JSON as a stream of newline-separated objects, rather than an as an array.')
 
