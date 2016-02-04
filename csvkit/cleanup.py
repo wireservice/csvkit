@@ -20,31 +20,6 @@ def join_rows(rows, joiner=' '):
     return fixed_row
 
 
-def fix_length_errors(errs, target_line_length, joiner=' '):
-    """
-    If possible, transform the rows backed up in the list of errors into rows of the correct length.
-    If the list of errors does not yet produce a row of target_line_length, return an empty array.
-    """
-    if not errs:
-        return []
-
-    fixed_rows = []
-    backlog = []
-
-    for err in errs:
-        if type(err) is not LengthMismatchError:
-            return []  # give up if any are not length errors
-
-        backlog.append(err)
-        fixed_row = join_rows([err.row for err in backlog])
-
-        if len(fixed_row) == target_line_length:
-            fixed_rows.append(fixed_row)
-            backlog = []  # reset
-
-    return fixed_rows
-
-
 def extract_joinable_row_errors(errs):
     joinable = []
 
