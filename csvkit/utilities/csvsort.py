@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import agate
-import six
 
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
