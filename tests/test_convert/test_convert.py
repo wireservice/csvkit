@@ -21,13 +21,6 @@ class TestConvert(unittest.TestCase):
         with open('examples/testxls_converted.csv', 'r') as f:
             self.assertEquals(f.read(), output.getvalue())
 
-    def test_no_file(self):
-        self.assertRaises(ValueError, convert.convert, None, 'xls')
-
-    def test_no_format(self):
-        with open('examples/dummy.csv', 'r') as f:
-            self.assertRaises(ValueError, convert.convert, f, None)
-
     def test_invalid_format(self):
         with open('examples/dummy.csv', 'r') as f:
             self.assertRaises(ValueError, convert.convert, f, 'INVALID')
