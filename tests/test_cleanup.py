@@ -25,18 +25,6 @@ class TestCleanup(unittest.TestCase):
         self.assertEqual(" ".join([start[0][-1], start[1][0], start[2][0], start[3][0]]), fixed[2])
         self.assertEqual(start[3][1], fixed[3])
 
-    def test_fix_length_errors_basic(self):
-        expected_length = 4
-        errs = [LengthMismatchError(1, ['alpha', 'beta', 'gam'], expected_length)]
-        errs.append(LengthMismatchError(2, ['ma', 'delta'], expected_length))
-        fixed = fix_length_errors(errs, expected_length)
-        self.assertEqual(1, len(fixed))
-        fixed = fixed[0]
-        self.assertEqual('alpha', fixed[0])
-        self.assertEqual('beta', fixed[1])
-        self.assertEqual('gam ma', fixed[2])
-        self.assertEqual('delta', fixed[3])
-
     def test_extract_joinable_row_errors(self):
         e1 = LengthMismatchError(1, ['foo', 'bar', 'baz'], 10)
         e2 = LengthMismatchError(2, ['foo', 'bar', 'baz'], 10)
