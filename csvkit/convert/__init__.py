@@ -17,16 +17,9 @@ def convert(f, format, schema=None, key=None, output=None, **kwargs):
     """
     Convert a file of a specified format to CSV.
     """
-    if not f:
-        raise ValueError('f must not be None')
-
-    if not format:
-        raise ValueError('format must not be None')
-
     if format == 'fixed':
         if not schema:
             raise ValueError('schema must not be null when format is "fixed"')
-
         output.write(fixed2csv(f, schema, output=output, **kwargs))
     elif format == 'geojson':
         output.write(geojson2csv(f, **kwargs))
@@ -45,7 +38,6 @@ def convert(f, format, schema=None, key=None, output=None, **kwargs):
             with dbf.Table(f.name) as db:
                 column_names = db.field_names
                 table = agate.Table(db, column_names)
-
         table.to_csv(output)
     else:
         raise ValueError('format "%s" is not supported' % format)
