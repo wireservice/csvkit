@@ -28,7 +28,7 @@ class SQL2CSV(CSVKitUtility):
             doublequote=None,
             escapechar=None,
             encoding='utf-8',
-            maxfieldsize=None,
+            field_size_limit=None,
             quotechar=None,
             quoting=None,
             skipinitialspace=None,

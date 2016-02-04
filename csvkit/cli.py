@@ -149,7 +149,7 @@ class CSVKitUtility(object):
             self.argparser.add_argument('-p', '--escapechar', dest='escapechar',
                                         help='Character used to escape the delimiter if --quoting 3 ("Quote None") is specified and to escape the QUOTECHAR if --doublequote is not specified.')
         if 'z' not in self.override_flags:
-            self.argparser.add_argument('-z', '--maxfieldsize', dest='maxfieldsize', type=int,
+            self.argparser.add_argument('-z', '--maxfieldsize', dest='field_size_limit', type=int,
                                         help='Maximum length of a single field in the input CSV file.')
         if 'e' not in self.override_flags:
             self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
@@ -213,7 +213,7 @@ class CSVKitUtility(object):
         elif self.args.delimiter:
             kwargs['delimiter'] = self.args.delimiter
 
-        for arg in ('quotechar', 'quoting', 'doublequote', 'escapechar', 'maxfieldsize', 'skipinitialspace'):
+        for arg in ('quotechar', 'quoting', 'doublequote', 'escapechar', 'field_size_limit', 'skipinitialspace'):
             value = getattr(self.args, arg)
             if value:
                 kwargs[arg] = value
