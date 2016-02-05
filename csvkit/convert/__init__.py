@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 
 import agate
+import agatedbf
 import agateexcel
-import dbf
+import six
 
 from csvkit.convert.fixed import fixed2csv
 from csvkit.convert.geojs import geojson2csv
 
+agatedbf.patch()
 agateexcel.patch()
 
 SUPPORTED_FORMATS = ['csv', 'dbf', 'fixed', 'geojson', 'json', 'ndjson', 'xls', 'xlsx']
@@ -34,9 +36,10 @@ def convert(f, format, schema=None, key=None, output=None, **kwargs):
         elif format == 'xlsx':
             table = agate.Table.from_xlsx(f, sheet=kwargs.get('sheet', None))
         elif format == 'dbf':
-            with dbf.Table(f.name) as db:
-                column_names = db.field_names
-                table = agate.Table(db, column_names)
+            if not hasattr(f, 'name'):
+                raise ValueError('DBF files can not be converted from stdin. You must pass a filename.')
+
+            table = agate.Table.from_dbf(f.name, **kwargs)
         table.to_csv(output)
     else:
         raise ValueError('format "%s" is not supported' % format)

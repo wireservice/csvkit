@@ -35,7 +35,7 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_no_header_row(self):
         reader = self.get_output_as_reader(['--no-header-row', '-c', '1', '-r', 'examples/no_header_row3.csv'])
-        test_order = ['A', '4', '1']
+        test_order = ['a', '4', '1']
         new_order = [six.text_type(r[0]) for r in reader]
         self.assertEqual(test_order, new_order)
 

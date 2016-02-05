@@ -48,7 +48,7 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
 
     def test_no_header_row(self):
         self.assertRows(['--no-header-row', 'examples/no_header_row.csv', 'examples/no_header_row2.csv'], [
-            ['A', 'B', 'C'],
+            ['a', 'b', 'c'],
             ['1', '2', '3'],
             ['4', '5', '6'],
         ])
