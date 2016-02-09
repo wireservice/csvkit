@@ -15,12 +15,7 @@ class CSVLook(CSVKitUtility):
                                     help='Disable type inference when parsing the input.')
 
     def main(self):
-        if self.args.no_inference:
-            column_types = agate.TypeTester(limit=0)
-        else:
-            column_types = None
-
-        table = agate.Table.from_csv(self.input_file, sniff_limit=self.args.sniff_limit, header=not self.args.no_header_row, column_types=column_types, line_numbers=self.args.line_numbers, **self.reader_kwargs)
+        table = agate.Table.from_csv(self.input_file, sniff_limit=self.args.sniff_limit, header=not self.args.no_header_row, column_types=self.get_column_types(), line_numbers=self.args.line_numbers, **self.reader_kwargs)
         table.print_table(output=self.output_file)
 
 

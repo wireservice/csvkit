@@ -67,16 +67,18 @@ class In2CSV(CSVKitUtility):
         elif filetype == 'fixed':
             raise ValueError('schema must not be null when format is "fixed"')
 
-        if filetype != 'csv' and self.args.no_inference:
+        if self.args.sheet:
+            kwargs['sheet'] = self.args.sheet
+
+        if filetype == 'csv':
+            # Streaming CSV musn't set sniff_limit, but non-streaming should.
+            if not self.args.no_inference:
+                kwargs['sniff_limit'] = self.args.sniff_limit
+            if self.args.no_header_row:
+                kwargs['header'] = False
+        elif self.args.no_inference:
+            # Streaming CSV musn't set column_types, but other formats should.
             kwargs['column_types'] = agate.TypeTester(limit=0)
-
-        if filetype == 'csv' and self.args.no_header_row:
-            kwargs['header'] = False
-
-        for arg in ('sniff_limit', 'sheet'):
-            value = getattr(self.args, arg)
-            if value:
-                kwargs[arg] = value
 
         # Convert the file.
         if filetype == 'csv' and self.args.no_inference:

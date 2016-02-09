@@ -255,6 +255,12 @@ class CSVKitUtility(object):
 
         sys.excepthook = handler
 
+    def get_column_types(self):
+        if self.args.no_inference:
+            return agate.TypeTester(limit=0)
+        else:
+            return None
+
     def get_column_offset(self):
         if self.args.zero_based:
             return 0

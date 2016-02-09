@@ -17,6 +17,7 @@ Improvements:
 
 * "import csvkit as csv" will now defer to agate readers/writers.
 * csvgrep supports --no-header-row.
+* csvjson suppots --snifflimit and --no-inference.
 * csvlook supports --snifflimit and --no-inference.
 * csvsql supports custom SQLAlchemy dialects.
 * csvstat supports --names.

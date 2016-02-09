@@ -32,6 +32,10 @@ class CSVJSON(CSVKitUtility):
                                     help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
         self.argparser.add_argument('--stream', dest='streamOutput', action='store_true',
                                     help='Output JSON as a stream of newline-separated objects, rather than an as an array.')
+        self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
+                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
+        self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
+                                    help='Disable type inference when parsing CSV input.')
 
     def main(self):
         if six.PY2:
@@ -149,7 +153,7 @@ class CSVJSON(CSVKitUtility):
                 ])
             dump_json(output)
         else:
-            table = agate.Table.from_csv(self.input_file)
+            table = agate.Table.from_csv(self.input_file, sniff_limit=self.args.sniff_limit, column_types=self.get_column_types())
             table.to_json(stream, key=self.args.key, newline=self.args.streamOutput, indent=self.args.indent)
 
 
