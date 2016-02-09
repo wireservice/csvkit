@@ -19,14 +19,15 @@ Improvements:
 * csvgrep supports --no-header-row.
 * csvsql supports custom SQLAlchemy dialects.
 * csvstat supports --names.
-* in2csv "csv itself" conversions now use agate.Table.
+* in2csv CSV-to-CSV conversion streams input and output if the --no-inference flag is set.
+* in2csv CSV-to-CSV conversion uses agate.Table.
 * Documentation: Update tool usage, remove shell prompts, document connection string, correct typos.
 
 Fixes:
 
 * in2csv DBF conversion works with Python 3.
 * in2csv correctly guesses format when file has an uppercase extension.
-* in2csv sets the correct flag for --no-inference.
+* in2csv correctly interprets --no-inference.
 * in2csv again supports nested JSON objects (fixes regression).
 * csvgrep can match multiline values.
 * csvsql correctly escapes `%` characters in SQL queries.
