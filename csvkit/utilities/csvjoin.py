@@ -9,7 +9,7 @@ from csvkit.cli import CSVKitUtility, match_column_identifier
 class CSVJoin(CSVKitUtility):
     description = 'Execute a SQL-like join to merge CSV files on a specified column or columns.'
     epilog = 'Note that the join operation requires reading all files into memory. Don\'t try this on very large files.'
-    override_flags = ['f', 'H']
+    override_flags = ['f']
 
     def add_arguments(self):
         self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
@@ -48,9 +48,10 @@ class CSVJoin(CSVKitUtility):
             self.argparser.error('It is not valid to specify both a left and a right join.')
 
         tables = []
+        header = not self.args.no_header_row
 
         for f in self.input_files:
-            tables.append(list(agate.reader(f, **self.reader_kwargs)))
+            tables.append(list(agate.reader(f, header=header, **self.reader_kwargs)))
             f.close()
 
         join_column_ids = []
@@ -59,14 +60,12 @@ class CSVJoin(CSVKitUtility):
             for i, t in enumerate(tables):
                 join_column_ids.append(match_column_identifier(t[0], join_column_names[i]))
 
-        jointab = []
+        jointab = tables[0]
 
         if self.args.left_join:
             # Left outer join
-            jointab = tables[0]
-
             for i, t in enumerate(tables[1:]):
-                jointab = join.left_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1])
+                jointab = join.left_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1], header=header)
         elif self.args.right_join:
             # Right outer join
             jointab = tables[-1]
@@ -75,26 +74,19 @@ class CSVJoin(CSVKitUtility):
             remaining_tables.reverse()
 
             for i, t in enumerate(remaining_tables):
-                jointab = join.right_outer_join(t, join_column_ids[-(i + 2)], jointab, join_column_ids[-1])
+                jointab = join.right_outer_join(t, join_column_ids[-(i + 2)], jointab, join_column_ids[-1], header=header)
         elif self.args.outer_join:
             # Full outer join
-            jointab = tables[0]
-
             for i, t in enumerate(tables[1:]):
-                jointab = join.full_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1])
+                jointab = join.full_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1], header=header)
+        elif self.args.columns:
+            # Inner join
+            for i, t in enumerate(tables[1:]):
+                jointab = join.inner_join(jointab, join_column_ids[0], t, join_column_ids[i + 1], header=header)
         else:
-            if self.args.columns:
-                # Inner join
-                jointab = tables[0]
-
-                for i, t in enumerate(tables[1:]):
-                    jointab = join.inner_join(jointab, join_column_ids[0], t, join_column_ids[i + 1])
-            else:
-                jointab = tables[0]
-
-                # Sequential join
-                for t in tables[1:]:
-                    jointab = join.sequential_join(jointab, t)
+            # Sequential join
+            for t in tables[1:]:
+                jointab = join.sequential_join(jointab, t, header=header)
 
         output = agate.writer(self.output_file, **self.writer_kwargs)
 
