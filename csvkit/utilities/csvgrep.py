@@ -55,7 +55,7 @@ class CSVGrep(CSVKitUtility):
         patterns = dict((column_id, pattern) for column_id in column_ids)
         filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse=self.args.inverse)
 
-        output = agate.writer(self.output_file, writer_kwargs)
+        output = agate.writer(self.output_file, **writer_kwargs)
         output.writerow(column_names)
 
         for row in filter_reader:
