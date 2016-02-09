@@ -48,9 +48,9 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         sql = self.get_output(['--table', 'foo', '--no-header-row', 'examples/no_header_row.csv'])
 
         self.assertTrue('CREATE TABLE foo' in sql)
-        self.assertTrue('"A" INTEGER NOT NULL' in sql)
-        self.assertTrue('"B" INTEGER NOT NULL' in sql)
-        self.assertTrue('"C" INTEGER NOT NULL' in sql)
+        self.assertTrue('a INTEGER NOT NULL' in sql)
+        self.assertTrue('b INTEGER NOT NULL' in sql)
+        self.assertTrue('c INTEGER NOT NULL' in sql)
 
     def test_stdin(self):
         input_file = six.StringIO('a,b,c\n1,2,3\n')

@@ -1,6 +1,6 @@
-git+git://github.com/onyxfish/agate.git#egg=agate
-git+git://github.com/onyxfish/agate-excel.git#egg=agate-excel
-dbf>=0.96.005
+agate>=1.2.2
+agate-excel>=0.1.0
+agate-dbf>=0.1.0
 python-dateutil>=2.2
 six>=1.6.1
 SQLAlchemy>=0.9.3

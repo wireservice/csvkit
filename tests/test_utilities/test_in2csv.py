@@ -54,7 +54,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
     def test_csv_no_headers(self):
         self.assertLines(['--no-header-row', 'examples/no_header_row.csv'], [
-            'A,B,C',
+            'a,b,c',
             'True,2,3',
         ])
 

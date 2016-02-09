@@ -58,6 +58,6 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_no_header_row(self):
         self.assertRows(['-c', '2', '--no-header-row', 'examples/no_header_row.csv'], [
-            ['B'],
+            ['b'],
             ['2'],
         ])

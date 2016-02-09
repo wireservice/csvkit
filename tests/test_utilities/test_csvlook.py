@@ -32,7 +32,7 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
     def test_no_header(self):
         self.assertLines(['--no-header-row', 'examples/no_header_row3.csv'], [
             '|----+---+----|',
-            '|  A | B | C  |',
+            '|  a | b | c  |',
             '|----+---+----|',
             '|  1 | 2 | 3  |',
             '|  4 | 5 | 6  |',
