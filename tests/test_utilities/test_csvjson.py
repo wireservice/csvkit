@@ -98,9 +98,16 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         self.assertEqual(crs['type'], 'name')
         self.assertEqual(crs['properties']['name'], 'EPSG:4269')
 
-    def test_json_streaming(self):
+    def test_ndjson(self):
         output = self.get_output(['--stream', 'examples/dummy3.csv'])
         result = list(map(json.loads, output.splitlines()))
         self.assertEqual(len(result), 2)
         self.assertDictEqual(result[0], {'a': True, 'c': 3.0, 'b': 2.0})
         self.assertDictEqual(result[1], {'a': True, 'c': 5.0, 'b': 4.0})
+
+    def test_ndjson_with_no_inference(self):
+        output = self.get_output(['--stream', '--no-inference', 'examples/dummy3.csv'])
+        result = list(map(json.loads, output.splitlines()))
+        self.assertEqual(len(result), 2)
+        self.assertDictEqual(result[0], {'a': '1', 'c': '3', 'b': '2'})
+        self.assertDictEqual(result[1], {'a': '1', 'c': '5', 'b': '4'})

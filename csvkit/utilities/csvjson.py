@@ -152,6 +152,10 @@ class CSVJSON(CSVKitUtility):
                     })
                 ])
             dump_json(output)
+        elif self.args.streamOutput and self.args.no_inference:
+            rows = agate.DictReader(self.input_file, **self.reader_kwargs)
+            for row in rows:
+                dump_json(row, newline=True)
         else:
             table = agate.Table.from_csv(self.input_file, sniff_limit=self.args.sniff_limit, column_types=self.get_column_types())
             table.to_json(stream, key=self.args.key, newline=self.args.streamOutput, indent=self.args.indent)
