@@ -32,7 +32,7 @@ class CSVCut(CSVKitUtility):
             self.print_column_names()
             return
 
-        rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids()
+        rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids(**self.reader_kwargs)
 
         output = agate.writer(self.output_file, **self.writer_kwargs)
         output.writerow([column_names[column_id] for column_id in column_ids])

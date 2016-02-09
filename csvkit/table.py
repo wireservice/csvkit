@@ -130,7 +130,7 @@ class Table(list):
         return 0
 
     @classmethod
-    def from_csv(cls, f, name='from_csv_table', sniff_limit=None, column_ids=None, blanks_as_nulls=True, zero_based=False, infer_types=True, no_header_row=False, **kwargs):
+    def from_csv(cls, f, name='from_csv_table', sniff_limit=None, column_ids=None, blanks_as_nulls=True, column_offset=1, infer_types=True, no_header_row=False, **kwargs):
         """
         Creates a new Table from a file-like object containing CSV data.
 
@@ -166,7 +166,7 @@ class Table(list):
             pass
 
         if no_header_row or column_ids:
-            column_ids = parse_column_identifiers(column_ids, headers, zero_based)
+            column_ids = parse_column_identifiers(column_ids, headers, column_offset)
             headers = [headers[c] for c in column_ids]
         else:
             column_ids = range(len(headers))

@@ -37,7 +37,12 @@ class CSVGrep(CSVKitUtility):
         if self.args.regex is None and self.args.pattern is None and self.args.matchfile is None:
             self.argparser.error('One of -r, -m or -f must be specified, unless using the -n option.')
 
-        rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids()
+        reader_kwargs = self.reader_kwargs
+        writer_kwargs = self.writer_kwargs
+        if writer_kwargs.pop('line_numbers', False):
+            reader_kwargs = {'line_numbers': True}
+
+        rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids(**reader_kwargs)
 
         if self.args.regex:
             pattern = re.compile(self.args.regex)
@@ -50,7 +55,7 @@ class CSVGrep(CSVKitUtility):
         patterns = dict((column_id, pattern) for column_id in column_ids)
         filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse=self.args.inverse)
 
-        output = agate.writer(self.output_file, **self.writer_kwargs)
+        output = agate.writer(self.output_file, writer_kwargs)
         output.writerow(column_names)
 
         for row in filter_reader:
