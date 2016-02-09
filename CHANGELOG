@@ -17,6 +17,7 @@ Improvements:
 
 * "import csvkit as csv" will now defer to agate readers/writers.
 * csvgrep supports --no-header-row.
+* csvjoin supports --no-header-row.
 * csvjson streams input and output if the --stream and --no-inference flags are set.
 * csvjson supports --snifflimit and --no-inference.
 * csvlook supports --snifflimit and --no-inference.
