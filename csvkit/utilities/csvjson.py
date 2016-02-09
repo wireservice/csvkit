@@ -166,7 +166,7 @@ class CSVJSON(CSVKitUtility):
                 dump_json(data, newline=True)
         else:
             table = agate.Table.from_csv(self.input_file, sniff_limit=self.args.sniff_limit, column_types=self.get_column_types(), **self.reader_kwargs)
-            table.to_json(stream, key=self.args.key, newline=self.args.streamOutput, indent=self.args.indent)
+            table.to_json(stream, key=self.args.key, newline=self.args.streamOutput, **json_kwargs)
 
 
 def launch_new_instance():
