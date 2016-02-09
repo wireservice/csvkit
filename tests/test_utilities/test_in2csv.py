@@ -37,15 +37,6 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     def test_convert_geojson(self):
         self.assertConverted('geojson', 'examples/test_geojson.json', 'examples/test_geojson.csv')
 
-    def test_convert_geojson_no_inference(self):
-        input_file = six.StringIO('{"a": 1, "b": 2, "type": "FeatureCollection", "features": [{"geometry": {}, "properties": {"a": 1, "b": 2, "c": 3}}]}')
-
-        with stdin_as_string(input_file):
-            self.assertLines(['--no-inference', '-f', 'geojson'], [
-                'id,a,b,c,geojson',
-                ',1,2,3,{}',
-            ])
-
     def test_convert_ndjson(self):
         self.assertConverted('ndjson', 'examples/testjson_multiline.json', 'examples/testjson_multiline_converted.csv')
 
@@ -75,6 +66,15 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
             'a,b,c',
             '1,2,3',
         ])
+
+    def test_geojson_no_inference(self):
+        input_file = six.StringIO('{"a": 1, "b": 2, "type": "FeatureCollection", "features": [{"geometry": {}, "properties": {"a": 1, "b": 2, "c": 3}}]}')
+
+        with stdin_as_string(input_file):
+            self.assertLines(['--no-inference', '-f', 'geojson'], [
+                'id,a,b,c,geojson',
+                ',1,2,3,{}',
+            ])
 
     def test_json_no_inference(self):
         input_file = six.StringIO('[{"a": 1, "b": 2, "c": 3}]')

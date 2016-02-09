@@ -25,6 +25,14 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         js = json.loads(self.get_output(['examples/dummy.csv']))
         self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})
 
+    def test_sniff_limit(self):
+        js = json.loads(self.get_output(['examples/sniff_limit.csv']))
+        self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})
+
+    def test_no_inference(self):
+        js = json.loads(self.get_output(['--no-inference', 'examples/dummy.csv']))
+        self.assertDictEqual(js[0], {'a': '1', 'c': '3', 'b': '2'})
+
     def test_indentation(self):
         output = self.get_output(['-i', '4', 'examples/dummy.csv'])
         js = json.loads(output)
