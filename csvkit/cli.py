@@ -156,7 +156,7 @@ class CSVKitUtility(object):
             self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
                                         help='Specify the encoding the input CSV file.')
         if 'S' not in self.override_flags:
-            self.argparser.add_argument('-S', '--skipinitialspace', dest='skipinitialspace', default=False, action='store_true',
+            self.argparser.add_argument('-S', '--skipinitialspace', dest='skipinitialspace', action='store_true',
                                         help='Ignore whitespace immediately following the delimiter.')
         if 'H' not in self.override_flags:
             self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
@@ -255,8 +255,14 @@ class CSVKitUtility(object):
 
         sys.excepthook = handler
 
-    def get_rows_and_column_names_and_column_ids(self):
-        rows = agate.reader(self.input_file, **self.reader_kwargs)
+    def get_column_offset(self):
+        if self.args.zero_based:
+            return 0
+        else:
+            return 1
+
+    def get_rows_and_column_names_and_column_ids(self, **kwargs):
+        rows = agate.reader(self.input_file, **kwargs)
 
         if self.args.no_header_row:
             # Peek at a row to get the number of columns.
@@ -266,7 +272,11 @@ class CSVKitUtility(object):
         else:
             column_names = next(rows)
 
-        column_ids = parse_column_identifiers(self.args.columns, column_names, self.args.zero_based, getattr(self.args, 'not_columns', None))
+        column_offset = self.get_column_offset()
+        if self.args.line_numbers:
+            column_offset -= 1
+
+        column_ids = parse_column_identifiers(self.args.columns, column_names, column_offset, getattr(self.args, 'not_columns', None))
 
         return rows, column_names, column_ids
 
@@ -301,7 +311,7 @@ def make_default_headers(n):
     return tuple(agate.utils.letter_name(i) for i in range(n))
 
 
-def match_column_identifier(column_names, c, zero_based=False):
+def match_column_identifier(column_names, c, column_offset=1):
     """
     Determine what column a single column id (name or index) matches in a series of column names.
     Note that integer values are *always* treated as positional identifiers. If you happen to have
@@ -311,9 +321,7 @@ def match_column_identifier(column_names, c, zero_based=False):
         return column_names.index(c)
     else:
         try:
-            c = int(c)
-            if not zero_based:
-                c -= 1
+            c = int(c) - column_offset
         # Fail out if neither a column name nor an integer
         except:
             raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name. Column names are: %s" % (c, repr(column_names)[1:-1]))
@@ -329,7 +337,7 @@ def match_column_identifier(column_names, c, zero_based=False):
     return c
 
 
-def parse_column_identifiers(ids, column_names, zero_based=False, excluded_columns=None):
+def parse_column_identifiers(ids, column_names, column_offset=1, excluded_columns=None):
     """
     Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
     Ranges of integers can be specified with two integers separated by a '-' or ':' character. Ranges of
@@ -347,7 +355,7 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
 
         for c in ids.split(','):
             try:
-                columns.append(match_column_identifier(column_names, c, zero_based))
+                columns.append(match_column_identifier(column_names, c, column_offset))
             except ColumnIdentifierError:
                 if ':' in c:
                     a, b = c.split(':', 1)
@@ -370,7 +378,7 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
                     raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
 
                 for x in range(a, b):
-                    columns.append(match_column_identifier(column_names, x, zero_based))
+                    columns.append(match_column_identifier(column_names, x, column_offset))
     else:
         columns = range(len(column_names))
 
@@ -379,7 +387,7 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
     if excluded_columns:
         for c in excluded_columns.split(','):
             try:
-                excludes.append(match_column_identifier(column_names, c, zero_based))
+                excludes.append(match_column_identifier(column_names, c, column_offset))
             except ColumnIdentifierError:
                 if ':' in c:
                     a, b = c.split(':', 1)
@@ -402,6 +410,6 @@ def parse_column_identifiers(ids, column_names, zero_based=False, excluded_colum
                     raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
 
                 for x in range(a, b):
-                    excludes.append(match_column_identifier(column_names, x, zero_based))
+                    excludes.append(match_column_identifier(column_names, x, column_offset))
 
     return [c for c in columns if c not in excludes]

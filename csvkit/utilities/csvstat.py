@@ -79,7 +79,7 @@ class CSVStat(CSVKitUtility):
             self.input_file,
             sniff_limit=self.args.sniff_limit,
             column_ids=self.args.columns,
-            zero_based=self.args.zero_based,
+            column_offset=self.get_column_offset(),
             no_header_row=self.args.no_header_row,
             **self.reader_kwargs
         )
