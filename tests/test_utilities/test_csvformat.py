@@ -33,13 +33,22 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
             '1\t2\t3',
         ])
 
-    def test_quoting(self):
+    def test_quotechar(self):
         input_file = six.StringIO('a,b,c\n1*2,3,4\n')
 
         with stdin_as_string(input_file):
-            self.assertLines(['-Q', '*', '-U', '0', '-B'], [
+            self.assertLines(['-Q', '*'], [
                 'a,b,c',
                 '*1**2*,3,4',
+            ])
+
+    def test_doublequote(self):
+        input_file = six.StringIO('a\n"a ""quoted"" string"')
+
+        with stdin_as_string(input_file):
+            self.assertLines(['-P', '#', '-B'], [
+                'a',
+                'a #"quoted#" string',
             ])
 
     def test_escapechar(self):

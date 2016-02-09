@@ -29,6 +29,7 @@ Improvements:
 
 Fixes:
 
+* Change -b, --doublequote to --no-doublequote, as doublequote is True by default.
 * in2csv DBF conversion works with Python 3.
 * in2csv correctly guesses format when file has an uppercase extension.
 * in2csv correctly interprets --no-inference.

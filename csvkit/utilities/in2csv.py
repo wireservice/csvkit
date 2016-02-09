@@ -60,7 +60,7 @@ class In2CSV(CSVKitUtility):
             self.input_file = self._open_input_file(self.args.input_path)
 
         # Set the reader's arguments.
-        kwargs = self.reader_kwargs
+        kwargs = {}
 
         if self.args.schema:
             schema = self._open_input_file(self.args.schema)
@@ -71,6 +71,7 @@ class In2CSV(CSVKitUtility):
             kwargs['sheet'] = self.args.sheet
 
         if filetype == 'csv':
+            kwargs.update(self.reader_kwargs)
             # Streaming CSV musn't set sniff_limit, but non-streaming should.
             if not self.args.no_inference:
                 kwargs['sniff_limit'] = self.args.sniff_limit
