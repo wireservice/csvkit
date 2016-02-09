@@ -99,15 +99,19 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         self.assertEqual(crs['properties']['name'], 'EPSG:4269')
 
     def test_ndjson(self):
-        output = self.get_output(['--stream', 'examples/dummy3.csv'])
-        result = list(map(json.loads, output.splitlines()))
-        self.assertEqual(len(result), 2)
-        self.assertDictEqual(result[0], {'a': True, 'c': 3.0, 'b': 2.0})
-        self.assertDictEqual(result[1], {'a': True, 'c': 5.0, 'b': 4.0})
+        self.assertLines(['--stream', 'examples/testjson_converted.csv'], [
+            '{"text": "Chicago Reader", "float": 1.0, "datetime": "1971-01-01T04:14:00", "boolean": true, "time": "4:14:00", "date": "1971-01-01", "integer": 40.0}',
+            '{"text": "Chicago Sun-Times", "float": 1.27, "datetime": "1948-01-01T14:57:13", "boolean": true, "time": "14:57:13", "date": "1948-01-01", "integer": 63.0}',
+            '{"text": "Chicago Tribune", "float": 41800000.01, "datetime": "1920-01-01T00:00:00", "boolean": false, "time": "0:00:00", "date": "1920-01-01", "integer": 164.0}',
+            '{"text": "This row has blanks", "float": null, "datetime": null, "boolean": null, "time": null, "date": null, "integer": null}',
+            '{"text": "Unicode! Σ", "float": null, "datetime": null, "boolean": null, "time": null, "date": null, "integer": null}',
+        ])
 
     def test_ndjson_with_no_inference(self):
-        output = self.get_output(['--stream', '--no-inference', 'examples/dummy3.csv'])
-        result = list(map(json.loads, output.splitlines()))
-        self.assertEqual(len(result), 2)
-        self.assertDictEqual(result[0], {'a': '1', 'c': '3', 'b': '2'})
-        self.assertDictEqual(result[1], {'a': '1', 'c': '5', 'b': '4'})
+        self.assertLines(['--stream', '--no-inference', 'examples/testjson_converted.csv'], [
+            '{"text": "Chicago Reader", "float": "1.0", "datetime": "1971-01-01T04:14:00", "boolean": "True", "time": "4:14:00", "date": "1971-01-01", "integer": "40"}',
+            '{"text": "Chicago Sun-Times", "float": "1.27", "datetime": "1948-01-01T14:57:13", "boolean": "True", "time": "14:57:13", "date": "1948-01-01", "integer": "63"}',
+            '{"text": "Chicago Tribune", "float": "41800000.01", "datetime": "1920-01-01T00:00:00", "boolean": "False", "time": "0:00:00", "date": "1920-01-01", "integer": "164"}',
+            '{"text": "This row has blanks", "float": "", "datetime": "", "boolean": "", "time": "", "date": "", "integer": ""}',
+            '{"text": "Unicode! Σ", "float": "", "datetime": "", "boolean": "", "time": "", "date": "", "integer": ""}',
+        ])

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import codecs
+import datetime
 
 try:
     from collections import OrderedDict
@@ -51,8 +52,13 @@ class CSVJSON(CSVKitUtility):
         if six.PY2:
             json_kwargs['encoding'] = 'utf-8'
 
+        def default(obj):
+            if isinstance(obj, (datetime.date, datetime.datetime)):
+                return obj.isoformat()
+            raise TypeError('%s is not JSON serializable' % repr(obj))
+
         def dump_json(data, newline=False):
-            json.dump(data, stream, **json_kwargs)
+            json.dump(data, stream, default=default, **json_kwargs)
             if newline:
                 stream.write("\n")
 
@@ -73,8 +79,7 @@ class CSVJSON(CSVKitUtility):
 
         # GeoJSON
         if self.args.lat and self.args.lon:
-            rows = agate.reader(self.input_file, **self.reader_kwargs)
-            column_names = next(rows)
+            table = agate.Table.from_csv(self.input_file, sniff_limit=self.args.sniff_limit, column_types=self.get_column_types(), **self.reader_kwargs)
 
             features = []
             min_lon = None
@@ -82,15 +87,15 @@ class CSVJSON(CSVKitUtility):
             max_lon = None
             max_lat = None
 
-            lat_column = match_column_identifier(column_names, self.args.lat, self.args.zero_based)
-            lon_column = match_column_identifier(column_names, self.args.lon, self.args.zero_based)
+            lat_column = match_column_identifier(table.column_names, self.args.lat, self.args.zero_based)
+            lon_column = match_column_identifier(table.column_names, self.args.lon, self.args.zero_based)
 
             if self.args.key:
-                id_column = match_column_identifier(column_names, self.args.key, self.args.zero_based)
+                id_column = match_column_identifier(table.column_names, self.args.key, self.args.zero_based)
             else:
                 id_column = None
 
-            for row in rows:
+            for row in table.rows:
                 feature = OrderedDict()
                 feature['type'] = 'Feature'
                 properties = OrderedDict()
@@ -104,10 +109,8 @@ class CSVJSON(CSVKitUtility):
                             lat = float(c)
                         except ValueError:
                             lat = None
-
                         if min_lat is None or lat < min_lat:
                             min_lat = lat
-
                         if max_lat is None or lat > max_lat:
                             max_lat = lat
                     elif i == lon_column:
@@ -115,16 +118,14 @@ class CSVJSON(CSVKitUtility):
                             lon = float(c)
                         except ValueError:
                             lon = None
-
                         if min_lon is None or lon < min_lon:
                             min_lon = lon
-
                         if max_lon is None or lon > max_lon:
                             max_lon = lon
-                    elif id_column is not None and i == id_column:
+                    elif i == id_column:
                         geoid = c
                     else:
-                        properties[column_names[i]] = c
+                        properties[table.column_names[i]] = c
 
                 if id_column is not None:
                     feature['id'] = geoid
@@ -133,9 +134,7 @@ class CSVJSON(CSVKitUtility):
                     ('type', 'Point'),
                     ('coordinates', [lon, lat])
                 ])
-
                 feature['properties'] = properties
-
                 features.append(feature)
 
             output = OrderedDict([
@@ -151,6 +150,7 @@ class CSVJSON(CSVKitUtility):
                         'name': self.args.crs
                     })
                 ])
+
             dump_json(output)
         elif self.args.streamOutput and self.args.no_inference:
             rows = agate.reader(self.input_file, **self.reader_kwargs)
@@ -165,7 +165,7 @@ class CSVJSON(CSVKitUtility):
                         data[column] = None
                 dump_json(data, newline=True)
         else:
-            table = agate.Table.from_csv(self.input_file, sniff_limit=self.args.sniff_limit, column_types=self.get_column_types())
+            table = agate.Table.from_csv(self.input_file, sniff_limit=self.args.sniff_limit, column_types=self.get_column_types(), **self.reader_kwargs)
             table.to_json(stream, key=self.args.key, newline=self.args.streamOutput, indent=self.args.indent)
 
 
