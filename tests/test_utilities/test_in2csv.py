@@ -61,6 +61,15 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
             'True,2,3',
         ])
 
+    def test_csv_datetime_inference(self):
+        input_file = six.StringIO('a\n2015-01-01T00:00:00Z')
+
+        with stdin_as_string(input_file):
+            self.assertLines(['-f', 'csv'], [
+                'a',
+                '2015-01-01T00:00:00+00:00',
+            ])
+
     def test_csv_no_inference(self):
         self.assertLines(['--no-inference', 'examples/dummy.csv'], [
             'a,b,c',
