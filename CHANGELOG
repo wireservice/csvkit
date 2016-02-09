@@ -32,6 +32,7 @@ Fixes:
 * in2csv correctly interprets --no-inference.
 * in2csv again supports nested JSON objects (fixes regression).
 * in2csv --format geojson will print a JSON object instead of `OrderedDict([(...)])`.
+* csvclean with standard input works on Windows.
 * csvgrep returns the input file's line numbers if the --linenumbers flag is set.
 * csvgrep can match multiline values.
 * csvsql correctly escapes `%` characters in SQL queries.

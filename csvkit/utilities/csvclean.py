@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 from os.path import splitext
 
 import agate
@@ -34,7 +35,10 @@ class CSVClean(CSVKitUtility):
             if checker.joins:
                 self.output_file.write('%i rows would have been joined/reduced to %i rows after eliminating expected internal line breaks.\n' % (checker.rows_joined, checker.joins))
         else:
-            base, ext = splitext(self.input_file.name)
+            if self.input_file == sys.stdin:
+                base = 'stdin'  # "<stdin>_out.csv" is invalid on Windows
+            else:
+                base = splitext(self.input_file.name)[0]
 
             with open('%s_out.csv' % base, 'w') as f:
                 clean_writer = agate.writer(f, **self.writer_kwargs)
