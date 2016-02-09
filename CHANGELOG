@@ -30,6 +30,7 @@ Fixes:
 * in2csv correctly guesses format when file has an uppercase extension.
 * in2csv correctly interprets --no-inference.
 * in2csv again supports nested JSON objects (fixes regression).
+* csvgrep returns the input file's line numbers if the --linenumbers flag is set.
 * csvgrep can match multiline values.
 * csvsql correctly escapes `%` characters in SQL queries.
 * csvstack supports stacking a single file.
