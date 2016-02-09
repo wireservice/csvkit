@@ -60,7 +60,10 @@ def geojson2csv(f, key=None, **kwargs):
         row = [geoid]
 
         for field in property_fields:
-            row.append(properties.get(field, None))
+            value = properties.get(field, None)
+            if isinstance(value, OrderedDict):
+                value = json.dumps(value)
+            row.append(value)
 
         row.append(geometry)
 
