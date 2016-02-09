@@ -14,12 +14,12 @@ All tools which accept CSV as input share a set of common command-line arguments
                         Quoting style used in the input CSV file. 0 = Quote
                         Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 =
                         Quote None.
-  -b, --doublequote     Whether or not double quotes are doubled in the input
+  -b, --no-doublequote  Whether or not double quotes are doubled in the input
                         CSV file.
   -p ESCAPECHAR, --escapechar ESCAPECHAR
                         Character used to escape the delimiter if --quoting 3
                         ("Quote None") is specified and to escape the
-                        QUOTECHAR if --doublequote is not specified.
+                        QUOTECHAR if --no-doublequote is not specified.
   -z MAXFIELDSIZE, --maxfieldsize MAXFIELDSIZE
                         Maximum length of a single field in the input CSV
                         file.
