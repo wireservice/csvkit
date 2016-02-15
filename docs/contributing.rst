@@ -55,6 +55,34 @@ How to contribute
 #. Wait for it to be merged or for a comment about what needs to be changed.
 #. Rejoice.
 
+Streaming and buffering
+=======================
+
+Some tools must read an entire file before writing any output; the tool "buffers" the file into memory. For example, ''csvsort'' cannot write any output before reading the entire file, because it's always possible that the next record it reads must go at the start of the sorted list.
+
+Other tools, that operate on individual records, can write a record immediately after reading and transforming it. Records are "streamed" through the tool. Streaming tools produce output faster and require less memory than buffering tools.
+
+Although all the tools that stream could buffer instead, we try to maintain the streaming behavior for performance reasons. The following tools stream:
+
+* ''csvclean''
+* ''csvcut''
+* ''csvformat''
+* ''csvgrep''
+* ''csvjson'' if both the ''--stream'' and ''--no-inference'' flags are set
+* ''csvsql''
+* ''csvstack''
+* ''in2csv'' if ''--format'' is set to either ''csv'' or ''ndjson'' and the ''--no-inference'' flag is set
+* ''sql2csv''
+
+The following tools buffer:
+
+* ''csvjoin''
+* ''csvjson'' unless both the ''--stream'' and ''--no-inference'' flags are set
+* ''csvlook''
+* ''csvsort''
+* ''csvstat''
+* ''in2csv'' unless ''--format'' is set to either ''csv'' or ''ndjson'' and the ''--no-inference'' flag is set
+
 Legalese
 ========
 
