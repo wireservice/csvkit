@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
+import codecs
 import datetime
+import math
 from heapq import nlargest
 from operator import itemgetter
-import math
 
 import agate
 import six
@@ -74,6 +75,11 @@ class CSVStat(CSVKitUtility):
             self.output_file.write('Row count: %i\n' % count)
 
             return
+
+        if six.PY2:
+            self.output_file = codecs.getwriter('utf-8')(self.output_file)
+        else:
+            self.output_file = self.output_file
 
         tab = table.Table.from_csv(
             self.input_file,
