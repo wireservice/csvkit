@@ -1,13 +1,13 @@
-.. image:: https://secure.travis-ci.org/onyxfish/csvkit.png
-    :target: https://travis-ci.org/onyxfish/csvkit
+.. image:: https://secure.travis-ci.org/wireservice/csvkit.png
+    :target: https://travis-ci.org/wireservice/csvkit
     :alt: Build Status
 
-.. image:: https://gemnasium.com/onyxfish/csvkit.png
-    :target: https://gemnasium.com/onyxfish/csvkit
+.. image:: https://gemnasium.com/wireservice/csvkit.png
+    :target: https://gemnasium.com/wireservice/csvkit
     :alt: Dependency Status
 
-.. image:: https://coveralls.io/repos/onyxfish/csvkit/badge.png?branch=master
-    :target: https://coveralls.io/r/onyxfish/csvkit
+.. image:: https://coveralls.io/repos/wireservice/csvkit/badge.png?branch=master
+    :target: https://coveralls.io/r/wireservice/csvkit
     :alt: Coverage Status
 
 .. image:: https://img.shields.io/pypi/dw/csvkit.svg
@@ -32,8 +32,8 @@ It is inspired by pdftk, gdal and the original csvcut tool by Joe Germuska and A
 
 Important links:
 
-* Repository:    https://github.com/onyxfish/csvkit
-* Issues:        https://github.com/onyxfish/csvkit/issues
+* Repository:    https://github.com/wireservice/csvkit
+* Issues:        https://github.com/wireservice/csvkit/issues
 * Documentation: http://csvkit.rtfd.org/
-* Schemas:       https://github.com/onyxfish/ffs
-* Buildbot:      https://travis-ci.org/onyxfish/csvkit
+* Schemas:       https://github.com/wireservice/ffs
+* Buildbot:      https://travis-ci.org/wireservice/csvkit
