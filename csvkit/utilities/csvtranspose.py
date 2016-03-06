@@ -20,7 +20,7 @@ class CSVTranspose(CSVKitUtility):
         self.args.no_header_row = True
 
         rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids(**self.reader_kwargs)
-        rows = map(list, zip(*rows))
+        rows = list(map(list, zip(*rows)))
 
         column_names = list(rows[0])
         column_ids = range(len(column_names))
