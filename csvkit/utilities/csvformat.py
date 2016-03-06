@@ -41,8 +41,8 @@ class CSVFormat(CSVKitUtility):
         return kwargs
 
     def main(self):
-        reader = agate.reader(self.input_file, **self.reader_kwargs)
-        writer = agate.writer(self.output_file, **self.writer_kwargs)
+        reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
+        writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
         writer.writerows(reader)
 
 

@@ -51,7 +51,7 @@ class CSVJoin(CSVKitUtility):
         header = not self.args.no_header_row
 
         for f in self.input_files:
-            tables.append(list(agate.reader(f, header=header, **self.reader_kwargs)))
+            tables.append(list(agate.csv.reader(f, header=header, **self.reader_kwargs)))
             f.close()
 
         join_column_ids = []
@@ -88,7 +88,7 @@ class CSVJoin(CSVKitUtility):
             for t in tables[1:]:
                 jointab = join.sequential_join(jointab, t, header=header)
 
-        output = agate.writer(self.output_file, **self.writer_kwargs)
+        output = agate.csv.writer(self.output_file, **self.writer_kwargs)
 
         for row in jointab:
             output.writerow(row)

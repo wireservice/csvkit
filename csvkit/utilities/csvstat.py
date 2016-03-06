@@ -67,7 +67,7 @@ class CSVStat(CSVKitUtility):
             self.argparser.error('You may not specify --count and a statistical argument at the same time.')
 
         if self.args.count_only:
-            count = len(list(agate.reader(self.input_file)))
+            count = len(list(agate.csv.reader(self.input_file)))
 
             if not self.args.no_header_row:
                 count -= 1

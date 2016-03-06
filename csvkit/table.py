@@ -150,7 +150,7 @@ class Table(list):
             kwargs['dialect'] = sniff_dialect(contents[:sniff_limit])
 
         f = six.StringIO(contents)
-        rows = agate.reader(f, **kwargs)
+        rows = agate.csv.reader(f, **kwargs)
 
         try:
             if no_header_row:

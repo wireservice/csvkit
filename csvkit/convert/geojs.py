@@ -52,7 +52,7 @@ def geojson2csv(f, key=None, **kwargs):
     header.append('geojson')
 
     o = six.StringIO()
-    writer = agate.writer(o)
+    writer = agate.csv.writer(o)
 
     writer.writerow(header)
 

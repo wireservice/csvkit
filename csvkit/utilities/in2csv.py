@@ -83,8 +83,8 @@ class In2CSV(CSVKitUtility):
 
         # Convert the file.
         if filetype == 'csv' and self.args.no_inference:
-            reader = agate.reader(self.input_file, **self.reader_kwargs)
-            writer = agate.writer(self.output_file, **self.writer_kwargs)
+            reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
+            writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
             writer.writerows(reader)
         elif filetype == 'fixed':
             self.output_file.write(fixed2csv(self.input_file, schema, output=self.output_file, **kwargs))

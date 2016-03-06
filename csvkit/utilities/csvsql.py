@@ -147,7 +147,7 @@ class CSVSQL(CSVKitUtility):
 
                 # Output result of last query as CSV
                 try:
-                    output = agate.writer(self.output_file, **self.writer_kwargs)
+                    output = agate.csv.writer(self.output_file, **self.writer_kwargs)
                     if not self.args.no_header_row:
                         output.writerow(rows._metadata.keys)
                     for row in rows:

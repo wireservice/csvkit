@@ -44,7 +44,7 @@ class CSVKitTestCase(unittest.TestCase):
         return self.get_output(args).split('\n')
 
     def get_output_as_reader(self, args):
-        return agate.reader(self.get_output_as_io(args))
+        return agate.csv.reader(self.get_output_as_io(args))
 
     def assertRows(self, args, rows):
         reader = self.get_output_as_reader(args)

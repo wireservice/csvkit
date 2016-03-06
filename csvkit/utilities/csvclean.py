@@ -18,7 +18,7 @@ class CSVClean(CSVKitUtility):
                                     help='Do not create output files. Information about what would have been done will be printed to STDERR.')
 
     def main(self):
-        reader = agate.reader(self.input_file, **self.reader_kwargs)
+        reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
 
         if self.args.dryrun:
             checker = RowChecker(reader)
@@ -41,7 +41,7 @@ class CSVClean(CSVKitUtility):
                 base = splitext(self.input_file.name)[0]
 
             with open('%s_out.csv' % base, 'w') as f:
-                clean_writer = agate.writer(f, **self.writer_kwargs)
+                clean_writer = agate.csv.writer(f, **self.writer_kwargs)
 
                 checker = RowChecker(reader)
                 clean_writer.writerow(checker.column_names)
@@ -53,7 +53,7 @@ class CSVClean(CSVKitUtility):
                 error_filename = '%s_err.csv' % base
 
                 with open(error_filename, 'w') as f:
-                    error_writer = agate.writer(f, **self.writer_kwargs)
+                    error_writer = agate.csv.writer(f, **self.writer_kwargs)
 
                     error_header = ['line_number', 'msg']
                     error_header.extend(checker.column_names)

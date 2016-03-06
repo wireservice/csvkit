@@ -14,7 +14,7 @@ should migrate to using agate.
 
 import agate
 
-reader = agate.reader
-writer = agate.writer
-DictReader = agate.DictReader
-DictWriter = agate.DictWriter
+reader = agate.csv.reader
+writer = agate.csv.writer
+DictReader = agate.csv.DictReader
+DictWriter = agate.csv.DictWriter

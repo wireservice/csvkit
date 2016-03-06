@@ -34,7 +34,7 @@ def fixed2csv(f, schema, output=None, **kwargs):
     except KeyError:
         encoding = None
 
-    writer = agate.writer(output)
+    writer = agate.csv.writer(output)
 
     reader = FixedWidthReader(f, schema, encoding=encoding)
     writer.writerows(reader)
@@ -93,7 +93,7 @@ class FixedWidthRowParser(object):
     def __init__(self, schema):
         self.fields = []  # A list of FixedWidthFields
 
-        schema_reader = agate.reader(schema)
+        schema_reader = agate.csv.reader(schema)
         schema_decoder = SchemaDecoder(next(schema_reader))
 
         for i, row in enumerate(schema_reader):

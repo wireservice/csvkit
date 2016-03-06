@@ -18,9 +18,9 @@ class CSVPy(CSVKitUtility):
         filename = self.input_file.name
 
         if self.args.as_dict:
-            reader_class = agate.DictReader
+            reader_class = agate.csv.DictReader
         else:
-            reader_class = agate.reader
+            reader_class = agate.csv.reader
 
         reader = reader_class(self.input_file, **self.reader_kwargs)
 

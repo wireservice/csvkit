@@ -42,10 +42,10 @@ class CSVStack(CSVKitUtility):
 
         group_name = self.args.group_name if self.args.group_name else 'group'
 
-        output = agate.writer(self.output_file, **self.writer_kwargs)
+        output = agate.csv.writer(self.output_file, **self.writer_kwargs)
 
         for i, f in enumerate(self.input_files):
-            rows = agate.reader(f, **self.reader_kwargs)
+            rows = agate.csv.reader(f, **self.reader_kwargs)
 
             # If we have header rows, use them
             if not self.args.no_header_row:

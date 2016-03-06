@@ -268,7 +268,7 @@ class CSVKitUtility(object):
             return 1
 
     def get_rows_and_column_names_and_column_ids(self, **kwargs):
-        rows = agate.reader(self.input_file, **kwargs)
+        rows = agate.csv.reader(self.input_file, **kwargs)
 
         if self.args.no_header_row:
             # Peek at a row to get the number of columns.
@@ -301,7 +301,7 @@ class CSVKitUtility(object):
         except:
             zero_based = False
 
-        rows = agate.reader(f, **self.reader_kwargs)
+        rows = agate.csv.reader(f, **self.reader_kwargs)
         column_names = next(rows)
 
         for i, c in enumerate(column_names):

@@ -153,7 +153,7 @@ class CSVJSON(CSVKitUtility):
 
             dump_json(output)
         elif self.args.streamOutput and self.args.no_inference:
-            rows = agate.reader(self.input_file, **self.reader_kwargs)
+            rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
             column_names = next(rows)
 
             for row in rows:
