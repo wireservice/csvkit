@@ -24,6 +24,8 @@ class CSVSQL(CSVKitUtility):
                                     help='If present, a sqlalchemy connection string to use to directly execute generated SQL on a database.')
         self.argparser.add_argument('--query', default=None,
                                     help='Execute one or more SQL queries delimited by ";" and output the result of the last query as CSV.')
+        self.argparser.add_argument('--queryfile', default=None,
+                                    help='Read and execute query from a file.')
         self.argparser.add_argument('--insert', dest='insert', action='store_true',
                                     help='In addition to creating the table, also insert the data into the table. Only valid when --db is specified.')
         self.argparser.add_argument('--tables', dest='table_names',
@@ -45,6 +47,14 @@ class CSVSQL(CSVKitUtility):
         connection_string = self.args.connection_string
         do_insert = self.args.insert
         query = self.args.query
+
+        if self.args.queryfile:
+            if self.args.queryfile == '-':
+                queryfile = sys.stdin
+            else:
+                queryfile = open(self.args.queryfile, 'U')
+            query = queryfile.read().replace('\n', ' ')
+            queryfile.close()
 
         self.input_files = []
 
