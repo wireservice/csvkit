@@ -21,7 +21,7 @@ Renders a CSV to the command line in a readable, fixed-width format::
     optional arguments:
       -h, --help            show this help message and exit
 
-If a table is too wide to display properly try truncating it using :doc:`csvcut`.
+If a table is too wide to display properly try piping the output to ``less -S`` or truncating it using :doc:`csvcut`.
 
 If the table is too long, try filtering it down with grep or piping the output to ``less``.
 
