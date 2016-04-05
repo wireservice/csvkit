@@ -7,7 +7,7 @@ Command-line interface to `csvsed.sed`.
 
 import agate
 from csvkit.cli import CSVKitUtility
-from sed import CSVModifier
+from csvkit.sed import CSVModifier
 
 class CSVSed(CSVKitUtility):
 
