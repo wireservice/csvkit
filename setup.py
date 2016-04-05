@@ -61,6 +61,7 @@ setup(
             'csvjson = csvkit.utilities.csvjson:launch_new_instance',
             'csvlook = csvkit.utilities.csvlook:launch_new_instance',
             'csvpy = csvkit.utilities.csvpy:launch_new_instance',
+            'csvsed = csvkit.utilities.csvsed:launch_new_instance',
             'csvsort = csvkit.utilities.csvsort:launch_new_instance',
             'csvsql = csvkit.utilities.csvsql:launch_new_instance',
             'csvstack = csvkit.utilities.csvstack:launch_new_instance',
