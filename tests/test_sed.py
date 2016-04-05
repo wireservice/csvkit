@@ -9,7 +9,7 @@ except ImportError:
 import agate
 import six
 
-from sed import CSVModifier, cranges, modifier_as_function
+from csvkit.sed import CSVModifier, cranges, modifier_as_function
 
 def run(source, modifiers, header=True):
     src = six.StringIO(source)
