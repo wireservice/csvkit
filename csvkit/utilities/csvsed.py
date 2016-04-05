@@ -59,9 +59,9 @@ class CSVSed(CSVKitUtility):
         for row in reader:
             output.writerow(row)
 
-def launch_instance():
+def launch_new_instance():
     utility = CSVSed()
     utility.main()
 
 if __name__ == '__main__':
-    launch_instance()
+    launch_new_instance()
