@@ -70,21 +70,6 @@ class CSVModifier(six.Iterator):
         itself. Only the "i" flag, indicating case-insensitive
         matching of `SRC`, is supported.
 
-      * Execution: "e/REGEX/COMMAND/FLAGS"
-
-        For cells matching `REGEX`, execute (using bash) the external
-        command `COMMAND`, which can back-references to `REGEX`. All
-        new lines are stripped in the output of `COMMAND`.
-
-        The following flags are supported for `REGEX`:
-
-        * i: case-insensitive
-        * l: uses locale-dependent character classes
-        * m: enables multiline matching for "^" and "$"
-        * s: "." also matches the newline character
-        * u: enables unicode escape sequences
-        * x: `REGEX` uses verbose descriptors & comments
-
       Note that the "/" character can be any character as long as it
       is used consistently and not used within the modifier,
       e.g. ``s|a|b|`` is equivalent to ``s/a/b/``.
@@ -149,7 +134,7 @@ def modifier_as_function(modifier):
 
     # modifier is a string modifier
     else:
-        supported_modifier_types = ['s', 'y', 'e']
+        supported_modifier_types = ['s', 'y']
         if not modifier:
             raise InvalidModifier('empty modifier')
         modifier_type = modifier[0]
@@ -311,61 +296,3 @@ class YModifier(Modifier):
 
     def __call__(self, value):
         return value.translate(self.table)
-
-class EModifier(Modifier):
-    """
-    The "execute" external program modifier ("s/REGEX/COMMAND/FLAGS").
-
-      For cells matching `REGEX`, execute (using bash) the external
-      command `COMMAND`, which can back-references to `REGEX`. All
-      new lines are stripped in the output of `COMMAND`.
-
-      The following flags are supported for `REGEX`:
-
-      * i: case-insensitive
-      * l: uses locale-dependent character classes
-      * m: enables multiline matching for "^" and "$"
-      * s: "." also matches the newline character
-      * u: enables unicode escape sequences
-      * x: `REGEX` uses verbose descriptors & comments
-
-    Note that the "/" character can be any character as long as it
-    is used consistently and not used within the modifier,
-    e.g. ``s|a|b|`` is equivalent to ``s/a/b/``.
-    """
-    def __init__(self, modifier):
-        self.modifier_form = 'e/REGEX/COMMAND/FLAGS'
-        self.supported_flags = ['i', 'l', 'm', 's', 'u', 'x']
-        super(EModifier, self).__init__(modifier)
-
-        re_flags = 0
-        for flag in self.modifier_flags:
-            re_flags |= getattr(re, flag.upper(), 0)
-
-        try:
-            self.regex = re.compile(self.modifier_lhs, re_flags)
-        except re.error as e:
-            raise InvalidModifier('%s in `%s`' % (e.message, modifier))
-
-        self.command = self.modifier_rhs
-
-    def __call__(self, value):
-        match = self.regex.match(value)
-        if not match:
-            return value
-
-        command = match.expand(self.command)
-
-        proc = subprocess.Popen(
-            command, shell=True,
-            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-        out, err = proc.communicate(value.encode('utf-8'))
-        out = out.decode('utf-8')
-        err = err.decode('utf-8')
-        if proc.returncode != 0:
-            sys.stderr.write('command `%s` failed: %s' % (command, err))
-            sys.exit(1)
-
-        out = out.replace('\n', '')
-        return out

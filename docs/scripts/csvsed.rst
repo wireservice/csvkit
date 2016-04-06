@@ -26,9 +26,8 @@ but for tabular data::
                             be modified.
       -m MODIFIER, --modifier MODIFIER
                             If specified, the "sed" modifier to evaluate:
-                            currently supports substitution (s/REGEX/REPL/FLAGS),
-                            transliteration (y/SRC/DEST/FLAGS) and execution
-                            (e/REGEX/COMMAND/FLAGS).
+                            currently supports substitution (s/REGEX/REPL/FLAGS)
+                            and transliteration (y/SRC/DEST/FLAGS).
 
 
 See also: :doc:`../common_arguments`.
@@ -43,7 +42,3 @@ Remove thousands-separators from the "Wage" column using the "s" (substitute) mo
 Convert column "Status" to lower-case using the "y" (transliterate) modifier::
 
     csvsed -c Status -m 'y/a-z/A-Z/' ../examples/csvsed.csv
-
-Square the "Age" column using the "e" (execute) modifier::
-
-    csvsed -c Age -m 'e/^[0-9]+$/xargs -I {} echo "{}^2/" | bc/' ../examples/csvsed.csv

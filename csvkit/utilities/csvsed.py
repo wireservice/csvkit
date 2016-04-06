@@ -21,8 +21,7 @@ class CSVSed(CSVKitUtility):
                                     help='A comma separated list of column indices or names to be modified.')
         self.argparser.add_argument('-m', '--modifier', dest='modifier',
                                     help='If specified, the "sed" modifier to evaluate: currently supports substitution '
-                                      '(s/REGEX/REPL/FLAGS), transliteration (y/SRC/DEST/FLAGS) and execution '
-                                      '(e/REGEX/COMMAND/FLAGS).')
+                                      '(s/REGEX/REPL/FLAGS) and transliteration (y/SRC/DEST/FLAGS).')
 
     def main(self):
         if self.args.names_only:
