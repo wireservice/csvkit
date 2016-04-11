@@ -98,7 +98,7 @@ class Column(list):
         l = 0
 
         if self.type == six.text_type:
-            l = max([len(d) if d else 0 for d in self])
+            l = max(len(d) if d else 0 for d in self)
 
             if self.has_nulls():
                 l = max(l, 4)  # "None"
