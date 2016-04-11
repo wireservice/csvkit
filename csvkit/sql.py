@@ -39,8 +39,8 @@ def make_column(column, no_constraints=False):
     if column.type in column_types:
         sql_column_type = column_types[column.type]
     elif column.type is int:
-        column_max = max([v for v in column if v is not None])
-        column_min = min([v for v in column if v is not None])
+        column_max = max(v for v in column if v is not None)
+        column_min = min(v for v in column if v is not None)
 
         if column_max > SQL_INTEGER_MAX or column_min < SQL_INTEGER_MIN:
             sql_column_type = BigInteger
