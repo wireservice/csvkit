@@ -49,11 +49,11 @@ See also: :doc:`../common_arguments`.
 
 .. note::
 
-    The "ndjson" format refers to "newline delimited JSON", such as is output by the many streaming APIs.
+    The "ndjson" format refers to "newline delimited JSON", as used by many streaming APIs.
 
 .. note::
 
-    DBF format is only supported when running on Python 2.
+    If an XLS looks identical to an XLSX when viewed in Excel, they may not be identical as CSV. For example, XLSX has an integer type, but XLS doesn't. Numbers that look like integers from an XLS will have decimals in CSV, but those from an XLSX won't.
 
 Examples
 ========
