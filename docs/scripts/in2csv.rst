@@ -66,7 +66,7 @@ Convert the 2000 census geo headers file from fixed-width to CSV and from latin-
 
     A library of fixed-width schemas is maintained in the ``ffs`` project:
 
-    https://github.com/onyxfish/ffs
+    https://github.com/wireservice/ffs
 
 Convert an Excel .xls file::
 
@@ -78,7 +78,7 @@ Standardize the formatting of a CSV file (quoting, line endings, etc.)::
 
 Fetch csvkit's open issues from the GitHub API, convert the JSON response into a CSV and write it to a file::
 
-    curl https://api.github.com/repos/onyxfish/csvkit/issues?state=open | in2csv -f json -v > issues.csv 
+    curl https://api.github.com/repos/wireservice/csvkit/issues?state=open | in2csv -f json -v > issues.csv 
 
 Convert a DBase DBF file to an equivalent CSV::
 

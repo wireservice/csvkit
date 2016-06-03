@@ -34,7 +34,7 @@ Let's start by creating a clean workspace::
 
 Now let's fetch the data::
 
-    curl -L -O https://github.com/onyxfish/csvkit/raw/master/examples/realdata/ne_1033_data.xlsx
+    curl -L -O https://raw.githubusercontent.com/wireservice/csvkit/master/examples/realdata/ne_1033_data.xlsx
 
 in2csv: the Excel killer
 ========================
