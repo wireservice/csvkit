@@ -43,7 +43,7 @@ class CSVStat(CSVKitUtility):
         self.argparser.add_argument('--nulls', dest='nulls_only', action='store_true',
                                     help='Only output whether column contains nulls.')
         self.argparser.add_argument('--unique', dest='unique_only', action='store_true',
-                                    help='Only output unique values.')
+                                    help='Only output counts of unique values.')
         self.argparser.add_argument('--freq', dest='freq_only', action='store_true',
                                     help='Only output frequent values.')
         self.argparser.add_argument('--len', dest='len_only', action='store_true',

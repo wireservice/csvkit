@@ -37,7 +37,7 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
       --median              Only output median.
       --stdev               Only output standard deviation.
       --nulls               Only output whether column contains nulls.
-      --unique              Only output unique values.
+      --unique              Only output counts of unique values.
       --freq                Only output frequent values.
       --len                 Only output max value length.
       --count               Only output row count
