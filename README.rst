@@ -30,7 +30,7 @@ csvkit is a suite of command-line tools for converting to and working with CSV, 
 
 It is inspired by pdftk, gdal and the original csvcut tool by Joe Germuska and Aaron Bycoffe.
 
-If you need to do more complex data analysis than csvkit can handle, use `agate <https://github.com/wireservice/agate>`>.
+If you need to do more complex data analysis than csvkit can handle, use `agate <https://github.com/wireservice/agate>`_.
 
 Important links:
 
