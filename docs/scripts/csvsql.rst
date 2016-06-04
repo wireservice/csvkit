@@ -82,7 +82,7 @@ Create tables for an entire folder of CSVs and import data from those files dire
     createdb test
     csvsql --db postgresql:///test --insert examples/*.csv
 
-If those CSVs have identical headers, you can import them into the same table by using ``csvstack`` first::
+If those CSVs have identical headers, you can import them into the same table by using :doc:`csvstack` first::
 
     createdb test
     csvstack examples/*.csv | csvsql --db postgresql:///test --insert
