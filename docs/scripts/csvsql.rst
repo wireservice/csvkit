@@ -39,9 +39,9 @@ Generate SQL statements for a CSV file or execute those statements directly on a
       --insert              In addition to creating the table, also insert the
                             data into the table. Only valid when --db is
                             specified.
-      --tables TABLE_NAMES  Specify one or more names for the tables to be
-                            created. If omitted, the filename (minus extension) or
-                            "stdin" will be used.
+      --tables TABLE_NAMES  Specify the names of the tables to be created. By
+                            default, the tables will be named after the
+                            filenames without extensions or "stdin".
       --no-constraints      Generate a schema without length limits or null
                             checks. Useful when sampling big tables.
       --no-create           Skip creating a table. Only valid when --insert is
