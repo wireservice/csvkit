@@ -18,15 +18,19 @@ Please note, the files are decompressed in memory, so this is a convenience, not
 Specifying STDIN as a file
 --------------------------
 
-Most tools default to ``STDIN`` if no filename is specified, but tools like :doc:`scripts/csvjoin` and :doc:`scripts/csvstack` accept multiple files, so this is not possible. To work around this it is also possible to specify ``STDIN`` by using ``-`` as a filename. For example, these three commands are functionally identical::
+Most tools use ``STDIN`` as input if no filename is given, but tools that accept multiple inputs like :doc:`scripts/csvjoin` and :doc:`scripts/csvstack` don't. To use ``STDIN`` as an input to these tools, use ``-`` as the filename. For example, these three commands produce the same output::
 
     csvstat examples/dummy.csv
     cat examples/dummy.csv | csvstat
     cat examples/dummy.csv | csvstat -
 
-This specification allows you to, for instance, ``csvstack`` input on ``STDIN`` with another file::
+``csvstack`` can take a filename and ``STDIN`` as input, for example::
 
     cat ~/src/csvkit/examples/dummy.csv | csvstack ~/src/csvkit/examples/dummy3.csv -
+
+Alternately, you can pipe in multiple inputs like so::
+
+    csvjoin -c id <(csvcut -c 2,5,6 a.csv) <(csvcut -c 1,7 b.csv)
 
 Troubleshooting
 ===============
