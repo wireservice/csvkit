@@ -55,6 +55,10 @@ See also: :doc:`../common_arguments`.
 
     If an XLS looks identical to an XLSX when viewed in Excel, they may not be identical as CSV. For example, XLSX has an integer type, but XLS doesn't. Numbers that look like integers from an XLS will have decimals in CSV, but those from an XLSX won't.
 
+.. note::
+
+    To convert from HTML, consider `messytables <https://messytables.readthedocs.io/>`_.
+
 Examples
 ========
 

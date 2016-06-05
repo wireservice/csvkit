@@ -39,6 +39,8 @@ Output and Analysis
     scripts/csvsql
     scripts/csvstat
 
+To diff CSVs, consider `daff <http://paulfitz.github.io/daff/>`_.
+
 Common arguments
 ================
 
