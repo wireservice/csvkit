@@ -81,8 +81,8 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
         with stdin_as_string(input_file):
             self.assertLines(['--no-inference', '-f', 'geojson'], [
-                'id,a,b,c,geojson',
-                ',1,2,3,{}',
+                'id,a,b,c,geojson,type,longitude,latitude',
+                ',1,2,3,{},,,',
             ])
 
     def test_json_no_inference(self):

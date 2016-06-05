@@ -26,6 +26,7 @@ Improvements:
 * csvstat supports --names.
 * in2csv CSV-to-CSV conversion streams input and output if the --no-inference flag is set.
 * in2csv CSV-to-CSV conversion uses agate.Table.
+* in2csv GeoJSON conversion adds columns for geometry type, longitude and latitude.
 * Documentation: Update tool usage, remove shell prompts, document connection string, correct typos.
 
 Fixes:
