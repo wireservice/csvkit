@@ -142,13 +142,12 @@ class CSVStat(CSVKitUtility):
 
                     self.output_file.write('\tUnique values: %i\n' % len(stats['unique']))
 
-                    if len(stats['unique']) != len(values):
-                        self.output_file.write('\t%i most frequent values:\n' % MAX_FREQ)
-                        for value, count in stats['freq']:
-                            self.output_file.write(('\t\t%s:\t%s\n' % (six.text_type(value), count)))
-
                     if c.type == six.text_type:
                         self.output_file.write('\tMax length: %i\n' % stats['len'])
+
+                self.output_file.write('\t%i most frequent values:\n' % MAX_FREQ)
+                for value, count in stats['freq']:
+                    self.output_file.write(('\t\t%s:\t%s\n' % (six.text_type(value), count)))
 
         if not operations:
             self.output_file.write('\n')
