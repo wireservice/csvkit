@@ -29,7 +29,7 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_sort_date(self):
         reader = self.get_output_as_reader(['-c', '2', 'examples/testxls_converted.csv'])
-        test_order = [u'text', u'This row has blanks', u'Unicode! Σ', u'Chicago Tribune', u'Chicago Sun-Times', u'Chicago Reader']
+        test_order = [u'text', u'Chicago Tribune', u'Chicago Sun-Times', u'Chicago Reader', u'This row has blanks', u'Unicode! Σ']
         new_order = [six.text_type(r[0]) for r in reader]
         self.assertEqual(test_order, new_order)
 
@@ -45,8 +45,8 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         new_order = [six.text_type(r[0]) for r in reader]
         self.assertEqual(test_order, new_order)
 
-    def test_sort_ints_and_nulls(self):
+    def test_sort_t_and_nulls(self):
         reader = self.get_output_as_reader(['-c', '2', 'examples/sort_ints_nulls.csv'])
-        test_order = ['b', '', '1', '2']
+        test_order = ['b', '1', '2', '']
         new_order = [six.text_type(r[1]) for r in reader]
         self.assertEqual(test_order, new_order)
