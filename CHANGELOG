@@ -41,6 +41,7 @@ Fixes:
 * csvgrep can match multiline values.
 * csvsql correctly escapes `%` characters in SQL queries.
 * csvstack supports stacking a single file.
+* csvstat always reports frequencies.
 * FilteringCSVReader's any_match argument works correctly.
 * All tools handle empty files without error.
 
