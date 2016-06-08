@@ -35,37 +35,40 @@ def geojson2csv(f, key=None, **kwargs):
     property_fields = []
 
     for feature in features:
-        geoid = feature.get('id', None)
-
-        properties = feature.get('properties') or {}
+        properties = feature.get('properties', {})
 
         for prop in properties.keys():
             if prop not in property_fields:
                 property_fields.append(prop)
 
-        geometry = json.dumps(feature['geometry'])
+        geometry = feature['geometry']
+        geometry_type = geometry.get('type')
+        if geometry_type == 'Point':
+            longitude, latitude = geometry['coordinates']
+        else:
+            longitude, latitude = (None, None)
 
-        features_parsed.append((geoid, properties, geometry))
+        features_parsed.append((feature.get('id'), properties, json.dumps(geometry), geometry_type, longitude, latitude))
 
     header = ['id']
     header.extend(property_fields)
-    header.append('geojson')
+    header.extend(('geojson', 'type', 'longitude', 'latitude'))
 
     o = six.StringIO()
     writer = agate.csv.writer(o)
 
     writer.writerow(header)
 
-    for geoid, properties, geometry in features_parsed:
+    for geoid, properties, geometry, geometry_type, longitude, latitude in features_parsed:
         row = [geoid]
 
         for field in property_fields:
-            value = properties.get(field, None)
+            value = properties.get(field)
             if isinstance(value, OrderedDict):
                 value = json.dumps(value)
             row.append(value)
 
-        row.append(geometry)
+        row.extend((geometry, geometry_type, longitude, latitude))
 
         writer.writerow(row)
 
