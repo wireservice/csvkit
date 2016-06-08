@@ -39,6 +39,7 @@ Fixes:
 * csvclean with standard input works on Windows.
 * csvgrep returns the input file's line numbers if the --linenumbers flag is set.
 * csvgrep can match multiline values.
+* csvgrep correctly operates on ragged rows.
 * csvsql correctly escapes `%` characters in SQL queries.
 * csvstack supports stacking a single file.
 * FilteringCSVReader's any_match argument works correctly.

@@ -64,7 +64,11 @@ class FilteringCSVReader(six.Iterator):
 
     def test_row(self, row):
         for idx, test in self.patterns.items():
-            result = test(row[idx])
+            try:
+                value = row[idx]
+            except IndexError:
+                value = ''
+            result = test(value)
             if self.any_match:
                 if result:
                     return not self.inverse  # True

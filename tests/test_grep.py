@@ -102,6 +102,16 @@ class TestGrep(unittest.TestCase):
         except ColumnIdentifierError:
             pass
 
+    def test_index_out_of_range(self):
+        fcr = FilteringCSVReader(iter(self.tab2), patterns={3: '0'})
+        self.assertEqual(self.tab2[0], next(fcr))
+        self.assertEqual(self.tab2[4], next(fcr))
+        try:
+            next(fcr)
+            self.fail("Should be no more rows left.")
+        except StopIteration:
+            pass
+
     def test_any_match(self):
         fcr = FilteringCSVReader(iter(self.tab2), patterns={'age': 'only', 0: '2'}, any_match=True)
         self.assertEqual(self.tab2[0], next(fcr))
