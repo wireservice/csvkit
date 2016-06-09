@@ -20,6 +20,13 @@ Set up your environment for development::
     python setup.py develop
     tox
 
+New Tools
+=========
+
+The maintainers have decided not to merge or maintain new tools; there is simply not enough time to do so. Our focus is instead on making the existing tools as good as possible. We welcome patches to improve existing tools.
+
+We encourage you to create and maintain your own tools as separate Python packages. You may want to use the `agate <http://agate.readthedocs.io/>`_ library, which csvkit uses for most of its CSV reading and writing. Doing so will make it easier to maintain common behavior with csvkit’s tools.
+
 Principles
 ==========
 
