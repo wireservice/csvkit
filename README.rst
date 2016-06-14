@@ -36,6 +36,6 @@ Important links:
 
 * Repository:    https://github.com/wireservice/csvkit
 * Issues:        https://github.com/wireservice/csvkit/issues
-* Documentation: http://csvkit.rtfd.org/
+* Documentation: http://csvkit.rtfd.io/en/540/
 * Schemas:       https://github.com/wireservice/ffs
 * Buildbot:      https://travis-ci.org/wireservice/csvkit
