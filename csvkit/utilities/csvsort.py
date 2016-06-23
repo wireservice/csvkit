@@ -1,15 +1,13 @@
 #!/usr/bin/env python
 
-import sys
-
 import agate
-import six
 
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
 
 class CSVSort(CSVKitUtility):
     description = 'Sort CSV files. Like the Unix "sort" command, but for tabular data.'
+    buffers_input = True
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
@@ -27,11 +25,6 @@ class CSVSort(CSVKitUtility):
         if self.args.names_only:
             self.print_column_names()
             return
-
-        # Otherwise, fails with "io.UnsupportedOperation: underlying stream is not seekable".
-        if self.input_file == sys.stdin:
-            # We can't sort without reading the entire input.
-            self.input_file = six.StringIO(sys.stdin.read())
 
         table = agate.Table.from_csv(self.input_file, sniff_limit=self.args.sniff_limit, header=not self.args.no_header_row, column_types=self.get_column_types(), **self.reader_kwargs)
         column_ids = parse_column_identifiers(self.args.columns, table.column_names, column_offset=self.get_column_offset())
