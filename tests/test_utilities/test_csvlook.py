@@ -86,3 +86,30 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             '|  1;2;3  |',
             '|---------|',
         ])
+
+    def test_max_rows(self):
+        self.assertLines(['--max-rows', '0', 'examples/dummy.csv'], [
+            '|----+---+----|',
+            '|  a | b | c  |',
+            '|----+---+----|',
+            '|  ... | ... | ...  |',
+            '|----+---+----|',
+        ])
+
+    def test_max_columns(self):
+        self.assertLines(['--max-columns', '1', 'examples/dummy.csv'], [
+            '|-------+------|',
+            '|     a | ...  |',
+            '|-------+------|',
+            '|  True | ...  |',
+            '|-------+------|',
+        ])
+
+    def test_max_column_width(self):
+        self.assertLines(['--max-column-width', '1', 'examples/dummy.csv'], [
+            '|--------+---+----|',
+            '|      a | b | c  |',
+            '|--------+---+----|',
+            '|  Tr... | 2 | 3  |',
+            '|--------+---+----|',
+        ])

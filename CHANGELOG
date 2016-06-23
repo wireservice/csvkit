@@ -22,6 +22,7 @@ Improvements:
 * csvjoin supports --no-header-row.
 * csvjson streams input and output if the --stream and --no-inference flags are set.
 * csvjson supports --snifflimit and --no-inference.
+* csvlook adds --max-rows, --max-columns and --max-column-width options.
 * csvlook supports --snifflimit and --no-inference.
 * csvsql supports custom SQLAlchemy dialects.
 * csvstat supports --names.
