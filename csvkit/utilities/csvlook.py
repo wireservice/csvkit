@@ -7,6 +7,7 @@ from csvkit.cli import CSVKitUtility
 
 class CSVLook(CSVKitUtility):
     description = 'Render a CSV file in the console as a fixed-width table.'
+    buffers_input = True
 
     def add_arguments(self):
         self.argparser.add_argument('--max-rows', dest='max_rows', type=int,
