@@ -195,7 +195,7 @@ class CSVKitUtility(object):
         else:
             (_, extension) = os.path.splitext(path)
 
-            if extension == u'.gz':
+            if extension == '.gz':
                 f = LazyFile(gzip.open, path, mode, **kwargs)
             elif extension == '.bz2':
                 if six.PY2:
@@ -206,6 +206,22 @@ class CSVKitUtility(object):
                 f = LazyFile(open, path, mode, **kwargs)
 
         return f
+
+    def file_or_path(self):
+        """
+        Returns the input path unless the input is stdin or an archive file.
+        """
+        path = self.args.input_path
+
+        if not path or path == '-':
+            return self.input_file
+        else:
+            (_, extension) = os.path.splitext(path)
+
+            if extension in ('.gz', '.bz2'):
+                return self.input_file
+            else:
+                return path
 
     def _extract_csv_reader_kwargs(self):
         """
