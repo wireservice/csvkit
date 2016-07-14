@@ -26,7 +26,7 @@ class CSVSort(CSVKitUtility):
             self.print_column_names()
             return
 
-        table = agate.Table.from_csv(self.input_file, sniff_limit=self.args.sniff_limit, header=not self.args.no_header_row, column_types=self.get_column_types(), **self.reader_kwargs)
+        table = agate.Table.from_csv(self.file_or_path(), sniff_limit=self.args.sniff_limit, header=not self.args.no_header_row, column_types=self.get_column_types(), **self.reader_kwargs)
         column_ids = parse_column_identifiers(self.args.columns, table.column_names, column_offset=self.get_column_offset())
         table = table.order_by(column_ids, reverse=self.args.reverse)
         table.to_csv(self.output_file, **self.writer_kwargs)
