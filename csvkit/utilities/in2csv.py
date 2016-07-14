@@ -53,6 +53,8 @@ class In2CSV(CSVKitUtility):
             if not filetype:
                 self.argparser.error('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
+        self.buffers_input = filetype == 'csv' or not self.args.no_inference
+
         # Set the input file.
         if filetype in ('xls', 'xlsx'):
             self.input_file = open(self.args.input_path, 'rb')

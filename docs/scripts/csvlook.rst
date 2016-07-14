@@ -20,6 +20,18 @@ Renders a CSV to the command line in a readable, fixed-width format::
 
     optional arguments:
       -h, --help            show this help message and exit
+      --max-rows MAX_ROWS   The maximum number of rows to display before
+                            truncating the data.
+      --max-columns MAX_COLUMNS
+                            The maximum number of columns to display before
+                            truncating the data.
+      --max-column-width MAX_COLUMN_WIDTH
+                            Truncate all columns to at most this width. The
+                            remainder will be replaced with ellipsis.
+      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
+                            Limit CSV dialect sniffing to the specified number of
+                            bytes. Specify "0" to disable sniffing entirely.
+      --no-inference        Disable type inference when parsing the input.
 
 If a table is too wide to display properly try piping the output to ``less -S`` or truncating it using :doc:`csvcut`.
 

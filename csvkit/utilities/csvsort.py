@@ -1,15 +1,13 @@
 #!/usr/bin/env python
 
-import sys
-
 import agate
-import six
 
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
 
 class CSVSort(CSVKitUtility):
     description = 'Sort CSV files. Like the Unix "sort" command, but for tabular data.'
+    buffers_input = True
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',

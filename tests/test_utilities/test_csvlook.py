@@ -3,13 +3,15 @@
 
 import sys
 
+import six
+
 try:
     from mock import patch
 except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvlook import CSVLook, launch_new_instance
-from tests.utils import CSVKitTestCase, EmptyFileTests
+from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 
 
 class TestCSVLook(CSVKitTestCase, EmptyFileTests):
@@ -86,3 +88,43 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             '|  1;2;3  |',
             '|---------|',
         ])
+
+    def test_max_rows(self):
+        self.assertLines(['--max-rows', '0', 'examples/dummy.csv'], [
+            '|----+---+----|',
+            '|  a | b | c  |',
+            '|----+---+----|',
+            '|  ... | ... | ...  |',
+            '|----+---+----|',
+        ])
+
+    def test_max_columns(self):
+        self.assertLines(['--max-columns', '1', 'examples/dummy.csv'], [
+            '|-------+------|',
+            '|     a | ...  |',
+            '|-------+------|',
+            '|  True | ...  |',
+            '|-------+------|',
+        ])
+
+    def test_max_column_width(self):
+        self.assertLines(['--max-column-width', '1', 'examples/dummy.csv'], [
+            '|--------+---+----|',
+            '|      a | b | c  |',
+            '|--------+---+----|',
+            '|  Tr... | 2 | 3  |',
+            '|--------+---+----|',
+        ])
+
+    def test_stdin(self):
+        input_file = six.StringIO('a,b,c\n1,2,3\n4,5,6\n')
+
+        with stdin_as_string(input_file):
+            self.assertLines([], [
+                '|----+---+----|',
+                '|  a | b | c  |',
+                '|----+---+----|',
+                '|  1 | 2 | 3  |',
+                '|  4 | 5 | 6  |',
+                '|----+---+----|',
+            ])

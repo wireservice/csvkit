@@ -65,6 +65,7 @@ class CSVKitUtility(object):
     description = ''
     epilog = ''
     override_flags = ''
+    buffers_input = False
 
     def __init__(self, args=None, output_file=None):
         """
@@ -187,7 +188,10 @@ class CSVKitUtility(object):
             kwargs = {'encoding': self.args.encoding}
 
         if not path or path == '-':
-            f = sys.stdin
+            if self.buffers_input:
+                f = six.StringIO(sys.stdin.read())
+            else:
+                f = sys.stdin
         else:
             (_, extension) = os.path.splitext(path)
 

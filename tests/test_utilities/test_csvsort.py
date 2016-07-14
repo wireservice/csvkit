@@ -11,7 +11,7 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvsort import CSVSort, launch_new_instance
-from tests.utils import CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests
+from tests.utils import CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests, stdin_as_string
 
 
 class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
@@ -50,3 +50,13 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         test_order = ['b', '1', '2', '']
         new_order = [six.text_type(r[1]) for r in reader]
         self.assertEqual(test_order, new_order)
+
+    def test_stdin(self):
+        input_file = six.StringIO('a,b,c\n4,5,6\n1,2,3\n')
+
+        with stdin_as_string(input_file):
+            self.assertLines([], [
+                'a,b,c',
+                '1,2,3',
+                '4,5,6',
+            ])
