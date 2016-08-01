@@ -67,7 +67,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         input_file = six.StringIO("a,b,c\n1,2,3\n")
 
         with stdin_as_string(input_file):
-            sql = self.get_output(['examples/dummy.csv'])
+            sql = self.get_output(['-', 'examples/dummy.csv'])
 
             self.assertTrue('CREATE TABLE stdin' in sql)
             self.assertTrue('CREATE TABLE dummy' in sql)

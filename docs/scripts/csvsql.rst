@@ -16,7 +16,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                   [--blanks] [--no-inference] [--db-schema DB_SCHEMA]
                   [FILE [FILE ...]]
 
-    Generate SQL statements for one or more CSV files, create execute those
+    Generate SQL statements for one or more CSV files, or execute those
     statements directly on a database, and execute one or more SQL queries.
 
     positional arguments:

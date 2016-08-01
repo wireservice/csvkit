@@ -11,7 +11,7 @@ from csvkit.cli import CSVKitUtility
 
 
 class CSVSQL(CSVKitUtility):
-    description = 'Generate SQL statements for one or more CSV files, create execute those statements directly on a database, and execute one or more SQL queries.'
+    description = 'Generate SQL statements for one or more CSV files, or execute those statements directly on a database, and execute one or more SQL queries.'
     override_flags = ['l', 'f']
 
     def add_arguments(self):
@@ -55,14 +55,6 @@ class CSVSQL(CSVKitUtility):
             table_names = self.args.table_names.split(',')
         else:
             table_names = []
-
-        # If one or more filenames are specified, we need to add stdin ourselves (if available)
-        if sys.stdin not in self.input_files:
-            try:
-                if not sys.stdin.isatty():
-                    self.input_files.insert(0, sys.stdin)
-            except:
-                pass
 
         # Create an SQLite database in memory if no connection string is specified
         if query and not connection_string:
