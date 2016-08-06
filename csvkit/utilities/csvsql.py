@@ -62,10 +62,10 @@ class CSVSQL(CSVKitUtility):
             do_insert = True
 
         if self.args.dialect and connection_string:
-            self.argparser.error('The --dialect option is only valid when --db is not specified.')
+            self.argparser.error('The --dialect option is only valid when neither --db nor --query are specified.')
 
         if do_insert and not connection_string:
-            self.argparser.error('The --insert option is only valid when --db is also specified.')
+            self.argparser.error('The --insert option is only valid when either --db or --query is specified.')
 
         if self.args.no_create and not do_insert:
             self.argparser.error('The --no-create option is only valid --insert is also specified.')
