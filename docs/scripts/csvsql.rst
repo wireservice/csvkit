@@ -87,6 +87,10 @@ If those CSVs have identical headers, you can import them into the same table by
     createdb test
     csvstack examples/*.csv | csvsql --db postgresql:///test --insert
 
+Group rows by one column::
+
+    csvsql --query "select * from 'dummy3' group by a" examples/dummy3.csv
+
 You can also use CSVSQL to "directly" query one or more CSV files. Please note that this will create an in-memory SQL database, so it won't be very fast::
 
     csvsql --query  "select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species" examples/iris.csv examples/irismeta.csv
