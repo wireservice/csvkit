@@ -52,4 +52,6 @@ Examples
 
 This command says you have two files to outer join, file1.csv and file2.csv. The key column in file1.csv is ColumnKey, the key column in file2.csv is Column Key.
 
+Add two empty columns to the right of a CSV::
 
+    echo "," | csvjoin file.csv -
