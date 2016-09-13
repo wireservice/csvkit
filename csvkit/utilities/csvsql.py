@@ -76,8 +76,8 @@ class CSVSQL(CSVKitUtility):
                 engine, metadata = sql.get_connection(connection_string)
             except ImportError:
                 raise ImportError('You don\'t appear to have the necessary database backend installed for connection string you\'re trying to use. Available backends include:\n\nPostgresql:\tpip install psycopg2\nMySQL:\t\tpip install MySQL-python\n\nFor details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at: \n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n')
-            conn = engine.connect()
-            trans = conn.begin()
+            connection = engine.connect()
+            transaction = connection.begin()
 
         for f in self.input_files:
             try:
@@ -120,7 +120,7 @@ class CSVSQL(CSVKitUtility):
                     if do_insert and csv_table.count_rows() > 0:
                         insert = sql_table.insert()
                         headers = csv_table.headers()
-                        conn.execute(insert, [dict(zip(headers, row)) for row in csv_table.to_rows()])
+                        connection.execute(insert, [dict(zip(headers, row)) for row in csv_table.to_rows()])
 
                 # Output SQL statements
                 else:
@@ -129,26 +129,25 @@ class CSVSQL(CSVKitUtility):
 
         if connection_string:
             if query:
-                # Execute specified SQL queries
+                # Execute the specified SQL queries
                 queries = query.split(';')
                 rows = None
 
                 for q in queries:
                     if q:
-                        rows = conn.execute(q)
+                        rows = connection.execute(q)
 
-                # Output result of last query as CSV
+                # Output the result of the last query as CSV
                 try:
                     output = agate.csv.writer(self.output_file, **self.writer_kwargs)
-                    if not self.args.no_header_row:
-                        output.writerow(rows._metadata.keys)
+                    output.writerow(rows._metadata.keys)
                     for row in rows:
                         output.writerow(row)
                 except AttributeError:
                     pass
 
-            trans.commit()
-            conn.close()
+            transaction.commit()
+            connection.close()
 
 
 def launch_new_instance():
