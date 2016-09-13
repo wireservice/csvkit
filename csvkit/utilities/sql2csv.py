@@ -41,7 +41,7 @@ class SQL2CSV(CSVKitUtility):
         except ImportError:
             raise ImportError('You don\'t appear to have the necessary database backend installed for connection string you\'re trying to use.. Available backends include:\n\nPostgresql:\tpip install psycopg2\nMySQL:\t\tpip install MySQL-python\n\nFor details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at: \n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n')
 
-        conn = engine.connect()
+        connection = engine.connect()
 
         if self.args.query:
             query = self.args.query.strip()
@@ -54,7 +54,7 @@ class SQL2CSV(CSVKitUtility):
         # Must escape '%'.
         # @see https://github.com/wireservice/csvkit/issues/440
         # @see https://bitbucket.org/zzzeek/sqlalchemy/commits/5bc1f17cb53248e7cea609693a3b2a9bb702545b
-        rows = conn.execute(query.replace('%', '%%'))
+        rows = connection.execute(query.replace('%', '%%'))
         output = agate.csv.writer(self.output_file, **self.writer_kwargs)
 
         if rows.returns_rows:
@@ -64,7 +64,7 @@ class SQL2CSV(CSVKitUtility):
             for row in rows:
                 output.writerow(row)
 
-        conn.close()
+        connection.close()
 
 
 def launch_new_instance():
