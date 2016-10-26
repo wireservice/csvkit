@@ -15,6 +15,13 @@ csvkit has builtin support for reading ``gzip`` or ``bz2`` compressed input file
 
 Please note, the files are decompressed in memory, so this is a convenience, not an optimization.
 
+Reading a CSV with a byte-order mark (BOM)
+------------------------------------------
+
+Set the encoding to ``utf-8-sig``, for example::
+
+    csvcut -e utf-8-sig -c column1 csv-with-bom.csv
+
 Specifying STDIN as a file
 --------------------------
 
