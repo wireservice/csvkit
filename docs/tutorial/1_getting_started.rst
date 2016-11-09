@@ -58,7 +58,13 @@ Now that we have some data, we probably want to get some idea of what's in it. W
 
     csvlook data.csv
 
-Now at first the output of :doc:`/scripts/csvlook` isn't going to appear very promising. You'll see a mess of data, pipe character and dashes. That's because this dataset has many columns and they won't all fit in the terminal at once. To fix this we need to learn how to reduce our dataset before we look at it.
+Now at first the output of :doc:`/scripts/csvlook` isn't going to appear very promising. You'll see a mess of data, pipe character and dashes. That's because this dataset has many columns and they won't all fit in the terminal at once. One way to fix this is to pipe the output into ``less -S``::
+
+    csvlook data.csv | less -S
+
+Now the lines are neatly displayed without wrapping, and you can use the arrow keys to scroll left and right.
+
+Alternatively, you can view a subset of the columns, as shown in the next section.
 
 csvcut: data scalpel
 ====================
