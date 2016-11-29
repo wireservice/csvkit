@@ -4,7 +4,7 @@ import sys
 from setuptools import setup
 
 install_requires = [
-    'agate>=1.4.0',
+    'agate==1.4.0',
     'agate-excel>=0.1.0',
     'agate-dbf>=0.1.0',
     'python-dateutil==2.2',
