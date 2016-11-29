@@ -66,3 +66,7 @@ Add line numbers to a file, making no other changes::
 
     csvcut -l examples/realdata/FY09_EDU_Recipients_by_State.csv
 
+Extract a column that may not exist in all files::
+
+    echo d, | csvjoin examples/dummy.csv - | csvcut -c d
+    echo d, | csvjoin examples/join_no_header_row.csv - | csvcut -c d
