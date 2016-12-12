@@ -84,7 +84,10 @@ class CSVKitUtility(object):
         self._install_exception_handler()
 
         if output_file is None:
-            self.output_file = sys.stdout
+            if six.PY2:
+                self.output_file = codecs.getwriter('utf-8')(sys.stdout)
+            else:
+                self.output_file = sys.stdout
         else:
             self.output_file = output_file
 
