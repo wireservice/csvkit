@@ -23,97 +23,77 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
 
     def test_simple(self):
         self.assertLines(['examples/dummy3.csv'], [
-            '|-------+---+----|',
-            '|     a | b | c  |',
-            '|-------+---+----|',
-            '|  True | 2 | 3  |',
-            '|  True | 4 | 5  |',
-            '|-------+---+----|',
+            '|    a | b | c |',
+            '| ---- | - | - |',
+            '| True | 2 | 3 |',
+            '| True | 4 | 5 |',
         ])
 
     def test_no_header(self):
         self.assertLines(['--no-header-row', 'examples/no_header_row3.csv'], [
-            '|----+---+----|',
-            '|  a | b | c  |',
-            '|----+---+----|',
-            '|  1 | 2 | 3  |',
-            '|  4 | 5 | 6  |',
-            '|----+---+----|',
+            '| a | b | c |',
+            '| - | - | - |',
+            '| 1 | 2 | 3 |',
+            '| 4 | 5 | 6 |',
         ])
 
     def test_unicode(self):
         self.assertLines(['examples/test_utf8.csv'], [
-            '|------+-----+------|',
-            '|  foo | bar | baz  |',
-            '|------+-----+------|',
-            '|    1 |   2 | 3    |',
-            u'|    4 |   5 | ʤ    |',
-            '|------+-----+------|',
+            '| foo | bar | baz |',
+            '| --- | --- | --- |',
+            '|   1 |   2 | 3   |',
+            u'|   4 |   5 | ʤ   |',
         ])
 
     def test_linenumbers(self):
         self.assertLines(['--linenumbers', 'examples/dummy3.csv'], [
-            '|---------------+------+---+----|',
-            '|  line_numbers |    a | b | c  |',
-            '|---------------+------+---+----|',
-            '|             1 | True | 2 | 3  |',
-            '|             2 | True | 4 | 5  |',
-            '|---------------+------+---+----|',
+            '| line_numbers |    a | b | c |',
+            '| ------------ | ---- | - | - |',
+            '|            1 | True | 2 | 3 |',
+            '|            2 | True | 4 | 5 |',
         ])
 
     def test_no_inference(self):
         self.assertLines(['--no-inference', 'examples/dummy3.csv'], [
-            '|----+---+----|',
-            '|  a | b | c  |',
-            '|----+---+----|',
-            '|  1 | 2 | 3  |',
-            '|  1 | 4 | 5  |',
-            '|----+---+----|',
+            '| a | b | c |',
+            '| - | - | - |',
+            '| 1 | 2 | 3 |',
+            '| 1 | 4 | 5 |',
         ])
 
     def test_sniff_limit_no_limit(self):
         self.assertLines(['examples/sniff_limit.csv'], [
-            '|-------+---+----|',
-            '|     a | b | c  |',
-            '|-------+---+----|',
-            '|  True | 2 | 3  |',
-            '|-------+---+----|',
+            '|    a | b | c |',
+            '| ---- | - | - |',
+            '| True | 2 | 3 |',
         ])
 
     def test_sniff_limit_zero_limit(self):
         self.assertLines(['--snifflimit', '0', 'examples/sniff_limit.csv'], [
-            '|---------|',
-            '|  a;b;c  |',
-            '|---------|',
-            '|  1;2;3  |',
-            '|---------|',
+            '| a;b;c |',
+            '| ----- |',
+            '| 1;2;3 |',
         ])
 
     def test_max_rows(self):
         self.assertLines(['--max-rows', '0', 'examples/dummy.csv'], [
-            '|----+---+----|',
-            '|  a | b | c  |',
-            '|----+---+----|',
-            '|  ... | ... | ...  |',
-            '|----+---+----|',
+            '| a | b | c |',
+            '| - | - | - |',
+            '| ... | ... | ... |',
         ])
 
     def test_max_columns(self):
         self.assertLines(['--max-columns', '1', 'examples/dummy.csv'], [
-            '|-------+------|',
-            '|     a | ...  |',
-            '|-------+------|',
-            '|  True | ...  |',
-            '|-------+------|',
+            '|    a | ... |',
+            '| ---- | --- |',
+            '| True | ... |',
         ])
 
     def test_max_column_width(self):
         self.assertLines(['--max-column-width', '1', 'examples/dummy.csv'], [
-            '|--------+---+----|',
-            '|      a | b | c  |',
-            '|--------+---+----|',
-            '|  Tr... | 2 | 3  |',
-            '|--------+---+----|',
+            '|     a | b | c |',
+            '| ----- | - | - |',
+            '| Tr... | 2 | 3 |',
         ])
 
     def test_stdin(self):
@@ -121,10 +101,8 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
 
         with stdin_as_string(input_file):
             self.assertLines([], [
-                '|----+---+----|',
-                '|  a | b | c  |',
-                '|----+---+----|',
-                '|  1 | 2 | 3  |',
-                '|  4 | 5 | 6  |',
-                '|----+---+----|',
+                '| a | b | c |',
+                '| - | - | - |',
+                '| 1 | 2 | 3 |',
+                '| 4 | 5 | 6 |',
             ])
