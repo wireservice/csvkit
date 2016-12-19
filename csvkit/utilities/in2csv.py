@@ -9,9 +9,6 @@ from csvkit.convert.fixed import fixed2csv
 from csvkit.convert.geojs import geojson2csv
 from csvkit.cli import CSVKitUtility
 
-agatedbf.patch()
-agateexcel.patch()
-
 SUPPORTED_FORMATS = ['csv', 'dbf', 'fixed', 'geojson', 'json', 'ndjson', 'xls', 'xlsx']
 
 
