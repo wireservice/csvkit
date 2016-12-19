@@ -4,6 +4,7 @@
 This is a major release of csvkit. The entire backend has been rewritten to leverage the agate data analysis library, rather than bespoke implementations. In addition to the specific changes enumerated below there may be small changes to the way the output of the various tools is formatted. For example:
 
 * If `--no-header-row` is set, the output will have column names a, b, c, etc. instead of column1, column2, column3, etc.
+* csvlook renders a simpler table.
 
 If you have built data workflows on top of csvkit you should not upgrade without thorough testing.
 
