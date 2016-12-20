@@ -108,6 +108,9 @@ class In2CSV(CSVKitUtility):
 
         self.input_file.close()
 
+        if self.args.schema:
+            schema.close()
+
 def launch_new_instance():
     utility = In2CSV()
     utility.run()
