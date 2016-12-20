@@ -105,9 +105,9 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
 
     # def test_wildcard_on_postgresql(self):
     #     db = postgresql_scheme + ':///dummy_test'
-    #
+
     #     self.csvsql('examples/iris.csv', db)
     #     csv = self.get_output(['--db', db, '--query', "select * from foo where species LIKE '%'"])
-    #
+
     #     self.assertTrue('sepal_length,sepal_width,petal_length,petal_width,species' in csv)
     #     self.assertTrue('5.1,3.5,1.4,0.2,Iris-setosa' in csv)

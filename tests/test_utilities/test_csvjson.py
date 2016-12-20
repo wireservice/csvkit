@@ -38,15 +38,15 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         output = self.get_output(['-i', '4', 'examples/dummy.csv'])
         js = json.loads(output)
         self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})
-        self.assertRegexpMatches(output, '        "a": true,')
+        six.assertRegex(self, output, '        "a": true,')
 
     def test_keying(self):
         js = json.loads(self.get_output(['-k', 'a', 'examples/dummy.csv']))
         self.assertDictEqual(js, {'true': {'a': True, 'c': 3.0, 'b': 2.0}})
 
-    def test_duplicate_keys(self):        
-        utility = CSVJSON(['-k', 'a', 'examples/dummy3.csv'])
-        self.assertRaisesRegexp(ValueError, 'Value True is not unique in the key column\.', utility.run)
+    def test_duplicate_keys(self):
+        utility = CSVJSON(['-k', 'a', 'examples/dummy3.csv'], six.StringIO())
+        six.assertRaisesRegex(self, ValueError, 'Value True is not unique in the key column\.', utility.run)
 
     def test_geojson(self):
         geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', 'examples/test_geo.csv']))

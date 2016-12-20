@@ -47,8 +47,6 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             os.remove('examples/bad_err.csv')
             os.remove('examples/bad_out.csv')
 
-        output_file.close()
-
     def test_dry_run(self):
         output = self.get_output_as_io(['-n', 'examples/bad.csv'])
         self.assertFalse(os.path.exists('examples/bad_err.csv'))

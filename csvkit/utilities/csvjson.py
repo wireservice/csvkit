@@ -170,7 +170,6 @@ class CSVJSON(CSVKitUtility):
             table.to_json(self.output_file, key=self.args.key, newline=self.args.streamOutput, **json_kwargs)
 
 
-
 def launch_new_instance():
     utility = CSVJSON()
     utility.run()
