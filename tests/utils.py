@@ -86,7 +86,9 @@ class NamesTests(object):
         output_file = six.StringIO()
 
         utility = self.Utility(args, output_file)
-        self.assertRaises(RequiredHeaderError, utility.run)
+
+        with self.assertRaises(RequiredHeaderError):
+            utility.run()
 
         output_file.close()
 
@@ -97,6 +99,8 @@ class ColumnsTests(object):
         output_file = six.StringIO()
 
         utility = self.Utility(args, output_file)
-        self.assertRaises(ColumnIdentifierError, utility.run)
+
+        with self.assertRaises(ColumnIdentifierError):
+            utility.run()
 
         output_file.close()
