@@ -34,6 +34,7 @@ Improvements:
 
 Fixes:
 
+* Fixed numerous instances of open files not being closed before utilities exit.
 * Change -b, --doublequote to --no-doublequote, as doublequote is True by default.
 * in2csv DBF conversion works with Python 3.
 * in2csv correctly guesses format when file has an uppercase extension.
