@@ -35,11 +35,7 @@ class CSVKitTestCase(unittest.TestCase):
         output_file = six.StringIO()
         utility = self.Utility(args, output_file)
         utility.run()
-
-        output = output_file.getvalue()
-        output_file.close()
-
-        return output
+        return output_file.getvalue()
 
     def get_output_as_io(self, args):
         return six.StringIO(self.get_output(args))
@@ -88,8 +84,6 @@ class NamesTests(object):
         utility = self.Utility(args, output_file)
         self.assertRaises(RequiredHeaderError, utility.run)
 
-        output_file.close()
-
 
 class ColumnsTests(object):
     def test_invalid_column(self):
@@ -98,5 +92,3 @@ class ColumnsTests(object):
 
         utility = self.Utility(args, output_file)
         self.assertRaises(ColumnIdentifierError, utility.run)
-
-        output_file.close()

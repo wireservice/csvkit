@@ -14,13 +14,6 @@ import six
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
 
-def lazy_opener(fn):
-    def wrapped(self, *args, **kwargs):
-        self._lazy_open()
-        fn(*args, **kwargs)
-    return wrapped
-
-
 class LazyFile(six.Iterator):
     """
     A proxy for a File object that delays opening it until
@@ -121,13 +114,14 @@ class CSVKitUtility(object):
         else:
             self.output_file = self.output_file_handle
 
-        self.main()
+        try:
+            self.main()
+        finally:
+            if 'f' not in self.override_flags:
+                self.input_file.close()
 
-        if 'f' not in self.override_flags:
-            self.input_file.close()
-
-        if not self.output_file_handle:
-            self.output_file.close()
+            if self.output_file_handle is None:
+                self.output_file.close()
 
     def main(self):
         """
