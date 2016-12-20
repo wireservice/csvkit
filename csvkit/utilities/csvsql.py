@@ -46,6 +46,17 @@ class CSVSQL(CSVKitUtility):
         do_insert = self.args.insert
         query = self.args.query
 
+        # support reading query string from a file if the argument exists on the filesystem
+        if query:
+            if query == '-':
+                queryfile = sys.stdin
+            elif os.path.exists(query):
+                queryfile = open(self.args.query, 'U')
+
+            if queryfile:
+                query = queryfile.read()
+                queryfile.close()
+
         self.input_files = []
 
         for path in self.args.input_paths:
