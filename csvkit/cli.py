@@ -49,9 +49,10 @@ class LazyFile(six.Iterator):
         return self
 
     def close(self):
-        self.f.close()
-        self.f = None
-        self._is_lazy_opened = False
+        if self._is_lazy_opened:
+            self.f.close()
+            self.f = None
+            self._is_lazy_opened = False
 
     def __next__(self):
         if not self._is_lazy_opened:
@@ -74,22 +75,12 @@ class CSVKitUtility(object):
         self._init_common_parser()
         self.add_arguments()
         self.args = self.argparser.parse_args(args)
-
-        if 'f' not in self.override_flags:
-            self.input_file = self._open_input_file(self.args.input_path)
+        self.output_file_handle = output_file
 
         self.reader_kwargs = self._extract_csv_reader_kwargs()
         self.writer_kwargs = self._extract_csv_writer_kwargs()
 
         self._install_exception_handler()
-
-        if output_file is None:
-            if six.PY2:
-                self.output_file = codecs.getwriter('utf-8')(sys.stdout)
-            else:
-                self.output_file = sys.stdout
-        else:
-            self.output_file = output_file
 
         # Ensure SIGPIPE doesn't throw an exception
         # Prevents [Errno 32] Broken pipe errors, e.g. when piping to 'head'
@@ -113,6 +104,30 @@ class CSVKitUtility(object):
         Should be overriden by individual utilities.
         """
         raise NotImplementedError('add_arguments must be provided by each subclass of CSVKitUtility.')
+
+    def run(self):
+        """
+        A wrapper around the main loop of the utility which handles opening and
+        closing files.
+        """
+        if 'f' not in self.override_flags:
+            self.input_file = self._open_input_file(self.args.input_path)
+
+        if self.output_file_handle is None:
+            if six.PY2:
+                self.output_file = codecs.getwriter('utf-8')(sys.stdout)
+            else:
+                self.output_file = sys.stdout
+        else:
+            self.output_file = self.output_file_handle
+
+        self.main()
+
+        if 'f' not in self.override_flags:
+            self.input_file.close()
+
+        if not self.output_file_handle:
+            self.output_file.close()
 
     def main(self):
         """

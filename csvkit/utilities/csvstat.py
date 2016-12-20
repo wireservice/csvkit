@@ -78,8 +78,6 @@ class CSVStat(CSVKitUtility):
 
         if six.PY2:
             self.output_file = codecs.getwriter('utf-8')(self.output_file)
-        else:
-            self.output_file = self.output_file
 
         tab = table.Table.from_csv(
             self.input_file,
@@ -258,7 +256,7 @@ def freq(l, n=MAX_FREQ):
 
 def launch_new_instance():
     utility = CSVStat()
-    utility.main()
+    utility.run()
 
 if __name__ == "__main__":
     launch_new_instance()

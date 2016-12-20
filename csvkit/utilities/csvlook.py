@@ -28,7 +28,7 @@ class CSVLook(CSVKitUtility):
 
 def launch_new_instance():
     utility = CSVLook()
-    utility.main()
+    utility.run()
 
 if __name__ == "__main__":
     launch_new_instance()

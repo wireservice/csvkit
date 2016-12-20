@@ -69,7 +69,7 @@ class SQL2CSV(CSVKitUtility):
 
 def launch_new_instance():
     utility = SQL2CSV()
-    utility.main()
+    utility.run()
 
 if __name__ == "__main__":
     launch_new_instance()

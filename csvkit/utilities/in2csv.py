@@ -106,10 +106,11 @@ class In2CSV(CSVKitUtility):
                 table = agate.Table.from_dbf(self.input_file.name, **kwargs)
             table.to_csv(self.output_file)
 
+        self.input_file.close()
 
 def launch_new_instance():
     utility = In2CSV()
-    utility.main()
+    utility.run()
 
 if __name__ == "__main__":
     launch_new_instance()

@@ -34,7 +34,7 @@ class CSVSort(CSVKitUtility):
 
 def launch_new_instance():
     utility = CSVSort()
-    utility.main()
+    utility.run()
 
 if __name__ == "__main__":
     launch_new_instance()

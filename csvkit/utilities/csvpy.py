@@ -37,7 +37,7 @@ class CSVPy(CSVKitUtility):
 
 def launch_new_instance():
     utility = CSVPy()
-    utility.main()
+    utility.run()
 
 if __name__ == "__main__":
     launch_new_instance()

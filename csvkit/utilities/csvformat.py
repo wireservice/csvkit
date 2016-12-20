@@ -48,7 +48,7 @@ class CSVFormat(CSVKitUtility):
 
 def launch_new_instance():
     utility = CSVFormat()
-    utility.main()
+    utility.run()
 
 if __name__ == "__main__":
     launch_new_instance()

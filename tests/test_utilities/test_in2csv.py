@@ -19,7 +19,9 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
     def assertConverted(self, input_format, input_filename, output_filename, additional_args=[]):
         output = self.get_output(['-f', input_format, input_filename] + additional_args)
-        self.assertEqual(output, open(output_filename, 'r').read())
+
+        with open(output_filename, 'r') as f:
+            self.assertEqual(output, f.read())
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):

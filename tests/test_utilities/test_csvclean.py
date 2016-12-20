@@ -26,7 +26,7 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         output_file = six.StringIO()
 
         utility = CSVClean(args, output_file)
-        utility.main()
+        utility.run()
 
         self.assertTrue(os.path.exists('examples/bad_err.csv'))
         self.assertTrue(os.path.exists('examples/bad_out.csv'))
@@ -46,6 +46,8 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             # Cleanup
             os.remove('examples/bad_err.csv')
             os.remove('examples/bad_out.csv')
+
+        output_file.close()
 
     def test_dry_run(self):
         output = self.get_output_as_io(['-n', 'examples/bad.csv'])

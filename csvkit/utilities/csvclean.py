@@ -80,7 +80,7 @@ class CSVClean(CSVKitUtility):
 
 def launch_new_instance():
     utility = CSVClean()
-    utility.main()
+    utility.run()
 
 if __name__ == '__main__':
     launch_new_instance()

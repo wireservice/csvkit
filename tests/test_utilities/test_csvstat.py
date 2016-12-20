@@ -26,7 +26,6 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_no_header_row(self):
         output = self.get_output(['-H', '-c', '2', 'examples/no_header_row.csv'])
-        print(output)
         self.assertFalse('1. a' in output)
         self.assertTrue('2. b' in output)
 

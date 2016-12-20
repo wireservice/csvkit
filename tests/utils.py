@@ -34,8 +34,12 @@ class CSVKitTestCase(unittest.TestCase):
     def get_output(self, args):
         output_file = six.StringIO()
         utility = self.Utility(args, output_file)
-        utility.main()
-        return output_file.getvalue()
+        utility.run()
+
+        output = output_file.getvalue()
+        output_file.close()
+
+        return output
 
     def get_output_as_io(self, args):
         return six.StringIO(self.get_output(args))
@@ -66,7 +70,7 @@ class EmptyFileTests(object):
         with open('examples/empty.csv') as f:
             with stdin_as_string(f):
                 utility = self.Utility(getattr(self, 'default_args', []))
-                utility.main()
+                utility.run()
 
 
 class NamesTests(object):
@@ -82,7 +86,9 @@ class NamesTests(object):
         output_file = six.StringIO()
 
         utility = self.Utility(args, output_file)
-        self.assertRaises(RequiredHeaderError, utility.main)
+        self.assertRaises(RequiredHeaderError, utility.run)
+
+        output_file.close()
 
 
 class ColumnsTests(object):
@@ -91,4 +97,6 @@ class ColumnsTests(object):
         output_file = six.StringIO()
 
         utility = self.Utility(args, output_file)
-        self.assertRaises(ColumnIdentifierError, utility.main)
+        self.assertRaises(ColumnIdentifierError, utility.run)
+
+        output_file.close()

@@ -64,7 +64,7 @@ class CSVGrep(CSVKitUtility):
 
 def launch_new_instance():
     utility = CSVGrep()
-    utility.main()
+    utility.run()
 
 if __name__ == "__main__":
     launch_new_instance()
