@@ -356,7 +356,7 @@ def match_column_identifier(column_names, c, column_offset=1):
     column names which are also integers, you must specify them using a positional index.
     """
     if isinstance(c, six.string_types) and not c.isdigit() and c in column_names:
-        return column_names.index(c)
+        return c
     else:
         try:
             c = int(c) - column_offset
@@ -372,7 +372,7 @@ def match_column_identifier(column_names, c, column_offset=1):
         if c >= len(column_names):
             raise ColumnIdentifierError("Column %i is invalid. The last column is '%s' at index %i." % (c, column_names[-1], len(column_names) - 1))
 
-    return c
+    return column_names[c]
 
 
 def parse_column_identifiers(ids, column_names, column_offset=1, excluded_columns=None):
@@ -386,7 +386,7 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
         return []
 
     if not ids and not excluded_columns:
-        return range(len(column_names))
+        return list(column_names)
 
     if ids:
         columns = []
@@ -418,7 +418,7 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                 for x in range(a, b):
                     columns.append(match_column_identifier(column_names, x, column_offset))
     else:
-        columns = range(len(column_names))
+        columns = list(column_names)
 
     excludes = []
 

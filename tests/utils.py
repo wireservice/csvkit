@@ -23,9 +23,9 @@ def stderr_as_stdout():
 
 
 @contextmanager
-def stdin_as_string(str):
+def stdin_as_string(content):
     temp = sys.stdin
-    sys.stdin = str
+    sys.stdin = content
     yield
     sys.stdin = temp
 

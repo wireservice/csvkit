@@ -7,6 +7,11 @@ try:
 except ImportError:
     from unittest.mock import patch
 
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
+
 from csvkit.utilities.csvstat import CSVStat, launch_new_instance
 from tests.utils import CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests
 
@@ -26,6 +31,7 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_no_header_row(self):
         output = self.get_output(['-H', '-c', '2', 'examples/no_header_row.csv'])
+        print(output)
         self.assertFalse('1. a' in output)
         self.assertTrue('2. b' in output)
 

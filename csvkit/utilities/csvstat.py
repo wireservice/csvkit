@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import codecs
+from collections import OrderedDict
 import datetime
 import math
 from heapq import nlargest
@@ -9,14 +10,26 @@ from operator import itemgetter
 import agate
 import six
 
-from csvkit import table
-from csvkit.cli import CSVKitUtility
+from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
 NoneType = type(None)
 
 MAX_UNIQUE = 5
 MAX_FREQ = 5
-OPERATIONS = ('min', 'max', 'sum', 'mean', 'median', 'stdev', 'nulls', 'unique', 'freq', 'len')
+OPERATIONS = ()
+
+OPERATIONS = OrderedDict([
+    ('min', agate.Min),
+    ('max', agate.Max),
+    ('sum', agate.Sum),
+    ('mean', agate.Mean),
+    ('median', agate.Median),
+    ('stdev', agate.StDev),
+    ('nulls', agate.HasNulls),
+    ('unique', None),
+    ('freq', None),
+    ('len', agate.Count)
+])
 
 
 class CSVStat(CSVKitUtility):
@@ -58,7 +71,7 @@ class CSVStat(CSVKitUtility):
             self.print_column_names()
             return
 
-        operations = [op for op in OPERATIONS if getattr(self.args, op + '_only')]
+        operations = [op for op in OPERATIONS.keys() if getattr(self.args, op + '_only')]
 
         if len(operations) > 1:
             self.argparser.error('Only one statistic argument may be specified (mean, median, etc).')
@@ -79,180 +92,95 @@ class CSVStat(CSVKitUtility):
         if six.PY2:
             self.output_file = codecs.getwriter('utf-8')(self.output_file)
 
-        tab = table.Table.from_csv(
+        table = agate.Table.from_csv(
             self.input_file,
+            header=(not self.args.no_header_row),
             sniff_limit=self.args.sniff_limit,
-            column_ids=self.args.columns,
-            column_offset=self.get_column_offset(),
-            no_header_row=self.args.no_header_row,
             **self.reader_kwargs
         )
 
-        for c in tab:
-            values = sorted(filter(lambda i: i is not None, c))
+        columns = parse_column_identifiers(
+            self.args.columns,
+            table.column_names,
+            self.get_column_offset()
+        )
 
-            stats = {}
+        for i, (column_name, column) in enumerate(table.columns.items()):
+            if column_name not in columns:
+                continue
 
             # Output a single stat
             if len(operations) == 1:
-                op = operations[0]
-                stat = getattr(self, 'get_%s' % op)(c, values, {})
+                op_name = operations[0]
+
+                if op_name == 'unique':
+                    stat = len(column.values_distinct())
+                elif op_name == 'freq':
+                    stat = table.pivot(column_name).order_by('Count', reverse=True)
+                else:
+                    op = OPERATIONS[operations[0]]
+                    stat = table.aggregate(op(column_name))
 
                 # Formatting
-                if op == 'unique':
-                    stat = len(stat)
-                elif op == 'freq':
-                    stat = ', '.join([('"%s": %s' % (six.text_type(k), count)) for k, count in stat])
+                if op_name == 'freq':
+                    stat = ', '.join([('"%s": %s' % (six.text_type(row[column_name]), row['Count'])) for row in stat])
                     stat = '{ %s }' % stat
 
                 if len(tab) == 1:
                     self.output_file.write(six.text_type(stat))
                 else:
-                    self.output_file.write('%3i. %s: %s\n' % (c.order + 1, c.name, stat))
+                    self.output_file.write('%3i. %s: %s\n' % (i + 1, column_name, stat))
             # Output all stats
             else:
-                for op in OPERATIONS:
-                    stats[op] = getattr(self, 'get_%s' % op)(c, values, stats)
+                stats = {}
 
-                self.output_file.write(('%3i. %s\n' % (c.order + 1, c.name)))
+                for op_name, op in OPERATIONS.items():
+                    if op_name == 'unique':
+                        stats[op_name] = len(column.values_distinct())
+                        continue
+                    elif op_name == 'freq':
+                        stats[op_name] = table.pivot(column_name).order_by('Count', reverse=True)
+                        continue
 
-                if c.type is None:
-                    self.output_file.write('\tEmpty column\n')
-                    continue
+                    try:
+                        stats[op_name] = table.aggregate(op(column_name))
+                    except:
+                        stats[op_name] = None
 
-                self.output_file.write('\t%s\n' % c.type)
+                self.output_file.write(('%3i. %s\n' % (i + 1, column_name)))
+
+                self.output_file.write('\t%s\n' % column.data_type.__class__.__name__)
                 self.output_file.write('\tNulls: %s\n' % stats['nulls'])
 
-                if len(stats['unique']) <= MAX_UNIQUE and c.type is not bool:
-                    uniques = [six.text_type(u) for u in list(stats['unique'])]
+                if stats['unique'] <= MAX_UNIQUE and not isinstance(column.data_type, agate.Boolean):
+                    uniques = [six.text_type(u) for u in column.values_distinct()]
                     data = u'\tValues: %s\n' % ', '.join(uniques)
                     self.output_file.write(data)
                 else:
-                    if c.type not in [six.text_type, bool]:
+                    if isinstance(column.data_type, (agate.Number, agate.Date, agate.DateTime)):
                         self.output_file.write('\tMin: %s\n' % stats['min'])
                         self.output_file.write('\tMax: %s\n' % stats['max'])
 
-                        if c.type in [int, float]:
-                            self.output_file.write('\tSum: %s\n' % stats['sum'])
-                            self.output_file.write('\tMean: %s\n' % stats['mean'])
-                            self.output_file.write('\tMedian: %s\n' % stats['median'])
-                            self.output_file.write('\tStandard Deviation: %s\n' % stats['stdev'])
+                    if isinstance(column.data_type, agate.Number):
+                        self.output_file.write('\tSum: %s\n' % stats['sum'])
+                        self.output_file.write('\tMean: %s\n' % stats['mean'])
+                        self.output_file.write('\tMedian: %s\n' % stats['median'])
+                        self.output_file.write('\tStandard Deviation: %s\n' % stats['stdev'])
 
-                    self.output_file.write('\tUnique values: %i\n' % len(stats['unique']))
+                    self.output_file.write('\tUnique values: %i\n' % stats['unique'])
 
-                    if c.type == six.text_type:
-                        self.output_file.write('\tMax length: %i\n' % stats['len'])
+                if isinstance(column.data_type, agate.Text):
+                    self.output_file.write('\tMax length: %i\n' % stats['len'])
 
                 self.output_file.write('\t%i most frequent values:\n' % MAX_FREQ)
-                for value, count in stats['freq']:
-                    self.output_file.write(('\t\t%s:\t%s\n' % (six.text_type(value), count)))
+
+                for row in stats['freq']:
+                    self.output_file.write(('\t\t%s:\t%s\n' % (six.text_type(row[column_name]), row['Count'])))
 
         if not operations:
             self.output_file.write('\n')
-            self.output_file.write('Row count: %s\n' % tab.count_rows())
-
-    def get_min(self, c, values, stats):
-        if c.type == NoneType:
-            return None
-
-        v = min(values)
-
-        if v in [datetime.datetime, datetime.date, datetime.time]:
-            return v.isoformat()
-
-        return v
-
-    def get_max(self, c, values, stats):
-        if c.type == NoneType:
-            return None
-
-        v = max(values)
-
-        if v in [datetime.datetime, datetime.date, datetime.time]:
-            return v.isoformat()
-
-        return v
-
-    def get_sum(self, c, values, stats):
-        if c.type not in [int, float]:
-            return None
-
-        return sum(values)
-
-    def get_mean(self, c, values, stats):
-        if c.type not in [int, float]:
-            return None
-
-        if 'sum' not in stats:
-            stats['sum'] = self.get_sum(c, values, stats)
-
-        return float(stats['sum']) / len(values)
-
-    def get_median(self, c, values, stats):
-        if c.type not in [int, float]:
-            return None
-
-        return median(values)
-
-    def get_stdev(self, c, values, stats):
-        if c.type not in [int, float]:
-            return None
-
-        if 'mean' not in stats:
-            stats['mean'] = self.get_mean(c, values, stats)
-
-        return math.sqrt(sum(math.pow(v - stats['mean'], 2) for v in values) / len(values))
-
-    def get_nulls(self, c, values, stats):
-        return c.has_nulls()
-
-    def get_unique(self, c, values, stats):
-        return set(values)
-
-    def get_freq(self, c, values, stats):
-        return freq(values)
-
-    def get_len(self, c, values, stats):
-        if c.type != six.text_type:
-            return None
-
-        return c.max_length()
-
-
-def median(l):
-    """
-    Compute the median of a list.
-    """
-    length = len(l)
-
-    if length % 2 == 1:
-        return l[(length + 1) // 2 - 1]
-    else:
-        a = l[(length // 2) - 1]
-        b = l[length // 2]
-    return (float(a + b)) / 2
-
-
-def freq(l, n=MAX_FREQ):
-    """
-    Count the number of times each value occurs in a column.
-    """
-    count = {}
-
-    for x in l:
-        s = six.text_type(x)
-
-        if s in count:
-            count[s] += 1
-        else:
-            count[s] = 1
-
-    # This will iterate through dictionary, return N highest
-    # values as (key, value) tuples.
-    top = nlargest(n, six.iteritems(count), itemgetter(1))
-
-    return top
-
+            self.output_file.write('Row count: %s\n' % len(table.rows))
+            
 
 def launch_new_instance():
     utility = CSVStat()
