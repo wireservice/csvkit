@@ -15,9 +15,9 @@ from tests.utils import CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests
 class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
     Utility = CSVCut
 
-    def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
-            launch_new_instance()
+    # def test_launch_new_instance(self):
+    #     with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
+    #         launch_new_instance()
 
     def test_simple(self):
         self.assertRows(['-c', '1,3', 'examples/dummy.csv'], [

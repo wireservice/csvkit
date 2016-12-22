@@ -99,15 +99,15 @@ class CSVStat(CSVKitUtility):
             **self.reader_kwargs
         )
 
-        columns = parse_column_identifiers(
+        column_ids = parse_column_identifiers(
             self.args.columns,
             table.column_names,
             self.get_column_offset()
         )
 
-        for i, (column_name, column) in enumerate(table.columns.items()):
-            if column_name not in columns:
-                continue
+        for column_id in column_ids:
+            column_name = table.column_names[column_id]
+            column = table.columns[column_id]
 
             # Output a single stat
             if len(operations) == 1:
@@ -147,7 +147,7 @@ class CSVStat(CSVKitUtility):
                     except:
                         stats[op_name] = None
 
-                self.output_file.write(('%3i. %s\n' % (i + 1, column_name)))
+                self.output_file.write(('%3i. %s\n' % (column_id + 1, column_name)))
 
                 self.output_file.write('\t%s\n' % column.data_type.__class__.__name__)
                 self.output_file.write('\tNulls: %s\n' % stats['nulls'])
@@ -180,7 +180,7 @@ class CSVStat(CSVKitUtility):
         if not operations:
             self.output_file.write('\n')
             self.output_file.write('Row count: %s\n' % len(table.rows))
-            
+
 
 def launch_new_instance():
     utility = CSVStat()
