@@ -94,17 +94,29 @@ class CSVSQL(CSVKitUtility):
                     # Use filename as table name
                     table_name = os.path.splitext(os.path.split(f.name)[1])[0]
 
-            column_types = None
+            if self.args.blanks:
+                text_type = agate.Text(cast_nulls=False)
+            else:
+                text_type = agate.Text()
 
             if self.args.no_inference:
-                column_types = agate.TypeTester(types=[agate.Text()])
+                tester = agate.TypeTester(types=[text_type])
+            else:
+                tester = agate.TypeTester(types=[
+                    agate.Boolean(),
+                    agate.Number(),
+                    agate.TimeDelta(),
+                    agate.Date(),
+                    agate.DateTime(),
+                    text_type
+                ])
 
             table = None
 
             try:
                 table = agate.Table.from_csv(
                     f,
-                    column_types=column_types,
+                    column_types=tester,
                     sniff_limit=self.args.sniff_limit,
                     header=(not self.args.no_header_row),
                     **self.reader_kwargs
@@ -113,16 +125,6 @@ class CSVSQL(CSVKitUtility):
                 # Catch cases where no table data was provided and fall through
                 # to query logic
                 continue
-
-            # csv_table = table.Table.from_csv(
-            #     f,
-            #     name=table_name,
-            #     sniff_limit=self.args.sniff_limit,
-            #     blanks_as_nulls=(not self.args.blanks),
-            #     infer_types=(not self.args.no_inference),
-            #     no_header_row=self.args.no_header_row,
-            #     **self.reader_kwargs
-            # )
 
             if table:
                 if connection_string:

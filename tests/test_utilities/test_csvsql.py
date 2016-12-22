@@ -42,13 +42,13 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
 
         self.assertTrue('CREATE TABLE foo' in sql)
         self.assertTrue('text VARCHAR(17) NOT NULL' in sql)
-        self.assertTrue('date VARCHAR(10) NOT NULL' in sql)
-        self.assertTrue('integer VARCHAR(3) NOT NULL' in sql)
-        self.assertTrue('boolean VARCHAR(5) NOT NULL' in sql)
-        self.assertTrue('float VARCHAR(11) NOT NULL' in sql)
-        self.assertTrue('time VARCHAR(8) NOT NULL' in sql)
-        self.assertTrue('datetime VARCHAR(19) NOT NULL' in sql)
-        self.assertTrue('empty_column VARCHAR NOT NULL' in sql)
+        self.assertTrue('date VARCHAR(10)' in sql)
+        self.assertTrue('integer VARCHAR(3)' in sql)
+        self.assertTrue('boolean VARCHAR(5)' in sql)
+        self.assertTrue('float VARCHAR(11)' in sql)
+        self.assertTrue('time VARCHAR(8)' in sql)
+        self.assertTrue('datetime VARCHAR(19)' in sql)
+        self.assertTrue('empty_column VARCHAR' in sql)
 
     def test_no_header_row(self):
         sql = self.get_output(['--table', 'foo', '--no-header-row', 'examples/no_header_row.csv'])
