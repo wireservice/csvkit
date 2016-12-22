@@ -4,8 +4,8 @@ from argparse import FileType
 import sys
 
 import agate
+from sqlalchemy import create_engine
 
-from csvkit import sql
 from csvkit.cli import CSVKitUtility
 
 
@@ -37,9 +37,9 @@ class SQL2CSV(CSVKitUtility):
 
     def main(self):
         try:
-            engine, metadata = sql.get_connection(self.args.connection_string)
+            engine = create_engine(connection_string)
         except ImportError:
-            raise ImportError('You don\'t appear to have the necessary database backend installed for connection string you\'re trying to use.. Available backends include:\n\nPostgresql:\tpip install psycopg2\nMySQL:\t\tpip install MySQL-python\n\nFor details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at: \n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n')
+            raise ImportError('You don\'t appear to have the necessary database backend installed for connection string you\'re trying to use. Available backends include:\n\nPostgresql:\tpip install psycopg2\nMySQL:\t\tpip install MySQL-python\n\nFor details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at: \n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n')
 
         connection = engine.connect()
 

@@ -3,9 +3,6 @@
 import codecs
 from collections import OrderedDict
 import datetime
-import math
-from heapq import nlargest
-from operator import itemgetter
 
 import agate
 import six
@@ -16,7 +13,6 @@ NoneType = type(None)
 
 MAX_UNIQUE = 5
 MAX_FREQ = 5
-OPERATIONS = ()
 
 OPERATIONS = OrderedDict([
     ('min', agate.Min),

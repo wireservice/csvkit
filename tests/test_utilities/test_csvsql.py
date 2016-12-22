@@ -23,8 +23,10 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
     def test_create_table(self):
         sql = self.get_output(['--table', 'foo', 'examples/testfixed_converted.csv'])
 
+        print(sql)
+
         self.assertTrue('CREATE TABLE foo' in sql)
-        self.assertTrue('text VARCHAR NOT NULL' in sql)
+        self.assertTrue('text VARCHAR(17) NOT NULL' in sql)
         self.assertTrue('date DATE' in sql)
         self.assertTrue('integer DECIMAL' in sql)
         self.assertTrue('boolean BOOLEAN' in sql)
@@ -39,13 +41,14 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         print(sql)
 
         self.assertTrue('CREATE TABLE foo' in sql)
-        self.assertTrue('text VARCHAR NOT NULL' in sql)
-        self.assertTrue('date VARCHAR NOT NULL' in sql)
-        self.assertTrue('integer VARCHAR NOT NULL' in sql)
-        self.assertTrue('boolean VARCHAR NOT NULL' in sql)
-        self.assertTrue('float VARCHAR NOT NULL' in sql)
-        self.assertTrue('time VARCHAR NOT NULL' in sql)
-        self.assertTrue('datetime VARCHAR NOT NULL' in sql)
+        self.assertTrue('text VARCHAR(17) NOT NULL' in sql)
+        self.assertTrue('date VARCHAR(10) NOT NULL' in sql)
+        self.assertTrue('integer VARCHAR(3) NOT NULL' in sql)
+        self.assertTrue('boolean VARCHAR(5) NOT NULL' in sql)
+        self.assertTrue('float VARCHAR(11) NOT NULL' in sql)
+        self.assertTrue('time VARCHAR(8) NOT NULL' in sql)
+        self.assertTrue('datetime VARCHAR(19) NOT NULL' in sql)
+        self.assertTrue('empty_column VARCHAR NOT NULL' in sql)
 
     def test_no_header_row(self):
         sql = self.get_output(['--table', 'foo', '--no-header-row', 'examples/no_header_row.csv'])
