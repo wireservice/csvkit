@@ -10,6 +10,9 @@ If you have built data workflows on top of csvkit you should not upgrade without
 
 Backwards-incompatible changes:
 
+* csvsql now generates DateTime columns instead of Time columns.
+* csvsql now generates Decimal columns instead of Integer, BigInteger, and Floatft columns.
+* csvsql no longer generates max-length constraints for text columns.
 * The --doublequote long flag is gone, and the -b short flag is now an alias for --no-doublequote.
 * When using the --columns or --not-columns options, you must not have spaces around the comma-separated values, unless the column names contain spaces.
 * When sorting, null values are now greater than other values instead of less than.

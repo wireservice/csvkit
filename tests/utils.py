@@ -32,10 +32,11 @@ def stdin_as_string(content):
 
 class CSVKitTestCase(unittest.TestCase):
     def get_output(self, args):
-        output_file = six.StringIO()
-        utility = self.Utility(args, output_file)
-        utility.run()
-        return output_file.getvalue()
+        with six.StringIO() as output_file:
+            utility = self.Utility(args, output_file)
+            utility.run()
+
+            return output_file.getvalue()
 
     def get_output_as_io(self, args):
         return six.StringIO(self.get_output(args))
@@ -48,16 +49,21 @@ class CSVKitTestCase(unittest.TestCase):
 
     def assertRows(self, args, rows):
         reader = self.get_output_as_reader(args)
+
         for row in rows:
             self.assertEqual(next(reader), row)
+
         self.assertRaises(StopIteration, next, reader)
 
     def assertLines(self, args, rows, newline_at_eof=True):
         lines = self.get_output_as_list(args)
+
         if newline_at_eof:
             rows.append('')
+
         for i, row in enumerate(rows):
             self.assertEqual(lines[i], row)
+
         self.assertEqual(len(lines), len(rows))
 
 
@@ -79,22 +85,20 @@ class NamesTests(object):
 
     def test_invalid_options(self):
         args = ['-n', '--no-header-row', 'examples/dummy.csv']
-        output_file = six.StringIO()
 
-        utility = self.Utility(args, output_file)
+        with six.StringIO() as output_file:
+            utility = self.Utility(args, output_file)
 
-        with self.assertRaises(RequiredHeaderError):
-            utility.run()
+            with self.assertRaises(RequiredHeaderError):
+                utility.run()
 
 
 class ColumnsTests(object):
     def test_invalid_column(self):
         args = getattr(self, 'columns_args', []) + ['-c', '0', 'examples/dummy.csv']
-        output_file = six.StringIO()
 
-        utility = self.Utility(args, output_file)
+        with six.StringIO() as output_file:
+            utility = self.Utility(args, output_file)
 
-        with self.assertRaises(ColumnIdentifierError):
-            utility.run()
-
-        output_file.close()
+            with self.assertRaises(ColumnIdentifierError):
+                utility.run()

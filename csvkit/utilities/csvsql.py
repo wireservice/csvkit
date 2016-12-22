@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 
 import os
+from pkg_resources import iter_entry_points
 import sys
 
 import agate
+import agatesql
+from sqlalchemy import create_engine, dialects
 
-from csvkit import sql
-from csvkit import table
 from csvkit.cli import CSVKitUtility
+
+DIALECTS = dialects.__all__ + tuple(e.name for e in iter_entry_points('sqlalchemy.dialects'))
 
 
 class CSVSQL(CSVKitUtility):
@@ -18,7 +21,7 @@ class CSVSQL(CSVKitUtility):
 
         self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
                                     help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
-        self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=sql.DIALECTS,
+        self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=DIALECTS,
                                     help='Dialect of SQL to generate. Only valid when --db is not specified.')
         self.argparser.add_argument('--db', dest='connection_string',
                                     help='If present, a sqlalchemy connection string to use to directly execute generated SQL on a database.')
@@ -73,9 +76,10 @@ class CSVSQL(CSVKitUtility):
         # Establish database validity before reading CSV files
         if connection_string:
             try:
-                engine, metadata = sql.get_connection(connection_string)
+                engine = create_engine(connection_string)
             except ImportError:
                 raise ImportError('You don\'t appear to have the necessary database backend installed for connection string you\'re trying to use. Available backends include:\n\nPostgresql:\tpip install psycopg2\nMySQL:\t\tpip install MySQL-python\n\nFor details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at: \n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n')
+
             connection = engine.connect()
             transaction = connection.begin()
 
@@ -90,42 +94,54 @@ class CSVSQL(CSVKitUtility):
                     # Use filename as table name
                     table_name = os.path.splitext(os.path.split(f.name)[1])[0]
 
-            csv_table = table.Table.from_csv(
-                f,
-                name=table_name,
-                sniff_limit=self.args.sniff_limit,
-                blanks_as_nulls=(not self.args.blanks),
-                infer_types=(not self.args.no_inference),
-                no_header_row=self.args.no_header_row,
-                **self.reader_kwargs
-            )
+            column_types = None
 
-            f.close()
+            if self.args.no_inference:
+                column_types = agate.TypeTester(types=[agate.Text()])
 
-            if csv_table:
+            table = None
+
+            try:
+                table = agate.Table.from_csv(
+                    f,
+                    column_types=column_types,
+                    sniff_limit=self.args.sniff_limit,
+                    header=(not self.args.no_header_row),
+                    **self.reader_kwargs
+                )
+            except StopIteration:
+                # Catch cases where no table data was provided and fall through
+                # to query logic
+                continue
+
+            # csv_table = table.Table.from_csv(
+            #     f,
+            #     name=table_name,
+            #     sniff_limit=self.args.sniff_limit,
+            #     blanks_as_nulls=(not self.args.blanks),
+            #     infer_types=(not self.args.no_inference),
+            #     no_header_row=self.args.no_header_row,
+            #     **self.reader_kwargs
+            # )
+
+            if table:
                 if connection_string:
-                    sql_table = sql.make_table(
-                        csv_table,
+                    table.to_sql(
+                        connection,
                         table_name,
-                        self.args.no_constraints,
-                        self.args.db_schema,
-                        metadata
+                        create=(not self.args.no_create),
+                        insert=(do_insert and len(table.rows) > 0),
+                        constraints=()
                     )
-
-                    # Create table
-                    if not self.args.no_create:
-                        sql_table.create()
-
-                    # Insert data
-                    if do_insert and csv_table.count_rows() > 0:
-                        insert = sql_table.insert()
-                        headers = csv_table.headers()
-                        connection.execute(insert, [dict(zip(headers, row)) for row in csv_table.to_rows()])
 
                 # Output SQL statements
                 else:
-                    sql_table = sql.make_table(csv_table, table_name, self.args.no_constraints)
-                    self.output_file.write('%s\n' % sql.make_create_table_statement(sql_table, dialect=self.args.dialect))
+                    statement = table.to_sql_create_statement(
+                        table_name,
+                        dialect=self.args.dialect
+                    )
+
+                    self.output_file.write('%s\n' % statement)
 
         if connection_string:
             if query:
