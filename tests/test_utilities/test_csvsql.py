@@ -23,8 +23,6 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
     def test_create_table(self):
         sql = self.get_output(['--table', 'foo', 'examples/testfixed_converted.csv'])
 
-        print(sql)
-
         self.assertTrue('CREATE TABLE foo' in sql)
         self.assertTrue('text VARCHAR(17) NOT NULL' in sql)
         self.assertTrue('date DATE' in sql)
@@ -36,9 +34,6 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
 
     def test_no_inference(self):
         sql = self.get_output(['--table', 'foo', '--no-inference', 'examples/testfixed_converted.csv'])
-
-        # BROKEN HERE BECAUSE OF LACK OF "--blanks-as-nulls" support
-        print(sql)
 
         self.assertTrue('CREATE TABLE foo' in sql)
         self.assertTrue('text VARCHAR(17) NOT NULL' in sql)

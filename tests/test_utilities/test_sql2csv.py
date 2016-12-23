@@ -51,7 +51,9 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
         utility.run()
 
         with open(csv_file, 'r') as f:
-            return f.read().strip()
+            text = f.read()
+
+        return text.strip()
 
     def test_query(self):
         csv = self.get_output(['--query', 'select 6*9 as question'])

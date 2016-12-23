@@ -45,48 +45,61 @@ class CSVSQL(CSVKitUtility):
                                     help='Disable type inference when parsing the input.')
 
     def main(self):
-        connection_string = self.args.connection_string
-        do_insert = self.args.insert
-        query = self.args.query
-
         self.input_files = []
+        self.connection = None
+        self.table_names = []
 
+        if self.args.table_names:
+            self.table_names = self.args.table_names.split(',')
+
+        # Create an SQLite database in memory if no connection string is specified
+        if self.args.query and not self.args.connection_string:
+            self.args.connection_string = "sqlite:///:memory:"
+            self.args.insert = True
+
+        if self.args.dialect and self.args.connection_string:
+            self.argparser.error('The --dialect option is only valid when neither --db nor --query are specified.')
+
+        if self.args.insert and not self.args.connection_string:
+            self.argparser.error('The --insert option is only valid when either --db or --query is specified.')
+
+        if self.args.no_create and not self.args.insert:
+            self.argparser.error('The --no-create option is only valid --insert is also specified.')
+
+        # Lazy open files
         for path in self.args.input_paths:
             self.input_files.append(self._open_input_file(path))
 
-        if self.args.table_names:
-            table_names = self.args.table_names.split(',')
-        else:
-            table_names = []
-
-        # Create an SQLite database in memory if no connection string is specified
-        if query and not connection_string:
-            connection_string = "sqlite:///:memory:"
-            do_insert = True
-
-        if self.args.dialect and connection_string:
-            self.argparser.error('The --dialect option is only valid when neither --db nor --query are specified.')
-
-        if do_insert and not connection_string:
-            self.argparser.error('The --insert option is only valid when either --db or --query is specified.')
-
-        if self.args.no_create and not do_insert:
-            self.argparser.error('The --no-create option is only valid --insert is also specified.')
-
         # Establish database validity before reading CSV files
-        if connection_string:
+        if self.args.connection_string:
             try:
-                engine = create_engine(connection_string)
+                engine = create_engine(self.args.connection_string)
             except ImportError:
                 raise ImportError('You don\'t appear to have the necessary database backend installed for connection string you\'re trying to use. Available backends include:\n\nPostgresql:\tpip install psycopg2\nMySQL:\t\tpip install MySQL-python\n\nFor details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at: \n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n')
 
-            connection = engine.connect()
-            transaction = connection.begin()
+            self.connection = engine.connect()
+
+        try:
+            self._failsafe_main()
+        finally:
+            for f in self.input_files:
+                f.close()
+
+            if self.connection:
+                self.connection.close()
+
+    def _failsafe_main(self):
+        """
+        Inner main function. If anything fails in here, file handles and
+        database connections will be safely closed.
+        """
+        if self.connection:
+            transaction = self.connection.begin()
 
         for f in self.input_files:
             try:
                 # Try to use name specified via --table
-                table_name = table_names.pop(0)
+                table_name = self.table_names.pop(0)
             except IndexError:
                 if f == sys.stdin:
                     table_name = "stdin"
@@ -127,12 +140,12 @@ class CSVSQL(CSVKitUtility):
                 continue
 
             if table:
-                if connection_string:
+                if self.connection:
                     table.to_sql(
-                        connection,
+                        self.connection,
                         table_name,
                         create=(not self.args.no_create),
-                        insert=(do_insert and len(table.rows) > 0),
+                        insert=(self.args.insert and len(table.rows) > 0),
                         constraints=()
                     )
 
@@ -145,15 +158,15 @@ class CSVSQL(CSVKitUtility):
 
                     self.output_file.write('%s\n' % statement)
 
-        if connection_string:
-            if query:
+        if self.connection:
+            if self.args.query:
                 # Execute the specified SQL queries
-                queries = query.split(';')
+                queries = self.args.query.split(';')
                 rows = None
 
                 for q in queries:
                     if q:
-                        rows = connection.execute(q)
+                        rows = self.connection.execute(q)
 
                 # Output the result of the last query as CSV
                 try:
@@ -165,7 +178,6 @@ class CSVSQL(CSVKitUtility):
                     pass
 
             transaction.commit()
-            connection.close()
 
 
 def launch_new_instance():
