@@ -32,11 +32,14 @@ def stdin_as_string(content):
 
 class CSVKitTestCase(unittest.TestCase):
     def get_output(self, args):
-        with six.StringIO() as output_file:
-            utility = self.Utility(args, output_file)
-            utility.run()
+        output_file = six.StringIO()
+        utility = self.Utility(args, output_file)
+        utility.run()
 
-            return output_file.getvalue()
+        output = output_file.getvalue()
+        output_file.close()
+
+        return output
 
     def get_output_as_io(self, args):
         return six.StringIO(self.get_output(args))
@@ -86,19 +89,23 @@ class NamesTests(object):
     def test_invalid_options(self):
         args = ['-n', '--no-header-row', 'examples/dummy.csv']
 
-        with six.StringIO() as output_file:
-            utility = self.Utility(args, output_file)
+        output_file = six.StringIO()
+        utility = self.Utility(args, output_file)
 
-            with self.assertRaises(RequiredHeaderError):
-                utility.run()
+        with self.assertRaises(RequiredHeaderError):
+            utility.run()
+
+        output_file.close()
 
 
 class ColumnsTests(object):
     def test_invalid_column(self):
         args = getattr(self, 'columns_args', []) + ['-c', '0', 'examples/dummy.csv']
 
-        with six.StringIO() as output_file:
-            utility = self.Utility(args, output_file)
+        output_file = six.StringIO()
+        utility = self.Utility(args, output_file)
 
-            with self.assertRaises(ColumnIdentifierError):
-                utility.run()
+        with self.assertRaises(ColumnIdentifierError):
+            utility.run()
+
+        output_file.close()

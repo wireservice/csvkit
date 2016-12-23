@@ -54,42 +54,55 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         self.assertTrue('c DECIMAL NOT NULL' in sql)
 
     def test_stdin(self):
-        with six.StringIO('a,b,c\n4,2,3\n') as input_file:
-            with stdin_as_string(input_file):
-                sql = self.get_output(['--table', 'foo'])
+        input_file = six.StringIO('a,b,c\n4,2,3\n')
 
-                self.assertTrue('CREATE TABLE foo' in sql)
-                self.assertTrue('a DECIMAL NOT NULL' in sql)
-                self.assertTrue('b DECIMAL NOT NULL' in sql)
-                self.assertTrue('c DECIMAL NOT NULL' in sql)
+        with stdin_as_string(input_file):
+            sql = self.get_output(['--table', 'foo'])
+
+            self.assertTrue('CREATE TABLE foo' in sql)
+            self.assertTrue('a DECIMAL NOT NULL' in sql)
+            self.assertTrue('b DECIMAL NOT NULL' in sql)
+            self.assertTrue('c DECIMAL NOT NULL' in sql)
+
+        input_file.close()
 
     def test_stdin_and_filename(self):
-        with six.StringIO("a,b,c\n1,2,3\n") as input_file:
-            with stdin_as_string(input_file):
-                sql = self.get_output(['-', 'examples/dummy.csv'])
+        input_file = six.StringIO("a,b,c\n1,2,3\n")
 
-                self.assertTrue('CREATE TABLE stdin' in sql)
-                self.assertTrue('CREATE TABLE dummy' in sql)
+        with stdin_as_string(input_file):
+            sql = self.get_output(['-', 'examples/dummy.csv'])
+
+            self.assertTrue('CREATE TABLE stdin' in sql)
+            self.assertTrue('CREATE TABLE dummy' in sql)
+
+        input_file.close()
 
     def test_empty_with_query(self):
-        with six.StringIO() as input_file:
-            with stdin_as_string(input_file):
-                with six.StringIO() as output_file:
-                    utility = CSVSQL(['--query', 'select 1'], output_file)
-                    utility.main()
+        input_file = six.StringIO()
+
+        with stdin_as_string(input_file):
+            output_file = six.StringIO()
+            utility = CSVSQL(['--query', 'select 1'], output_file)
+            utility.main()
+
+        input_file.close()
+        output_file.close()
 
     def test_query(self):
-        with six.StringIO("a,b,c\n1,2,3\n") as input_file:
-            with stdin_as_string(input_file):
-                sql = self.get_output(['--query', 'select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species', 'examples/iris.csv', 'examples/irismeta.csv'])
+        input_file = six.StringIO("a,b,c\n1,2,3\n")
 
-                if six.PY2:
-                    self.assertTrue('usda_id,mean_sepal_length' in sql)
-                    self.assertTrue('IRSE,5.006' in sql)
-                    self.assertTrue('IRVE2,5.936' in sql)
-                    self.assertTrue('IRVI,6.588' in sql)
-                else:
-                    self.assertTrue('usda_id,mean_sepal_length' in sql)
-                    self.assertTrue('IRSE,5.005' in sql)
-                    self.assertTrue('IRVE2,5.936' in sql)
-                    self.assertTrue('IRVI,6.587' in sql)
+        with stdin_as_string(input_file):
+            sql = self.get_output(['--query', 'select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species', 'examples/iris.csv', 'examples/irismeta.csv'])
+
+            if six.PY2:
+                self.assertTrue('usda_id,mean_sepal_length' in sql)
+                self.assertTrue('IRSE,5.006' in sql)
+                self.assertTrue('IRVE2,5.936' in sql)
+                self.assertTrue('IRVI,6.588' in sql)
+            else:
+                self.assertTrue('usda_id,mean_sepal_length' in sql)
+                self.assertTrue('IRSE,5.005' in sql)
+                self.assertTrue('IRVE2,5.936' in sql)
+                self.assertTrue('IRVI,6.587' in sql)
+
+        input_file.close()

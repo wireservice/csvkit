@@ -41,6 +41,8 @@ def fixed2csv(f, schema, output=None, **kwargs):
 
     if not streaming:
         data = output.getvalue()
+        output.close()
+
         return data
 
     # Return empty string when streaming
