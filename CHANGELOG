@@ -21,6 +21,7 @@ Backwards-incompatible changes:
 
 Improvements:
 
+* csvkit is now tested against Python 3.6. (#702)
 * "import csvkit as csv" will now defer to agate readers/writers.
 * csvgrep supports --no-header-row.
 * csvjoin supports --no-header-row.

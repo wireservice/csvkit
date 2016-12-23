@@ -7,6 +7,7 @@ install_requires = [
     'agate>=1.5.0',
     'agate-excel>=0.2.0',
     'agate-dbf>=0.2.0',
+    'agate-sql>=0.5.0',
     'python-dateutil==2.2',
     'six>=1.6.1',
     'sqlalchemy>=0.6.6',
