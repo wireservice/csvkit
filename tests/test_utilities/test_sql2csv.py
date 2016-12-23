@@ -27,9 +27,7 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), '--query', 'select 1']):
-            print(1)
             launch_new_instance()
-            print(2)
 
     def setUp(self):
         self.db_file = 'foo.db'

@@ -73,7 +73,7 @@ class CSVKitUtility(object):
         self.reader_kwargs = self._extract_csv_reader_kwargs()
         self.writer_kwargs = self._extract_csv_writer_kwargs()
 
-        self._install_exception_handler()
+        # self._install_exception_handler()
 
         # Ensure SIGPIPE doesn't throw an exception
         # Prevents [Errno 32] Broken pipe errors, e.g. when piping to 'head'
@@ -119,9 +119,6 @@ class CSVKitUtility(object):
         finally:
             if 'f' not in self.override_flags:
                 self.input_file.close()
-
-            if self.output_file_handle is None:
-                self.output_file.close()
 
     def main(self):
         """
