@@ -80,7 +80,15 @@ class CSVJSON(CSVKitUtility):
 
         # GeoJSON
         if self.args.lat and self.args.lon:
-            table = agate.Table.from_csv(self.input_file, sniff_limit=self.args.sniff_limit, column_types=self.get_column_types(), **self.reader_kwargs)
+            if 'encoding' not in self.reader_kwargs:
+                self.reader_kwargs['encoding'] = self.args.encoding
+
+            table = agate.Table.from_csv(
+                self.input_file,
+                sniff_limit=self.args.sniff_limit,
+                column_types=self.get_column_types(),
+                **self.reader_kwargs
+            )
 
             features = []
             min_lon = None

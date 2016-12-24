@@ -112,26 +112,17 @@ class CSVSQL(CSVKitUtility):
             else:
                 text_type = agate.Text()
 
-            if self.args.no_inference:
-                tester = agate.TypeTester(types=[text_type])
-            else:
-                tester = agate.TypeTester(types=[
-                    agate.Boolean(),
-                    agate.Number(),
-                    agate.TimeDelta(),
-                    agate.Date(),
-                    agate.DateTime(),
-                    text_type
-                ])
+            if 'encoding' not in self.reader_kwargs:
+                self.reader_kwargs['encoding'] = self.args.encoding
 
             table = None
 
             try:
                 table = agate.Table.from_csv(
                     f,
-                    column_types=tester,
                     sniff_limit=self.args.sniff_limit,
-                    header=(not self.args.no_header_row),
+                    header=not self.args.no_header_row,
+                    column_types=self.get_column_types(),
                     **self.reader_kwargs
                 )
             except StopIteration:
