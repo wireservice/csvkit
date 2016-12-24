@@ -216,19 +216,22 @@ class CSVKitUtility(object):
 
         return f
 
-    def file_or_path(self):
+    def file_or_path(self, file=None, path=None):
         """
         Returns the input path unless the input is stdin or an archive file.
         """
-        path = self.args.input_path
+        if not file:
+            file = self.input_file
+        if not path:
+            path = self.args.input_path
 
         if not path or path == '-':
-            return self.input_file
+            return file
         else:
             (_, extension) = os.path.splitext(path)
 
             if extension in ('.gz', '.bz2'):
-                return self.input_file
+                return file
             else:
                 return path
 
