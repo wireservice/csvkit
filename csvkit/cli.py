@@ -73,7 +73,7 @@ class CSVKitUtility(object):
         self.reader_kwargs = self._extract_csv_reader_kwargs()
         self.writer_kwargs = self._extract_csv_writer_kwargs()
 
-        # self._install_exception_handler()
+        self._install_exception_handler()
 
         # Ensure SIGPIPE doesn't throw an exception
         # Prevents [Errno 32] Broken pipe errors, e.g. when piping to 'head'
