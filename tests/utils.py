@@ -33,6 +33,7 @@ def stdin_as_string(content):
 class CSVKitTestCase(unittest.TestCase):
     def get_output(self, args):
         output_file = six.StringIO()
+
         utility = self.Utility(args, output_file)
         utility.run()
 
@@ -95,8 +96,6 @@ class NamesTests(object):
         with self.assertRaises(RequiredHeaderError):
             utility.run()
 
-        output_file.close()
-
 
 class ColumnsTests(object):
     def test_invalid_column(self):
@@ -107,5 +106,3 @@ class ColumnsTests(object):
 
         with self.assertRaises(ColumnIdentifierError):
             utility.run()
-
-        output_file.close()
