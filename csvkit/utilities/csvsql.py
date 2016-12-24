@@ -5,7 +5,7 @@ from pkg_resources import iter_entry_points
 import sys
 
 import agate
-import agatesql
+import agatesql  # noqa
 from sqlalchemy import create_engine, dialects
 
 from csvkit.cli import CSVKitUtility
@@ -184,5 +184,6 @@ def launch_new_instance():
     utility = CSVSQL()
     utility.run()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     launch_new_instance()

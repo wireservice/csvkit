@@ -39,7 +39,6 @@ class CSVCut(CSVKitUtility):
 
         for row in rows:
             out_row = [row[column_id] if column_id < len(row) else None for column_id in column_ids]
-
             if not self.args.delete_empty or ''.join(out_row):
                 output.writerow(out_row)
 
@@ -48,5 +47,6 @@ def launch_new_instance():
     utility = CSVCut()
     utility.run()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     launch_new_instance()

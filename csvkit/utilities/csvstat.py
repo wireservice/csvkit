@@ -2,7 +2,6 @@
 
 import codecs
 from collections import OrderedDict
-import datetime
 
 import agate
 import six
@@ -182,5 +181,6 @@ def launch_new_instance():
     utility = CSVStat()
     utility.run()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     launch_new_instance()
