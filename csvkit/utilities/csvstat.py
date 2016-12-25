@@ -89,8 +89,8 @@ class CSVStat(CSVKitUtility):
 
         table = agate.Table.from_csv(
             self.input_file,
-            header=(not self.args.no_header_row),
             sniff_limit=self.args.sniff_limit,
+            header=not self.args.no_header_row,
             **self.reader_kwargs
         )
 
