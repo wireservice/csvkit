@@ -42,7 +42,6 @@ def fixed2csv(f, schema, output=None, **kwargs):
     if not streaming:
         data = output.getvalue()
         output.close()
-
         return data
 
     # Return empty string when streaming
@@ -80,6 +79,7 @@ class FixedWidthReader(six.Iterator):
             return self.parser.headers
 
         return self.parser.parse(next(self.file))
+
 
 FixedWidthField = namedtuple('FixedWidthField', ['name', 'start', 'length'])
 

@@ -2,7 +2,6 @@
 
 import codecs
 from collections import OrderedDict
-import datetime
 
 import agate
 import six
@@ -88,10 +87,13 @@ class CSVStat(CSVKitUtility):
         if six.PY2:
             self.output_file = codecs.getwriter('utf-8')(self.output_file)
 
+        if 'encoding' not in self.reader_kwargs:
+            self.reader_kwargs['encoding'] = self.args.encoding
+
         table = agate.Table.from_csv(
-            self.input_file,
-            header=(not self.args.no_header_row),
+            self.file_or_path(),
             sniff_limit=self.args.sniff_limit,
+            header=not self.args.no_header_row,
             **self.reader_kwargs
         )
 
@@ -182,5 +184,6 @@ def launch_new_instance():
     utility = CSVStat()
     utility.run()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     launch_new_instance()

@@ -11,7 +11,7 @@ except ImportError:
     from unittest.mock import patch
 
 try:
-    import psycopg2
+    import psycopg2  # noqa
     postgresql_scheme = 'postgresql'
 except ImportError:
     # @see http://docs.sqlalchemy.org/en/latest/dialects/postgresql.html#module-sqlalchemy.dialects.postgresql.psycopg2cffi

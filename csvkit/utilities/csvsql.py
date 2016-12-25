@@ -5,7 +5,7 @@ from pkg_resources import iter_entry_points
 import sys
 
 import agate
-import agatesql
+import agatesql  # noqa
 from sqlalchemy import create_engine, dialects
 
 from csvkit.cli import CSVKitUtility
@@ -66,10 +66,6 @@ class CSVSQL(CSVKitUtility):
         if self.args.no_create and not self.args.insert:
             self.argparser.error('The --no-create option is only valid --insert is also specified.')
 
-        # Lazy open files
-        for path in self.args.input_paths:
-            self.input_files.append(self._open_input_file(path))
-
         # Establish database validity before reading CSV files
         if self.args.connection_string:
             try:
@@ -82,9 +78,6 @@ class CSVSQL(CSVKitUtility):
         try:
             self._failsafe_main()
         finally:
-            for f in self.input_files:
-                f.close()
-
             if self.connection:
                 self.connection.close()
 
@@ -96,42 +89,33 @@ class CSVSQL(CSVKitUtility):
         if self.connection:
             transaction = self.connection.begin()
 
-        for f in self.input_files:
+        for path in self.args.input_paths:
             try:
                 # Try to use name specified via --table
                 table_name = self.table_names.pop(0)
             except IndexError:
-                if f == sys.stdin:
-                    table_name = "stdin"
+                if not path or path == '-':
+                    table_name = 'stdin'
                 else:
                     # Use filename as table name
-                    table_name = os.path.splitext(os.path.split(f.name)[1])[0]
+                    table_name = os.path.splitext(os.path.split(path)[1])[0]
 
             if self.args.blanks:
                 text_type = agate.Text(cast_nulls=False)
             else:
                 text_type = agate.Text()
 
-            if self.args.no_inference:
-                tester = agate.TypeTester(types=[text_type])
-            else:
-                tester = agate.TypeTester(types=[
-                    agate.Boolean(),
-                    agate.Number(),
-                    agate.TimeDelta(),
-                    agate.Date(),
-                    agate.DateTime(),
-                    text_type
-                ])
+            if 'encoding' not in self.reader_kwargs:
+                self.reader_kwargs['encoding'] = self.args.encoding
 
             table = None
 
             try:
                 table = agate.Table.from_csv(
-                    f,
-                    column_types=tester,
+                    self.file_or_path(file=self._open_input_file(path), path=path),
                     sniff_limit=self.args.sniff_limit,
-                    header=(not self.args.no_header_row),
+                    header=not self.args.no_header_row,
+                    column_types=self.get_column_types(),
                     **self.reader_kwargs
                 )
             except StopIteration:
@@ -184,5 +168,6 @@ def launch_new_instance():
     utility = CSVSQL()
     utility.run()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     launch_new_instance()
