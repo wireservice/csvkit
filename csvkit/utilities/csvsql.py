@@ -107,31 +107,14 @@ class CSVSQL(CSVKitUtility):
                     # Use filename as table name
                     table_name = os.path.splitext(os.path.split(f.name)[1])[0]
 
-            if self.args.blanks:
-                text_type = agate.Text(cast_nulls=False)
-            else:
-                text_type = agate.Text()
-
-            if self.args.no_inference:
-                tester = agate.TypeTester(types=[text_type])
-            else:
-                tester = agate.TypeTester(types=[
-                    agate.Boolean(),
-                    agate.Number(),
-                    agate.TimeDelta(),
-                    agate.Date(),
-                    agate.DateTime(),
-                    text_type
-                ])
-
             table = None
 
             try:
                 table = agate.Table.from_csv(
                     f,
-                    column_types=tester,
                     sniff_limit=self.args.sniff_limit,
-                    header=(not self.args.no_header_row),
+                    header=not self.args.no_header_row,
+                    column_types=self.get_column_types(),
                     **self.reader_kwargs
                 )
             except StopIteration:
