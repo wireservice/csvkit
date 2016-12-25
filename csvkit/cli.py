@@ -216,22 +216,6 @@ class CSVKitUtility(object):
 
         return f
 
-    def file_or_path(self):
-        """
-        Returns the input path unless the input is stdin or an archive file.
-        """
-        path = self.args.input_path
-
-        if not path or path == '-':
-            return self.input_file
-        else:
-            (_, extension) = os.path.splitext(path)
-
-            if extension in ('.gz', '.bz2'):
-                return self.input_file
-            else:
-                return path
-
     def _extract_csv_reader_kwargs(self):
         """
         Extracts those from the command-line arguments those would should be passed through to the input CSV reader(s).
