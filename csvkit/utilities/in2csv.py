@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import agate
-import agatedbf
-import agateexcel
+import agatedbf  # noqa
+import agateexcel  # noqa
 
 from csvkit import convert
 from csvkit.convert.fixed import fixed2csv
@@ -111,9 +111,11 @@ class In2CSV(CSVKitUtility):
         if self.args.schema:
             schema.close()
 
+
 def launch_new_instance():
     utility = In2CSV()
     utility.run()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     launch_new_instance()

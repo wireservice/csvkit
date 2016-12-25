@@ -48,7 +48,9 @@ class CSVGrep(CSVKitUtility):
             pattern = re.compile(self.args.regex)
         elif self.args.matchfile:
             lines = set(line.rstrip() for line in self.args.matchfile)
-            pattern = lambda x: x in lines
+
+            def pattern(x):
+                return x in lines
         else:
             pattern = self.args.pattern
 
@@ -66,5 +68,6 @@ def launch_new_instance():
     utility = CSVGrep()
     utility.run()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     launch_new_instance()

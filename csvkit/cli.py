@@ -216,22 +216,6 @@ class CSVKitUtility(object):
 
         return f
 
-    def file_or_path(self):
-        """
-        Returns the input path unless the input is stdin or an archive file.
-        """
-        path = self.args.input_path
-
-        if not path or path == '-':
-            return self.input_file
-        else:
-            (_, extension) = os.path.splitext(path)
-
-            if extension in ('.gz', '.bz2'):
-                return self.input_file
-            else:
-                return path
-
     def _extract_csv_reader_kwargs(self):
         """
         Extracts those from the command-line arguments those would should be passed through to the input CSV reader(s).
@@ -285,10 +269,22 @@ class CSVKitUtility(object):
         sys.excepthook = handler
 
     def get_column_types(self):
-        if self.args.no_inference:
-            return agate.TypeTester(limit=0)
+        if getattr(self.args, 'blanks', None):
+            text_type = agate.Text(cast_nulls=False)
         else:
-            return None
+            text_type = agate.Text()
+
+        if self.args.no_inference:
+            return agate.TypeTester(types=[text_type])
+        else:
+            return agate.TypeTester(types=[
+                agate.Boolean(),
+                agate.Number(),
+                agate.TimeDelta(),
+                agate.Date(),
+                agate.DateTime(),
+                text_type
+            ])
 
     def get_column_offset(self):
         if self.args.zero_based:

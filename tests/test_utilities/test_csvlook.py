@@ -21,6 +21,12 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def test_runs(self):
+        self.get_output(['examples/test_utf8.csv'])
+
+    def test_encoding(self):
+        self.get_output(['-e', 'latin1', 'examples/test_latin1.csv'])
+
     def test_simple(self):
         self.assertLines(['examples/dummy3.csv'], [
             '|    a | b | c |',

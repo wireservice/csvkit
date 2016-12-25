@@ -21,6 +21,12 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def test_runs(self):
+        self.get_output(['examples/test_utf8.csv'])
+
+    def test_encoding(self):
+        self.get_output(['-e', 'latin1', 'examples/test_latin1.csv'])
+
     def test_sort_string_reverse(self):
         reader = self.get_output_as_reader(['-c', '1', '-r', 'examples/testxls_converted.csv'])
         test_order = [u'text', u'Unicode! Σ', u'This row has blanks', u'Chicago Tribune', u'Chicago Sun-Times', u'Chicago Reader']
