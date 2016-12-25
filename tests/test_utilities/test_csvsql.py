@@ -64,8 +64,6 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
             self.assertTrue('b DECIMAL NOT NULL' in sql)
             self.assertTrue('c DECIMAL NOT NULL' in sql)
 
-        input_file.close()
-
     def test_stdin_and_filename(self):
         input_file = six.StringIO("a,b,c\n1,2,3\n")
 
@@ -75,8 +73,6 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
             self.assertTrue('CREATE TABLE stdin' in sql)
             self.assertTrue('CREATE TABLE dummy' in sql)
 
-        input_file.close()
-
     def test_empty_with_query(self):
         input_file = six.StringIO()
 
@@ -84,9 +80,6 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
             output_file = six.StringIO()
             utility = CSVSQL(['--query', 'select 1'], output_file)
             utility.main()
-
-        input_file.close()
-        output_file.close()
 
     def test_query(self):
         input_file = six.StringIO("a,b,c\n1,2,3\n")
@@ -104,5 +97,3 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
                 self.assertTrue('IRSE,5.005' in sql)
                 self.assertTrue('IRVE2,5.936' in sql)
                 self.assertTrue('IRVI,6.587' in sql)
-
-        input_file.close()
