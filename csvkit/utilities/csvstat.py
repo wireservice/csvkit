@@ -24,7 +24,7 @@ OPERATIONS = OrderedDict([
     ('nulls', agate.HasNulls),
     ('unique', None),
     ('freq', None),
-    ('len', agate.Count)
+    ('len', agate.MaxLength)
 ])
 
 

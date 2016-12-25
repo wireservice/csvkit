@@ -38,6 +38,14 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         output = self.get_output(['--count', 'examples/realdata/ks_1033_data.csv'])
         self.assertEqual(output, 'Row count: 1575\n')
 
+    def test_unique(self):
+        output = self.get_output(['-c', 'county', 'examples/realdata/ks_1033_data.csv'])
+        self.assertIn('Unique values: 73\n', output)
+
+    def test_max_length(self):
+        output = self.get_output(['-c', 'county', 'examples/realdata/ks_1033_data.csv'])
+        self.assertIn('Max length: 12\n', output)
+
     def test_freq_list(self):
         output = self.get_output(['examples/realdata/ks_1033_data.csv'])
         # print(output)
