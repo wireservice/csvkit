@@ -17,7 +17,8 @@ Backwards-incompatible changes:
 * When using the --columns or --not-columns options, you must not have spaces around the comma-separated values, unless the column names contain spaces.
 * When sorting, null values are now greater than other values instead of less than.
 * CSVKitReader, CSVKitWriter, CSVKitDictReader, and CSVKitDictWriter have been removed. Use agate.csv.reader, agate.csv.writer, agate.csv.DictReader and agate.csv.DictWriter.
-* Drop Python 2.6 support.
+* Dropped support for older versions of PyPy.
+* Dropped Python 2.6 support.
 
 Improvements:
 
