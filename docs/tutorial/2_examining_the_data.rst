@@ -5,13 +5,18 @@ Examining the data
 csvstat: statistics without code
 ================================
 
-In the previous section we saw how we could use ``csvlook`` and ``csvcut`` to peek at slices of our data. This is a good starting place for diving into a dataset, but in practice we usually want to get the widest possible view before we start diving into specifics.
+In the previous section we saw how we could use :doc:`csvlook` and :doc:`csvcut` to view slices of our data. This is a good tool for exploring a dataset, but in practice we usually need to get the broadest possible view before we can start diving into specifics.
 
-:doc:`/scripts/csvstat` is designed to give us just such a broad picture of our data. It is inspired by the summary() function from the computational statistics programming language `"R" <http://www.r-project.org/>`_.
+:doc:`/scripts/csvstat` is designed to give us just such a broad understanding of our data. Inspired by the ``summary()`` function from the computational statistics programming language `"R" <http://www.r-project.org/>`_, ``csvstat`` will generate summary statistics for all the data in a CSV file.
 
-Let's examine summary statistics for some selected columns from our data (remember you can use ``csvcut -n data.csv`` to see the columns in the data)::
+Let's examine summary statistics for a few columns from our dataset. As we learned in the last section, we can use ``csvcut`` and a pipe to pick out the columns we want:
+
+.. code-block:: bash
 
     csvcut -c county,acquisition_cost,ship_date data.csv | csvstat
+
+.. code-block:: bash
+
       1. county
             <type 'unicode'>
             Nulls: False
@@ -54,7 +59,7 @@ Let's examine summary statistics for some selected columns from our data (rememb
 
     Row count: 1036
 
-``csvstat`` algorithmically infers the type of each column in the data and then performs basic statistics on it. The particular statistics computed depend on the type of the column.
+:doc:`csvstat` infers the type of data in each column and then performs basic statistics on it. The particular statistics computed depend on the type of the column (numbers, text, dates, etc).
 
 In this example the first column, ``county`` was identified as type "unicode" (text). We see that there are ``35`` counties represented in the dataset and that ``DOUGLAS`` is far and away the most frequently occurring. A quick Google search shows that there are ``93`` counties in Nebraska, so we know that either not every county received equipment or that the data is incomplete. We can also find out that Douglas county contains Omaha, the state's largest city by far.
 
@@ -67,62 +72,68 @@ As a journalist, this quick glance at the data gave me a tremendous amount of in
 csvgrep: find the data you need
 ===============================
 
-After reviewing the summary statistics you might wonder what equipment was received by a particular county. To get a simple answer to the question we can use :doc:`/scripts/csvgrep` to search for the state's name amongst the rows. Let's also use ``csvcut`` to just look at the columns we care about and ``csvlook`` to format the output::
+After reviewing the summary statistics you might wonder what equipment was received by a particular county. To get a simple answer to the question we can use :doc:`/scripts/csvgrep` to search for the state's name amongst the rows. Let's also use ``csvcut`` to just look at the columns we care about and ``csvlook`` to format the output:
+
+.. code-block:: bash
 
     csvcut -c county,item_name,total_cost data.csv | csvgrep -c county -m LANCASTER | csvlook
-    |------------+--------------------------------+-------------|
-    |  county    | item_name                      | total_cost  |
-    |------------+--------------------------------+-------------|
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | LIGHT ARMORED VEHICLE          | 0           |
-    |  LANCASTER | LIGHT ARMORED VEHICLE          | 0           |
-    |  LANCASTER | LIGHT ARMORED VEHICLE          | 0           |
-    |  LANCASTER | MINE RESISTANT VEHICLE         | 412000      |
-    |  LANCASTER | IMAGE INTENSIFIER,NIGHT VISION | 6800        |
-    |  LANCASTER | IMAGE INTENSIFIER,NIGHT VISION | 6800        |
-    |  LANCASTER | IMAGE INTENSIFIER,NIGHT VISION | 6800        |
-    |  LANCASTER | IMAGE INTENSIFIER,NIGHT VISION | 6800        |
-    |------------+--------------------------------+-------------|
+
+.. code-block:: bash
+
+    | county    | item_name                      | total_cost |
+    | --------- | ------------------------------ | ---------- |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | LIGHT ARMORED VEHICLE          |          0 |
+    | LANCASTER | LIGHT ARMORED VEHICLE          |          0 |
+    | LANCASTER | LIGHT ARMORED VEHICLE          |          0 |
+    | LANCASTER | MINE RESISTANT VEHICLE         |    412,000 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
 
 ``LANCASTER`` county contains Lincoln, Nebraska, the capital of the state and its second-largest city. The ``-m`` flag means "match" and will find text anywhere in a given column--in this case the ``county`` column. For those who need a more powerful search you can also use ``-r`` to search for a regular expression.
 
 csvsort: order matters
 ======================
 
-Now let's use :doc:`/scripts/csvsort` to sort the rows by the ``total_cost`` column, in reverse (descending) order::
+Now let's use :doc:`/scripts/csvsort` to sort the rows by the ``total_cost`` column, in reverse (descending) order:
+
+.. code-block:: bash
 
     csvcut -c county,item_name,total_cost data.csv | csvgrep -c county -m LANCASTER | csvsort -c total_cost -r | csvlook
-    |------------+--------------------------------+-------------|
-    |  county    | item_name                      | total_cost  |
-    |------------+--------------------------------+-------------|
-    |  LANCASTER | MINE RESISTANT VEHICLE         | 412000      |
-    |  LANCASTER | IMAGE INTENSIFIER,NIGHT VISION | 6800        |
-    |  LANCASTER | IMAGE INTENSIFIER,NIGHT VISION | 6800        |
-    |  LANCASTER | IMAGE INTENSIFIER,NIGHT VISION | 6800        |
-    |  LANCASTER | IMAGE INTENSIFIER,NIGHT VISION | 6800        |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | RIFLE,5.56 MILLIMETER          | 120         |
-    |  LANCASTER | LIGHT ARMORED VEHICLE          | 0           |
-    |  LANCASTER | LIGHT ARMORED VEHICLE          | 0           |
-    |  LANCASTER | LIGHT ARMORED VEHICLE          | 0           |
-    |------------+--------------------------------+-------------|
+
+.. code-block:: bash
+
+    | county    | item_name                      | total_cost |
+    | --------- | ------------------------------ | ---------- |
+    | LANCASTER | MINE RESISTANT VEHICLE         |    412,000 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | LIGHT ARMORED VEHICLE          |          0 |
+    | LANCASTER | LIGHT ARMORED VEHICLE          |          0 |
+    | LANCASTER | LIGHT ARMORED VEHICLE          |          0 |
 
 Two interesting things should jump out about this sorted data: that ``LANCASTER`` county got a very expensive ``MINE RESISTANT VEHICLE`` and that it also go three other ``LIGHT ARMORED VEHICLE``.
 

@@ -7,11 +7,18 @@ csvjoin: merging related data
 
 One of the most common operations that we need to perform on data is "joining" it to other, related data. For instance, given a dataset about equipment supplied to counties in Nebraska, one might reasonably want to merge that with a dataset containing the population of each county. :doc:`/scripts/csvjoin` allows us to take two those two datasets (equipment and population) and merge them, much like you might do with a SQL ``JOIN`` query. In order to demonstrate this, let's grab a second dataset::
 
+.. code-block:: bash
+
     curl -L -O https://raw.githubusercontent.com/wireservice/csvkit/master/examples/realdata/acs2012_5yr_population.csv
 
-Now let's see what's in there::
+Now let's see what's in there:
+
+.. code-block:: bash
 
     csvstat acs2012_5yr_population.csv
+
+.. code-block:: bash
+
       1. fips
             <type 'int'>
             Nulls: False
@@ -56,13 +63,20 @@ Now let's see what's in there::
 
     Row count: 93
 
-As you can see, this data file contains population estimates for each county in Nebraska from the 2012 5-year ACS estimates. This data was retrieved from `Census Reporter <http://censusreporter.org/>`_ and reformatted slightly for this example. Let's join it to our equipment data::
+As you can see, this data file contains population estimates for each county in Nebraska from the 2012 5-year ACS estimates. This data was retrieved from `Census Reporter <http://censusreporter.org/>`_ and reformatted slightly for this example. Let's join it to our equipment data:
+
+.. code-block:: bash
 
     csvjoin -c fips data.csv acs2012_5yr_population.csv > joined.csv
 
-Since both files contain a fips column, we can use that to join the two. In our output you should see the population data appended at the end of each row of data. Let's combine this with what we've learned before to answer the question "What was the lowest population county to receive equipment?"::
+Since both files contain a fips column, we can use that to join the two. In our output you should see the population data appended at the end of each row of data. Let's combine this with what we've learned before to answer the question "What was the lowest population county to receive equipment?":
+
+.. code-block:: bash
 
     csvcut -c county,item_name,total_population joined.csv | csvsort -c total_population | csvlook | head
+
+.. code-block:: bash
+
     |-------------+----------------------------------------------------------------+-------------------|
     |  county     | item_name                                                      | total_population  |
     |-------------+----------------------------------------------------------------+-------------------|
@@ -79,21 +93,32 @@ Two counties with fewer than one-thousand residents were the recipients of 5.56 
 csvstack: combining subsets
 ===========================
 
-Frequently large datasets are distributed in many small files. At some point you will probably want to merge those files for aggregate analysis. :doc:`/scripts/csvstack` allows you to "stack" the rows from CSV files with identical headers. To demonstrate, let's imagine we've decided that Nebraska and Kansas form a "region" and that it would be useful to analyze them in a single dataset. Let's grab the Kansas data::
+Frequently large datasets are distributed in many small files. At some point you will probably want to merge those files for bulk analysis. :doc:`/scripts/csvstack` allows you to "stack" the rows from CSV files with the same columns (and identical column names). To demonstrate, let's imagine we've decided that Nebraska and Kansas form a "region" and that it would be useful to analyze them in a single dataset. Let's grab the Kansas data:
+
+.. code-block:: bash
 
     curl -L -O https://raw.githubusercontent.com/wireservice/csvkit/master/examples/realdata/ks_1033_data.csv
 
-Back in :doc:`1_getting_started`, we had used in2csv to convert our Nebraska data from XLSX to CSV. However, we named our output `data.csv` for simplicity at the time. Now that we are going to be stacking multiple states, we should re-convert our Nebraska data using a file naming convention matching our Kansas data::
+Back in :doc:`1_getting_started`, we had used in2csv to convert our Nebraska data from XLSX to CSV. However, we named our output `data.csv` for simplicity at the time. Now that we are going to be stacking multiple states, we should re-convert our Nebraska data using a file naming convention matching our Kansas data:
+
+.. code-block:: bash
 
     in2csv ne_1033_data.xlsx > ne_1033_data.csv
 
-Now let's stack these two data files::
+Now let's stack these two data files:
+
+.. code-block:: bash
 
     csvstack ne_1033_data.csv ks_1033_data.csv > region.csv
 
-Using csvstat we can see that our ``region.csv`` contains both datasets::
+Using csvstat we can see that our ``region.csv`` contains both datasets:
+
+.. code-block:: bash
 
     csvstat -c state,acquisition_cost region.csv
+
+.. code-block:: bash
+
       1. state
             <type 'unicode'>
             Nulls: False
@@ -126,7 +151,12 @@ Sometimes (almost always), the command-line isn't enough. It would be crazy to t
 
 By default, ``csvsql`` will generate a create table statement for your data. You can specify what sort of database you are using with the ``-i`` flag::
 
+.. code-block:: bash
+
     csvsql -i sqlite joined.csv
+
+.. code-block:: sql
+
     CREATE TABLE joined (
             state VARCHAR(2) NOT NULL,
             county VARCHAR(10) NOT NULL,
@@ -149,19 +179,27 @@ By default, ``csvsql`` will generate a create table statement for your data. You
 
 Here we have the sqlite "create table" statement for our joined data. You'll see that, like ``csvstat``, ``csvsql`` has done its best to infer the column types.
 
-Often you won't care about storing the SQL statements locally. You can also use ``csvsql`` to create the table directly in the database on your local machine. If you add the ``--insert`` option the data will also be imported::
+Often you won't care about storing the SQL statements locally. You can also use ``csvsql`` to create the table directly in the database on your local machine. If you add the ``--insert`` option the data will also be imported:
+
+.. code-block:: bash
 
     csvsql --db sqlite:///leso.db --insert joined.csv
 
-How can we check that our data was imported successfully? We could use the sqlite command-line interface, but rather than worry about the specifics of another tool, we can also use ``sql2csv``::
+How can we check that our data was imported successfully? We could use the sqlite command-line interface, but rather than worry about the specifics of another tool, we can also use ``sql2csv``:
+
+.. code-block:: bash
 
     sql2csv --db sqlite:///leso.db --query "select * from joined"
 
-Note that the ``--query`` parameter to ``sql2csv`` accepts any SQL query. For example, to export Douglas county from the ``joined`` table from our sqlite database, we would run::
+Note that the ``--query`` parameter to ``sql2csv`` accepts any SQL query. For example, to export Douglas county from the ``joined`` table from our sqlite database, we would run:
+
+.. code-block:: bash
 
     sql2csv --db sqlite:///leso.db --query "select * from joined where county='DOUGLAS';" > douglas.csv
 
-Sometimes, if you will only be running a single query, even constructing the database is a waste of time. For that case, you can actually skip the database entirely and ``csvsql`` will create one in memory for you::
+Sometimes, if you will only be running a single query, even constructing the database is a waste of time. For that case, you can actually skip the database entirely and ``csvsql`` will create one in memory for you:
+
+.. code-block:: bash
 
     csvsql --query "select county,item_name from joined where quantity > 5;" joined.csv | csvlook
 
@@ -170,4 +208,4 @@ SQL queries directly on CSVs! Keep in mind when using this that you are loading 
 Summing up
 ==========
 
-``csvjoin``, ``csvstack``, ``csvsql`` and ``sql2csv`` represent the power tools of csvkit. Using this tools can vastly simplify processes that would otherwise require moving data between other systems. But what about cases where these tools still don't cut it? What if you need to move your data onto the web or into a legacy database system? We've got a few solutions for those problems in our final section, :doc:`4_going_elsewhere`.
+``csvjoin``, ``csvstack``, ``csvsql`` and ``sql2csv`` represent the power tools of csvkit. Using these tools can vastly simplify processes that would otherwise require moving data between other systems. But what about cases where these tools still don't cut it? What if you need to move your data onto the web or into a legacy database system? We've got a few solutions for those problems in our final section, :doc:`4_going_elsewhere`.
