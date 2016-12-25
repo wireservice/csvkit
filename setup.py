@@ -8,9 +8,7 @@ install_requires = [
     'agate-excel>=0.2.0',
     'agate-dbf>=0.2.0',
     'agate-sql>=0.5.0',
-    'python-dateutil==2.2',
-    'six>=1.6.1',
-    'sqlalchemy>=0.6.6',
+    'six>=1.6.1'
 ]
 
 if sys.version_info < (2, 7):
