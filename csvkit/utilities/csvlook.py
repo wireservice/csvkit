@@ -30,5 +30,6 @@ def launch_new_instance():
     utility = CSVLook()
     utility.run()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     launch_new_instance()

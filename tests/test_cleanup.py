@@ -5,8 +5,8 @@ try:
 except ImportError:
     import unittest
 
-from csvkit.cleanup import *
-from csvkit.exceptions import LengthMismatchError
+from csvkit.cleanup import extract_joinable_row_errors, join_rows
+from csvkit.exceptions import CSVTestException, LengthMismatchError
 
 
 class TestCleanup(unittest.TestCase):
