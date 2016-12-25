@@ -81,6 +81,7 @@ class FixedWidthReader(six.Iterator):
 
         return self.parser.parse(next(self.file))
 
+
 FixedWidthField = namedtuple('FixedWidthField', ['name', 'start', 'length'])
 
 

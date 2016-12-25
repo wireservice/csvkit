@@ -7,11 +7,6 @@ try:
 except ImportError:
     from unittest.mock import patch
 
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
-
 from csvkit.utilities.csvstat import CSVStat, launch_new_instance
 from tests.utils import CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests
 

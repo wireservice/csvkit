@@ -22,13 +22,27 @@ class CSVLook(CSVKitUtility):
                                     help='Disable type inference when parsing the input.')
 
     def main(self):
-        table = agate.Table.from_csv(self.file_or_path(), sniff_limit=self.args.sniff_limit, header=not self.args.no_header_row, column_types=self.get_column_types(), line_numbers=self.args.line_numbers, **self.reader_kwargs)
-        table.print_table(output=self.output_file, max_rows=self.args.max_rows, max_columns=self.args.max_columns, max_column_width=self.args.max_column_width)
+        table = agate.Table.from_csv(
+            self.input_file,
+            sniff_limit=self.args.sniff_limit,
+            header=not self.args.no_header_row,
+            column_types=self.get_column_types(),
+            line_numbers=self.args.line_numbers,
+            **self.reader_kwargs
+        )
+
+        table.print_table(
+            output=self.output_file,
+            max_rows=self.args.max_rows,
+            max_columns=self.args.max_columns,
+            max_column_width=self.args.max_column_width
+        )
 
 
 def launch_new_instance():
     utility = CSVLook()
     utility.run()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     launch_new_instance()

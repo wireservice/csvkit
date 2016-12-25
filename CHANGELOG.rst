@@ -19,7 +19,7 @@ Backwards-incompatible changes:
 * Dropped support for older versions of PyPy.
 * Dropped Python 2.6 support.
 * If ``--no-header-row`` is set, the output will have column names ``a``, ``b``, ``c``, etc. instead of ``column1``, ``column2``, ``column3``, etc.
-* csvlook renders a simplerle, markdown-compatib table.
+* csvlook renders a simpler, markdown-compatible table.
 
 Improvements:
 
