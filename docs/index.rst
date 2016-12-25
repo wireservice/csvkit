@@ -50,7 +50,7 @@ Query with SQL::
 
 Import into PostgreSQL::
 
-    csvsql --db postgresql:///database --insert data.csv 
+    csvsql --db postgresql:///database --insert data.csv
 
 Extract data from PostgreSQL::
 
@@ -62,13 +62,13 @@ Table of contents
 =================
 
 .. toctree::
-    :maxdepth: 3 
-    
+    :maxdepth: 3
+
     tutorial
-    cli 
+    cli
     tricks
     contributing
-    release 
+    release
 
 Citation
 ========
@@ -85,7 +85,7 @@ When citing csvkit in publications, you may use this BibTeX entry::
 Authors
 =======
 
-.. include:: ../AUTHORS
+.. include:: ../AUTHORS.rst
 
 License
 =======
@@ -95,7 +95,7 @@ License
 Changelog
 =========
 
-.. include:: ../CHANGELOG
+.. include:: ../CHANGELOG.rst
 
 Indices and tables
 ==================
@@ -103,4 +103,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

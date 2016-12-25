@@ -1,60 +1,61 @@
 1.0.0
 -----
 
-This is a major release of csvkit. The entire backend has been rewritten to leverage the agate data analysis library, rather than bespoke implementations. In addition to the specific changes enumerated below there may be small changes to the way the output of the various tools is formatted. For example:
+This is the first major release of csvkit in a very long time. The entire backend has been rewritten to leverage the `agate <http://agate.rtfd.io>`_ data analysis library, which was itself inspired by csvkit. The new backend provides better type detection accuracy, as well as some new features.
 
-* If `--no-header-row` is set, the output will have column names a, b, c, etc. instead of column1, column2, column3, etc.
-* csvlook renders a simpler table.
+Because of the long and complex cycle behind this release, the list of changes should not be considered exhaustive. In particular, the output format of some tools may have changed in small ways. Any existing data pipelines using csvkit should be tested as part of the upgrade.
 
-If you have built data workflows on top of csvkit you should not upgrade without thorough testing.
+Much of the credit for this release goes to `James McKinney <https://github.com/jpmckinney>`_, who has almost single-handedly kept the fire burning for a year.
 
 Backwards-incompatible changes:
 
-* csvsql now generates DateTime columns instead of Time columns.
-* csvsql now generates Decimal columns instead of Integer, BigInteger, and Float columns.
-* csvsql no longer generates max-length constraints for text columns.
-* The --doublequote long flag is gone, and the -b short flag is now an alias for --no-doublequote.
-* When using the --columns or --not-columns options, you must not have spaces around the comma-separated values, unless the column names contain spaces.
+* :doc:`/scripts/csvsql` now generates ``DateTime`` columns instead of ``Time`` columns.
+* :doc:`/scripts/csvsql` now generates ``Decimal`` columns instead of ``Integer``, ``BigInteger``, and ``Float`` columns.
+* :doc:`/scripts/csvsql` no longer generates max-length constraints for text columns.
+* The ``--doublequote`` long flag is gone, and the ``-b`` short flag is now an alias for ``--no-doublequote``.
+* When using the ``--columns`` or ``--not-columns`` options, you must not have spaces around the comma-separated values, unless the column names contain spaces.
 * When sorting, null values are now greater than other values instead of less than.
-* CSVKitReader, CSVKitWriter, CSVKitDictReader, and CSVKitDictWriter have been removed. Use agate.csv.reader, agate.csv.writer, agate.csv.DictReader and agate.csv.DictWriter.
+* ``CSVKitReader``, ``CSVKitWriter``, ``CSVKitDictReader``, and ``CSVKitDictWriter`` have been removed. Use ``agate.csv.reader``, ``agate.csv.writer``, ``agate.csv.DictReader`` and ``agate.csv.DictWriter``.
 * Dropped support for older versions of PyPy.
 * Dropped Python 2.6 support.
+* If ``--no-header-row`` is set, the output will have column names ``a``, ``b``, ``c``, etc. instead of ``column1``, ``column2``, ``column3``, etc.
+* csvlook renders a simplerle, markdown-compatib table.
 
 Improvements:
 
 * csvkit is now tested against Python 3.6. (#702)
-* "import csvkit as csv" will now defer to agate readers/writers.
-* csvgrep supports --no-header-row.
-* csvjoin supports --no-header-row.
-* csvjson streams input and output if the --stream and --no-inference flags are set.
-* csvjson supports --snifflimit and --no-inference.
-* csvlook adds --max-rows, --max-columns and --max-column-width options.
-* csvlook supports --snifflimit and --no-inference.
-* csvsql supports custom SQLAlchemy dialects.
-* csvstat supports --names.
-* in2csv CSV-to-CSV conversion streams input and output if the --no-inference flag is set.
-* in2csv CSV-to-CSV conversion uses agate.Table.
-* in2csv GeoJSON conversion adds columns for geometry type, longitude and latitude.
+* ``import csvkit as csv`` will now defer to agate readers/writers.
+* :doc:`/scripts/csvgrep` supports ``--no-header-row``.
+* :doc:`/scripts/csvjoin` supports ``--no-header-row``.
+* :doc:`/scripts/csvjson` streams input and output if the ``--stream`` and ``--no-inference`` flags are set.
+* :doc:`/scripts/csvjson` supports ``--snifflimit`` and ``--no-inference``.
+* :doc:`/scripts/csvlook` adds ``--max-rows``, ``--max-columns`` and ``--max-column-width`` options.
+* :doc:`/scripts/csvlook` supports ``--snifflimit`` and ``--no-inference``.
+* ``csvsql`` supports custom `SQLAlchemy dialects <http://docs.sqlalchemy.org/en/latest/dialects/>`_.
+* :doc:`/scripts/csvstat` supports ``--names``.
+* :doc:`/scripts/in2csv` CSV-to-CSV conversion streams input and output if the ``--no-inference`` flag is set.
+* :doc:`/scripts/in2csv` CSV-to-CSV conversion uses ``agate.Table``.
+* :doc:`/scripts/in2csv` GeoJSON conversion adds columns for geometry type, longitude and latitude.
 * Documentation: Update tool usage, remove shell prompts, document connection string, correct typos.
 
 Fixes:
 
 * Fixed numerous instances of open files not being closed before utilities exit.
-* Change -b, --doublequote to --no-doublequote, as doublequote is True by default.
-* in2csv DBF conversion works with Python 3.
-* in2csv correctly guesses format when file has an uppercase extension.
-* in2csv correctly interprets --no-inference.
-* in2csv again supports nested JSON objects (fixes regression).
-* in2csv --format geojson will print a JSON object instead of `OrderedDict([(...)])`.
-* csvclean with standard input works on Windows.
-* csvgrep returns the input file's line numbers if the --linenumbers flag is set.
-* csvgrep can match multiline values.
-* csvgrep correctly operates on ragged rows.
-* csvsql correctly escapes `%` characters in SQL queries.
-* csvsql adds standard input only if explicitly requested.
-* csvstack supports stacking a single file.
-* csvstat always reports frequencies.
-* FilteringCSVReader's any_match argument works correctly.
+* Change ``-b``, ``--doublequote`` to ``--no-doublequote``, as doublequote is True by default.
+* :doc:`/scripts/in2csv` DBF conversion works with Python 3.
+* :doc:`/scripts/in2csv` correctly guesses format when file has an uppercase extension.
+* :doc:`/scripts/in2csv` correctly interprets ``--no-inference``.
+* :doc:`/scripts/in2csv` again supports nested JSON objects (fixes regression).
+* :doc:`/scripts/in2csv` with ``--format geojson`` will print a JSON object instead of ``OrderedDict([(...)])``.
+* :doc:`/scripts/csvclean` with standard input works on Windows.
+* :doc:`/scripts/csvgrep` returns the input file's line numbers if the ``--linenumbers`` flag is set.
+* :doc:`/scripts/csvgrep` can match multiline values.
+* :doc:`/scripts/csvgrep` correctly operates on ragged rows.
+* :doc:`/scripts/csvsql` correctly escapes ``%``` characters in SQL queries.
+* :doc:`/scripts/csvsql` adds standard input only if explicitly requested.
+* :doc:`/scripts/csvstack` supports stacking a single file.
+* :doc:`/scripts/csvstat` always reports frequencies.
+* The ``any_match`` argument of ``FilteringCSVReader`` now works correctly.
 * All tools handle empty files without error.
 
 0.9.1
