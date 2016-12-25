@@ -31,9 +31,16 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_no_header_row(self):
         output = self.get_output(['-H', '-c', '2', 'examples/no_header_row.csv'])
-        self.assertFalse('1. a' in output)
-        self.assertTrue('2. b' in output)
+        self.assertNotIn('1. a', output)
+        self.assertIn('2. b', output)
 
     def test_count_only(self):
-        output = self.get_output(['--count', 'examples/dummy.csv'])
-        self.assertEqual(output, 'Row count: 1\n')
+        output = self.get_output(['--count', 'examples/realdata/ks_1033_data.csv'])
+        self.assertEqual(output, 'Row count: 1575\n')
+
+    def test_freq_list(self):
+        output = self.get_output(['examples/realdata/ks_1033_data.csv'])
+        # print(output)
+        self.assertIn('WYANDOTTE:\t123', output)
+        self.assertIn('SALINE:\t59', output)
+        self.assertNotIn('MIAMI:\t56', output)

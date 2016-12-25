@@ -112,7 +112,7 @@ class CSVStat(CSVKitUtility):
                 if op_name == 'unique':
                     stat = len(column.values_distinct())
                 elif op_name == 'freq':
-                    stat = table.pivot(column_name).order_by('Count', reverse=True)
+                    stat = table.pivot(column_name).order_by('Count', reverse=True).limit(MAX_FREQ)
                 else:
                     op = OPERATIONS[operations[0]]
                     stat = table.aggregate(op(column_name))
@@ -135,7 +135,7 @@ class CSVStat(CSVKitUtility):
                         stats[op_name] = len(column.values_distinct())
                         continue
                     elif op_name == 'freq':
-                        stats[op_name] = table.pivot(column_name).order_by('Count', reverse=True)
+                        stats[op_name] = table.pivot(column_name).order_by('Count', reverse=True).limit(MAX_FREQ)
                         continue
 
                     try:
