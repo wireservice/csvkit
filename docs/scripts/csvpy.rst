@@ -20,7 +20,8 @@ Loads a CSV file into a :class:`agate.csv.Reader` object and then drops into a P
 
     optional arguments:
       -h, --help            show this help message and exit
-      --dict                Use a CSV DictReader instead of a normal reader.
+      --dict                Use CSV DictReader instead of the default CSV reader.
+      --agate               Use agate instead of the default CSV reader.
 
 This tool will automatically use the IPython shell if it is installed, otherwise it will use the running Python shell.
 
@@ -42,8 +43,17 @@ Basic use::
 
 As a dictionary::
 
-    csvpy --dict examples/dummy.csv -v
+    csvpy --dict examples/dummy.csv
     Welcome! "examples/dummy.csv" has been loaded in a DictReader object named "reader".
     >>> reader.next()
     {u'a': u'1', u'c': u'3', u'b': u'2'}
+
+As an agate table::
+
+    csvpy --agate examples/dummy.csv
+    Welcome! "examples/dummy.csv" has been loaded in a from_csv object named "reader".
+    >>> reader.print_table()
+    |    a | b | c |
+    | ---- | - | - |
+    | True | 2 | 3 |
 

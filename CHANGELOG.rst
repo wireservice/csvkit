@@ -31,6 +31,7 @@ Improvements:
 * :doc:`/scripts/csvjson` supports ``--snifflimit`` and ``--no-inference``.
 * :doc:`/scripts/csvlook` adds ``--max-rows``, ``--max-columns`` and ``--max-column-width`` options.
 * :doc:`/scripts/csvlook` supports ``--snifflimit`` and ``--no-inference``.
+* :doc:`/scripts/csvpy` supports ``--agate`` to read a CSV file into an agate table.
 * ``csvsql`` supports custom `SQLAlchemy dialects <http://docs.sqlalchemy.org/en/latest/dialects/>`_.
 * :doc:`/scripts/csvstat` supports ``--names``.
 * :doc:`/scripts/in2csv` CSV-to-CSV conversion streams input and output if the ``--no-inference`` flag is set.
