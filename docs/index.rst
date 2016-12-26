@@ -34,7 +34,7 @@ Reorder columns::
 
 Find rows with matching cells::
 
-    csvgrep -c phone_number -r "555-555-\d{4}" data.csv > matching.csv
+    csvgrep -c phone_number -r "555-555-\d{4}" data.csv > new.csv
 
 Convert to JSON::
 
@@ -46,7 +46,7 @@ Generate summary statistics::
 
 Query with SQL::
 
-    csvsql --query "select name from data where age > 30" data.csv > old_folks.csv
+    csvsql --query "select name from data where age > 30" data.csv > new.csv
 
 Import into PostgreSQL::
 
@@ -54,7 +54,7 @@ Import into PostgreSQL::
 
 Extract data from PostgreSQL::
 
-    sql2csv --db postgresql:///database --query "select * from data" > extract.csv
+    sql2csv --db postgresql:///database --query "select * from data" > new.csv
 
 And much more...
 

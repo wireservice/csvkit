@@ -48,10 +48,10 @@ Examples
 
 ::
 
-    csvjoin -c "ColumnKey,Column Key" --outer file1.csv file2.csv
+    csvjoin -c 1 examples/join_a.csv examples/join_b.csv
 
 This command says you have two files to outer join, file1.csv and file2.csv. The key column in file1.csv is ColumnKey, the key column in file2.csv is Column Key.
 
 Add two empty columns to the right of a CSV::
 
-    echo "," | csvjoin file.csv -
+    echo "," | csvjoin examples/dummy.csv -

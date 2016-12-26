@@ -49,7 +49,7 @@ Examples
 
 Basic use::
 
-    csvstat examples/realdata/FY09_EDU_Recipients_by_State.csv 
+    csvstat examples/realdata/FY09_EDU_Recipients_by_State.csv
 
 When an statistic name is passed, only that stat will be printed::
 

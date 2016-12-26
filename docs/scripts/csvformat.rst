@@ -49,11 +49,11 @@ See also: :doc:`../common_arguments`.
 Examples
 ========
 
-Convert  "standard" CSV file to a pipe-delimited one::
+Convert a comma-separated file to a pipe-delimited file::
 
     csvformat -D "|" examples/dummy.csv
 
-Convert to ridiculous line-endings::
+Convert to carriage return line-endings::
 
     csvformat -M "\r" examples/dummy.csv
 

@@ -68,7 +68,7 @@ Generate a statement in the PostgreSQL dialect::
 
     csvsql -i postgresql examples/realdata/FY09_EDU_Recipients_by_State.csv
 
-Create a table and import data from the CSV directly into Postgres::
+Create a table and import data from the CSV directly into PostgreSQL::
 
     createdb test
     csvsql --db postgresql:///test --table fy09 --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
@@ -77,7 +77,7 @@ For large tables it may not be practical to process the entire table. One soluti
     
     head -n 20 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsql --no-constraints --table fy09
 
-Create tables for an entire folder of CSVs and import data from those files directly into Postgres::
+Create tables for an entire folder of CSVs and import data from those files directly into PostgreSQL::
 
     createdb test
     csvsql --db postgresql:///test --insert examples/*.csv
