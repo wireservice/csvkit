@@ -50,6 +50,7 @@ Fixes:
 * :doc:`/scripts/in2csv` again supports nested JSON objects (fixes regression).
 * :doc:`/scripts/in2csv` with ``--format geojson`` will print a JSON object instead of ``OrderedDict([(...)])``.
 * :doc:`/scripts/csvclean` with standard input works on Windows.
+* :doc:`/scripts/csvformat` supports escaped characters for the delimiter, quote character, escape character and line terminator.
 * :doc:`/scripts/csvgrep` returns the input file's line numbers if the ``--linenumbers`` flag is set.
 * :doc:`/scripts/csvgrep` can match multiline values.
 * :doc:`/scripts/csvgrep` correctly operates on ragged rows.
