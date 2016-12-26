@@ -87,7 +87,3 @@ Fetch csvkit's open issues from the GitHub API, convert the JSON response into a
 Convert a DBase DBF file to an equivalent CSV::
 
     in2csv examples/testdbf.dbf
-
-Fetch the ten most recent robberies in Oakland, convert the GeoJSON response into a CSV and write it to a file::
-
-    curl "http://oakland.crimespotting.org/crime-data?format=json&type=robbery&count=10" | in2csv -f geojson
