@@ -194,7 +194,6 @@ By default, ``csvsql`` will generate a create table statement for your data. You
             federal_supply_category_name VARCHAR(35) NOT NULL,
             federal_supply_class DECIMAL NOT NULL,
             federal_supply_class_name VARCHAR(63) NOT NULL,
-            fips_2 DECIMAL NOT NULL,
             name VARCHAR(21) NOT NULL,
             total_population DECIMAL NOT NULL,
             margin_of_error DECIMAL NOT NULL
