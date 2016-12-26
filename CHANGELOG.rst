@@ -9,6 +9,7 @@ Much of the credit for this release goes to `James McKinney <https://github.com/
 
 Backwards-incompatible changes:
 
+* :doc:`/scripts/csvjoin` now renames duplicate columns with integer suffixes to prevent collisions in output.
 * :doc:`/scripts/csvsql` now generates ``DateTime`` columns instead of ``Time`` columns.
 * :doc:`/scripts/csvsql` now generates ``Decimal`` columns instead of ``Integer``, ``BigInteger``, and ``Float`` columns.
 * :doc:`/scripts/csvsql` no longer generates max-length constraints for text columns.

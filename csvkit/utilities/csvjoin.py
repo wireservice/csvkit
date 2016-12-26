@@ -51,21 +51,26 @@ class CSVJoin(CSVKitUtility):
         header = not self.args.no_header_row
 
         for f in self.input_files:
-            tables.append(list(agate.csv.reader(f, header=header, **self.reader_kwargs)))
+            tables.append(agate.Table.from_csv(f, header=header, **self.reader_kwargs))
             f.close()
+
+        for table in tables:
+            import sys
+            table.print_table(output=sys.stdout)
+            print('')
 
         join_column_ids = []
 
         if self.args.columns:
-            for i, t in enumerate(tables):
-                join_column_ids.append(match_column_identifier(t[0], join_column_names[i]))
+            for i, table in enumerate(tables):
+                join_column_ids.append(match_column_identifier(table.column_names, join_column_names[i]))
 
         jointab = tables[0]
 
         if self.args.left_join:
             # Left outer join
-            for i, t in enumerate(tables[1:]):
-                jointab = join.left_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1], header=header)
+            for i, table in enumerate(tables[1:]):
+                jointab = agate.Table.join(jointab, table, join_column_ids[0], join_column_ids[i + 1])
         elif self.args.right_join:
             # Right outer join
             jointab = tables[-1]
@@ -73,25 +78,25 @@ class CSVJoin(CSVKitUtility):
             remaining_tables = tables[:-1]
             remaining_tables.reverse()
 
-            for i, t in enumerate(remaining_tables):
-                jointab = join.right_outer_join(t, join_column_ids[-(i + 2)], jointab, join_column_ids[-1], header=header)
+            for i, table in enumerate(remaining_tables):
+                jointab = agate.Table.join(jointab, table, join_column_ids[-(i + 2)], join_column_ids[-1])
+                # jointab = join.right_outer_join(t, join_column_ids[-(i + 2)], jointab, join_column_ids[-1], header=header)
         elif self.args.outer_join:
             # Full outer join
             for i, t in enumerate(tables[1:]):
                 jointab = join.full_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1], header=header)
         elif self.args.columns:
             # Inner join
-            for i, t in enumerate(tables[1:]):
-                jointab = join.inner_join(jointab, join_column_ids[0], t, join_column_ids[i + 1], header=header)
+            for i, table in enumerate(tables[1:]):
+                jointab = agate.Table.join(jointab, table, join_column_ids[0], join_column_ids[i + 1], inner=True)
+            # for i, t in enumerate(tables[1:]):
+            #     jointab = join.inner_join(jointab, join_column_ids[0], t, join_column_ids[i + 1], header=header)
         else:
             # Sequential join
             for t in tables[1:]:
                 jointab = join.sequential_join(jointab, t, header=header)
 
-        output = agate.csv.writer(self.output_file, **self.writer_kwargs)
-
-        for row in jointab:
-            output.writerow(row)
+        jointab.to_csv(self.output_file, **self.writer_kwargs)
 
     def _parse_join_column_names(self, join_string):
         """
