@@ -2,6 +2,7 @@
 
 import codecs
 from collections import OrderedDict
+import warnings
 
 import agate
 import six
@@ -138,14 +139,20 @@ class CSVStat(CSVKitUtility):
                         continue
 
                     try:
-                        stats[op_name] = table.aggregate(op(column_name))
+                        with warnings.catch_warnings():
+                            warnings.simplefilter('ignore', agate.NullCalculationWarning)
+                            stats[op_name] = table.aggregate(op(column_name))
                     except:
                         stats[op_name] = None
 
                 self.output_file.write(('%3i. %s\n' % (column_id + 1, column_name)))
 
-                self.output_file.write('\t%s\n' % column.data_type.__class__.__name__)
-                self.output_file.write('\tNulls: %s\n' % stats['nulls'])
+                self.output_file.write('\tType of data: %ss\n' % column.data_type.__class__.__name__)
+
+                if stats['nulls']:
+                    self.output_file.write('\tContains null values: True (excluded from calculations)\n')
+                else:
+                    self.output_file.write('\tContains values: False\n')
 
                 if stats['unique'] <= MAX_UNIQUE and not isinstance(column.data_type, agate.Boolean):
                     uniques = [six.text_type(u) for u in column.values_distinct()]
@@ -153,21 +160,21 @@ class CSVStat(CSVKitUtility):
                     self.output_file.write(data)
                 else:
                     if isinstance(column.data_type, (agate.Number, agate.Date, agate.DateTime)):
-                        self.output_file.write('\tMin: %s\n' % stats['min'])
-                        self.output_file.write('\tMax: %s\n' % stats['max'])
+                        self.output_file.write('\tMinimum value: %s\n' % stats['min'])
+                        self.output_file.write('\tMaximum value: %s\n' % stats['max'])
 
                     if isinstance(column.data_type, agate.Number):
                         self.output_file.write('\tSum: %s\n' % stats['sum'])
                         self.output_file.write('\tMean: %s\n' % stats['mean'])
                         self.output_file.write('\tMedian: %s\n' % stats['median'])
-                        self.output_file.write('\tStandard Deviation: %s\n' % stats['stdev'])
+                        self.output_file.write('\tStDev: %s\n' % stats['stdev'])
 
                     self.output_file.write('\tUnique values: %i\n' % stats['unique'])
 
                 if isinstance(column.data_type, agate.Text):
                     self.output_file.write('\tMax length: %i\n' % stats['len'])
 
-                self.output_file.write('\t%i most frequent values:\n' % MAX_FREQ)
+                self.output_file.write('\tTop %i most common values:\n' % MAX_FREQ)
 
                 for row in stats['freq']:
                     self.output_file.write(('\t\t%s:\t%s\n' % (six.text_type(row[column_name]), row['Count'])))
