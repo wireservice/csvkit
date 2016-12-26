@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+import warnings
 from contextlib import contextmanager
 
 import agate
@@ -31,6 +32,8 @@ def stdin_as_string(content):
 
 
 class CSVKitTestCase(unittest.TestCase):
+    warnings.filterwarnings(action='ignore', message='Column names? not specified', category=RuntimeWarning, module='agate')
+
     def get_output(self, args):
         output_file = six.StringIO()
 
