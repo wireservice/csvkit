@@ -15,59 +15,59 @@ Let's examine summary statistics for a few columns from our dataset. As we learn
 
     csvcut -c county,acquisition_cost,ship_date data.csv | csvstat
 
-.. code-block:: bash
+.. code-block:: none
 
-      1. county
-            <type 'unicode'>
-            Nulls: False
-            Unique values: 35
-            5 most frequent values:
-                    DOUGLAS:        760
-                    DAKOTA: 42
-                    CASS:   37
-                    HALL:   23
-                    LANCASTER:      18
-            Max length: 10
-      2. acquisition_cost
-            <type 'float'>
-            Nulls: False
-            Min: 0.0
-            Max: 412000.0
-            Sum: 5438254.0
-            Mean: 5249.27992278
-            Median: 6000.0
-            Standard Deviation: 13360.1600088
-            Unique values: 75
-            5 most frequent values:
-                    6800.0: 304
-                    10747.0:        195
-                    6000.0: 105
-                    499.0:  98
-                    0.0:    81
-      3. ship_date
-            <type 'datetime.date'>
-            Nulls: False
-            Min: 1984-12-31
-            Max: 2054-12-31
-            Unique values: 84
-            5 most frequent values:
-                    2013-04-25:     495
-                    2013-04-26:     160
-                    2008-05-20:     28
-                    2012-04-16:     26
-                    2006-11-17:     20
+    1. county
+      Text
+      Nulls: False
+      Unique values: 35
+      Max length: 10
+      5 most frequent values:
+          DOUGLAS:	760
+          DAKOTA:	42
+          CASS:	37
+          HALL:	23
+          LANCASTER:	18
+    2. acquisition_cost
+      Number
+      Nulls: False
+      Min: 0.0
+      Max: 412000.0
+      Sum: 5430787.55
+      Mean: 5242.072924710424710424710425
+      Median: 6000.0
+      Standard Deviation: 13368.07836799839045093904423
+      Unique values: 75
+      5 most frequent values:
+          6800.0:	304
+          10747.0:	195
+          6000.0:	105
+          499.0:	98
+          0.0:	81
+    3. ship_date
+      Date
+      Nulls: False
+      Min: 2006-03-07
+      Max: 2014-01-30
+      Unique values: 84
+      5 most frequent values:
+          2013-04-25:	495
+          2013-04-26:	160
+          2008-05-20:	28
+          2012-04-16:	26
+          2006-11-17:	20
 
     Row count: 1036
 
 :doc:`csvstat` infers the type of data in each column and then performs basic statistics on it. The particular statistics computed depend on the type of the column (numbers, text, dates, etc).
 
-In this example the first column, ``county`` was identified as type "unicode" (text). We see that there are ``35`` counties represented in the dataset and that ``DOUGLAS`` is far and away the most frequently occurring. A quick Google search shows that there are ``93`` counties in Nebraska, so we know that either not every county received equipment or that the data is incomplete. We can also find out that Douglas county contains Omaha, the state's largest city by far.
+In this example the first column, ``county`` was identified as type ``Text``. We see that there are ``35`` counties represented in the dataset and that ``DOUGLAS`` is far and away the most frequently occurring. A quick Google search shows that there are ``93`` counties in Nebraska, so we know that either not every county received equipment or that the data is incomplete. We can also find out that Douglas county contains Omaha, the state's largest city by far.
 
-The ``acquisition_cost`` column is type "float" (number including a decimal). We see that the largest individual cost was ``412,000``. (Probably dollars, but let's not presume.) Total acquisition costs were ``5,438,254``.
+The ``acquisition_cost`` column is type ``Number``. We see that the largest individual cost was ``412,000``. (Probably dollars, but let's not presume.) Total acquisition costs were ``5,438,254``.
 
-Lastly, the ``ship_date`` column shows us that the earliest data is from ``1984`` and the latest from ``2054``. From this we know that there is invalid data for at least one value, since presumably the equipment being shipped does not include time travel devices. We may also note that an unusually large amount of equipment was shipped in April, 2013.
+Lastly, the ``ship_date`` column (type ``Date``) shows us that the earliest data is from ``1984`` and the latest from ``2014``. We may also note that an unusually large amount of equipment was shipped in April, 2013.
 
-As a journalist, this quick glance at the data gave me a tremendous amount of information about the dataset. Although we have to be careful about assuming to much from this quick glance (always double-check the numbers!) it can be an invaluable way to familiarize yourself with a new dataset.
+As a journalist, this quick glance at the data gave me a tremendous amount of information about the dataset. Although we have to be careful about assuming to much from this quick glance (always double-check the numbers mean what you think they mean!) it can be an invaluable way to familiarize yourself with a new dataset.
 
 csvgrep: find the data you need
 ===============================
@@ -78,7 +78,7 @@ After reviewing the summary statistics you might wonder what equipment was recei
 
     csvcut -c county,item_name,total_cost data.csv | csvgrep -c county -m LANCASTER | csvlook
 
-.. code-block:: bash
+.. code-block:: none
 
     | county    | item_name                      | total_cost |
     | --------- | ------------------------------ | ---------- |
@@ -112,7 +112,7 @@ Now let's use :doc:`/scripts/csvsort` to sort the rows by the ``total_cost`` col
 
     csvcut -c county,item_name,total_cost data.csv | csvgrep -c county -m LANCASTER | csvsort -c total_cost -r | csvlook
 
-.. code-block:: bash
+.. code-block:: none
 
     | county    | item_name                      | total_cost |
     | --------- | ------------------------------ | ---------- |

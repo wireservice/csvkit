@@ -17,49 +17,67 @@ Now let's see what's in there:
 
     csvstat acs2012_5yr_population.csv
 
-.. code-block:: bash
+.. code-block:: none
 
-      1. fips
-            <type 'int'>
-            Nulls: False
-            Min: 31001
-            Max: 31185
-            Sum: 2891649
-            Mean: 31093.0
-            Median: 31093
-            Standard Deviation: 53.6904709112
-            Unique values: 93
-      2. name
-            <type 'unicode'>
-            Nulls: False
-            Unique values: 93
-            Max length: 23
-      3. total_population
-            <type 'int'>
-            Nulls: False
-            Min: 348
-            Max: 518271
-            Sum: 1827306
-            Mean: 19648.4516129
-            Median: 6294
-            Standard Deviation: 62164.0702096
-            Unique values: 93
-      4. margin_of_error
-            <type 'int'>
-            Nulls: False
-            Min: 0
-            Max: 115
-            Sum: 1800
-            Mean: 19.3548387097
-            Median: 0
-            Standard Deviation: 37.6927719494
-            Unique values: 15
-            5 most frequent values:
-                    0:      73
-                    115:    2
-                    114:    2
-                    99:     2
-                    73:     2
+    1. fips
+      Number
+      Nulls: False
+      Min: 31001
+      Max: 31185
+      Sum: 2891649
+      Mean: 31093
+      Median: 31093
+      Standard Deviation: 53.98147830506311726900562525
+      Unique values: 93
+      5 most frequent values:
+          31001:	1
+          31003:	1
+          31005:	1
+          31007:	1
+          31009:	1
+    2. name
+      Text
+      Nulls: False
+      Unique values: 93
+      Max length: 23
+      5 most frequent values:
+          Adams County, NE:	1
+          Antelope County, NE:	1
+          Arthur County, NE:	1
+          Banner County, NE:	1
+          Blaine County, NE:	1
+    3. total_population
+      Number
+      Nulls: False
+      Min: 348
+      Max: 518271
+      Sum: 1827306
+      Mean: 19648.45161290322580645161290
+      Median: 6294
+      Standard Deviation: 62501.00530730896711321285542
+      Unique values: 93
+      5 most frequent values:
+          31299:	1
+          6655:	1
+          490:	1
+          778:	1
+          584:	1
+    4. margin_of_error
+      Number
+      Nulls: False
+      Min: 0
+      Max: 115
+      Sum: 1800
+      Mean: 19.35483870967741935483870968
+      Median: 0
+      Standard Deviation: 37.89707031274211909117708454
+      Unique values: 15
+      5 most frequent values:
+          0:	73
+          73:	2
+          114:	2
+          97:	2
+          99:	2
 
     Row count: 93
 
@@ -119,26 +137,30 @@ Using csvstat we can see that our ``region.csv`` contains both datasets:
 
 .. code-block:: bash
 
-      1. state
-            <type 'unicode'>
-            Nulls: False
-            Values: KS, NE
-      8. acquisition_cost
-            <type 'float'>
-            Nulls: False
-            Min: 0.0
-            Max: 658000.0
-            Sum: 9447912.36
-            Mean: 3618.50339334
-            Median: 138.0
-            Standard Deviation: 23725.9555723
-            Unique values: 127
-            5 most frequent values:
-                    120.0:  649
-                    499.0:  449
-                    138.0:  311
-                    6800.0: 304
-                    58.71:  218
+    1. state
+      Text
+      Nulls: False
+      Values: NE, KS
+      Max length: 2
+      5 most frequent values:
+          KS:	1575
+          NE:	1036
+    8. acquisition_cost
+      Number
+      Nulls: False
+      Min: 0.0
+      Max: 658000
+      Sum: 9440445.91
+      Mean: 3615.643780160857908847184987
+      Median: 138
+      Standard Deviation: 23730.63142202547205726466358
+      Unique values: 127
+      5 most frequent values:
+          120.0:	649
+          499.0:	449
+          138.0:	311
+          6800.0:	304
+          58.71:	218
 
     Row count: 2611
 

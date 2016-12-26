@@ -61,7 +61,7 @@ For the programmers out there, the command line is rarely as functional as just 
 
     csvpy data.csv
 
-.. code-block:: bash
+.. code-block:: none
 
     Welcome! "data.csv" has been loaded in a reader object named "reader".
     >>> print len(list(reader))
