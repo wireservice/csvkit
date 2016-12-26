@@ -2,7 +2,6 @@
 
 import agate
 
-from csvkit import join
 from csvkit.cli import CSVKitUtility, match_column_identifier
 
 
@@ -80,21 +79,18 @@ class CSVJoin(CSVKitUtility):
 
             for i, table in enumerate(remaining_tables):
                 jointab = agate.Table.join(jointab, table, join_column_ids[-(i + 2)], join_column_ids[-1])
-                # jointab = join.right_outer_join(t, join_column_ids[-(i + 2)], jointab, join_column_ids[-1], header=header)
         elif self.args.outer_join:
             # Full outer join
-            for i, t in enumerate(tables[1:]):
-                jointab = join.full_outer_join(jointab, join_column_ids[0], t, join_column_ids[i + 1], header=header)
+            for i, table in enumerate(tables[1:]):
+                jointab = agate.Table.join(jointab, table, join_column_ids[0], join_column_ids[i + 1], full_outer=True)
         elif self.args.columns:
             # Inner join
             for i, table in enumerate(tables[1:]):
                 jointab = agate.Table.join(jointab, table, join_column_ids[0], join_column_ids[i + 1], inner=True)
-            # for i, t in enumerate(tables[1:]):
-            #     jointab = join.inner_join(jointab, join_column_ids[0], t, join_column_ids[i + 1], header=header)
         else:
             # Sequential join
-            for t in tables[1:]:
-                jointab = join.sequential_join(jointab, t, header=header)
+            for table in tables[1:]:
+                jointab = agate.Table.fuse(jointab, table)
 
         jointab.to_csv(self.output_file, **self.writer_kwargs)
 
