@@ -28,6 +28,8 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         utility = CSVClean(args, output_file)
         utility.run()
 
+        output_file.close()
+
         self.assertTrue(os.path.exists('examples/bad_err.csv'))
         self.assertTrue(os.path.exists('examples/bad_out.csv'))
 

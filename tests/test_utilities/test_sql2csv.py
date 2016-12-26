@@ -70,6 +70,8 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
             self.assertTrue('answer' in csv)
             self.assertTrue('42' in csv)
 
+        input_file.close()
+
     def test_stdin_with_query(self):
         input_file = six.StringIO('select cast(3.1415 * 13.37 as integer) as answer')
 
@@ -78,6 +80,8 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
 
             self.assertTrue('question' in csv)
             self.assertTrue('42' not in csv)
+
+        input_file.close()
 
     def test_unicode(self):
         expected = self.csvsql('examples/test_utf8.csv')

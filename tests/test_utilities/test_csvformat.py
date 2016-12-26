@@ -42,6 +42,8 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
                 '*1**2*,3,4',
             ])
 
+        input_file.close()
+
     def test_doublequote(self):
         input_file = six.StringIO('a\n"a ""quoted"" string"')
 
@@ -51,6 +53,8 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
                 'a #"quoted#" string',
             ])
 
+        input_file.close()
+
     def test_escapechar(self):
         input_file = six.StringIO('a,b,c\n1"2,3,4\n')
 
@@ -59,6 +63,8 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
                 'a,b,c',
                 '1#"2,3,4',
             ])
+
+        input_file.close()
 
     def test_lineterminator(self):
         self.assertLines(['-M', 'XYZ', 'examples/dummy.csv'], [
