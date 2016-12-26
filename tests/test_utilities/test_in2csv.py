@@ -72,6 +72,8 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
                 '2015-01-01T00:00:00+00:00',
             ])
 
+        input_file.close()
+
     def test_csv_no_inference(self):
         self.assertLines(['--no-inference', 'examples/dummy.csv'], [
             'a,b,c',
@@ -87,6 +89,8 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
                 ',1,2,3,{},,,',
             ])
 
+        input_file.close()
+
     def test_json_no_inference(self):
         input_file = six.StringIO('[{"a": 1, "b": 2, "c": 3}]')
 
@@ -96,6 +100,8 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
                 '1,2,3',
             ])
 
+        input_file.close()
+
     def test_ndjson_no_inference(self):
         input_file = six.StringIO('{"a": 1, "b": 2, "c": 3}')
 
@@ -104,3 +110,5 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
                 'a,b,c',
                 '1,2,3',
             ])
+
+        input_file.close()

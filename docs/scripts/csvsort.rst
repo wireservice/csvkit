@@ -39,8 +39,8 @@ Examples
 
 Sort the veteran's education benefits table by the "TOTAL" column::
 
-    cat examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsort -c 9
+    csvsort -c 9 examples/realdata/FY09_EDU_Recipients_by_State.csv
 
 View the five states with the most individuals claiming veteran's education benefits::
 
-    cat examples/realdata/FY09_EDU_Recipients_by_State.csv | csvcut -c 1,9 | csvsort -r -c 2 | head -n 5
+    csvcut -c 1,9 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsort -r -c 2 | head -n 5

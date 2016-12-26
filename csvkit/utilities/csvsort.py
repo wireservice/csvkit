@@ -34,7 +34,12 @@ class CSVSort(CSVKitUtility):
             **self.reader_kwargs
         )
 
-        column_ids = parse_column_identifiers(self.args.columns, table.column_names, column_offset=self.get_column_offset())
+        column_ids = parse_column_identifiers(
+            self.args.columns,
+            table.column_names,
+            self.get_column_offset()
+        )
+
         table = table.order_by(column_ids, reverse=self.args.reverse)
         table.to_csv(self.output_file, **self.writer_kwargs)
 

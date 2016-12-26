@@ -54,19 +54,18 @@ Results in a JSON document like::
 
     {
         [...]
-        "WA": 
-        {
-            "": "",
-             "Code": "53",
-             "Reserve Educational Assistance Program": "549",
-             "Dependents' Educational Assistance": "2,192",
-             "Montgomery GI Bill-Active Duty": "7,969",
-             "State Name": "WASHINGTON",
-             "Montgomery GI Bill- Selective Reserve": "769",
-             "State Abbreviate": "WA",
-             "Post-Vietnam Era Veteran's Educational Assistance Program": "13",
-             "TOTAL": "11,492"
-        },
+        "WA": {
+            "State Name": "WASHINGTON", 
+            "State Abbreviate": "WA", 
+            "Code": 53.0, 
+            "Montgomery GI Bill-Active Duty": 7969.0, 
+            "Montgomery GI Bill- Selective Reserve": 769.0, 
+            "Dependents' Educational Assistance": 2192.0, 
+            "Reserve Educational Assistance Program": 549.0, 
+            "Post-Vietnam Era Veteran's Educational Assistance Program": 13.0, 
+            "TOTAL": 11492.0, 
+            "": null
+        }, 
         [...]
     }
 
@@ -92,6 +91,8 @@ Results in a GeoJSON document like::
         }, 
         "features": [
             {
+                "type": "Feature", 
+                "id": "dcl", 
                 "geometry": {
                     "type": "Point", 
                     "coordinates": [
@@ -99,21 +100,25 @@ Results in a GeoJSON document like::
                         32.35066
                     ]
                 }, 
-                "type": "Feature", 
-                "id": "dcl", 
                 "properties": {
-                    "photo_credit": "", 
-                    "description": "In addition to being the only coffee shop in downtown Tyler, DCL also features regular exhibitions of work by local artists.", 
-                    "artist": "", 
                     "title": "Downtown Coffee Lounge", 
-                    "install_date": "", 
+                    "artist": null, 
+                    "description": "In addition to being the only coffee shop in downtown Tyler, DCL also features regular exhibitions of work by local artists.", 
+                    "install_date": null, 
                     "address": "200 West Erwin Street", 
-                    "last_seen_date": "3/30/12", 
                     "type": "Gallery", 
-                    "photo_url": ""
+                    "photo_url": null, 
+                    "photo_credit": null, 
+                    "last_seen_date": "2012-03-30"
                 }
-            },
-        [...]
-        ]
+            }, 
+            [...]
+        ], 
+        "crs": {
+            "type": "name", 
+            "properties": {
+                "name": "EPSG:4269"
+            }
+        }
     }
 

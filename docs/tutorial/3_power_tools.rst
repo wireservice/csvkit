@@ -95,16 +95,16 @@ Since both files contain a fips column, we can use that to join the two. In our 
 
 .. code-block:: bash
 
-    |-------------+----------------------------------------------------------------+-------------------|
-    |  county     | item_name                                                      | total_population  |
-    |-------------+----------------------------------------------------------------+-------------------|
-    |  MCPHERSON  | RIFLE,5.56 MILLIMETER                                          | 348               |
-    |  WHEELER    | RIFLE,5.56 MILLIMETER                                          | 725               |
-    |  GREELEY    | RIFLE,7.62 MILLIMETER                                          | 2515              |
-    |  GREELEY    | RIFLE,7.62 MILLIMETER                                          | 2515              |
-    |  GREELEY    | RIFLE,7.62 MILLIMETER                                          | 2515              |
-    |  NANCE      | RIFLE,5.56 MILLIMETER                                          | 3730              |
-    |  NANCE      | RIFLE,7.62 MILLIMETER                                          | 3730              |
+    | county     | item_name                                                      | total_population |
+    | ---------- | -------------------------------------------------------------- | ---------------- |
+    | MCPHERSON  | RIFLE,5.56 MILLIMETER                                          |              348 |
+    | WHEELER    | RIFLE,5.56 MILLIMETER                                          |              725 |
+    | GREELEY    | RIFLE,7.62 MILLIMETER                                          |            2,515 |
+    | GREELEY    | RIFLE,7.62 MILLIMETER                                          |            2,515 |
+    | GREELEY    | RIFLE,7.62 MILLIMETER                                          |            2,515 |
+    | NANCE      | RIFLE,5.56 MILLIMETER                                          |            3,730 |
+    | NANCE      | RIFLE,7.62 MILLIMETER                                          |            3,730 |
+    | NANCE      | RIFLE,7.62 MILLIMETER                                          |            3,730 |
 
 Two counties with fewer than one-thousand residents were the recipients of 5.56 millimeter assault rifles. This simple example demonstrates the power of joining datasets. Although SQL will always be a more flexible option, ``csvjoin`` will often get you where you need to go faster.
 
@@ -182,21 +182,22 @@ By default, ``csvsql`` will generate a create table statement for your data. You
     CREATE TABLE joined (
             state VARCHAR(2) NOT NULL,
             county VARCHAR(10) NOT NULL,
-            fips INTEGER NOT NULL,
+            fips DECIMAL NOT NULL,
             nsn VARCHAR(16) NOT NULL,
-            item_name VARCHAR(62) NOT NULL,
-            quantity VARCHAR(4) NOT NULL,
+            item_name VARCHAR(62),
+            quantity DECIMAL NOT NULL,
             ui VARCHAR(7) NOT NULL,
-            acquisition_cost FLOAT NOT NULL,
-            total_cost VARCHAR(10) NOT NULL,
+            acquisition_cost DECIMAL NOT NULL,
+            total_cost DECIMAL NOT NULL,
             ship_date DATE NOT NULL,
-            federal_supply_category VARCHAR(34) NOT NULL,
+            federal_supply_category DECIMAL NOT NULL,
             federal_supply_category_name VARCHAR(35) NOT NULL,
-            federal_supply_class VARCHAR(25) NOT NULL,
-            federal_supply_class_name VARCHAR(63),
+            federal_supply_class DECIMAL NOT NULL,
+            federal_supply_class_name VARCHAR(63) NOT NULL,
+            fips_2 DECIMAL NOT NULL,
             name VARCHAR(21) NOT NULL,
-            total_population INTEGER NOT NULL,
-            margin_of_error INTEGER NOT NULL
+            total_population DECIMAL NOT NULL,
+            margin_of_error DECIMAL NOT NULL
     );
 
 Here we have the sqlite "create table" statement for our joined data. You'll see that, like ``csvstat``, ``csvsql`` has done its best to infer the column types.

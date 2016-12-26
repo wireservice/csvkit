@@ -112,3 +112,5 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
                 '| 1 | 2 | 3 |',
                 '| 4 | 5 | 6 |',
             ])
+
+        input_file.close()

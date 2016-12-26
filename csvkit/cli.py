@@ -307,7 +307,12 @@ class CSVKitUtility(object):
         if self.args.line_numbers:
             column_offset -= 1
 
-        column_ids = parse_column_identifiers(self.args.columns, column_names, column_offset, getattr(self.args, 'not_columns', None))
+        column_ids = parse_column_identifiers(
+            self.args.columns,
+            column_names,
+            column_offset,
+            getattr(self.args, 'not_columns', None)
+        )
 
         return rows, column_names, column_ids
 
