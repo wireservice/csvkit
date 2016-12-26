@@ -53,11 +53,6 @@ class CSVJoin(CSVKitUtility):
             tables.append(agate.Table.from_csv(f, header=header, **self.reader_kwargs))
             f.close()
 
-        for table in tables:
-            import sys
-            table.print_table(output=sys.stdout)
-            print('')
-
         join_column_ids = []
 
         if self.args.columns:
@@ -90,7 +85,7 @@ class CSVJoin(CSVKitUtility):
         else:
             # Sequential join
             for table in tables[1:]:
-                jointab = agate.Table.fuse(jointab, table)
+                jointab = agate.Table.join(jointab, table, full_outer=True)
 
         jointab.to_csv(self.output_file, **self.writer_kwargs)
 
