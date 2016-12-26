@@ -121,10 +121,10 @@ class CSVStat(CSVKitUtility):
                     stat = ', '.join([('"%s": %s' % (six.text_type(row[column_name]), row['Count'])) for row in stat])
                     stat = '{ %s }' % stat
 
-                if len(tab) == 1:
+                if len(table) == 1:
                     self.output_file.write(six.text_type(stat))
                 else:
-                    self.output_file.write('%3i. %s: %s\n' % (i + 1, column_name, stat))
+                    self.output_file.write('%3i. %s: %s\n' % (column_id + 1, column_name, stat))
             # Output all stats
             else:
                 stats = {}

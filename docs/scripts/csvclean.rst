@@ -32,5 +32,5 @@ Test a file with known bad rows::
 
     csvclean -n examples/bad.csv
 
-    Line 3: Expected 3 columns, found 4 columns
-    Line 4: Expected 3 columns, found 2 columns
+    Line 1: Expected 3 columns, found 4 columns
+    Line 2: Expected 3 columns, found 2 columns

@@ -33,7 +33,7 @@ Most tools use ``STDIN`` as input if no filename is given, but tools that accept
 
 ``csvstack`` can take a filename and ``STDIN`` as input, for example::
 
-    cat ~/src/csvkit/examples/dummy.csv | csvstack ~/src/csvkit/examples/dummy3.csv -
+    cat examples/dummy.csv | csvstack examples/dummy3.csv -
 
 Alternately, you can pipe in multiple inputs like so::
 
@@ -88,7 +88,7 @@ These may be symptoms of CSV sniffing gone wrong. As there is no single, standar
 Although these issues are annoying, in most cases, CSV sniffing Just Works™. Disabling sniffing by default would produce a lot more issues than enabling it by default.
 
 * Are your ``Y``, ``N``, ``T``, or ``F`` values changing to ``1`` or ``0``?
-* Are your phone numbers changing to integers and loosing their leading ``+`` or ``0``?
+* Are your phone numbers changing to integers and losing their leading ``+`` or ``0``?
 * Is the Italian comune of None becoming a null value?
 
 These may be symptoms of type inference gone wrong. CSV is a text format, but a CSV may contain text representing numbers, dates, booleans or other types. Many csvkit tools try to cast the input text to an appropriate type, in a process called "type inference". Type inference can be slow, however. To disable type inference, use the :code:``--no-inference`` switch. If you want to preserve your original input (with its ``Y``, ``N``, etc.), use :code:``--no-inference``.

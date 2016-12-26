@@ -64,7 +64,7 @@ Examples
 
 Convert the 2000 census geo headers file from fixed-width to CSV and from latin-1 encoding to utf8::
 
-    in2csv -e iso-8859-1 -f fixed -s examples/realdata/census_2000/census2000_geo_schema.csv examples/realdata/census_2000/usgeo_excerpt.upl > usgeo.csv
+    in2csv -e iso-8859-1 -f fixed -s examples/realdata/census_2000/census2000_geo_schema.csv examples/realdata/census_2000/usgeo_excerpt.upl
 
 .. note::
 
@@ -82,12 +82,12 @@ Standardize the formatting of a CSV file (quoting, line endings, etc.)::
 
 Fetch csvkit's open issues from the GitHub API, convert the JSON response into a CSV and write it to a file::
 
-    curl https://api.github.com/repos/wireservice/csvkit/issues?state=open | in2csv -f json -v > issues.csv 
+    curl https://api.github.com/repos/wireservice/csvkit/issues?state=open | in2csv -f json -v
 
 Convert a DBase DBF file to an equivalent CSV::
 
-    in2csv examples/testdbf.dbf > testdbf_converted.csv
+    in2csv examples/testdbf.dbf
 
 Fetch the ten most recent robberies in Oakland, convert the GeoJSON response into a CSV and write it to a file::
 
-    curl "http://oakland.crimespotting.org/crime-data?format=json&type=robbery&count=10" | in2csv -f geojson > robberies.csv
+    curl "http://oakland.crimespotting.org/crime-data?format=json&type=robbery&count=10" | in2csv -f geojson

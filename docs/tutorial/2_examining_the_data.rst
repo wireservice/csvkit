@@ -63,9 +63,9 @@ Let's examine summary statistics for a few columns from our dataset. As we learn
 
 In this example the first column, ``county`` was identified as type ``Text``. We see that there are ``35`` counties represented in the dataset and that ``DOUGLAS`` is far and away the most frequently occurring. A quick Google search shows that there are ``93`` counties in Nebraska, so we know that either not every county received equipment or that the data is incomplete. We can also find out that Douglas county contains Omaha, the state's largest city by far.
 
-The ``acquisition_cost`` column is type ``Number``. We see that the largest individual cost was ``412,000``. (Probably dollars, but let's not presume.) Total acquisition costs were ``5,438,254``.
+The ``acquisition_cost`` column is type ``Number``. We see that the largest individual cost was ``412000.0``. (Probably dollars, but let's not presume.) Total acquisition costs were ``5430787.55``.
 
-Lastly, the ``ship_date`` column (type ``Date``) shows us that the earliest data is from ``1984`` and the latest from ``2014``. We may also note that an unusually large amount of equipment was shipped in April, 2013.
+Lastly, the ``ship_date`` column (type ``Date``) shows us that the earliest data is from ``2006`` and the latest from ``2014``. We may also note that an unusually large amount of equipment was shipped in April, 2013.
 
 As a journalist, this quick glance at the data gave me a tremendous amount of information about the dataset. Although we have to be careful about assuming to much from this quick glance (always double-check the numbers mean what you think they mean!) it can be an invaluable way to familiarize yourself with a new dataset.
 
