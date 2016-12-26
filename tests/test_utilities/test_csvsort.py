@@ -66,3 +66,5 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
                 '1,2,3',
                 '4,5,6',
             ])
+
+        input_file.close()

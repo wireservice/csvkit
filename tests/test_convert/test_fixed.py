@@ -27,12 +27,15 @@ class TestFixed(CSVKitTestCase):
                 '1,2,3',
             ])
 
+        input_file.close()
+
     def test_fixed_streaming(self):
         with open('examples/testfixed', 'r') as f:
             with open('examples/testfixed_schema.csv', 'r') as schema:
-                output = six.StringIO()
-                fixed.fixed2csv(f, schema, output=output)
-                output = output.getvalue()
+                output_file = six.StringIO()
+                fixed.fixed2csv(f, schema, output=output_file)
+                output = output_file.getvalue()
+                output_file.close()
 
         with open('examples/testfixed_converted.csv', 'r') as f:
             self.assertEqual(f.read(), output)
@@ -83,8 +86,11 @@ class TestFixed(CSVKitTestCase):
 foo,1,5
 bar,6,2
 baz,8,5"""
+
         f = six.StringIO(schema)
         parser = fixed.FixedWidthRowParser(f)
+        f.close()
+
         self.assertEqual('foo', parser.headers[0])
         self.assertEqual('bar', parser.headers[1])
         self.assertEqual('baz', parser.headers[2])

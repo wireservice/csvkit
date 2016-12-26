@@ -96,6 +96,8 @@ class NamesTests(object):
         with self.assertRaises(RequiredHeaderError):
             utility.run()
 
+        output_file.close()
+
 
 class ColumnsTests(object):
     def test_invalid_column(self):
@@ -106,3 +108,5 @@ class ColumnsTests(object):
 
         with self.assertRaises(ColumnIdentifierError):
             utility.run()
+
+        output_file.close()

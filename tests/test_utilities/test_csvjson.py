@@ -45,8 +45,10 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         self.assertDictEqual(js, {'true': {'a': True, 'c': 3.0, 'b': 2.0}})
 
     def test_duplicate_keys(self):
-        utility = CSVJSON(['-k', 'a', 'examples/dummy3.csv'], six.StringIO())
+        output_file = six.StringIO()
+        utility = CSVJSON(['-k', 'a', 'examples/dummy3.csv'], output_file)
         six.assertRaisesRegex(self, ValueError, 'Value True is not unique in the key column\.', utility.run)
+        output_file.close()
 
     def test_geojson(self):
         geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', 'examples/test_geo.csv']))
