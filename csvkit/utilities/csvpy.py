@@ -11,9 +11,9 @@ class CSVPy(CSVKitUtility):
 
     def add_arguments(self):
         self.argparser.add_argument('--dict', dest='as_dict', action='store_true',
-                                    help='Use CSV DictReader instead of the default CSV reader.')
+                                    help='Load the CSV file into a DictReader.')
         self.argparser.add_argument('--agate', dest='as_agate', action='store_true',
-                                    help='Use agate instead of the default CSV reader.')
+                                    help='Load the CSV file into an agate table.')
 
     def main(self):
         # Attempt reading filename, will cause lazy loader to access file and raise error if it does not exist

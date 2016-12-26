@@ -20,8 +20,8 @@ Loads a CSV file into a :class:`agate.csv.Reader` object and then drops into a P
 
     optional arguments:
       -h, --help            show this help message and exit
-      --dict                Use CSV DictReader instead of the default CSV reader.
-      --agate               Use agate instead of the default CSV reader.
+      --dict                Load the CSV file into a DictReader.
+      --agate               Load the CSV file into an agate table.
 
 This tool will automatically use the IPython shell if it is installed, otherwise it will use the running Python shell.
 
