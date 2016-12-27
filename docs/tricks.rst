@@ -51,7 +51,7 @@ csvkit is supported on:
 * Python 3.3+
 * `PyPy <http://pypy.org/>`_
 
-It is tested on OS X, and has been used on Linux and Windows.
+It is tested on OS X, and has also been used on Linux and Windows.
 
 If installing on Ubuntu, you may need to install Python's development headers first::
 
@@ -75,28 +75,35 @@ If you use Python 2 on FreeBSD, you may need to install `py-sqlite3 <https://www
 
     Need more speed? If you use Python 2, :code:`pip install cdecimal` for a boost.
 
-Unexpected results
-------------------
+CSV formatting and parsing
+--------------------------
 
 * Are values appearing in incorrect columns?
 * Does the output combine multiple fields into a single column with double-quotes?
 * Does the outplit split a single field into multiple columns?
 * Are `csvstat -c 1` and `csvstat --count` reporting inconsistent row counts?
 
-These may be symptoms of CSV sniffing gone wrong. As there is no single, standard CSV format, csvkit uses Python's `csv.Sniffer <https://docs.python.org/3.5/library/csv.html#csv.Sniffer>`_ to deduce the format of a CSV file: that is, the field delimiter and quote character. By default, the entire file is sent for sniffing, which can be slow. You can send a small sample with the :code:`--snifflimit` option. If you're encountering any cases above, you can try setting :code:`--snifflimit 0` to disable sniffing and set the `--delimiter` and `--quotechar` options yourself.
+These may be symptoms of CSV sniffing gone wrong. As there is no single, standard CSV format, csvkit uses Python's `csv.Sniffer <https://docs.python.org/3.5/library/csv.html#csv.Sniffer>`_ to deduce the format of a CSV file: that is, the field delimiter and quote character. By default, the entire file is sent for sniffing, which can be slow. You can send a small sample with the :code:`--snifflimit` option. If you're encountering any cases above, you can try setting :code:`--snifflimit 0` to disable sniffing and set the :code:`--delimiter` and :code:`--quotechar` options yourself.
 
 Although these issues are annoying, in most cases, CSV sniffing Just Works™. Disabling sniffing by default would produce a lot more issues than enabling it by default.
 
-* Are your ``Y``, ``N``, ``T``, or ``F`` values changing to ``1`` or ``0``?
-* Are your phone numbers changing to integers and losing their leading ``+`` or ``0``?
-* Is the Italian comune of None becoming a null value?
+CSV data interpretation
+-----------------------
 
-These may be symptoms of type inference gone wrong. CSV is a text format, but a CSV may contain text representing numbers, dates, booleans or other types. Many csvkit tools try to cast the input text to an appropriate type, in a process called "type inference". Type inference can be slow, however. To disable type inference, use the :code:``--no-inference`` switch. If you want to preserve your original input (with its ``Y``, ``N``, etc.), use :code:``--no-inference``.
+* Are the numbers ``1`` and ``0`` being interepted as ``True`` and ``False``?
+* Are phone numbers changing to integers and losing their leading ``+`` or ``0``?
+* Is the Italian comune of "None" being treated as a null value?
+
+These may be symptoms of csvkit's type inference being too aggressive for your data. CSV is a text format, but it may contain text representing numbers, dates, booleans or other types. csvkit attempts to reverse engineer that text into proper data types—a process called "type inference".
+
+For some data, type inference can be error prone. If necessary you can disable it with the To :code:`--no-inference` switch. This will force all columns to be treated as regular text.
 
 Slow performance
 ----------------
 
-See the above section about setting the :code:``--snifflimit`` option or using the :code:``--no-inference`` switch to improve performance, if the tool supports those options.
+csvkit's tools fall into two categories: Those that load an entire CSV into memory (e.g. :doc:`/scripts/csvstat`) and those that only read data one row at a time (e.g. :doc:`/scripts/csvcut`). Those that stream results will generally be very fast. For those that buffer the entire file, the slowest part of that process is typically the "type inference" described in the previous section.
+
+If a tool is too slow to be practical for your data try setting the :code:`--snifflimit` option or using the :code:`--no-inference`.
 
 Database errors
 ---------------
@@ -110,9 +117,8 @@ Are you seeing this error message, even after running :code:`pip install psycopg
     Postgresql: pip install psycopg2
     MySQL:      pip install MySQL-python
 
-    For details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at: 
+    For details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at:
 
     http://www.sqlalchemy.org/docs/dialects/
 
 First, make sure that you can open a ``python`` interpreter and run :code:`import psycopg2`. If you see an error containing ``mach-o, but wrong architecture``, you may need to reinstall ``psycopg2`` with :code:`export ARCHFLAGS="-arch i386" pip install --upgrade psycopg2` (`source <http://www.destructuring.net/2013/07/31/trouble-installing-psycopg2-on-osx/>`_). If you see another error, you may be able to find a solution on StackOverflow.
-
