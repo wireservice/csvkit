@@ -21,14 +21,17 @@ class CSVPy(CSVKitUtility):
 
         if self.args.as_dict:
             reader_class = agate.csv.DictReader
+            descriptor = 'agate.csv.DictReader'
         elif self.args.as_agate:
             reader_class = agate.Table.from_csv
+            descriptor = 'agate.Table'
         else:
             reader_class = agate.csv.reader
+            descriptor = 'agate.csv.reader'
 
         reader = reader_class(self.input_file, **self.reader_kwargs)
 
-        welcome_message = 'Welcome! "%s" has been loaded in a %s object named "reader".' % (filename, reader_class.__name__)
+        welcome_message = 'Welcome! "%s" has been loaded in an %s object named "reader".' % (filename, descriptor)
 
         try:
             from IPython.frontend.terminal.embed import InteractiveShellEmbed
