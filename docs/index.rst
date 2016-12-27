@@ -78,7 +78,7 @@ When citing csvkit in publications, you may use this BibTeX entry::
     @Manual{,
       title = {csvkit},
       author = {Christopher Groskopf and contributors},
-      year = 2015,
+      year = 2016,
       url = {https://csvkit.readthedocs.org/}
     }
 

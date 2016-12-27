@@ -34,7 +34,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'csvkit'
-copyright = u'2015, Christopher Groskopf'
+copyright = u'2016, Christopher Groskopf'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
