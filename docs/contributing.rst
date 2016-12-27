@@ -2,6 +2,12 @@
 Contributing to csvkit
 ======================
 
+csvkit actively encourages contributions from people of all genders, races, ethnicities, ages, creeds, nationalities, persuasions, alignments, sizes, shapes, and journalistic affiliations. You are welcome here.
+
+We seek contributions from developers and non-developers of all skill levels. We will typically accept bug fixes and documentation updates with minimal fuss. If you want to work on a larger feature—great! The maintainers will be happy to provide feedback and code review on your implementation.
+
+Before making any changes or additions to csvkit, please be sure to read the rest of this document, especially the "Principles of development" section.
+
 Getting Started
 ===============
 
@@ -20,15 +26,8 @@ Set up your environment for development::
     python setup.py develop
     tox
 
-New Tools
-=========
-
-The maintainers have decided not to merge or maintain new tools; there is simply not enough time to do so. Our focus is instead on making the existing tools as good as possible. We welcome patches to improve existing tools.
-
-We encourage you to create and maintain your own tools as separate Python packages. You may want to use the `agate <http://agate.readthedocs.io/>`_ library, which csvkit uses for most of its CSV reading and writing. Doing so will make it easier to maintain common behavior with csvkit’s tools.
-
-Principles
-==========
+Principles of development
+=========================
 
 csvkit is to tables as Unix text processing commands (cut, grep, cat, sort) are to text. As such, csvkit adheres to `the Unix philosophy <http://en.wikipedia.org/wiki/Unix_philosophy>`_.
 
@@ -44,9 +43,9 @@ csvkit is to tables as Unix text processing commands (cut, grep, cat, sort) are 
 
 As there is no single, standard CSV format, csvkit encourages popular formatting options:
 
-* Output targets broad compatibility. Quoting is done with double-quotes and only when required, fields are delimited with commas, and rows are terminated with Unix line endings ("\\n").
+* Output targets broad compatibility: Quoting is done with double-quotes and only when required. Fields are delimited with commas. Rows are terminated with Unix line endings ("\\n").
 
-* Output favors consistency over brevity. Floats always include at least one decimal place, even if they are round. Dates and times are output in ISO 8601 format.
+* Output favors consistency over brevity: Numbers always include at least one decimal place, even if they are round. Dates and times are output in ISO 8601 format. Null values are rendered as empty strings.
 
 How to contribute
 =================
@@ -62,33 +61,38 @@ How to contribute
 #. Wait for it to be merged or for a comment about what needs to be changed.
 #. Rejoice.
 
-Streaming and buffering
-=======================
+A note on new tools
+===================
 
-Some tools must read an entire file before writing any output; the tool "buffers" the file into memory. For example, ''csvsort'' cannot write any output before reading the entire file, because it's always possible that the next record it reads must go at the start of the sorted list.
+As a general rule, csvkit is no longer adding new tools. This is the result of limited maintenance time as well as a desire to keep the toolkit focused on the most common use cases. Exceptions may be made to this rule on a case-by-case basis. We, of course, welcome patches to improve existing tools or add useful features.
 
-Other tools, that operate on individual records, can write a record immediately after reading and transforming it. Records are "streamed" through the tool. Streaming tools produce output faster and require less memory than buffering tools.
+If you decide to build your own tool, we encourage you to create and maintain it as a separate Python package. You will probably want to use the `agate <http://agate.readthedocs.io/>`_ library, which csvkit uses for most of its CSV reading and writing. Doing so will safe time and make it easier to maintain common behavior with csvkit’s core tools.
 
-Although all the tools that stream could buffer instead, we try to maintain the streaming behavior for performance reasons. The following tools stream:
+Streaming versus buffering
+==========================
 
-* ''csvclean''
-* ''csvcut''
-* ''csvformat''
-* ''csvgrep''
-* ''csvjson'' if both the ''--stream'' and ''--no-inference'' flags are set
-* ''csvsql''
-* ''csvstack''
-* ''in2csv'' if ''--format'' is set to either ''csv'' or ''ndjson'' and the ''--no-inference'' flag is set
-* ''sql2csv''
+csvkit tools operate in one of two fashions: Some, such as :doc:`/scripts/csvsort`, buffer their entire input into memory before writing any output. Other tools—those that can operate on individual records—write write a row immediately after reading a row. Records are "streamed" through the tool. Streaming tools produce output faster and require less memory than buffering tools.
 
-The following tools buffer:
+For performance reasons tools should always offer streaming when possible. If a new feature would undermine streaming functionality it must be balanced against the utility of having a tool that can efficiently operate over large datasets.
 
-* ''csvjoin''
-* ''csvjson'' unless both the ''--stream'' and ''--no-inference'' flags are set
-* ''csvlook''
-* ''csvsort''
-* ''csvstat''
-* ''in2csv'' unless ''--format'' is set to either ''csv'' or ''ndjson'' and the ''--no-inference'' flag is set
+Currently, the following tools stream:
+
+* :doc:`/scripts/csvclean`
+* :doc:`/scripts/csvcut`
+* :doc:`/scripts/csvformat`
+* :doc:`/scripts/csvgrep`
+* :doc:`/scripts/csvstack`
+* :doc:`/scripts/sql2csv`
+
+Currently, the following tools buffer:
+
+* :doc:`/scripts/csvjoin`
+* :doc:`/scripts/csvjson` unless both the ``--stream`` and ``--no-inference`` flags are set
+* :doc:`/scripts/csvlook`
+* :doc:`/scripts/csvsort`
+* :doc:`/scripts/csvsql`
+* :doc:`/scripts/csvstat`
+* :doc:`/scripts/in2csv` unless ``--format`` is set to either ``csv`` or ``ndjson`` and the ``--no-inference`` flag is set
 
 Legalese
 ========
@@ -96,4 +100,3 @@ Legalese
 To the extent that contributors care, they should keep the following legal mumbo-jumbo in mind:
 
 The source of csvkit and therefore of any contributions are licensed under the permissive `MIT license <http://www.opensource.org/licenses/mit-license.php>`_. By submitting a patch or pull request you are agreeing to release your contribution under this license. You will be acknowledged in the AUTHORS file. As the owner of your specific contributions you retain the right to privately relicense your specific contributions (and no others), however, the released version of the code can never be retracted or relicensed.
-
