@@ -1,11 +1,11 @@
-1.0.0
------
+1.0.0 - December 27, 2016
+-------------------------
 
 This is the first major release of csvkit in a very long time. The entire backend has been rewritten to leverage the `agate <http://agate.rtfd.io>`_ data analysis library, which was itself inspired by csvkit. The new backend provides better type detection accuracy, as well as some new features.
 
 Because of the long and complex cycle behind this release, the list of changes should not be considered exhaustive. In particular, the output format of some tools may have changed in small ways. Any existing data pipelines using csvkit should be tested as part of the upgrade.
 
-Much of the credit for this release goes to `James McKinney <https://github.com/jpmckinney>`_, who has almost single-handedly kept the fire burning for a year.
+Much of the credit for this release goes to `James McKinney <https://github.com/jpmckinney>`_, who has almost single-handedly kept the csvkit fire burning for a year. Thanks, James!
 
 Backwards-incompatible changes:
 
@@ -60,8 +60,8 @@ Fixes:
 * The ``any_match`` argument of ``FilteringCSVReader`` now works correctly.
 * All tools handle empty files without error.
 
-0.9.1
------
+0.9.1 - March 31, 2015
+----------------------
 
 * Add Antonio Lima to AUTHORS.
 * Add support for ndjson. (#329)
