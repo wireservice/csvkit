@@ -15,16 +15,50 @@ MAX_UNIQUE = 5
 MAX_FREQ = 5
 
 OPERATIONS = OrderedDict([
-    ('min', agate.Min),
-    ('max', agate.Max),
-    ('sum', agate.Sum),
-    ('mean', agate.Mean),
-    ('median', agate.Median),
-    ('stdev', agate.StDev),
-    ('nulls', agate.HasNulls),
-    ('unique', None),
-    ('freq', None),
-    ('len', agate.MaxLength)
+    ('type', {
+        'aggregation': None,
+        'label': 'Type of data: '
+    }),
+    ('nulls', {
+        'aggregation': agate.HasNulls,
+        'label': 'Contains null values: '
+    }),
+    ('min', {
+        'aggregation': agate.Min,
+        'label': 'Smallest value: '
+    }),
+    ('max', {
+        'aggregation': agate.Max,
+        'label': 'Largest value: '
+    }),
+    ('sum', {
+        'aggregation': agate.Sum,
+        'label': 'Sum: '
+    }),
+    ('mean', {
+        'aggregation': agate.Mean,
+        'label': 'Mean: '
+    }),
+    ('median', {
+        'aggregation': agate.Median,
+        'label': 'Median: '
+    }),
+    ('stdev', {
+        'aggregation': agate.StDev,
+        'label': 'StDev: '
+    }),
+    ('unique', {
+        'aggregation': None,
+        'label': 'Unique values: '
+    }),
+    ('freq', {
+        'aggregation': None,
+        'label': 'Most common values: '
+    }),
+    ('len', {
+        'aggregation': agate.MaxLength,
+        'label': 'Longest value: '
+    }),
 ])
 
 
@@ -37,10 +71,12 @@ class CSVStat(CSVKitUtility):
                                     help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
                                     help='A comma separated list of column indices or names to be examined. Defaults to all columns.')
-        self.argparser.add_argument('--max', dest='max_only', action='store_true',
-                                    help='Only output max.')
+        self.argparser.add_argument('--type', dest='type_only', action='store_true',
+                                    help='Only output data type.')
         self.argparser.add_argument('--min', dest='min_only', action='store_true',
                                     help='Only output min.')
+        self.argparser.add_argument('--max', dest='max_only', action='store_true',
+                                    help='Only output max.')
         self.argparser.add_argument('--sum', dest='sum_only', action='store_true',
                                     help='Only output sum.')
         self.argparser.add_argument('--mean', dest='mean_only', action='store_true',
@@ -109,12 +145,14 @@ class CSVStat(CSVKitUtility):
             if len(operations) == 1:
                 op_name = operations[0]
 
-                if op_name == 'unique':
+                if op_name == 'type':
+                    stat = column.data_type.__class__.__name__
+                elif op_name == 'unique':
                     stat = len(column.values_distinct())
                 elif op_name == 'freq':
                     stat = table.pivot(column_name).order_by('Count', reverse=True).limit(MAX_FREQ)
                 else:
-                    op = OPERATIONS[operations[0]]
+                    op = OPERATIONS[operations[0]]['aggregation']
                     stat = table.aggregate(op(column_name))
 
                 # Formatting
@@ -130,8 +168,24 @@ class CSVStat(CSVKitUtility):
             else:
                 stats = {}
 
-                for op_name, op in OPERATIONS.items():
-                    if op_name == 'unique':
+                label_column_width = 0
+                value_column_width = 0
+                freq_label_width = 0
+                freq_value_width = 0
+
+                for op_name, op_data in OPERATIONS.items():
+                    label_column_width = max(label_column_width, len(op_data['label']))
+
+                    if op_name == 'type':
+                        stats[op_name] = '%ss' % column.data_type.__class__.__name__
+                        continue
+                    elif op_name == 'nulls':
+                        if table.aggregate(agate.HasNulls(column_name)):
+                            stats[op_name] = 'True (excluded from calculations)'
+                        else:
+                            stats[op_name] = 'False'
+                        continue
+                    elif op_name == 'unique':
                         stats[op_name] = len(column.values_distinct())
                         continue
                     elif op_name == 'freq':
@@ -139,48 +193,71 @@ class CSVStat(CSVKitUtility):
                         continue
 
                     try:
+                        op = op_data['aggregation']
+
                         with warnings.catch_warnings():
                             warnings.simplefilter('ignore', agate.NullCalculationWarning)
                             stats[op_name] = table.aggregate(op(column_name))
                     except:
                         stats[op_name] = None
 
-                self.output_file.write(('%3i. %s\n' % (column_id + 1, column_name)))
+                    if stats[op_name]:
+                        value_column_width = max(value_column_width, len(str(stats[op_name])))
 
-                self.output_file.write('\tType of data: %ss\n' % column.data_type.__class__.__name__)
+                # print(label_column_width)
+                # print(value_column_width)
+                # print(freq_label_width)
+                # print(freq_value_width)
 
-                if stats['nulls']:
-                    self.output_file.write('\tContains null values: True (excluded from calculations)\n')
-                else:
-                    self.output_file.write('\tContains values: False\n')
+                self.output_file.write(('%3i. "%s"\n\n' % (column_id + 1, column_name)))
 
-                if stats['unique'] <= MAX_UNIQUE and not isinstance(column.data_type, agate.Boolean):
-                    uniques = [six.text_type(u) for u in column.values_distinct()]
-                    data = u'\tValues: %s\n' % ', '.join(uniques)
-                    self.output_file.write(data)
-                else:
-                    if isinstance(column.data_type, (agate.Number, agate.Date, agate.DateTime)):
-                        self.output_file.write('\tMinimum value: %s\n' % stats['min'])
-                        self.output_file.write('\tMaximum value: %s\n' % stats['max'])
+                for op_name, op_data in OPERATIONS.items():
+                    if not stats[op_name]:
+                        continue
 
-                    if isinstance(column.data_type, agate.Number):
-                        self.output_file.write('\tSum: %s\n' % stats['sum'])
-                        self.output_file.write('\tMean: %s\n' % stats['mean'])
-                        self.output_file.write('\tMedian: %s\n' % stats['median'])
-                        self.output_file.write('\tStDev: %s\n' % stats['stdev'])
+                    if op_name == 'freq':
+                        continue
 
-                    self.output_file.write('\tUnique values: %i\n' % stats['unique'])
+                    label = '{label:{label_column_width}}'.format(**{
+                        'label_column_width': label_column_width,
+                        'label': op_data['label']
+                    })
 
-                if isinstance(column.data_type, agate.Text):
-                    self.output_file.write('\tMax length: %i\n' % stats['len'])
+                    # value = '{value:{value_column_width}}'.format(**{
+                    #     'value_column_width': value_column_width,
+                    #     'value': stats[op_name]
+                    # })
 
-                self.output_file.write('\tTop %i most common values:\n' % MAX_FREQ)
+                    self.output_file.write('\t{} {}\n'.format(label, stats[op_name]))
 
-                for row in stats['freq']:
-                    self.output_file.write(('\t\t%s:\t%s\n' % (six.text_type(row[column_name]), row['Count'])))
+                self.output_file.write('\n')
+
+                # if stats['unique'] <= MAX_UNIQUE and not isinstance(column.data_type, agate.Boolean):
+                #     uniques = [six.text_type(u) for u in column.values_distinct()]
+                #     data = u'\tValues: %s\n' % ', '.join(uniques)
+                #     self.output_file.write(data)
+                # else:
+                #     if isinstance(column.data_type, (agate.Number, agate.Date, agate.DateTime)):
+                #         self.output_file.write('\tMinimum value: %s\n' % stats['min'])
+                #         self.output_file.write('\tMaximum value: %s\n' % stats['max'])
+                #
+                #     if isinstance(column.data_type, agate.Number):
+                #         self.output_file.write('\tSum: %s\n' % stats['sum'])
+                #         self.output_file.write('\tMean: %s\n' % stats['mean'])
+                #         self.output_file.write('\tMedian: %s\n' % stats['median'])
+                #         self.output_file.write('\tStDev: %s\n' % stats['stdev'])
+                #
+                #     self.output_file.write('\tUnique values: %i\n' % stats['unique'])
+                #
+                # if isinstance(column.data_type, agate.Text):
+                #     self.output_file.write('\tMax length: %i\n' % stats['len'])
+                #
+                # self.output_file.write('\tTop %i most common values:\n' % MAX_FREQ)
+                #
+                # for row in stats['freq']:
+                #     self.output_file.write(('\t\t%s:\t%s\n' % (six.text_type(row[column_name]), row['Count'])))
 
         if not operations:
-            self.output_file.write('\n')
             self.output_file.write('Row count: %s\n' % len(table.rows))
 
 
