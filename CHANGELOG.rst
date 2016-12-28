@@ -1,6 +1,7 @@
 1.0.1
 -----
 
+* Fix a Python 2.6 bug preventing :doc:`/scripts/csvjson` from parsing utf-8 files. (#732)
 * Update required version of unittest to latest. (#727)
 
 1.0.0 - December 27, 2016
