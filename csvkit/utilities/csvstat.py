@@ -146,8 +146,11 @@ class CSVStat(CSVKitUtility):
 
         # Output a single stat
         if operations:
-            for column_id in column_ids:
-                self.print_one(table, column_id, operations[0])
+            if len(column_ids) == 1:
+                self.print_one(table, column_ids[0], operations[0], label=False)
+            else:
+                for column_id in column_ids:
+                    self.print_one(table, column_id, operations[0])
         else:
             stats = {}
 
@@ -161,7 +164,7 @@ class CSVStat(CSVKitUtility):
             else:
                 self.print_stats(table, column_ids, stats)
 
-    def print_one(self, table, column_id, operation):
+    def print_one(self, table, column_id, operation, label=True):
         """
         Print data for a single statistic.
         """
@@ -187,10 +190,10 @@ class CSVStat(CSVKitUtility):
             stat = ', '.join([(u'"%s": %s' % (six.text_type(row[column_id]), row['Count'])) for row in stat])
             stat = u'{ %s }' % stat
 
-        if len(table.columns) == 1:
-            self.output_file.write(six.text_type(stat))
-        else:
+        if label:
             self.output_file.write(u'%3i. %s: %s\n' % (column_id + 1, column_name, stat))
+        else:
+            self.output_file.write(u'%s\n' % stat)
 
     def calculate_stats(self, table, column_id):
         """
