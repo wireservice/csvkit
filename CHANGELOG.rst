@@ -1,7 +1,7 @@
 1.0.1
 -----
 
-
+* Update required version of unittest to latest. (#727)
 
 1.0.0 - December 27, 2016
 -------------------------
