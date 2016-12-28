@@ -20,15 +20,21 @@ class CSVPy(CSVKitUtility):
         filename = self.input_file.name
 
         if self.args.as_dict:
-            reader_class = agate.csv.DictReader
+            klass = agate.csv.DictReader
+            class_name = 'agate.csv.DictReader'
+            variable_name = 'reader'
         elif self.args.as_agate:
-            reader_class = agate.Table.from_csv
+            klass = agate.Table.from_csv
+            class_name = 'agate.Table'
+            variable_name = 'table'
         else:
-            reader_class = agate.csv.reader
+            klass = agate.csv.reader
+            class_name = 'agate.csv.reader'
+            variable_name = 'reader'
 
-        reader = reader_class(self.input_file, **self.reader_kwargs)
+        variable = klass(self.input_file, **self.reader_kwargs)
 
-        welcome_message = 'Welcome! "%s" has been loaded in a %s object named "reader".' % (filename, reader_class.__name__)
+        welcome_message = 'Welcome! "%s" has been loaded in an %s object named "%s".' % (filename, class_name, variable_name)
 
         try:
             from IPython.frontend.terminal.embed import InteractiveShellEmbed
@@ -36,7 +42,7 @@ class CSVPy(CSVKitUtility):
             ipy()
         except ImportError:
             import code
-            code.interact(welcome_message, local={'reader': reader})
+            code.interact(welcome_message, local={variable_name: variable})
 
 
 def launch_new_instance():
