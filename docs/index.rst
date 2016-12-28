@@ -69,6 +69,8 @@ Table of contents
     tricks
     contributing
     release
+    license
+    changelog
 
 Citation
 ========
@@ -86,16 +88,6 @@ Authors
 =======
 
 .. include:: ../AUTHORS.rst
-
-License
-=======
-
-.. include:: ../COPYING
-
-Changelog
-=========
-
-.. include:: ../CHANGELOG.rst
 
 Indices and tables
 ==================
