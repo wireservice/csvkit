@@ -5,6 +5,7 @@ from collections import OrderedDict
 import warnings
 
 import agate
+from babel.numbers import format_decimal
 import six
 
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
@@ -22,6 +23,10 @@ OPERATIONS = OrderedDict([
     ('nulls', {
         'aggregation': agate.HasNulls,
         'label': 'Contains null values: '
+    }),
+    ('unique', {
+        'aggregation': None,
+        'label': 'Unique values: '
     }),
     ('min', {
         'aggregation': agate.Min,
@@ -47,18 +52,14 @@ OPERATIONS = OrderedDict([
         'aggregation': agate.StDev,
         'label': 'StDev: '
     }),
-    ('unique', {
-        'aggregation': None,
-        'label': 'Unique values: '
-    }),
-    ('freq', {
-        'aggregation': None,
-        'label': 'Most common values: '
-    }),
     ('len', {
         'aggregation': agate.MaxLength,
         'label': 'Longest value: '
     }),
+    ('freq', {
+        'aggregation': None,
+        'label': 'Most common values: '
+    })
 ])
 
 
@@ -123,6 +124,7 @@ class CSVStat(CSVKitUtility):
 
         if six.PY2:
             self.output_file = codecs.getwriter('utf-8')(self.output_file)
+            print(self.output_file)
 
         table = agate.Table.from_csv(
             self.input_file,
@@ -144,70 +146,52 @@ class CSVStat(CSVKitUtility):
             # Output a single stat
             if len(operations) == 1:
                 op_name = operations[0]
+                getter = globals().get('get_%s' % op_name, None)
 
-                if op_name == 'type':
-                    stat = column.data_type.__class__.__name__
-                elif op_name == 'unique':
-                    stat = len(column.values_distinct())
-                elif op_name == 'freq':
-                    stat = table.pivot(column_name).order_by('Count', reverse=True).limit(MAX_FREQ)
-                else:
-                    op = OPERATIONS[operations[0]]['aggregation']
-                    stat = table.aggregate(op(column_name))
+                with warnings.catch_warnings():
+                    warnings.simplefilter('ignore', agate.NullCalculationWarning)
+
+                    try:
+                        if getter:
+                            stat = getter(table, column_name)
+                        else:
+                            op = OPERATIONS[op_name]['aggregation']
+                            stat = format_decimal(table.aggregate(op(column_name)))
+                    except:
+                        stat = None
 
                 # Formatting
                 if op_name == 'freq':
-                    stat = ', '.join([('"%s": %s' % (six.text_type(row[column_name]), row['Count'])) for row in stat])
-                    stat = '{ %s }' % stat
+                    stat = ', '.join([(u'"%s": %s' % (six.text_type(row[column_name]), row['Count'])) for row in stat])
+                    stat = u'{ %s }' % stat
 
-                if len(table) == 1:
+                if len(table.columns) == 1:
                     self.output_file.write(six.text_type(stat))
                 else:
-                    self.output_file.write('%3i. %s: %s\n' % (column_id + 1, column_name, stat))
+                    self.output_file.write(u'%3i. %s: %s\n' % (column_id + 1, column_name, stat))
             # Output all stats
             else:
                 stats = {}
 
                 label_column_width = 0
-                value_column_width = 0
-                freq_label_width = 0
                 freq_value_width = 0
 
                 for op_name, op_data in OPERATIONS.items():
                     label_column_width = max(label_column_width, len(op_data['label']))
 
-                    if op_name == 'type':
-                        stats[op_name] = '%ss' % column.data_type.__class__.__name__
-                        continue
-                    elif op_name == 'nulls':
-                        if table.aggregate(agate.HasNulls(column_name)):
-                            stats[op_name] = 'True (excluded from calculations)'
-                        else:
-                            stats[op_name] = 'False'
-                        continue
-                    elif op_name == 'unique':
-                        stats[op_name] = len(column.values_distinct())
-                        continue
-                    elif op_name == 'freq':
-                        stats[op_name] = table.pivot(column_name).order_by('Count', reverse=True).limit(MAX_FREQ)
-                        continue
+                    getter = globals().get('get_%s' % op_name, None)
 
-                    try:
-                        op = op_data['aggregation']
+                    with warnings.catch_warnings():
+                        warnings.simplefilter('ignore', agate.NullCalculationWarning)
 
-                        with warnings.catch_warnings():
-                            warnings.simplefilter('ignore', agate.NullCalculationWarning)
-                            stats[op_name] = table.aggregate(op(column_name))
-                    except:
-                        stats[op_name] = None
-
-                    if stats[op_name]:
-                        value_column_width = max(value_column_width, len(str(stats[op_name])))
-
-                # print(label_column_width)
-                # print(value_column_width)
-                # print(freq_label_width)
-                # print(freq_value_width)
+                        try:
+                            if getter:
+                                stats[op_name] = getter(table, column_name)
+                            else:
+                                op = op_data['aggregation']
+                                stats[op_name] = format_decimal(table.aggregate(op(column_name)))
+                        except:
+                            stats[op_name] = None
 
                 self.output_file.write(('%3i. "%s"\n\n' % (column_id + 1, column_name)))
 
@@ -215,50 +199,59 @@ class CSVStat(CSVKitUtility):
                     if not stats[op_name]:
                         continue
 
-                    if op_name == 'freq':
-                        continue
-
-                    label = '{label:{label_column_width}}'.format(**{
+                    label = u'{label:{label_column_width}}'.format(**{
                         'label_column_width': label_column_width,
                         'label': op_data['label']
                     })
 
-                    # value = '{value:{value_column_width}}'.format(**{
-                    #     'value_column_width': value_column_width,
-                    #     'value': stats[op_name]
-                    # })
+                    if op_name == 'freq':
+                        for i, row in enumerate(stats['freq']):
+                            if i == 0:
+                                self.output_file.write('\t{} '.format(label))
+                            else:
+                                self.output_file.write(u'\t{label:{label_column_width}} '.format(**{
+                                    'label_column_width': label_column_width,
+                                    'label': ''
+                                }))
 
-                    self.output_file.write('\t{} {}\n'.format(label, stats[op_name]))
+                            if isinstance(column.data_type, agate.Number):
+                                v = format_decimal(row[column_name])
+                            else:
+                                v = six.text_type(row[column_name])
+
+                            self.output_file.write(u'{} ({}x)\n'.format(v, row['Count']))
+
+                        continue
+
+                    self.output_file.write(u'\t{} {}\n'.format(label, stats[op_name]))
 
                 self.output_file.write('\n')
 
-                # if stats['unique'] <= MAX_UNIQUE and not isinstance(column.data_type, agate.Boolean):
-                #     uniques = [six.text_type(u) for u in column.values_distinct()]
-                #     data = u'\tValues: %s\n' % ', '.join(uniques)
-                #     self.output_file.write(data)
-                # else:
-                #     if isinstance(column.data_type, (agate.Number, agate.Date, agate.DateTime)):
-                #         self.output_file.write('\tMinimum value: %s\n' % stats['min'])
-                #         self.output_file.write('\tMaximum value: %s\n' % stats['max'])
-                #
-                #     if isinstance(column.data_type, agate.Number):
-                #         self.output_file.write('\tSum: %s\n' % stats['sum'])
-                #         self.output_file.write('\tMean: %s\n' % stats['mean'])
-                #         self.output_file.write('\tMedian: %s\n' % stats['median'])
-                #         self.output_file.write('\tStDev: %s\n' % stats['stdev'])
-                #
-                #     self.output_file.write('\tUnique values: %i\n' % stats['unique'])
-                #
-                # if isinstance(column.data_type, agate.Text):
-                #     self.output_file.write('\tMax length: %i\n' % stats['len'])
-                #
-                # self.output_file.write('\tTop %i most common values:\n' % MAX_FREQ)
-                #
-                # for row in stats['freq']:
-                #     self.output_file.write(('\t\t%s:\t%s\n' % (six.text_type(row[column_name]), row['Count'])))
-
         if not operations:
             self.output_file.write('Row count: %s\n' % len(table.rows))
+
+
+def get_type(table, column_name):
+    return '%s' % table.columns[column_name].data_type.__class__.__name__
+
+
+def get_nulls(table, column_name):
+    if table.aggregate(agate.HasNulls(column_name)):
+        return 'True (excluded from calculations)'
+    else:
+        return 'False'
+
+
+def get_unique(table, column_name):
+    return len(table.columns[column_name].values_distinct())
+
+
+def get_len(table, column_name):
+    return '%s characters' % table.aggregate(agate.MaxLength(column_name))
+
+
+def get_freq(table, column_name):
+    return table.pivot(column_name).order_by('Count', reverse=True).limit(MAX_FREQ)
 
 
 def launch_new_instance():

@@ -26,8 +26,8 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_no_header_row(self):
         output = self.get_output(['-H', '-c', '2', 'examples/no_header_row.csv'])
-        self.assertNotIn('1. a', output)
-        self.assertIn('2. b', output)
+        self.assertNotIn('1. "a"', output)
+        self.assertIn('2. "b"', output)
 
     def test_count_only(self):
         output = self.get_output(['--count', 'examples/realdata/ks_1033_data.csv'])
@@ -35,15 +35,15 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_unique(self):
         output = self.get_output(['-c', 'county', 'examples/realdata/ks_1033_data.csv'])
-        self.assertIn('Unique values: 73\n', output)
+        self.assertRegex(output, r'Unique values:\s+73')
 
     def test_max_length(self):
         output = self.get_output(['-c', 'county', 'examples/realdata/ks_1033_data.csv'])
-        self.assertIn('Max length: 12\n', output)
+        self.assertRegex(output, r'Longest value:\s+12')
 
     def test_freq_list(self):
         output = self.get_output(['examples/realdata/ks_1033_data.csv'])
         # print(output)
-        self.assertIn('WYANDOTTE:\t123', output)
-        self.assertIn('SALINE:\t59', output)
-        self.assertNotIn('MIAMI:\t56', output)
+        self.assertIn('WYANDOTTE (123x)', output)
+        self.assertIn('SALINE (59x)', output)
+        self.assertNotIn('MIAMI (56x)', output)
