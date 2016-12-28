@@ -2,6 +2,8 @@
 
 import sys
 
+import agate
+
 try:
     from mock import patch
 except ImportError:
@@ -20,6 +22,11 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_runs(self):
         self.get_output(['examples/test_utf8.csv'])
+
+    def test_columns(self):
+        output = self.get_output(['-c', '2', 'examples/testxls_converted.csv'])
+        self.assertNotIn('1. "text"', output)
+        self.assertIn('2. "date"', output)
 
     def test_encoding(self):
         self.get_output(['-e', 'latin1', 'examples/test_latin1.csv'])
@@ -43,7 +50,41 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_freq_list(self):
         output = self.get_output(['examples/realdata/ks_1033_data.csv'])
-        # print(output)
+
         self.assertIn('WYANDOTTE (123x)', output)
         self.assertIn('SALINE (59x)', output)
         self.assertNotIn('MIAMI (56x)', output)
+
+    def test_csv(self):
+        output = self.get_output_as_io(['--csv', 'examples/realdata/ks_1033_data.csv'])
+
+        reader = agate.csv.reader(output)
+
+        header = next(reader)
+
+        self.assertEqual(header[1], 'column_name')
+        self.assertEqual(header[4], 'unique')
+
+        row = next(reader)
+
+        self.assertEqual(row[1], 'state')
+        self.assertEqual(row[2], 'Text')
+        self.assertEqual(row[5], '')
+        self.assertEqual(row[11], '2')
+
+    def test_csv_columns(self):
+        output = self.get_output_as_io(['--csv', '-c', '4', 'examples/realdata/ks_1033_data.csv'])
+
+        reader = agate.csv.reader(output)
+
+        header = next(reader)
+
+        self.assertEqual(header[1], 'column_name')
+        self.assertEqual(header[4], 'unique')
+
+        row = next(reader)
+
+        self.assertEqual(row[1], 'nsn')
+        self.assertEqual(row[2], 'Text')
+        self.assertEqual(row[5], '')
+        self.assertEqual(row[11], '16')
