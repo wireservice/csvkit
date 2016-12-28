@@ -1,6 +1,7 @@
 1.0.1
 -----
 
+* :doc:`/scripts/csvpy` now has a better description when using the :code:`--agate` flag (#729)
 * Fix a Python 2.6 bug preventing :doc:`/scripts/csvjson` from parsing utf-8 files. (#732)
 * Update required version of unittest to latest. (#727)
 
