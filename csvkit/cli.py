@@ -68,7 +68,10 @@ class CSVKitUtility(object):
         self._init_common_parser()
         self.add_arguments()
         self.args = self.argparser.parse_args(args)
-        self.output_file_handle = output_file
+        if output_file is None:
+            self.output_file = sys.stdout
+        else:
+            self.output_file = output_file
 
         self.reader_kwargs = self._extract_csv_reader_kwargs()
         self.writer_kwargs = self._extract_csv_writer_kwargs()
@@ -105,14 +108,6 @@ class CSVKitUtility(object):
         """
         if 'f' not in self.override_flags:
             self.input_file = self._open_input_file(self.args.input_path)
-
-        if self.output_file_handle is None:
-            if six.PY2:
-                self.output_file = codecs.getwriter('utf-8')(sys.stdout)
-            else:
-                self.output_file = sys.stdout
-        else:
-            self.output_file = self.output_file_handle
 
         try:
             self.main()

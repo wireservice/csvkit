@@ -40,6 +40,7 @@ class CSVJSON(CSVKitUtility):
                                     help='Disable type inference when parsing CSV input.')
 
     def main(self):
+        # We need to do this dance here, because we aren't writing through agate.
         if six.PY2:
             stream = codecs.getwriter('utf-8')(self.output_file)
         else:
@@ -182,7 +183,7 @@ class CSVJSON(CSVKitUtility):
                 self.output_file,
                 key=self.args.key,
                 newline=self.args.streamOutput,
-                **json_kwargs
+                indent=self.args.indent
             )
 
 
