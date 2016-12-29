@@ -6,7 +6,7 @@ from csvkit.cli import CSVKitUtility
 
 
 class CSVLook(CSVKitUtility):
-    description = 'Render a CSV file in the console as a fixed-width table.'
+    description = 'Render a CSV file in the console as a Markdown-compatible, fixed-width table.'
     buffers_input = True
 
     def add_arguments(self):

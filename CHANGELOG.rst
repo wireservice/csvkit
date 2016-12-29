@@ -1,6 +1,7 @@
 1.0.1
 -----
 
+* :doc:`/scripts/csvlook` docs now note that output tables are Markdown-compatible. (#734)
 * :doc:`/scripts/csvstat` now supports a :code:`--csv` flag for tabular output. (#584)
 * :doc:`/scripts/csvstat` output is now easier to read. (#714)
 * :doc:`/scripts/csvpy` now has a better description when using the :code:`--agate` flag (#729)

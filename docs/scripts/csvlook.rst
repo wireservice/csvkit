@@ -5,14 +5,17 @@ csvlook
 Description
 ===========
 
-Renders a CSV to the command line in a readable, fixed-width format::
+Renders a CSV to the command line in a Markdown-compatible, fixed-width format::
 
     usage: csvlook [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-H] [-v]
-                   [-l] [--zero]
+                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
+                   [-v] [-l] [--zero] [--max-rows MAX_ROWS]
+                   [--max-columns MAX_COLUMNS]
+                   [--max-column-width MAX_COLUMN_WIDTH] [-y SNIFF_LIMIT]
+                   [--no-inference]
                    [FILE]
 
-    Render a CSV file in the console as a fixed-width table.
+    Render a CSV file in the console as a Markdown-compatible, fixed-width table.
 
     positional arguments:
       FILE                  The CSV file to operate on. If omitted, will accept
