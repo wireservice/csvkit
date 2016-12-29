@@ -41,9 +41,9 @@ copyright = u'2016, Christopher Groskopf'
 # built documents.
 #
 # The short X.Y version.
-version = '1.0.1'
+version = '1.0.2'
 # The full version, including alpha/beta/rc tags.
-release = '1.0.1'
+release = '1.0.2'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
