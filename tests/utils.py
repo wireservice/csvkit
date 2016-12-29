@@ -32,7 +32,7 @@ def stdin_as_string(content):
 
 
 class CSVKitTestCase(unittest.TestCase):
-    warnings.filterwarnings(action='ignore', message='Column names? not specified', category=RuntimeWarning, module='agate')
+    warnings.filterwarnings(action='ignore', module='agate')
 
     def get_output(self, args):
         output_file = six.StringIO()
