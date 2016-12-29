@@ -1,5 +1,7 @@
-1.0.1
------
+1.0.1 - December 29, 2016
+-------------------------
+
+This is a minor release which fixes several bugs reported in the :code:`1.0.0` release earlier this week. It also significantly improves the output of :doc:`/scripts/csvstat` and adds a :code:`--csv` output option to that command.
 
 * :doc:`/scripts/csvstat` will no longer crash when a :code:`Number` column has :code:`None` as a frequent value. (#738)
 * :doc:`/scripts/csvlook` docs now note that output tables are Markdown-compatible. (#734)
