@@ -181,7 +181,10 @@ class CSVStat(CSVKitUtility):
                     stat = getter(table, column_id)
                 else:
                     op = OPERATIONS[op_name]['aggregation']
-                    stat = format_decimal(table.aggregate(op(column_id)))
+                    stat = table.aggregate(op(column_id))
+
+                    if isinstance(stat, Decimal):
+                        stat = format_decimal(stat)
             except:
                 stat = None
 
@@ -256,7 +259,10 @@ class CSVStat(CSVKitUtility):
                             }))
 
                         if isinstance(column.data_type, agate.Number):
-                            v = format_decimal(row[column_name])
+                            v = row[column_name]
+
+                            if isinstance(v, Decimal):
+                                v = format_decimal(v)
                         else:
                             v = six.text_type(row[column_name])
 
