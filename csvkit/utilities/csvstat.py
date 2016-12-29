@@ -273,7 +273,8 @@ class CSVStat(CSVKitUtility):
 
                 self.output_file.write(u'\t{} {}\n'.format(label, v))
 
-        self.output_file.write('\n')
+            self.output_file.write('\n')
+
         self.output_file.write('Row count: %s\n' % len(table.rows))
 
     def print_csv(self, table, column_ids, stats):
