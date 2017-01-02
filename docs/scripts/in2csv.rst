@@ -42,7 +42,8 @@ The header line is required though the columns may be in any order::
       -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
                             Limit CSV dialect sniffing to the specified number of
                             bytes. Specify "0" to disable sniffing entirely.
-      --sheet SHEET         The name of the XLSX sheet to operate on.
+      -n, --names           Display sheet names from the input Excel file.
+      --sheet SHEET         The name of the Excel sheet to operate on.
       --no-inference        Disable type inference when parsing the input.
 
 See also: :doc:`../common_arguments`.

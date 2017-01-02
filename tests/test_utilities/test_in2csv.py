@@ -112,3 +112,15 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
             ])
 
         input_file.close()
+
+    def test_names_xls(self):
+        output = self.get_output_as_io(['-n', 'examples/sheets.xls'])
+
+        self.assertEqual(next(output), 'not this one\n')
+        self.assertEqual(next(output), 'data\n')
+
+    def test_names_xlsx(self):
+        output = self.get_output_as_io(['-n', 'examples/sheets.xlsx'])
+
+        self.assertEqual(next(output), 'not this one\n')
+        self.assertEqual(next(output), 'data\n')
