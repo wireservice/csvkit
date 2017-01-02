@@ -27,7 +27,7 @@ class In2CSV(CSVKitUtility):
         self.argparser.add_argument('-k', '--key', dest='key',
                                     help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
         self.argparser.add_argument('--sheet', dest='sheet',
-                                    help='The name of the XLSX sheet to operate on.')
+                                    help='The name of the Excel sheet to operate on.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
@@ -50,6 +50,7 @@ class In2CSV(CSVKitUtility):
             if not filetype:
                 self.argparser.error('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
+        # Buffer standard input if the input file is in CSV format or if performing type inference.
         self.buffers_input = filetype == 'csv' or not self.args.no_inference
 
         # Set the input file.
@@ -71,11 +72,8 @@ class In2CSV(CSVKitUtility):
 
         if filetype == 'csv':
             kwargs.update(self.reader_kwargs)
-            # Streaming CSV musn't set sniff_limit, but non-streaming should.
-            if not self.args.no_inference:
-                kwargs['sniff_limit'] = self.args.sniff_limit
-            if self.args.no_header_row:
-                kwargs['header'] = False
+            kwargs['sniff_limit'] = self.args.sniff_limit
+            kwargs['header'] = not self.args.no_header_row
         elif self.args.no_inference:
             # Streaming CSV musn't set column_types, but other formats should.
             kwargs['column_types'] = agate.TypeTester(limit=0)
