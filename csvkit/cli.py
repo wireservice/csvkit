@@ -321,17 +321,15 @@ class CSVKitUtility(object):
         f = self.input_file
         output = self.output_file
 
-        try:
-            zero_based = self.args.zero_based
-        except:
-            zero_based = False
+        if getattr(self.args, 'zero_based', None):
+            start = 0
+        else:
+            start = 1
 
         rows = agate.csv.reader(f, **self.reader_kwargs)
         column_names = next(rows)
 
-        for i, c in enumerate(column_names):
-            if not zero_based:
-                i += 1
+        for i, c in enumerate(column_names, start):
             output.write('%3i: %s\n' % (i, c))
 
 
