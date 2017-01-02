@@ -45,5 +45,5 @@ class TestCSVJoin(CSVKitTestCase, EmptyFileTests):
             self.assertEqual(output.readlines(), f.readlines())
 
     def test_no_header_row(self):
-        output = self.get_output_as_io(['-c', '1', '-H', 'examples/join_a.csv', 'examples/join_no_header_row.csv'])
+        output = self.get_output_as_io(['-c', '1', '--no-header-row', 'examples/join_a.csv', 'examples/join_no_header_row.csv'])
         self.assertEqual(len(output.readlines()), 3)
