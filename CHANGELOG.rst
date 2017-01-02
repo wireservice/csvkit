@@ -1,7 +1,7 @@
 1.0.2
 -----
 
-
+* :doc:`/scripts/csvjoin` supports ``--snifflimit`` and ``--no-inference``.
 
 1.0.1 - December 29, 2016
 -------------------------

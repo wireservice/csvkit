@@ -21,6 +21,10 @@ class CSVJoin(CSVKitUtility):
                                     help='Perform a left outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of left outer joins, starting at the left.')
         self.argparser.add_argument('--right', dest='right_join', action='store_true',
                                     help='Perform a right outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of right outer joins, starting at the right.')
+        self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
+                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
+        self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
+                                    help='Disable type inference when parsing CSV input.')
 
     def main(self):
         self.input_files = []
@@ -48,9 +52,17 @@ class CSVJoin(CSVKitUtility):
 
         tables = []
         header = not self.args.no_header_row
+        sniff_limit = self.args.sniff_limit
+        column_types = self.get_column_types()
 
         for f in self.input_files:
-            tables.append(agate.Table.from_csv(f, header=header, **self.reader_kwargs))
+            tables.append(agate.Table.from_csv(
+                f,
+                sniff_limit=sniff_limit,
+                header=header,
+                column_types=column_types,
+                **self.reader_kwargs
+            ))
             f.close()
 
         join_column_ids = []

@@ -47,3 +47,27 @@ class TestCSVJoin(CSVKitTestCase, EmptyFileTests):
     def test_no_header_row(self):
         output = self.get_output_as_io(['-c', '1', '--no-header-row', 'examples/join_a.csv', 'examples/join_no_header_row.csv'])
         self.assertEqual(len(output.readlines()), 3)
+
+    def test_no_inference(self):
+        self.assertRows(['--no-inference', 'examples/join_a.csv', 'examples/join_short.csv'], [
+            ['a', 'b', 'c', 'a2', 'b2', 'c2', 'b2_2', 'c2_2'],
+            ['1', 'b', 'c', '1', 'b', '', 'b', 'c'],
+            ['2', 'b', 'c', '1', 'b', '', 'b', 'c'],
+            ['3', 'b', 'c', '', '', '', '', ''],
+        ])
+
+    def test_sniff_limit_no_limit(self):
+        self.assertRows(['examples/join_a.csv', 'examples/sniff_limit.csv'], [
+            ['a', 'b', 'c', 'a2', 'b2', 'c2'],
+            ['1', 'b', 'c', 'True', '2', '3'],
+            ['2', 'b', 'c', '', '', ''],
+            ['3', 'b', 'c', '', '', ''],
+        ])
+
+    def test_sniff_limit_zero_limit(self):
+        self.assertRows(['--snifflimit', '0', 'examples/join_a.csv', 'examples/sniff_limit.csv'], [
+            ['a', 'b', 'c', 'a;b;c'],
+            ['1', 'b', 'c', '1;2;3'],
+            ['2', 'b', 'c', ''],
+            ['3', 'b', 'c', ''],
+        ])
