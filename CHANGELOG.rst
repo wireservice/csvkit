@@ -1,7 +1,7 @@
 1.0.2
 -----
 
-
+* :doc:`/scripts/in2csv` now supports a :code:`--names` flag to print Excel sheet names.
 
 1.0.1 - December 29, 2016
 -------------------------

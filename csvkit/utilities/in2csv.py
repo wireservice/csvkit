@@ -3,6 +3,8 @@
 import agate
 import agatedbf  # noqa
 import agateexcel  # noqa
+import openpyxl
+import xlrd
 
 from csvkit import convert
 from csvkit.convert.fixed import fixed2csv
@@ -26,6 +28,8 @@ class In2CSV(CSVKitUtility):
                                     help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
         self.argparser.add_argument('-k', '--key', dest='key',
                                     help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
+        self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
+                                    help='Display sheet names from the input Excel file.')
         self.argparser.add_argument('--sheet', dest='sheet',
                                     help='The name of the Excel sheet to operate on.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
@@ -58,6 +62,20 @@ class In2CSV(CSVKitUtility):
             self.input_file = open(self.args.input_path, 'rb')
         else:
             self.input_file = self._open_input_file(self.args.input_path)
+
+        if self.args.names_only:
+            sheet_names = None
+            if filetype == 'xls':
+                sheet_names = xlrd.open_workbook(file_contents=self.input_file.read()).sheet_names()
+            elif filetype == 'xlsx':
+                sheet_names = openpyxl.load_workbook(self.input_file, read_only=True, data_only=True).sheetnames
+            if sheet_names:
+                for name in sheet_names:
+                    self.output_file.write('%s\n' % name)
+            else:
+                self.argparser.error('You cannot use the -n or --names options with non-Excel files.')
+            self.input_file.close()
+            return
 
         # Set the reader's arguments.
         kwargs = {}
