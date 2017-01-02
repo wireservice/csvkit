@@ -74,9 +74,9 @@ class In2CSV(CSVKitUtility):
             kwargs.update(self.reader_kwargs)
             kwargs['sniff_limit'] = self.args.sniff_limit
             kwargs['header'] = not self.args.no_header_row
-        elif self.args.no_inference:
-            # Streaming CSV musn't set column_types, but other formats should.
-            kwargs['column_types'] = agate.TypeTester(limit=0)
+
+        if filetype != 'dbf':
+            kwargs['column_types'] = self.get_column_types()
 
         # Convert the file.
         if filetype == 'csv' and self.args.no_inference:
