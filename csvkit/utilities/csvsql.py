@@ -127,16 +127,19 @@ class CSVSQL(CSVKitUtility):
                     table.to_sql(
                         self.connection,
                         table_name,
-                        create=(not self.args.no_create),
-                        insert=(self.args.insert and len(table.rows) > 0),
-                        constraints=()
+                        create=not self.args.no_create,
+                        insert=self.args.insert and len(table.rows) > 0,
+                        db_schema=self.args.db_schema,
+                        constraints=not self.args.no_constraints
                     )
 
                 # Output SQL statements
                 else:
                     statement = table.to_sql_create_statement(
                         table_name,
-                        dialect=self.args.dialect
+                        dialect=self.args.dialect,
+                        db_schema=self.args.db_schema,
+                        constraints=not self.args.no_constraints
                     )
 
                     self.output_file.write('%s\n' % statement)
