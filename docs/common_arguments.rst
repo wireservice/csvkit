@@ -19,7 +19,7 @@ All tools which accept CSV as input share a set of common command-line arguments
   -p ESCAPECHAR, --escapechar ESCAPECHAR
                         Character used to escape the delimiter if --quoting 3
                         ("Quote None") is specified and to escape the
-                        QUOTECHAR if --no-doublequote is not specified.
+                        QUOTECHAR if --no-doublequote is specified.
   -z MAXFIELDSIZE, --maxfieldsize MAXFIELDSIZE
                         Maximum length of a single field in the input CSV
                         file.

@@ -38,7 +38,7 @@ Convert a CSV file to a custom output format.::
       -P OUT_ESCAPECHAR, --out-escapechar OUT_ESCAPECHAR
                             Character used to escape the delimiter in the output
                             CSV file if --quoting 3 ("Quote None") is specified
-                            and to escape the QUOTECHAR if --no-doublequote is not
+                            and to escape the QUOTECHAR if --no-doublequote is
                             specified.
       -M OUT_LINETERMINATOR, --out-lineterminator OUT_LINETERMINATOR
                             Character used to terminate lines in the output CSV
