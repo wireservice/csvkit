@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import sys
 
@@ -51,11 +52,23 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     def test_convert_xls_with_sheet(self):
         self.assertConverted('xls', 'examples/sheets.xls', 'examples/testxls_converted.csv', ['--sheet', 'data'])
 
+    def test_convert_xls_with_unicode_sheet(self):
+        self.assertLines(['--sheet', 'ʤ', 'examples/sheets.xls'], [
+            'a,b,c',
+            '1.0,2.0,3.0',
+        ])
+
     def test_convert_xlsx(self):
         self.assertConverted('xlsx', 'examples/test.xlsx', 'examples/testxlsx_converted.csv')
 
     def test_convert_xlsx_with_sheet(self):
         self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_converted.csv', ['--sheet', 'data'])
+
+    def test_convert_xlsx_with_unicode_sheet(self):
+        self.assertLines(['--sheet', 'ʤ', 'examples/sheets.xlsx'], [
+            'a,b,c',
+            'True,2,3',
+        ])
 
     def test_csv_no_headers(self):
         self.assertLines(['--no-header-row', 'examples/no_header_row.csv'], [

@@ -1,9 +1,15 @@
 1.0.2
 -----
 
+Improvements:
+
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
-* :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
 * :doc:`/scripts/in2csv` now supports a :code:`--names` flag to print Excel sheet names.
+
+Fixes:
+
+* :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
+* :doc:`/scripts/in2csv` accepts utf-8 arguments to the :code:`--sheet` option in Python 2.
 
 1.0.1 - December 29, 2016
 -------------------------
@@ -14,7 +20,7 @@ This is a minor release which fixes several bugs reported in the :code:`1.0.0` r
 * :doc:`/scripts/csvlook` docs now note that output tables are Markdown-compatible. (#734)
 * :doc:`/scripts/csvstat` now supports a :code:`--csv` flag for tabular output. (#584)
 * :doc:`/scripts/csvstat` output is now easier to read. (#714)
-* :doc:`/scripts/csvpy` now has a better description when using the :code:`--agate` flag (#729)
+* :doc:`/scripts/csvpy` now has a better description when using the :code:`--agate` flag. (#729)
 * Fix a Python 2.6 bug preventing :doc:`/scripts/csvjson` from parsing utf-8 files. (#732)
 * Update required version of unittest to latest. (#727)
 
