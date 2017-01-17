@@ -5,7 +5,14 @@ csvclean
 Description
 ===========
 
-Cleans a CSV file of common syntax errors. Outputs [basename]_out.csv and [basename]_err.csv, the former containing all valid rows and the latter containing all error rows along with line numbers and descriptions::
+Cleans a CSV file of common syntax errors:
+
+* reports rows that have a different number of columns than the header row
+* removes optional quote characters
+* changes the record delimiter to a line feed
+* changes the character encoding to UTF-8
+
+Outputs [basename]_out.csv and [basename]_err.csv, the former containing all valid rows and the latter containing all error rows along with line numbers and descriptions::
 
     usage: csvclean [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                     [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-v] [-l]

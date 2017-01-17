@@ -17,12 +17,8 @@ from tests.utils import CSVKitTestCase, EmptyFileTests
 class TestCSVClean(CSVKitTestCase, EmptyFileTests):
     Utility = CSVClean
 
-    def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/bad.csv']):
-            launch_new_instance()
-
-    def test_simple(self):
-        args = ['examples/bad.csv']
+    def assertCleaned(self, basename, output_lines, error_lines, additional_args=[]):
+        args = ['examples/%s.csv' % basename] + additional_args
         output_file = six.StringIO()
 
         utility = CSVClean(args, output_file)
@@ -30,24 +26,64 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
 
         output_file.close()
 
-        self.assertTrue(os.path.exists('examples/bad_err.csv'))
-        self.assertTrue(os.path.exists('examples/bad_out.csv'))
+        output_file = 'examples/%s_out.csv' % basename
+        error_file = 'examples/%s_err.csv' % basename
+
+        self.assertEqual(os.path.exists(output_file), bool(output_lines))
+        self.assertEqual(os.path.exists(error_file), bool(error_lines))
 
         try:
-            with open('examples/bad_err.csv') as f:
-                next(f)
-                self.assertEqual(next(f)[0], '1')
-                self.assertEqual(next(f)[0], '2')
-                self.assertRaises(StopIteration, next, f)
-
-            with open('examples/bad_out.csv') as f:
-                next(f)
-                self.assertEqual(next(f)[0], '0')
-                self.assertRaises(StopIteration, next, f)
+            if output_lines:
+                with open(output_file) as f:
+                    for line in output_lines:
+                        self.assertEqual(next(f), line)
+                    self.assertRaises(StopIteration, next, f)
+            if error_lines:
+                with open(error_file) as f:
+                    for line in error_lines:
+                        self.assertEqual(next(f), line)
+                    self.assertRaises(StopIteration, next, f)
         finally:
-            # Cleanup
-            os.remove('examples/bad_err.csv')
-            os.remove('examples/bad_out.csv')
+            if output_lines:
+                os.remove(output_file)
+            if error_lines:
+                os.remove(error_file)
+
+
+    def test_launch_new_instance(self):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/bad.csv']):
+            launch_new_instance()
+
+    def test_simple(self):
+        self.assertCleaned('bad', [
+            'column_a,column_b,column_c\n',
+            '0,mixed types.... uh oh,17\n',
+        ], [
+            'line_number,msg,column_a,column_b,column_c\n',
+            '1,"Expected 3 columns, found 4 columns",1,27,,I\'m too long!\n',
+            '2,"Expected 3 columns, found 2 columns",,I\'m too short!\n',
+        ])
+
+    def test_removes_optional_quote_characters(self):
+        self.assertCleaned('optional_quote_characters', [
+            'a,b,c\n',
+            '1,2,3\n',
+        ], [])
+
+    def test_changes_line_endings(self):
+        self.assertCleaned('mac_newlines', [
+            'a,b,c\n',
+            '1,2,3\n',
+            '"Once upon\n',
+            'a time",5,6\n',
+        ], [])
+
+    def test_changes_character_encoding(self):
+        self.assertCleaned('test_latin1', [
+            'a,b,c\n',
+            '1,2,3\n',
+            '4,5,©\n',
+        ], [], ['-e', 'latin1'])
 
     def test_dry_run(self):
         output = self.get_output_as_io(['-n', 'examples/bad.csv'])
