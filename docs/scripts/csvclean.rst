@@ -5,16 +5,7 @@ csvclean
 Description
 ===========
 
-Cleans a CSV file of common syntax errors and issues:
-
-* adds quotes when needed
-* deletes every unneeded quote
-* recodes charset to UTF-8
-* replaces delimiter by a comma
-* replaces end-of-line by LF
-* deletes comments (lines beginning with a #)
-
-Outputs [basename]_out.csv and [basename]_err.csv, the former containing all valid rows and the latter containing all error rows along with line numbers and descriptions::
+Cleans a CSV file of common syntax errors. Outputs [basename]_out.csv and [basename]_err.csv, the former containing all valid rows and the latter containing all error rows along with line numbers and descriptions::
 
     usage: csvclean [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                     [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-v] [-l]
