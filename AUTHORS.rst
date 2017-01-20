@@ -71,3 +71,4 @@ The following individuals have contributed code to csvkit:
 * Santiago Castro
 * Dan Davison
 * Éric Araujo
+* Sam Stuck
