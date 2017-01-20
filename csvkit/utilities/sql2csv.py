@@ -51,9 +51,6 @@ class SQL2CSV(CSVKitUtility):
             for line in self.args.file:
                 query += line
 
-        # Must escape '%'.
-        # @see https://github.com/wireservice/csvkit/issues/440
-        # @see https://bitbucket.org/zzzeek/sqlalchemy/commits/5bc1f17cb53248e7cea609693a3b2a9bb702545b
         rows = connection.execution_options(no_parameters=True).execute(query)
         output = agate.csv.writer(self.output_file, **self.writer_kwargs)
 
