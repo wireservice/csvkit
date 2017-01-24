@@ -80,6 +80,18 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
             '1,2,3',
         ])
 
+    def test_xls_no_inference(self):
+        self.assertLines(['--no-inference', 'examples/dummy.xls'], [
+            'a,b,c',
+            '1.0,2.0,3.0',
+        ])
+
+    def test_xlsx_no_inference(self):
+        self.assertLines(['--no-inference', 'examples/dummy.xlsx'], [
+            'a,b,c',
+            '1,2,3',
+        ])
+
     def test_geojson_no_inference(self):
         input_file = six.StringIO('{"a": 1, "b": 2, "type": "FeatureCollection", "features": [{"geometry": {}, "properties": {"a": 1, "b": 2, "c": 3}}]}')
 
