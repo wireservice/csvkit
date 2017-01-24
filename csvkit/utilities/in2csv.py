@@ -113,9 +113,9 @@ class In2CSV(CSVKitUtility):
             elif filetype == 'ndjson':
                 table = agate.Table.from_json(self.input_file, key=self.args.key, newline=True, **kwargs)
             elif filetype == 'xls':
-                table = agate.Table.from_xls(self.input_file, sheet=kwargs.get('sheet'))
+                table = agate.Table.from_xls(self.input_file, **kwargs)
             elif filetype == 'xlsx':
-                table = agate.Table.from_xlsx(self.input_file, sheet=kwargs.get('sheet'))
+                table = agate.Table.from_xlsx(self.input_file, **kwargs)
             elif filetype == 'dbf':
                 if not hasattr(self.input_file, 'name'):
                     raise ValueError('DBF files can not be converted from stdin. You must pass a filename.')
