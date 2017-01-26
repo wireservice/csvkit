@@ -58,3 +58,6 @@ Search for rows that do not contain an empty state cell::
 
     csvgrep -c 1 -r "^$" -i examples/realdata/FY09_EDU_Recipients_by_State.csv
 
+Search for rows that do not contain an empty state cell::
+
+    csvgrep -c 1 -r "^$" -i examples/realdata/FY09_EDU_Recipients_by_State.csv
