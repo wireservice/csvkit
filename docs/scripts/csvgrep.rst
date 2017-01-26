@@ -53,4 +53,8 @@ Search for the row relating to Illinois::
 Search for rows relating to states with names beginning with the letter "I"::
 
     csvgrep -c 1 -r "^I" examples/realdata/FY09_EDU_Recipients_by_State.csv
+    
+Search for rows that do not contain an empty state cell::
+
+    csvgrep -c 1 -r "^$" -i examples/realdata/FY09_EDU_Recipients_by_State.csv
 
