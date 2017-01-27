@@ -39,8 +39,9 @@ class CSVGrep(CSVKitUtility):
 
         reader_kwargs = self.reader_kwargs
         writer_kwargs = self.writer_kwargs
+        # Move the line_numbers option from the writer to the reader.
         if writer_kwargs.pop('line_numbers', False):
-            reader_kwargs = {'line_numbers': True}
+            reader_kwargs['line_numbers'] = True
 
         rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids(**reader_kwargs)
 
