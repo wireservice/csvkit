@@ -11,6 +11,7 @@ Improvements:
 
 Fixes:
 
+* :doc:`/scripts/csvgrep` no longer ignores common arguments if :code:`--linenumbers` is set.
 * :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
 * :doc:`/scripts/in2csv` restores support for :code:`--no-inference` for Excel files.
 

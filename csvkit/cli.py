@@ -241,7 +241,7 @@ class CSVKitUtility(object):
         """
         kwargs = {}
 
-        if 'l' not in self.override_flags and self.args.line_numbers:
+        if getattr(self.args, 'line_numbers', None):
             kwargs['line_numbers'] = True
 
         return kwargs

@@ -50,7 +50,13 @@ class TestCSVGrep(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         ])
 
     def test_match_with_line_numbers(self):
-        self.assertRows(['-c', '1', '-m', 'ILLINOIS', '-l', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'], [
+        self.assertRows(['-c', '1', '-m', 'ILLINOIS', '--linenumbers', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'], [
             ['line_numbers', 'State Name', 'State Abbreviate', 'Code', 'Montgomery GI Bill-Active Duty', 'Montgomery GI Bill- Selective Reserve', 'Dependents\' Educational Assistance', 'Reserve Educational Assistance Program', 'Post-Vietnam Era Veteran\'s Educational Assistance Program', 'TOTAL', ''],
             ['14', 'ILLINOIS', 'IL', '17', '15,659', '2,491', '2,025', '1,770', '19', '21,964', ''],
+        ])
+
+    def test_kwargs_with_line_numbers(self):
+        self.assertRows(['-t', '-c', '1', '-m', '1', '--linenumbers', 'examples/dummy.tsv'], [
+            ['line_numbers', 'a', 'b', 'c'],
+            ['1', '1', '2', '3'],
         ])
