@@ -6,7 +6,8 @@ Improvements:
 * Add a :code:`--version` (:code:`-V`) flag.
 * :code:`-I` is the short option for :code:`--no-inference`.
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
-* :doc:`/scripts/in2csv` now supports a :code:`--names` flag to print Excel sheet names.
+* :doc:`/scripts/csvstat` adds a :code:`--freq-count` option to set the maximum number of frequent values to display.
+* :doc:`/scripts/in2csv` adds a :code:`--names` flag to print Excel sheet names.
 
 Fixes:
 
