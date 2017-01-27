@@ -27,6 +27,13 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def test_version(self):
+        with self.assertRaises(SystemExit) as e:
+            output = self.get_output(['-V'])
+            self.assertRegex(output, r'csvcut \d+.\d+.\d+')
+
+        self.assertEqual(e.exception.code, 0)
+
     def test_convert_csv(self):
         self.assertConverted('csv', 'examples/testfixed_converted.csv', 'examples/testfixed_converted.csv')
 
