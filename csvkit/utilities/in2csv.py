@@ -25,9 +25,9 @@ class In2CSV(CSVKitUtility):
         self.argparser.add_argument('-f', '--format', dest='filetype',
                                     help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(SUPPORTED_FORMATS)))
         self.argparser.add_argument('-s', '--schema', dest='schema',
-                                    help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
+                                    help='Specify a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
         self.argparser.add_argument('-k', '--key', dest='key',
-                                    help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
+                                    help='Specify a top-level key to use look within for a list of objects to be converted when processing JSON.')
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                                     help='Display sheet names from the input Excel file.')
         self.argparser.add_argument('--sheet', dest='sheet',

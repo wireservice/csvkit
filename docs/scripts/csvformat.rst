@@ -24,7 +24,7 @@ Convert a CSV file to a custom output format.::
       -h, --help            show this help message and exit
       -D OUT_DELIMITER, --out-delimiter OUT_DELIMITER
                             Delimiting character of the output CSV file.
-      -T, --out-tabs        Specifies that the output CSV file is delimited with
+      -T, --out-tabs        Specify that the output CSV file is delimited with
                             tabs. Overrides "-D".
       -Q OUT_QUOTECHAR, --out-quotechar OUT_QUOTECHAR
                             Character used to quote strings in the output CSV

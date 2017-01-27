@@ -35,10 +35,10 @@ The header line is required though the columns may be in any order::
                             inferred from the file type. Supported formats: csv,
                             dbf, fixed, geojson, json, ndjson, xls, xlsx.
       -s SCHEMA, --schema SCHEMA
-                            Specifies a CSV-formatted schema file for converting
+                            Specify a CSV-formatted schema file for converting
                             fixed-width files. See documentation for details.
-      -k KEY, --key KEY     Specifies a top-level key to use look within for a
-                            list of objects to be converted when processing JSON.
+      -k KEY, --key KEY     Specify a top-level key to use look within for a list
+                            of objects to be converted when processing JSON.
       -n, --names           Display sheet names from the input Excel file.
       --sheet SHEET         The name of the Excel sheet to operate on.
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT

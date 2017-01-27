@@ -141,7 +141,7 @@ class CSVKitUtility(object):
                                         help='Delimiting character of the input CSV file.')
         if 't' not in self.override_flags:
             self.argparser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
-                                        help='Specifies that the input CSV file is delimited with tabs. Overrides "-d".')
+                                        help='Specify that the input CSV file is delimited with tabs. Overrides "-d".')
         if 'q' not in self.override_flags:
             self.argparser.add_argument('-q', '--quotechar', dest='quotechar',
                                         help='Character used to quote strings in the input CSV file.')
@@ -165,7 +165,7 @@ class CSVKitUtility(object):
                                         help='Ignore whitespace immediately following the delimiter.')
         if 'H' not in self.override_flags:
             self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
-                                        help='Specifies that the input CSV file has no header row. Will create default headers (A,B,C,...).')
+                                        help='Specify that the input CSV file has no header row. Will create default headers (A,B,C,...).')
         if 'v' not in self.override_flags:
             self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
                                         help='Print detailed tracebacks when errors occur.')

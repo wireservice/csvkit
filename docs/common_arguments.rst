@@ -6,7 +6,7 @@ All tools which accept CSV as input share a set of common command-line arguments
 
   -d DELIMITER, --delimiter DELIMITER
                         Delimiting character of the input CSV file.
-  -t, --tabs            Specifies that the input CSV file is delimited with
+  -t, --tabs            Specify that the input CSV file is delimited with
                         tabs. Overrides "-d".
   -q QUOTECHAR, --quotechar QUOTECHAR
                         Character used to quote strings in the input CSV file.
@@ -27,7 +27,7 @@ All tools which accept CSV as input share a set of common command-line arguments
                         Specify the encoding the input CSV file.
   -S, --skipinitialspace
                         Ignore whitespace immediately following the delimiter.
-  -H, --no-header-row   Specifies that the input CSV file has no header row.
+  -H, --no-header-row   Specify that the input CSV file has no header row.
                         Will create default headers (A,B,C,...).
   -v, --verbose         Print detailed tracebacks when errors occur.
   -l, --linenumbers     Insert a column of line numbers at the front of the
