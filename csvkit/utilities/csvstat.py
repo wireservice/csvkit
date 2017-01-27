@@ -194,7 +194,7 @@ class CSVStat(CSVKitUtility):
 
         # Formatting
         if op_name == 'freq':
-            stat = ', '.join([(u'"%s": %s' % (six.text_type(row[column_id]), row['Count'])) for row in stat])
+            stat = ', '.join([(u'"%s": %s' % (six.text_type(row[column_name]), row['Count'])) for row in stat])
             stat = u'{ %s }' % stat
 
         if label:

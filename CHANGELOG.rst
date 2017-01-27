@@ -12,6 +12,7 @@ Improvements:
 Fixes:
 
 * :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
+* :doc:`/scripts/csvstat` will no longer crash when :code:`--freq` is set.
 * :doc:`/scripts/in2csv` restores support for :code:`--no-inference` for Excel files.
 
 1.0.1 - December 29, 2016
