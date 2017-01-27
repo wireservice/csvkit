@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from argparse import FileType
 import sys
 
 import agate
@@ -16,10 +15,12 @@ class SQL2CSV(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument('--db', dest='connection_string', default='sqlite://',
                                     help='An sqlalchemy connection string to connect to a database.',)
-        self.argparser.add_argument('file', metavar="FILE", nargs='?', type=FileType('rt'), default=sys.stdin,
+        self.argparser.add_argument(metavar="FILE", nargs='?', dest='input_path',
                                     help='The file to use as SQL query. If both FILE and QUERY are omitted, query will be read from STDIN.')
         self.argparser.add_argument('--query', default=None,
                                     help="The SQL query to execute. If specified, it overrides FILE and STDIN.")
+        self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
+                                    help='Specify the encoding the input query file.')
         self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
                                     help='Do not output column names.')
 
@@ -48,8 +49,12 @@ class SQL2CSV(CSVKitUtility):
         else:
             query = ""
 
-            for line in self.args.file:
+            self.input_file = self._open_input_file(self.args.input_path)
+
+            for line in self.input_file:
                 query += line
+
+            self.input_file.close()
 
         rows = connection.execution_options(no_parameters=True).execute(query)
         output = agate.csv.writer(self.output_file, **self.writer_kwargs)

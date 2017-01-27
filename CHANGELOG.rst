@@ -8,6 +8,7 @@ Improvements:
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
 * :doc:`/scripts/csvstat` adds a :code:`--freq-count` option to set the maximum number of frequent values to display.
 * :doc:`/scripts/in2csv` adds a :code:`--names` flag to print Excel sheet names.
+* :doc:`/scripts/sql2csv` adds an :code:`--encoding` option to specify the encoding of the input query file.
 
 Fixes:
 
