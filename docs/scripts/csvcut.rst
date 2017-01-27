@@ -70,3 +70,8 @@ Extract a column that may not exist in all files::
 
     echo d, | csvjoin examples/dummy.csv - | csvcut -c d
     echo d, | csvjoin examples/join_no_header_row.csv - | csvcut -c d
+
+Display a column's unique values::
+
+    csvcut -c 1 examples/realdata/FY09_EDU_Recipients_by_State.csv | sed 1d | uniq
+
