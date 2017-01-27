@@ -41,7 +41,7 @@ class CSVSQL(CSVKitUtility):
                                     help='Optional name of database schema to create table(s) in.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
-        self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
+        self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
                                     help='Disable type inference when parsing the input.')
 
     def main(self):

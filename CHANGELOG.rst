@@ -1,9 +1,15 @@
 1.0.2
 -----
 
+Improvements:
+
+* :code:`-I` is the short option for :code:`--no-inference`.
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
-* :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
 * :doc:`/scripts/in2csv` now supports a :code:`--names` flag to print Excel sheet names.
+
+Fixes:
+
+* :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
 * :doc:`/scripts/in2csv` restores support for :code:`--no-inference` for Excel files.
 
 1.0.1 - December 29, 2016

@@ -23,7 +23,7 @@ class CSVJoin(CSVKitUtility):
                                     help='Perform a right outer join, rather than the default inner join. If more than two files are provided this will be executed as a sequence of right outer joins, starting at the right.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
-        self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
+        self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
                                     help='Disable type inference when parsing CSV input.')
 
     def main(self):

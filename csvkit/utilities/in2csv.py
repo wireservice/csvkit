@@ -34,7 +34,7 @@ class In2CSV(CSVKitUtility):
                                     help='The name of the Excel sheet to operate on.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
-        self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
+        self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
                                     help='Disable type inference when parsing CSV input.')
 
     def main(self):
