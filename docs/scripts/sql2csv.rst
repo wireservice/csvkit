@@ -8,7 +8,7 @@ Description
 Executes arbitrary commands against a SQL database and outputs the results as a CSV::
 
     usage: sql2csv [-h] [-v] [-l] [-V] [--db CONNECTION_STRING] [--query QUERY]
-                   [-H]
+                   [-e ENCODING] [-H]
                    [FILE]
 
     Execute an SQL query on a database and output the result to a CSV file.
@@ -29,6 +29,8 @@ Executes arbitrary commands against a SQL database and outputs the results as a 
                             database.
       --query QUERY         The SQL query to execute. If specified, it overrides
                             FILE and STDIN.
+      -e ENCODING, --encoding ENCODING
+                            Specify the encoding the input query file.
       -H, --no-header-row   Do not output column names.
 
 Examples

@@ -55,8 +55,23 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
 
         return text.strip()
 
+    def test_encoding(self):
+        self.get_output(['-e', 'latin1', 'examples/test.sql'])
+
     def test_query(self):
         csv = self.get_output(['--query', 'select 6*9 as question'])
+
+        self.assertTrue('question' in csv)
+        self.assertTrue('54' in csv)
+
+    def test_file(self):
+        csv = self.get_output(['examples/test.sql'])
+
+        self.assertTrue('question' in csv)
+        self.assertTrue('36' in csv)
+
+    def test_file_with_query(self):
+        csv = self.get_output(['examples/test.sql', '--query', 'select 6*9 as question'])
 
         self.assertTrue('question' in csv)
         self.assertTrue('54' in csv)
@@ -79,7 +94,29 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
             csv = self.get_output(['--query', 'select 6*9 as question'])
 
             self.assertTrue('question' in csv)
-            self.assertTrue('42' not in csv)
+            self.assertTrue('54' in csv)
+
+        input_file.close()
+
+    def test_stdin_with_file(self):
+        input_file = six.StringIO('select cast(3.1415 * 13.37 as integer) as answer')
+
+        with stdin_as_string(input_file):
+            csv = self.get_output(['examples/test.sql'])
+
+            self.assertTrue('question' in csv)
+            self.assertTrue('36' in csv)
+
+        input_file.close()
+
+    def test_stdin_with_file_and_query(self):
+        input_file = six.StringIO('select cast(3.1415 * 13.37 as integer) as answer')
+
+        with stdin_as_string(input_file):
+            csv = self.get_output(['examples/test.sql', '--query', 'select 6*9 as question'])
+
+            self.assertTrue('question' in csv)
+            self.assertTrue('54' in csv)
 
         input_file.close()
 
