@@ -55,12 +55,16 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         self.assertIn('SALINE (59x)', output)
         self.assertNotIn('MIAMI (56x)', output)
 
+    def test_freq(self):
+        output = self.get_output(['examples/realdata/ks_1033_data.csv', '--freq'])
+
+        self.assertIn('  1. state: { "KS": 1575 }', output)
 
     def test_freq_count(self):
         output = self.get_output(['examples/realdata/ks_1033_data.csv', '--freq-count', '1'])
 
         self.assertIn('WYANDOTTE (123x)', output)
-        self.assertNotIn('SALINE (59x)', output)
+        self.assertNotIn('FINNEY (103x)', output)
         self.assertNotIn('MIAMI (56x)', output)
 
     def test_csv(self):
