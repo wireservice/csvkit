@@ -8,9 +8,9 @@ Description
 Sort CSV files. Like the Unix "sort" command, but for tabular data::
 
     usage: csvsort [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-H] [-v]
-                   [-l] [--zero] [-y SNIFFLIMIT] [-n] [-c COLUMNS] [-r]
-                   [--no-inference]
+                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
+                   [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS] [-r] [-y SNIFF_LIMIT]
+                   [-I]
                    [FILE]
 
     Sort CSV files. Like the Unix "sort" command, but for tabular data.
@@ -21,16 +21,16 @@ Sort CSV files. Like the Unix "sort" command, but for tabular data::
 
     optional arguments:
       -h, --help            show this help message and exit
-      -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
-                            Limit CSV dialect sniffing to the specified number of
-                            bytes. Specify "0" to disable sniffing entirely.
       -n, --names           Display column names and indices from the input CSV
                             and exit.
       -c COLUMNS, --columns COLUMNS
                             A comma separated list of column indices or names to
                             sort by. Defaults to all columns.
       -r, --reverse         Sort in descending order.
-      --no-inference        Disable type inference when parsing the input.
+      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
+                            Limit CSV dialect sniffing to the specified number of
+                            bytes. Specify "0" to disable sniffing entirely.
+      -I, --no-inference    Disable type inference when parsing the input.
 
 See also: :doc:`../common_arguments`.
 

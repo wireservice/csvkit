@@ -7,7 +7,8 @@ Description
 
 Executes arbitrary commands against a SQL database and outputs the results as a CSV::
 
-    usage: sql2csv [-h] [-v] [-l] [--db CONNECTION_STRING] [--query QUERY] [-H]
+    usage: sql2csv [-h] [-v] [-l] [-V] [--db CONNECTION_STRING] [--query QUERY]
+                   [-H]
                    [FILE]
 
     Execute an SQL query on a database and output the result to a CSV file.
@@ -22,6 +23,7 @@ Executes arbitrary commands against a SQL database and outputs the results as a 
       -l, --linenumbers     Insert a column of line numbers at the front of the
                             output. Useful when piping to grep or as a simple
                             primary key.
+      -V, --version         Display version information and exit.
       --db CONNECTION_STRING
                             An sqlalchemy connection string to connect to a
                             database.

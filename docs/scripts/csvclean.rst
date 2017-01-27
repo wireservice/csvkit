@@ -20,8 +20,8 @@ Note that every csvkit tool does the following:
 Outputs [basename]_out.csv and [basename]_err.csv, the former containing all valid rows and the latter containing all error rows along with line numbers and descriptions::
 
     usage: csvclean [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                    [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-v] [-l]
-                    [--zero] [-n]
+                    [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-v]
+                    [-l] [--zero] [-V] [-n]
                     [FILE]
 
     Fix common errors in a CSV file.
