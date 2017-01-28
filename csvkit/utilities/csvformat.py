@@ -7,7 +7,7 @@ from csvkit.cli import CSVKitUtility
 
 class CSVFormat(CSVKitUtility):
     description = 'Convert a CSV file to a custom output format.'
-    override_flags = ['l', 'zero', 'H', 'L']
+    override_flags = ['l', 'zero', 'H', 'L', 'date-format', 'datetime-format']
 
     def add_arguments(self):
         self.argparser.add_argument('-D', '--out-delimiter', dest='out_delimiter',
