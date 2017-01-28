@@ -29,6 +29,11 @@ All tools which accept CSV as input share a set of common command-line arguments
                         Specify the locale (en_US) of any formatted numbers.
   -S, --skipinitialspace
                         Ignore whitespace immediately following the delimiter.
+  --date-format DATE_FORMAT
+                        Specify a strptime date format string like "%m/%d/%Y".
+  --datetime-format DATETIME_FORMAT
+                        Specify a strptime datetime format string like
+                        "%m/%d/%Y %I:%M %p".
   -H, --no-header-row   Specify that the input CSV file has no header row.
                         Will create default headers (A,B,C,...).
   -L SKIP_LINES, --skip-lines SKIP_LINES

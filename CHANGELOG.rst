@@ -6,6 +6,8 @@ Improvements:
 * Add a :code:`--version` flag.
 * Add a :code:`--skip-lines` option to skip initial lines (e.g. comments, copyright notices, empty rows).
 * Add a :code:`--locale` option to set the locale of any formatted numbers.
+* Add a :code:`--date-format` option to set a strptime date format string.
+* Add a :code:`--datetime-format` option to set a strptime datetime format string.
 * :code:`-I` is the short option for :code:`--no-inference`.
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
 * :doc:`/scripts/csvstat` adds a :code:`--freq-count` option to set the maximum number of frequent values to display.

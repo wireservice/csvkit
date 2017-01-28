@@ -35,7 +35,7 @@ class In2CSV(CSVKitUtility):
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
-                                    help='Disable type inference when parsing CSV input.')
+                                    help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
     def main(self):
         # Determine the file type.

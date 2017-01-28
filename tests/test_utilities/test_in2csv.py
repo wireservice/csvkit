@@ -37,6 +37,9 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     def test_locale(self):
         self.assertConverted('csv', 'examples/test_locale.csv', 'examples/test_locale_converted.csv', ['--locale', 'de_DE'])
 
+    def test_date_format(self):
+        self.assertConverted('csv', 'examples/test_date_format.csv', 'examples/test_date_format_converted.csv', ['--date-format', '%d/%m/%Y'])
+
     def test_convert_csv(self):
         self.assertConverted('csv', 'examples/testfixed_converted.csv', 'examples/testfixed_converted.csv')
 
