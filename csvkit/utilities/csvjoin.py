@@ -51,7 +51,6 @@ class CSVJoin(CSVKitUtility):
             self.argparser.error('It is not valid to specify both a left and a right join.')
 
         tables = []
-        header = not self.args.no_header_row
         sniff_limit = self.args.sniff_limit
         column_types = self.get_column_types()
 
@@ -60,7 +59,6 @@ class CSVJoin(CSVKitUtility):
                 f,
                 skip_lines=self.args.skip_lines,
                 sniff_limit=sniff_limit,
-                header=header,
                 column_types=column_types,
                 **self.reader_kwargs
             ))

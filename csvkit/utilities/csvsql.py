@@ -114,7 +114,6 @@ class CSVSQL(CSVKitUtility):
                     f,
                     skip_lines=self.args.skip_lines,
                     sniff_limit=self.args.sniff_limit,
-                    header=not self.args.no_header_row,
                     column_types=self.get_column_types(),
                     **self.reader_kwargs
                 )

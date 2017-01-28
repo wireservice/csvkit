@@ -236,6 +236,9 @@ class CSVKitUtility(object):
         if six.PY2 and self.args.encoding:
             kwargs['encoding'] = self.args.encoding
 
+        if getattr(self.args, 'no_header_row', None):
+            kwargs['header'] = not self.args.no_header_row
+
         return kwargs
 
     def _extract_csv_writer_kwargs(self):
