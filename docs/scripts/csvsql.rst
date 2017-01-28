@@ -36,6 +36,8 @@ Generate SQL statements for a CSV file or execute those statements directly on a
       --insert              In addition to creating the table, also insert the
                             data into the table. Only valid when --db is
                             specified.
+      --prefix PREFIX       Add an expression following the INSERT keyword, like
+                            IGNORE or REPLACE.
       --tables TABLE_NAMES  Specify the names of the tables to be created. By
                             default, the tables will be named after the filenames
                             without extensions or "stdin".
@@ -71,11 +73,11 @@ Generate a statement in the PostgreSQL dialect::
 Create a table and import data from the CSV directly into PostgreSQL::
 
     createdb test
-    csvsql --db postgresql:///test --table fy09 --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
+    csvsql --db postgresql:///test --tables fy09 --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
 
 For large tables it may not be practical to process the entire table. One solution to this is to analyze a sample of the table. In this case it can be useful to turn off length limits and null checks with the ``no-constraints`` option::
 
-    head -n 20 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsql --no-constraints --table fy09
+    head -n 20 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsql --no-constraints --tables fy09
 
 Create tables for an entire folder of CSVs and import data from those files directly into PostgreSQL::
 

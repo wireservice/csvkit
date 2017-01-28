@@ -29,6 +29,8 @@ class CSVSQL(CSVKitUtility):
                                     help='Execute one or more SQL queries delimited by ";" and output the result of the last query as CSV.')
         self.argparser.add_argument('--insert', dest='insert', action='store_true',
                                     help='In addition to creating the table, also insert the data into the table. Only valid when --db is specified.')
+        self.argparser.add_argument('--prefix', action='append', default=[],
+                                    help='Add an expression following the INSERT keyword, like IGNORE or REPLACE.')
         self.argparser.add_argument('--tables', dest='table_names',
                                     help='Specify the names of the tables to be created. By default, the tables will be named after the filenames without extensions or "stdin".')
         self.argparser.add_argument('--no-constraints', dest='no_constraints', action='store_true',
@@ -98,7 +100,7 @@ class CSVSQL(CSVKitUtility):
 
         for f in self.input_files:
             try:
-                # Try to use name specified via --table
+                # Try to use name specified via --tables
                 table_name = self.table_names.pop(0)
             except IndexError:
                 if f == sys.stdin:
@@ -129,6 +131,7 @@ class CSVSQL(CSVKitUtility):
                         table_name,
                         create=not self.args.no_create,
                         insert=self.args.insert and len(table.rows) > 0,
+                        prefixes=self.args.prefix,
                         db_schema=self.args.db_schema,
                         constraints=not self.args.no_constraints
                     )

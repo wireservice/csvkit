@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+import os
 import sys
 
 import six
+from sqlalchemy import Index, MetaData, Table, create_engine
 
 try:
     from mock import patch
@@ -20,8 +22,17 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def setUp(self):
+        self.db_file = 'foo.db'
+
+    def tearDown(self):
+        try:
+            os.remove(self.db_file)
+        except OSError:
+            pass
+
     def test_create_table(self):
-        sql = self.get_output(['--table', 'foo', 'examples/testfixed_converted.csv'])
+        sql = self.get_output(['--tables', 'foo', 'examples/testfixed_converted.csv'])
 
         self.assertTrue('CREATE TABLE foo' in sql)
         self.assertTrue('text VARCHAR(17) NOT NULL' in sql)
@@ -29,11 +40,11 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         self.assertTrue('integer DECIMAL' in sql)
         self.assertTrue('boolean BOOLEAN' in sql)
         self.assertTrue('float DECIMAL' in sql)
-        self.assertTrue('time DATETIME' in sql)
-        self.assertTrue('datetime DATETIME' in sql)
+        self.assertTrue('time TIMESTAMP' in sql)
+        self.assertTrue('datetime TIMESTAMP' in sql)
 
     def test_no_inference(self):
-        sql = self.get_output(['--table', 'foo', '--no-inference', 'examples/testfixed_converted.csv'])
+        sql = self.get_output(['--tables', 'foo', '--no-inference', 'examples/testfixed_converted.csv'])
 
         self.assertTrue('CREATE TABLE foo' in sql)
         self.assertTrue('text VARCHAR(17) NOT NULL' in sql)
@@ -46,7 +57,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         self.assertTrue('empty_column VARCHAR' in sql)
 
     def test_no_header_row(self):
-        sql = self.get_output(['--table', 'foo', '--no-header-row', 'examples/no_header_row.csv'])
+        sql = self.get_output(['--tables', 'foo', '--no-header-row', 'examples/no_header_row.csv'])
 
         self.assertTrue('CREATE TABLE foo' in sql)
         self.assertTrue('a BOOLEAN NOT NULL' in sql)
@@ -57,7 +68,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         input_file = six.StringIO('a,b,c\n4,2,3\n')
 
         with stdin_as_string(input_file):
-            sql = self.get_output(['--table', 'foo'])
+            sql = self.get_output(['--tables', 'foo'])
 
             self.assertTrue('CREATE TABLE foo' in sql)
             self.assertTrue('a DECIMAL NOT NULL' in sql)
@@ -89,10 +100,26 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_query(self):
+        sql = self.get_output(['--insert', '--query', "SELECT text FROM testfixed_converted WHERE text LIKE 'Chicago%'", 'examples/testfixed_converted.csv'])
+
+        self.assertTrue('text' in sql)
+        self.assertTrue('Chicago Reader' in sql)
+        self.assertTrue('Chicago Sun-Times' in sql)
+        self.assertTrue('Chicago Tribune' in sql)
+
+    def test_query_with_prefix(self):
+        sql = self.get_output(['--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
+
+        connection = create_engine('sqlite:///' + self.db_file).connect()
+        Index('myindex', Table('dummy', MetaData(connection), autoload=True, autoload_with=connection).c.a, unique=True)
+
+        sql = self.get_output(['--no-create', '--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
+
+    def test_query_with_stdin(self):
         input_file = six.StringIO("a,b,c\n1,2,3\n")
 
         with stdin_as_string(input_file):
-            sql = self.get_output(['--query', 'select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species', 'examples/iris.csv', 'examples/irismeta.csv'])
+            sql = self.get_output(['--query', 'SELECT m.usda_id, avg(i.sepal_length) AS mean_sepal_length FROM iris AS i JOIN irismeta AS m ON (i.species = m.species) GROUP BY m.species', 'examples/iris.csv', 'examples/irismeta.csv'])
 
             if six.PY2:
                 self.assertTrue('usda_id,mean_sepal_length' in sql)
