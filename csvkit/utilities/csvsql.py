@@ -30,7 +30,7 @@ class CSVSQL(CSVKitUtility):
         self.argparser.add_argument('--insert', dest='insert', action='store_true',
                                     help='In addition to creating the table, also insert the data into the table. Only valid when --db is specified.')
         self.argparser.add_argument('--prefix', action='append', default=[],
-                                    help='Add an expression following the INSERT keyword, like IGNORE or REPLACE.')
+                                    help='Add an expression following the INSERT keyword, like OR IGNORE or OR REPLACE.')
         self.argparser.add_argument('--tables', dest='table_names',
                                     help='Specify the names of the tables to be created. By default, the tables will be named after the filenames without extensions or "stdin".')
         self.argparser.add_argument('--no-constraints', dest='no_constraints', action='store_true',

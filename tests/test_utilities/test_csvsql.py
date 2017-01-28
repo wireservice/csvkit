@@ -110,10 +110,14 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
     def test_query_with_prefix(self):
         sql = self.get_output(['--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
 
-        connection = create_engine('sqlite:///' + self.db_file).connect()
-        Index('myindex', Table('dummy', MetaData(connection), autoload=True, autoload_with=connection).c.a, unique=True)
+        engine = create_engine('sqlite:///' + self.db_file)
+        connection = engine.connect()
+        metadata = MetaData(connection)
+        table = Table('dummy', metadata, autoload=True, autoload_with=connection)
+        index = Index('myindex', table.c.a, unique=True)
+        index.create(bind=connection)
 
-        sql = self.get_output(['--no-create', '--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
+        sql = self.get_output(['--prefix', 'OR IGNORE', '--no-create', '--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
 
     def test_query_with_stdin(self):
         input_file = six.StringIO("a,b,c\n1,2,3\n")
