@@ -30,7 +30,7 @@ Executes arbitrary commands against a SQL database and outputs the results as a 
       --query QUERY         The SQL query to execute. If specified, it overrides
                             FILE and STDIN.
       -e ENCODING, --encoding ENCODING
-                            Specify the encoding the input query file.
+                            Specify the encoding of the input query file.
       -H, --no-header-row   Do not output column names.
 
 Examples

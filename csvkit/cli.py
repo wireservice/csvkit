@@ -159,7 +159,10 @@ class CSVKitUtility(object):
                                         help='Maximum length of a single field in the input CSV file.')
         if 'e' not in self.override_flags:
             self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
-                                        help='Specify the encoding the input CSV file.')
+                                        help='Specify the encoding of the input CSV file.')
+        if 'L' not in self.override_flags:
+            self.argparser.add_argument('-L', '--locale', dest='locale', default='en_US',
+                                        help='Specify the locale (en_US) of any formatted numbers.')
         if 'S' not in self.override_flags:
             self.argparser.add_argument('-S', '--skipinitialspace', dest='skipinitialspace', action='store_true',
                                         help='Ignore whitespace immediately following the delimiter.')
@@ -283,7 +286,7 @@ class CSVKitUtility(object):
         else:
             return agate.TypeTester(types=[
                 agate.Boolean(),
-                agate.Number(),
+                agate.Number(locale=self.args.locale),
                 agate.TimeDelta(),
                 agate.Date(),
                 agate.DateTime(),

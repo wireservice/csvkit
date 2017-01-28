@@ -3,8 +3,9 @@
 
 Improvements:
 
-* Add a :code:`--version` (:code:`-V`) flag.
+* Add a :code:`--version` flag.
 * Add a :code:`--skip-lines` option to skip initial lines (e.g. comments, copyright notices, empty rows).
+* Add a :code:`--locale` option to set the locale of any formatted numbers.
 * :code:`-I` is the short option for :code:`--no-inference`.
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
 * :doc:`/scripts/csvstat` adds a :code:`--freq-count` option to set the maximum number of frequent values to display.
