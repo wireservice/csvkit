@@ -65,9 +65,9 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_converted.csv', ['--sheet', 'data'])
 
     def test_convert_xlsx_with_unicode_sheet(self):
-        self.assertLines(['--sheet', 'ʤ', 'examples/sheets.xlsx'], [
+        self.assertLines(['--sheet', 'ʤ', '--no-inference', 'examples/sheets.xlsx'], [
             'a,b,c',
-            'True,2,3',
+            '1,2,3',
         ])
 
     def test_csv_no_headers(self):
