@@ -37,6 +37,8 @@ class CSVSQL(CSVKitUtility):
                                     help='Generate a schema without length limits or null checks. Useful when sampling big tables.')
         self.argparser.add_argument('--no-create', dest='no_create', action='store_true',
                                     help='Skip creating a table. Only valid when --insert is specified.')
+        self.argparser.add_argument('--overwrite', dest='overwrite', action='store_true',
+                                    help='Drop the table before creating.')
         self.argparser.add_argument('--blanks', dest='blanks', action='store_true',
                                     help='Do not coerce empty strings to NULL values.')
         self.argparser.add_argument('--db-schema', dest='db_schema',
@@ -129,6 +131,7 @@ class CSVSQL(CSVKitUtility):
                     table.to_sql(
                         self.connection,
                         table_name,
+                        overwrite=self.args.overwrite,
                         create=not self.args.no_create,
                         insert=self.args.insert and len(table.rows) > 0,
                         prefixes=self.args.prefix,
