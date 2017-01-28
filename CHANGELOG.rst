@@ -3,8 +3,23 @@
 
 Improvements:
 
+* Add a :code:`--version` flag.
+* Add a :code:`--skip-lines` option to skip initial lines (e.g. comments, copyright notices, empty rows).
+* Add a :code:`--locale` option to set the locale of any formatted numbers.
+* Add a :code:`--date-format` option to set a strptime date format string.
+* Add a :code:`--datetime-format` option to set a strptime datetime format string.
+* :code:`-I` is the short option for :code:`--no-inference`.
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
-* :doc:`/scripts/in2csv` now supports a :code:`--names` flag to print Excel sheet names.
+* :doc:`/scripts/csvstat` adds a :code:`--freq-count` option to set the maximum number of frequent values to display.
+* :doc:`/scripts/in2csv` adds a :code:`--names` flag to print Excel sheet names.
+* :doc:`/scripts/sql2csv` adds an :code:`--encoding` option to specify the encoding of the input query file.
+
+Fixes:
+
+* :doc:`/scripts/csvgrep` no longer ignores common arguments if :code:`--linenumbers` is set.
+* :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
+* :doc:`/scripts/csvstat` will no longer crash when :code:`--freq` is set.
+* :doc:`/scripts/in2csv` restores support for :code:`--no-inference` for Excel files.
 
 Fixes:
 

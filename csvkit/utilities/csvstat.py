@@ -13,9 +13,6 @@ from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
 NoneType = type(None)
 
-MAX_UNIQUE = 5
-MAX_FREQ = 5
-
 OPERATIONS = OrderedDict([
     ('type', {
         'aggregation': None,
@@ -66,7 +63,7 @@ OPERATIONS = OrderedDict([
 
 class CSVStat(CSVKitUtility):
     description = 'Print descriptive statistics for each column in a CSV file.'
-    override_flags = ['l']
+    override_flags = ['l', 'L', 'date-format', 'datetime-format']
 
     def add_arguments(self):
         self.argparser.add_argument('--csv', dest='csv_output', action='store_true',
@@ -97,8 +94,10 @@ class CSVStat(CSVKitUtility):
                                     help='Only output the length of the longest values.')
         self.argparser.add_argument('--freq', dest='freq_only', action='store_true',
                                     help='Only output lists of frequent values.')
+        self.argparser.add_argument('--freq-count', dest='freq_count', type=int,
+                                    help='The maximum number of frequent values to display.')
         self.argparser.add_argument('--count', dest='count_only', action='store_true',
-                                    help='Only output total row count')
+                                    help='Only output total row count.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
 
@@ -133,8 +132,8 @@ class CSVStat(CSVKitUtility):
 
         table = agate.Table.from_csv(
             self.input_file,
+            skip_lines=self.args.skip_lines,
             sniff_limit=self.args.sniff_limit,
-            header=not self.args.no_header_row,
             **self.reader_kwargs
         )
 
@@ -144,18 +143,23 @@ class CSVStat(CSVKitUtility):
             self.get_column_offset()
         )
 
+        kwargs = {}
+
+        if self.args.freq_count:
+            kwargs['freq_count'] = self.args.freq_count
+
         # Output a single stat
         if operations:
             if len(column_ids) == 1:
-                self.print_one(table, column_ids[0], operations[0], label=False)
+                self.print_one(table, column_ids[0], operations[0], label=False, **kwargs)
             else:
                 for column_id in column_ids:
-                    self.print_one(table, column_id, operations[0])
+                    self.print_one(table, column_id, operations[0], **kwargs)
         else:
             stats = {}
 
             for column_id in column_ids:
-                stats[column_id] = self.calculate_stats(table, column_id)
+                stats[column_id] = self.calculate_stats(table, column_id, **kwargs)
 
             # Output as CSV
             if self.args.csv_output:
@@ -164,7 +168,7 @@ class CSVStat(CSVKitUtility):
             else:
                 self.print_stats(table, column_ids, stats)
 
-    def print_one(self, table, column_id, operation, label=True):
+    def print_one(self, table, column_id, operation, label=True, **kwargs):
         """
         Print data for a single statistic.
         """
@@ -178,7 +182,7 @@ class CSVStat(CSVKitUtility):
 
             try:
                 if getter:
-                    stat = getter(table, column_id)
+                    stat = getter(table, column_id, **kwargs)
                 else:
                     op = OPERATIONS[op_name]['aggregation']
                     stat = table.aggregate(op(column_id))
@@ -190,7 +194,7 @@ class CSVStat(CSVKitUtility):
 
         # Formatting
         if op_name == 'freq':
-            stat = ', '.join([(u'"%s": %s' % (six.text_type(row[column_id]), row['Count'])) for row in stat])
+            stat = ', '.join([(u'"%s": %s' % (six.text_type(row[column_name]), row['Count'])) for row in stat])
             stat = u'{ %s }' % stat
 
         if label:
@@ -198,7 +202,7 @@ class CSVStat(CSVKitUtility):
         else:
             self.output_file.write(u'%s\n' % stat)
 
-    def calculate_stats(self, table, column_id):
+    def calculate_stats(self, table, column_id, **kwargs):
         """
         Calculate stats for all valid operations.
         """
@@ -212,7 +216,7 @@ class CSVStat(CSVKitUtility):
 
                 try:
                     if getter:
-                        stats[op_name] = getter(table, column_id)
+                        stats[op_name] = getter(table, column_id, **kwargs)
                     else:
                         op = op_data['aggregation']
                         v = table.aggregate(op(column_id))
@@ -314,16 +318,16 @@ class CSVStat(CSVKitUtility):
             writer.writerow(output_row)
 
 
-def get_type(table, column_id):
+def get_type(table, column_id, **kwargs):
     return '%s' % table.columns[column_id].data_type.__class__.__name__
 
 
-def get_unique(table, column_id):
+def get_unique(table, column_id, **kwargs):
     return len(table.columns[column_id].values_distinct())
 
 
-def get_freq(table, column_id):
-    return table.pivot(column_id).order_by('Count', reverse=True).limit(MAX_FREQ)
+def get_freq(table, column_id, freq_count=5, **kwargs):
+    return table.pivot(column_id).order_by('Count', reverse=True).limit(freq_count)
 
 
 def launch_new_instance():

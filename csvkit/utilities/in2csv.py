@@ -34,17 +34,17 @@ class In2CSV(CSVKitUtility):
         self.argparser.add_argument('-f', '--format', dest='filetype',
                                     help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(SUPPORTED_FORMATS)))
         self.argparser.add_argument('-s', '--schema', dest='schema',
-                                    help='Specifies a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
+                                    help='Specify a CSV-formatted schema file for converting fixed-width files.  See documentation for details.')
         self.argparser.add_argument('-k', '--key', dest='key',
-                                    help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
+                                    help='Specify a top-level key to use look within for a list of objects to be converted when processing JSON.')
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                                     help='Display sheet names from the input Excel file.')
         self.argparser.add_argument('--sheet', dest='sheet', type=option_parser,
                                     help='The name of the Excel sheet to operate on.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
-        self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
-                                    help='Disable type inference when parsing CSV input.')
+        self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
+                                    help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
     def main(self):
         # Determine the file type.
@@ -100,13 +100,15 @@ class In2CSV(CSVKitUtility):
         if filetype == 'csv':
             kwargs.update(self.reader_kwargs)
             kwargs['sniff_limit'] = self.args.sniff_limit
-            kwargs['header'] = not self.args.no_header_row
+
+        if filetype not in ('dbf', 'geojson', 'json', 'ndjson'):
+            kwargs['skip_lines'] = self.args.skip_lines
 
         if filetype != 'dbf':
             kwargs['column_types'] = self.get_column_types()
 
         # Convert the file.
-        if filetype == 'csv' and self.args.no_inference:
+        if filetype == 'csv' and self.args.no_inference and not self.args.skip_lines:
             reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
             writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
             writer.writerows(reader)
@@ -122,9 +124,9 @@ class In2CSV(CSVKitUtility):
             elif filetype == 'ndjson':
                 table = agate.Table.from_json(self.input_file, key=self.args.key, newline=True, **kwargs)
             elif filetype == 'xls':
-                table = agate.Table.from_xls(self.input_file, sheet=kwargs.get('sheet'))
+                table = agate.Table.from_xls(self.input_file, **kwargs)
             elif filetype == 'xlsx':
-                table = agate.Table.from_xlsx(self.input_file, sheet=kwargs.get('sheet'))
+                table = agate.Table.from_xlsx(self.input_file, **kwargs)
             elif filetype == 'dbf':
                 if not hasattr(self.input_file, 'name'):
                     raise ValueError('DBF files can not be converted from stdin. You must pass a filename.')

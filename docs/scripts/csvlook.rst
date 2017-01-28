@@ -9,10 +9,9 @@ Renders a CSV to the command line in a Markdown-compatible, fixed-width format::
 
     usage: csvlook [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                    [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                   [-v] [-l] [--zero] [--max-rows MAX_ROWS]
+                   [-v] [-l] [--zero] [-V] [--max-rows MAX_ROWS]
                    [--max-columns MAX_COLUMNS]
-                   [--max-column-width MAX_COLUMN_WIDTH] [-y SNIFF_LIMIT]
-                   [--no-inference]
+                   [--max-column-width MAX_COLUMN_WIDTH] [-y SNIFF_LIMIT] [-I]
                    [FILE]
 
     Render a CSV file in the console as a Markdown-compatible, fixed-width table.
@@ -34,7 +33,7 @@ Renders a CSV to the command line in a Markdown-compatible, fixed-width format::
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                             Limit CSV dialect sniffing to the specified number of
                             bytes. Specify "0" to disable sniffing entirely.
-      --no-inference        Disable type inference when parsing the input.
+      -I, --no-inference    Disable type inference when parsing the input.
 
 If a table is too wide to display properly try piping the output to ``less -S`` or truncating it using :doc:`csvcut`.
 

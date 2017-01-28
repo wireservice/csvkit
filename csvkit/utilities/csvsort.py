@@ -18,7 +18,7 @@ class CSVSort(CSVKitUtility):
                                     help='Sort in descending order.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
-        self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
+        self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
                                     help='Disable type inference when parsing the input.')
 
     def main(self):
@@ -28,8 +28,8 @@ class CSVSort(CSVKitUtility):
 
         table = agate.Table.from_csv(
             self.input_file,
+            skip_lines=self.args.skip_lines,
             sniff_limit=self.args.sniff_limit,
-            header=not self.args.no_header_row,
             column_types=self.get_column_types(),
             **self.reader_kwargs
         )

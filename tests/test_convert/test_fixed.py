@@ -18,6 +18,14 @@ class TestFixed(CSVKitTestCase):
         with open('examples/testfixed_converted.csv', 'r') as f:
             self.assertEqual(f.read(), output)
 
+    def test_fixed_skip_lines(self):
+        with open('examples/testfixed_skip_lines', 'r') as f:
+            with open('examples/testfixed_schema.csv', 'r') as schema:
+                output = fixed.fixed2csv(f, schema, skip_lines=3)
+
+        with open('examples/testfixed_converted.csv', 'r') as f:
+            self.assertEqual(f.read(), output)
+
     def test_fixed_no_inference(self):
         input_file = six.StringIO('     1   2 3')
 

@@ -7,13 +7,13 @@ from csvkit.cli import CSVKitUtility
 
 class CSVFormat(CSVKitUtility):
     description = 'Convert a CSV file to a custom output format.'
-    override_flags = ['l', 'zero', 'H']
+    override_flags = ['l', 'zero', 'H', 'L', 'date-format', 'datetime-format']
 
     def add_arguments(self):
         self.argparser.add_argument('-D', '--out-delimiter', dest='out_delimiter',
                                     help='Delimiting character of the output CSV file.')
         self.argparser.add_argument('-T', '--out-tabs', dest='out_tabs', action='store_true',
-                                    help='Specifies that the output CSV file is delimited with tabs. Overrides "-D".')
+                                    help='Specify that the output CSV file is delimited with tabs. Overrides "-D".')
         self.argparser.add_argument('-Q', '--out-quotechar', dest='out_quotechar',
                                     help='Character used to quote strings in the output CSV file.')
         self.argparser.add_argument('-U', '--out-quoting', dest='out_quoting', type=int, choices=[0, 1, 2, 3],
@@ -41,7 +41,7 @@ class CSVFormat(CSVKitUtility):
         return kwargs
 
     def main(self):
-        reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
+        reader = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
         writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
         writer.writerows(reader)
 

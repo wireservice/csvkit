@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from argparse import FileType
 import sys
 
 import agate
@@ -11,15 +10,17 @@ from csvkit.cli import CSVKitUtility
 
 class SQL2CSV(CSVKitUtility):
     description = 'Execute an SQL query on a database and output the result to a CSV file.'
-    override_flags = 'f,b,d,e,H,p,q,S,t,u,z,zero'.split(',')
+    override_flags = 'f,b,d,e,H,K,L,p,q,S,t,u,z,date-format,datetime-format,zero'.split(',')
 
     def add_arguments(self):
         self.argparser.add_argument('--db', dest='connection_string', default='sqlite://',
                                     help='An sqlalchemy connection string to connect to a database.',)
-        self.argparser.add_argument('file', metavar="FILE", nargs='?', type=FileType('rt'), default=sys.stdin,
+        self.argparser.add_argument(metavar="FILE", nargs='?', dest='input_path',
                                     help='The file to use as SQL query. If both FILE and QUERY are omitted, query will be read from STDIN.')
         self.argparser.add_argument('--query', default=None,
                                     help="The SQL query to execute. If specified, it overrides FILE and STDIN.")
+        self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
+                                    help='Specify the encoding of the input query file.')
         self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
                                     help='Do not output column names.')
 
@@ -48,13 +49,14 @@ class SQL2CSV(CSVKitUtility):
         else:
             query = ""
 
-            for line in self.args.file:
+            self.input_file = self._open_input_file(self.args.input_path)
+
+            for line in self.input_file:
                 query += line
 
-        # Must escape '%'.
-        # @see https://github.com/wireservice/csvkit/issues/440
-        # @see https://bitbucket.org/zzzeek/sqlalchemy/commits/5bc1f17cb53248e7cea609693a3b2a9bb702545b
-        rows = connection.execute(query.replace('%', '%%'))
+            self.input_file.close()
+
+        rows = connection.execution_options(no_parameters=True).execute(query)
         output = agate.csv.writer(self.output_file, **self.writer_kwargs)
 
         if rows.returns_rows:

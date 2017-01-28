@@ -8,9 +8,9 @@ Description
 Converts a CSV file into JSON or GeoJSON (depending on flags)::
 
     usage: csvjson [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-v] [-l]
-                   [--zero] [-i INDENT] [-k KEY] [--lat LAT] [--lon LON]
-                   [--crs CRS] [--stream]
+                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-v]
+                   [-l] [--zero] [-V] [-i INDENT] [-k KEY] [--lat LAT] [--lon LON]
+                   [--crs CRS] [--stream] [-y SNIFF_LIMIT] [-I]
                    [FILE]
 
     Convert a CSV file into JSON (or GeoJSON).
@@ -40,6 +40,10 @@ Converts a CSV file into JSON or GeoJSON (depending on flags)::
                             also specified.
       --stream              Output JSON as a stream of newline-separated objects,
                             rather than an as an array.
+      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
+                            Limit CSV dialect sniffing to the specified number of
+                            bytes. Specify "0" to disable sniffing entirely.
+      -I, --no-inference    Disable type inference when parsing CSV input.
 
 See also: :doc:`../common_arguments`.
 

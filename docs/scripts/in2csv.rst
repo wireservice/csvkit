@@ -17,34 +17,36 @@ Converting fixed width requires that you provide a schema file with the "-s" opt
 The header line is required though the columns may be in any order::
 
     usage: in2csv [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                  [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-H] [-v]
-                  [-l] [--zero] [-f FILETYPE] [-s SCHEMA] [-k KEY] [-y SNIFFLIMIT]
-                  [--sheet SHEET] [--no-inference]
+                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
+                  [-v] [-l] [--zero] [-V] [-f FILETYPE] [-s SCHEMA] [-k KEY] [-n]
+                  [--sheet SHEET] [-y SNIFF_LIMIT] [-I]
                   [FILE]
 
     Convert common, but less awesome, tabular data formats to CSV.
 
     positional arguments:
-      FILE                  The file to operate on. If omitted, will accept input
-                            on STDIN.
+      FILE                  The CSV file to operate on. If omitted, will accept
+                            input on STDIN.
 
     optional arguments:
       -h, --help            show this help message and exit
       -f FILETYPE, --format FILETYPE
                             The format of the input file. If not specified will be
                             inferred from the file type. Supported formats: csv,
-                            fixed, geojson, json, ndjson, xls, xlsx.
+                            dbf, fixed, geojson, json, ndjson, xls, xlsx.
       -s SCHEMA, --schema SCHEMA
-                            Specifies a CSV-formatted schema file for converting
+                            Specify a CSV-formatted schema file for converting
                             fixed-width files. See documentation for details.
-      -k KEY, --key KEY     Specifies a top-level key to use look within for a
-                            list of objects to be converted when processing JSON.
-      -y SNIFFLIMIT, --snifflimit SNIFFLIMIT
-                            Limit CSV dialect sniffing to the specified number of
-                            bytes. Specify "0" to disable sniffing entirely.
+      -k KEY, --key KEY     Specify a top-level key to use look within for a list
+                            of objects to be converted when processing JSON.
       -n, --names           Display sheet names from the input Excel file.
       --sheet SHEET         The name of the Excel sheet to operate on.
-      --no-inference        Disable type inference when parsing the input.
+      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
+                            Limit CSV dialect sniffing to the specified number of
+                            bytes. Specify "0" to disable sniffing entirely.
+      -I, --no-inference    Disable type inference when parsing CSV input.
+
+    Some command-line flags only pertain to specific input formats.
 
 See also: :doc:`../common_arguments`.
 

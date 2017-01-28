@@ -8,8 +8,8 @@ Description
 Loads a CSV file into a :class:`agate.csv.Reader` object and then drops into a Python shell so the user can inspect the data however they see fit::
 
     usage: csvpy [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                 [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-v]
-                 [--dict]
+                 [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-v]
+                 [-V] [--dict] [--agate]
                  [FILE]
 
     Load a CSV file into a CSV reader and then drop into a Python shell.

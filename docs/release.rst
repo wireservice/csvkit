@@ -7,6 +7,7 @@ Release process
 #. Ensure these files all have the correct version number:
     * CHANGELOG
     * setup.py
+    * csvkit/cli.py
     * docs/conf.py
 #. Tag the release: ``git tag -a x.y.z; git push --tags``
 #. Roll out to PyPI: ``python setup.py sdist upload``

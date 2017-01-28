@@ -39,7 +39,7 @@ Output and Analysis
     scripts/csvsql
     scripts/csvstat
 
-To diff CSVs, consider `daff <http://paulfitz.github.io/daff/>`_.
+To diff CSVs, consider `daff <http://paulfitz.github.io/daff/>`_. An alternative to :doc:`csvsql` is `q <https://github.com/harelba/q>`_.
 
 Common arguments
 ================

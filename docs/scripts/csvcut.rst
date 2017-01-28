@@ -8,11 +8,12 @@ Description
 Filters and truncates CSV files. Like the Unix "cut" command, but for tabular data::
 
     usage: csvcut [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                  [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-H] [-v]
-                  [-l] [--zero] [-n] [-c COLUMNS] [-C NOT_COLUMNS] [-x]
+                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
+                  [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS] [-C NOT_COLUMNS] [-x]
                   [FILE]
 
-    Filter and truncate CSV files. Like the Unix "cut" command, but for tabular data.
+    Filter and truncate CSV files. Like the Unix "cut" command, but for tabular
+    data.
 
     positional arguments:
       FILE                  The CSV file to operate on. If omitted, will accept
@@ -70,3 +71,8 @@ Extract a column that may not exist in all files::
 
     echo d, | csvjoin examples/dummy.csv - | csvcut -c d
     echo d, | csvjoin examples/join_no_header_row.csv - | csvcut -c d
+
+Display a column's unique values::
+
+    csvcut -c 1 examples/realdata/FY09_EDU_Recipients_by_State.csv | sed 1d | sort | uniq
+

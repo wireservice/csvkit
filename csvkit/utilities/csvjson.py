@@ -36,8 +36,8 @@ class CSVJSON(CSVKitUtility):
                                     help='Output JSON as a stream of newline-separated objects, rather than an as an array.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
-        self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
-                                    help='Disable type inference when parsing CSV input.')
+        self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
+                                    help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
     def main(self):
         # We need to do this dance here, because we aren't writing through agate.
@@ -83,6 +83,7 @@ class CSVJSON(CSVKitUtility):
         if self.args.lat and self.args.lon:
             table = agate.Table.from_csv(
                 self.input_file,
+                skip_lines=self.args.skip_lines,
                 sniff_limit=self.args.sniff_limit,
                 column_types=self.get_column_types(),
                 **self.reader_kwargs
@@ -159,7 +160,7 @@ class CSVJSON(CSVKitUtility):
                 ])
 
             dump_json(output)
-        elif self.args.streamOutput and self.args.no_inference:
+        elif self.args.streamOutput and self.args.no_inference and not self.args.skip_lines:
             rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
             column_names = next(rows)
 
@@ -174,6 +175,7 @@ class CSVJSON(CSVKitUtility):
         else:
             table = agate.Table.from_csv(
                 self.input_file,
+                skip_lines=self.args.skip_lines,
                 sniff_limit=self.args.sniff_limit,
                 column_types=self.get_column_types(),
                 **self.reader_kwargs

@@ -67,3 +67,9 @@ The following individuals have contributed code to csvkit:
 * Martin Burch
 * Pedro Silva
 * hydrosIII
+* Tim Wisniewski
+* Santiago Castro
+* Dan Davison
+* Éric Araujo
+* Sam Stuck
+* Edward Betts

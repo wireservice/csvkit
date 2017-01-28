@@ -8,9 +8,9 @@ Description
 Filter tabular data to only those rows where certain columns contain a given value or match a regular expression::
 
     usage: csvgrep [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-v] [-l]
-                   [--zero] [-n] [-c COLUMNS] [-m PATTERN] [-r REGEX]
-                   [-f MATCHFILE] [-i]
+                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
+                   [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS] [-m PATTERN]
+                   [-r REGEX] [-f MATCHFILE] [-i]
                    [FILE]
 
     Search CSV files. Like the Unix "grep" command, but for tabular data.
@@ -53,4 +53,8 @@ Search for the row relating to Illinois::
 Search for rows relating to states with names beginning with the letter "I"::
 
     csvgrep -c 1 -r "^I" examples/realdata/FY09_EDU_Recipients_by_State.csv
+    
+Search for rows that do not contain an empty state cell::
+
+    csvgrep -c 1 -r "^$" -i examples/realdata/FY09_EDU_Recipients_by_State.csv
 

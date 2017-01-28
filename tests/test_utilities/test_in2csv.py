@@ -28,8 +28,24 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def test_version(self):
+        with self.assertRaises(SystemExit) as e:
+            output = self.get_output(['-V'])
+            self.assertRegex(output, r'csvcut \d+.\d+.\d+')
+
+        self.assertEqual(e.exception.code, 0)
+
+    def test_locale(self):
+        self.assertConverted('csv', 'examples/test_locale.csv', 'examples/test_locale_converted.csv', ['--locale', 'de_DE'])
+
+    def test_date_format(self):
+        self.assertConverted('csv', 'examples/test_date_format.csv', 'examples/test_date_format_converted.csv', ['--date-format', '%d/%m/%Y'])
+
     def test_convert_csv(self):
         self.assertConverted('csv', 'examples/testfixed_converted.csv', 'examples/testfixed_converted.csv')
+
+    def test_convert_csv_with_skip_lines(self):
+        self.assertConverted('csv', 'examples/test_skip_lines.csv', 'examples/dummy.csv', ['--skip-lines', '3', '--no-inference'])
 
     def test_convert_dbf(self):
         self.assertConverted('dbf', 'examples/testdbf.dbf', 'examples/testdbf_converted.csv')
@@ -58,6 +74,9 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
             '1.0,2.0,3.0',
         ])
 
+    def test_convert_xls_with_skip_lines(self):
+        self.assertConverted('xls', 'examples/test_skip_lines.xls', 'examples/testxls_converted.csv', ['--skip-lines', '3'])
+
     def test_convert_xlsx(self):
         self.assertConverted('xlsx', 'examples/test.xlsx', 'examples/testxlsx_converted.csv')
 
@@ -69,6 +88,9 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
             'a,b,c',
             '1,2,3',
         ])
+
+    def test_convert_xlsx_with_skip_lines(self):
+        self.assertConverted('xlsx', 'examples/test_skip_lines.xlsx', 'examples/testxlsx_converted.csv', ['--skip-lines', '3'])
 
     def test_csv_no_headers(self):
         self.assertLines(['--no-header-row', 'examples/no_header_row.csv'], [
@@ -89,6 +111,18 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
     def test_csv_no_inference(self):
         self.assertLines(['--no-inference', 'examples/dummy.csv'], [
+            'a,b,c',
+            '1,2,3',
+        ])
+
+    def test_xls_no_inference(self):
+        self.assertLines(['--no-inference', 'examples/dummy.xls'], [
+            'a,b,c',
+            '1.0,2.0,3.0',
+        ])
+
+    def test_xlsx_no_inference(self):
+        self.assertLines(['--no-inference', 'examples/dummy.xlsx'], [
             'a,b,c',
             '1,2,3',
         ])

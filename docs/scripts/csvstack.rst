@@ -8,8 +8,9 @@ Description
 Stack up the rows from multiple CSV files, optionally adding a grouping value to each row::
 
     usage: csvstack [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                    [-p ESCAPECHAR] [-z MAXFIELDSIZE] [-e ENCODING] [-S] [-H] [-v]
-                    [-l] [--zero] [-g GROUPS] [-n GROUP_NAME] [--filenames]
+                    [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
+                    [-v] [-l] [--zero] [-V] [-g GROUPS] [-n GROUP_NAME]
+                    [--filenames]
                     FILE [FILE ...]
 
     Stack up the rows from multiple CSV files, optionally adding a grouping value.
@@ -33,6 +34,10 @@ Stack up the rows from multiple CSV files, optionally adding a grouping value to
                             value. When specified, -g will be ignored.
 
 See also: :doc:`../common_arguments`.
+
+.. warn::
+
+    If you redirect output to an input file like ``csvstack file.csv > file.csv``, the file will grow indefinitely.
 
 Examples
 ========
