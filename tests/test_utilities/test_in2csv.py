@@ -34,6 +34,9 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
         self.assertEqual(e.exception.code, 0)
 
+    def test_locale(self):
+        self.assertConverted('csv', 'examples/test_locale.csv', 'examples/test_locale_converted.csv', ['--locale', 'de_DE'])
+
     def test_convert_csv(self):
         self.assertConverted('csv', 'examples/testfixed_converted.csv', 'examples/testfixed_converted.csv')
 

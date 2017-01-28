@@ -24,7 +24,9 @@ All tools which accept CSV as input share a set of common command-line arguments
                         Maximum length of a single field in the input CSV
                         file.
   -e ENCODING, --encoding ENCODING
-                        Specify the encoding the input CSV file.
+                        Specify the encoding of the input CSV file.
+  -L LOCALE, --locale LOCALE
+                        Specify the locale (en_US) of any formatted numbers.
   -S, --skipinitialspace
                         Ignore whitespace immediately following the delimiter.
   -H, --no-header-row   Specify that the input CSV file has no header row.
