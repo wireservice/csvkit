@@ -166,8 +166,8 @@ class CSVKitUtility(object):
         if 'H' not in self.override_flags:
             self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
                                         help='Specify that the input CSV file has no header row. Will create default headers (a,b,c,...).')
-        if 'L' not in self.override_flags:
-            self.argparser.add_argument('-L', '--skip-lines', dest='skip_lines', type=int, default=0,
+        if 'K' not in self.override_flags:
+            self.argparser.add_argument('-K', '--skip-lines', dest='skip_lines', type=int, default=0,
                                         help='Specify the number of initial lines to skip (e.g. comments, copyright notices, empty rows).')
         if 'v' not in self.override_flags:
             self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
