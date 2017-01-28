@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 
+import sys
+
 import agate
 import agatedbf  # noqa
 import agateexcel  # noqa
 import openpyxl
+import six
 import xlrd
 
 from csvkit import convert
@@ -20,6 +23,12 @@ class In2CSV(CSVKitUtility):
     override_flags = ['f']
 
     def add_arguments(self):
+        def option_parser(bytestring):
+            if six.PY2:
+                return bytestring.decode(sys.getfilesystemencoding())
+            else:
+                return bytestring
+
         self.argparser.add_argument(metavar="FILE", nargs='?', dest='input_path',
                                     help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-f', '--format', dest='filetype',
@@ -30,7 +39,7 @@ class In2CSV(CSVKitUtility):
                                     help='Specify a top-level key to use look within for a list of objects to be converted when processing JSON.')
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                                     help='Display sheet names from the input Excel file.')
-        self.argparser.add_argument('--sheet', dest='sheet',
+        self.argparser.add_argument('--sheet', dest='sheet', type=option_parser,
                                     help='The name of the Excel sheet to operate on.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
