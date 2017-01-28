@@ -41,7 +41,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         self.assertConverted('csv', 'examples/testfixed_converted.csv', 'examples/testfixed_converted.csv')
 
     def test_convert_csv_with_skip_lines(self):
-        self.assertConverted('csv', 'examples/test_skip_lines.csv', 'examples/testfixed_converted.csv', ['--skip-lines', '3'])
+        self.assertConverted('csv', 'examples/test_skip_lines.csv', 'examples/dummy.csv', ['--skip-lines', '3', '--no-inference'])
 
     def test_convert_dbf(self):
         self.assertConverted('dbf', 'examples/testdbf.dbf', 'examples/testdbf_converted.csv')

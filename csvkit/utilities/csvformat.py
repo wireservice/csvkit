@@ -7,7 +7,7 @@ from csvkit.cli import CSVKitUtility
 
 class CSVFormat(CSVKitUtility):
     description = 'Convert a CSV file to a custom output format.'
-    override_flags = ['l', 'zero', 'H']
+    override_flags = ['l', 'zero', 'H', 'L']
 
     def add_arguments(self):
         self.argparser.add_argument('-D', '--out-delimiter', dest='out_delimiter',
@@ -41,7 +41,7 @@ class CSVFormat(CSVKitUtility):
         return kwargs
 
     def main(self):
-        reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
+        reader = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
         writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
         writer.writerows(reader)
 

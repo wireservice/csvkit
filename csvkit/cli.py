@@ -299,8 +299,18 @@ class CSVKitUtility(object):
         else:
             return 1
 
+    def skip_lines(self):
+        if isinstance(self.args.skip_lines, int):
+            while self.args.skip_lines > 0:
+                self.input_file.readline()
+                self.args.skip_lines -= 1
+        else:
+            raise ValueError('skip_lines argument must be an int')
+
+        return self.input_file
+
     def get_rows_and_column_names_and_column_ids(self, **kwargs):
-        rows = agate.csv.reader(self.input_file, **kwargs)
+        rows = agate.csv.reader(self.skip_lines(), **kwargs)
 
         if self.args.no_header_row:
             # Peek at a row to get the number of columns.

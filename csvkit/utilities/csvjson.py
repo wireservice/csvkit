@@ -160,7 +160,7 @@ class CSVJSON(CSVKitUtility):
                 ])
 
             dump_json(output)
-        elif self.args.streamOutput and self.args.no_inference:
+        elif self.args.streamOutput and self.args.no_inference and not self.args.skip_lines:
             rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
             column_names = next(rows)
 

@@ -20,6 +20,12 @@ class TestCSVGrep(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower()] + self.default_args + ['examples/dummy.csv']):
             launch_new_instance()
 
+    def test_skip_lines(self):
+        self.assertRows(['--skip-lines', '3', '-c', '1', '-m', '1', 'examples/test_skip_lines.csv'], [
+            ['a', 'b', 'c'],
+            ['1', '2', '3'],
+        ])
+
     def test_match(self):
         self.assertRows(['-c', '1', '-m', '1', 'examples/dummy.csv'], [
             ['a', 'b', 'c'],
