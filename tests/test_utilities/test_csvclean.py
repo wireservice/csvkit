@@ -55,7 +55,7 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/bad.csv']):
             launch_new_instance()
 
-    def test_simple(self):
+    def test_skip_lines(self):
         self.assertCleaned('bad_skip_lines', [
             'column_a,column_b,column_c\n',
             '0,mixed types.... uh oh,17\n',
