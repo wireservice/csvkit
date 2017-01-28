@@ -93,11 +93,14 @@ class In2CSV(CSVKitUtility):
             kwargs['sniff_limit'] = self.args.sniff_limit
             kwargs['header'] = not self.args.no_header_row
 
+        if filetype in ('csv', 'fixed', 'xls', 'xlsx'):
+            kwargs['skip_lines'] = self.args.skip_lines
+
         if filetype != 'dbf':
             kwargs['column_types'] = self.get_column_types()
 
         # Convert the file.
-        if filetype == 'csv' and self.args.no_inference:
+        if filetype == 'csv' and self.args.no_inference and not self.args.skip_lines:
             reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
             writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
             writer.writerows(reader)

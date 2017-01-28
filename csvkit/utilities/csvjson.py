@@ -83,6 +83,7 @@ class CSVJSON(CSVKitUtility):
         if self.args.lat and self.args.lon:
             table = agate.Table.from_csv(
                 self.input_file,
+                skip_lines=self.args.skip_lines,
                 sniff_limit=self.args.sniff_limit,
                 column_types=self.get_column_types(),
                 **self.reader_kwargs
@@ -174,6 +175,7 @@ class CSVJSON(CSVKitUtility):
         else:
             table = agate.Table.from_csv(
                 self.input_file,
+                skip_lines=self.args.skip_lines,
                 sniff_limit=self.args.sniff_limit,
                 column_types=self.get_column_types(),
                 **self.reader_kwargs

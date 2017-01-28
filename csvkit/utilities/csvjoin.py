@@ -58,6 +58,7 @@ class CSVJoin(CSVKitUtility):
         for f in self.input_files:
             tables.append(agate.Table.from_csv(
                 f,
+                skip_lines=self.args.skip_lines,
                 sniff_limit=sniff_limit,
                 header=header,
                 column_types=column_types,
