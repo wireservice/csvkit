@@ -10,6 +10,7 @@ Improvements:
 * Add a :code:`--datetime-format` option to set a strptime datetime format string.
 * :code:`-I` is the short option for :code:`--no-inference`.
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
+* :doc:`/scripts/csvsql` adds a :code:`--prefix` option to add an expression like IGNORE or REPLACE following the INSERT keyword.
 * :doc:`/scripts/csvstat` adds a :code:`--freq-count` option to set the maximum number of frequent values to display.
 * :doc:`/scripts/in2csv` adds a :code:`--names` flag to print Excel sheet names.
 * :doc:`/scripts/sql2csv` adds an :code:`--encoding` option to specify the encoding of the input query file.
