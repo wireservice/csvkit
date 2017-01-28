@@ -63,7 +63,7 @@ OPERATIONS = OrderedDict([
 
 class CSVStat(CSVKitUtility):
     description = 'Print descriptive statistics for each column in a CSV file.'
-    override_flags = ['l']
+    override_flags = ['l', 'L']
 
     def add_arguments(self):
         self.argparser.add_argument('--csv', dest='csv_output', action='store_true',

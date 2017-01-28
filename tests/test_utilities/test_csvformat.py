@@ -21,6 +21,12 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def test_skip_lines(self):
+        self.assertLines(['--skip-lines', '3', '-D', '|', 'examples/test_skip_lines.csv'], [
+            'a|b|c',
+            '1|2|3',
+        ])
+
     def test_delimiter(self):
         self.assertLines(['-D', '|', 'examples/dummy.csv'], [
             'a|b|c',

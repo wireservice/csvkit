@@ -11,14 +11,14 @@ from csvkit.cleanup import RowChecker
 
 class CSVClean(CSVKitUtility):
     description = 'Fix common errors in a CSV file.'
-    override_flags = ['H']
+    override_flags = ['H', 'L']
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--dry-run', dest='dryrun', action='store_true',
                                     help='Do not create output files. Information about what would have been done will be printed to STDERR.')
 
     def main(self):
-        reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
+        reader = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
 
         if self.args.dryrun:
             checker = RowChecker(reader)
