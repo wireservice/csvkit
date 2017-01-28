@@ -55,6 +55,16 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/bad.csv']):
             launch_new_instance()
 
+    def test_skip_lines(self):
+        self.assertCleaned('bad_skip_lines', [
+            'column_a,column_b,column_c\n',
+            '0,mixed types.... uh oh,17\n',
+        ], [
+            'line_number,msg,column_a,column_b,column_c\n',
+            '1,"Expected 3 columns, found 4 columns",1,27,,I\'m too long!\n',
+            '2,"Expected 3 columns, found 2 columns",,I\'m too short!\n',
+        ], ['--skip-lines', '3'])
+
     def test_simple(self):
         self.assertCleaned('bad', [
             'column_a,column_b,column_c\n',

@@ -3,8 +3,11 @@
 
 Improvements:
 
-* Add a :code:`--version` (:code:`-V`) flag.
+* Add a :code:`--version` flag.
 * Add a :code:`--skip-lines` option to skip initial lines (e.g. comments, copyright notices, empty rows).
+* Add a :code:`--locale` option to set the locale of any formatted numbers.
+* Add a :code:`--date-format` option to set a strptime date format string.
+* Add a :code:`--datetime-format` option to set a strptime datetime format string.
 * :code:`-I` is the short option for :code:`--no-inference`.
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
 * :doc:`/scripts/csvsql` adds a :code:`--prefix` option to add an expression like IGNORE or REPLACE following the INSERT keyword.
@@ -18,6 +21,11 @@ Fixes:
 * :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
 * :doc:`/scripts/csvstat` will no longer crash when :code:`--freq` is set.
 * :doc:`/scripts/in2csv` restores support for :code:`--no-inference` for Excel files.
+
+Fixes:
+
+* :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
+* :doc:`/scripts/in2csv` accepts utf-8 arguments to the :code:`--sheet` option in Python 2.
 
 1.0.1 - December 29, 2016
 -------------------------

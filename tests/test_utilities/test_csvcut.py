@@ -19,6 +19,12 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def test_skip_lines(self):
+        self.assertRows(['--skip-lines', '3', '-c', '1,3', 'examples/test_skip_lines.csv'], [
+            ['a', 'c'],
+            ['1', '3'],
+        ])
+
     def test_simple(self):
         self.assertRows(['-c', '1,3', 'examples/dummy.csv'], [
             ['a', 'c'],

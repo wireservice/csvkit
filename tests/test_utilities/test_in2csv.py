@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import sys
 
@@ -34,11 +35,17 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
         self.assertEqual(e.exception.code, 0)
 
+    def test_locale(self):
+        self.assertConverted('csv', 'examples/test_locale.csv', 'examples/test_locale_converted.csv', ['--locale', 'de_DE'])
+
+    def test_date_format(self):
+        self.assertConverted('csv', 'examples/test_date_format.csv', 'examples/test_date_format_converted.csv', ['--date-format', '%d/%m/%Y'])
+
     def test_convert_csv(self):
         self.assertConverted('csv', 'examples/testfixed_converted.csv', 'examples/testfixed_converted.csv')
 
     def test_convert_csv_with_skip_lines(self):
-        self.assertConverted('csv', 'examples/test_skip_lines.csv', 'examples/testfixed_converted.csv', ['--skip-lines', '3'])
+        self.assertConverted('csv', 'examples/test_skip_lines.csv', 'examples/dummy.csv', ['--skip-lines', '3', '--no-inference'])
 
     def test_convert_dbf(self):
         self.assertConverted('dbf', 'examples/testdbf.dbf', 'examples/testdbf_converted.csv')
@@ -61,6 +68,12 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     def test_convert_xls_with_sheet(self):
         self.assertConverted('xls', 'examples/sheets.xls', 'examples/testxls_converted.csv', ['--sheet', 'data'])
 
+    def test_convert_xls_with_unicode_sheet(self):
+        self.assertLines(['--sheet', 'ʤ', 'examples/sheets.xls'], [
+            'a,b,c',
+            '1.0,2.0,3.0',
+        ])
+
     def test_convert_xls_with_skip_lines(self):
         self.assertConverted('xls', 'examples/test_skip_lines.xls', 'examples/testxls_converted.csv', ['--skip-lines', '3'])
 
@@ -69,6 +82,12 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
     def test_convert_xlsx_with_sheet(self):
         self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_converted.csv', ['--sheet', 'data'])
+
+    def test_convert_xlsx_with_unicode_sheet(self):
+        self.assertLines(['--sheet', 'ʤ', '--no-inference', 'examples/sheets.xlsx'], [
+            'a,b,c',
+            '1,2,3',
+        ])
 
     def test_convert_xlsx_with_skip_lines(self):
         self.assertConverted('xlsx', 'examples/test_skip_lines.xlsx', 'examples/testxlsx_converted.csv', ['--skip-lines', '3'])

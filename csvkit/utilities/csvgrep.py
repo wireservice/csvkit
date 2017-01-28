@@ -11,6 +11,7 @@ from csvkit.grep import FilteringCSVReader
 
 class CSVGrep(CSVKitUtility):
     description = 'Search CSV files. Like the Unix "grep" command, but for tabular data.'
+    override_flags = ['L', 'date-format', 'datetime-format']
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',

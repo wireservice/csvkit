@@ -10,7 +10,7 @@ from csvkit.cli import CSVKitUtility
 
 class SQL2CSV(CSVKitUtility):
     description = 'Execute an SQL query on a database and output the result to a CSV file.'
-    override_flags = 'f,b,d,e,H,K,p,q,S,t,u,z,zero'.split(',')
+    override_flags = 'f,b,d,e,H,K,L,p,q,S,t,u,z,date-format,datetime-format,zero'.split(',')
 
     def add_arguments(self):
         self.argparser.add_argument('--db', dest='connection_string', default='sqlite://',
@@ -20,7 +20,7 @@ class SQL2CSV(CSVKitUtility):
         self.argparser.add_argument('--query', default=None,
                                     help="The SQL query to execute. If specified, it overrides FILE and STDIN.")
         self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
-                                    help='Specify the encoding the input query file.')
+                                    help='Specify the encoding of the input query file.')
         self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
                                     help='Do not output column names.')
 

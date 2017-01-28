@@ -159,10 +159,19 @@ class CSVKitUtility(object):
                                         help='Maximum length of a single field in the input CSV file.')
         if 'e' not in self.override_flags:
             self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
-                                        help='Specify the encoding the input CSV file.')
+                                        help='Specify the encoding of the input CSV file.')
+        if 'L' not in self.override_flags:
+            self.argparser.add_argument('-L', '--locale', dest='locale', default='en_US',
+                                        help='Specify the locale (en_US) of any formatted numbers.')
         if 'S' not in self.override_flags:
             self.argparser.add_argument('-S', '--skipinitialspace', dest='skipinitialspace', action='store_true',
                                         help='Ignore whitespace immediately following the delimiter.')
+        if 'date-format' not in self.override_flags:
+            self.argparser.add_argument('--date-format', dest='date_format',
+                                        help='Specify a strptime date format string like "%%m/%%d/%%Y".')
+        if 'datetime-format' not in self.override_flags:
+            self.argparser.add_argument('--datetime-format', dest='datetime_format',
+                                        help='Specify a strptime datetime format string like "%%m/%%d/%%Y %%I:%%M %%p".')
         if 'H' not in self.override_flags:
             self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
                                         help='Specify that the input CSV file has no header row. Will create default headers (a,b,c,...).')
@@ -283,10 +292,10 @@ class CSVKitUtility(object):
         else:
             return agate.TypeTester(types=[
                 agate.Boolean(),
-                agate.Number(),
+                agate.Number(locale=self.args.locale),
                 agate.TimeDelta(),
-                agate.Date(),
-                agate.DateTime(),
+                agate.Date(date_format=self.args.date_format),
+                agate.DateTime(datetime_format=self.args.datetime_format),
                 text_type
             ])
 
@@ -296,8 +305,18 @@ class CSVKitUtility(object):
         else:
             return 1
 
+    def skip_lines(self):
+        if isinstance(self.args.skip_lines, int):
+            while self.args.skip_lines > 0:
+                self.input_file.readline()
+                self.args.skip_lines -= 1
+        else:
+            raise ValueError('skip_lines argument must be an int')
+
+        return self.input_file
+
     def get_rows_and_column_names_and_column_ids(self, **kwargs):
-        rows = agate.csv.reader(self.input_file, **kwargs)
+        rows = agate.csv.reader(self.skip_lines(), **kwargs)
 
         if self.args.no_header_row:
             # Peek at a row to get the number of columns.
