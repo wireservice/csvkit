@@ -10,7 +10,7 @@ Improvements:
 * Add a :code:`--datetime-format` option to set a strptime datetime format string.
 * :code:`-I` is the short option for :code:`--no-inference`.
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
-* :doc:`/scripts/csvsql` adds a :code:`--prefix` option to add an expression like IGNORE or REPLACE following the INSERT keyword.
+* :doc:`/scripts/csvsql` adds a :code:`--prefix` option to add expressions like OR IGNORE or OR REPLACE following the INSERT keyword.
 * :doc:`/scripts/csvsql` adds a :code:`--overwrite` flag to drop any existing table with the same name before creating.
 * :doc:`/scripts/csvstat` adds a :code:`--freq-count` option to set the maximum number of frequent values to display.
 * :doc:`/scripts/in2csv` adds a :code:`--names` flag to print Excel sheet names.
@@ -22,10 +22,6 @@ Fixes:
 * :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
 * :doc:`/scripts/csvstat` will no longer crash when :code:`--freq` is set.
 * :doc:`/scripts/in2csv` restores support for :code:`--no-inference` for Excel files.
-
-Fixes:
-
-* :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
 * :doc:`/scripts/in2csv` accepts utf-8 arguments to the :code:`--sheet` option in Python 2.
 
 1.0.1 - December 29, 2016
