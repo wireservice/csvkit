@@ -7,7 +7,7 @@ import agate
 import six
 
 
-def fixed2csv(f, schema, output=None, **kwargs):
+def fixed2csv(f, schema, output=None, skip_lines=0, **kwargs):
     """
     Convert a fixed-width file to csv using a CSV-formatted schema description.
 
@@ -23,6 +23,9 @@ def fixed2csv(f, schema, output=None, **kwargs):
 
     If output is specified, rows will be written to that object, otherwise the
     complete data will be returned.
+
+    :param skip_lines:
+        The number of lines to skip from the top of the file.
     """
     streaming = True if output else False
 
@@ -33,6 +36,13 @@ def fixed2csv(f, schema, output=None, **kwargs):
         encoding = kwargs['encoding']
     except KeyError:
         encoding = None
+
+    if isinstance(skip_lines, int):
+        while skip_lines > 0:
+            f.readline()
+            skip_lines -= 1
+    else:
+        raise ValueError('skip_lines argument must be an int')
 
     writer = agate.csv.writer(output)
 

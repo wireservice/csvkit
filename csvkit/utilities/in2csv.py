@@ -91,9 +91,8 @@ class In2CSV(CSVKitUtility):
         if filetype == 'csv':
             kwargs.update(self.reader_kwargs)
             kwargs['sniff_limit'] = self.args.sniff_limit
-            kwargs['header'] = not self.args.no_header_row
 
-        if filetype in ('csv', 'fixed', 'xls', 'xlsx'):
+        if filetype not in ('dbf', 'geojson', 'json', 'ndjson'):
             kwargs['skip_lines'] = self.args.skip_lines
 
         if filetype != 'dbf':
