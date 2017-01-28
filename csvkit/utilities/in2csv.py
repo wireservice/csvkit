@@ -23,6 +23,7 @@ class In2CSV(CSVKitUtility):
     override_flags = ['f']
 
     def add_arguments(self):
+        # I feel that there ought to be a better way to do this across Python 2 and 3.
         def option_parser(bytestring):
             if six.PY2:
                 return bytestring.decode(sys.getfilesystemencoding())
