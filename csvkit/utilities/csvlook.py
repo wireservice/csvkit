@@ -25,7 +25,6 @@ class CSVLook(CSVKitUtility):
         table = agate.Table.from_csv(
             self.input_file,
             sniff_limit=self.args.sniff_limit,
-            header=not self.args.no_header_row,
             column_types=self.get_column_types(),
             line_numbers=self.args.line_numbers,
             **self.reader_kwargs
