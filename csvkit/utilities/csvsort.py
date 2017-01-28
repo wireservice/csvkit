@@ -28,6 +28,7 @@ class CSVSort(CSVKitUtility):
 
         table = agate.Table.from_csv(
             self.input_file,
+            skip_lines=self.args.skip_lines,
             sniff_limit=self.args.sniff_limit,
             column_types=self.get_column_types(),
             **self.reader_kwargs

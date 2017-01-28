@@ -87,7 +87,7 @@ Currently, the following tools stream:
 Currently, the following tools buffer:
 
 * :doc:`/scripts/csvjoin`
-* :doc:`/scripts/csvjson` unless both the ``--stream`` and ``--no-inference`` flags are set
+* :doc:`/scripts/csvjson` unless ``--stream`` is set and either the ``--no-inference`` or ``--skip-lines`` flag is set
 * :doc:`/scripts/csvlook`
 * :doc:`/scripts/csvsort`
 * :doc:`/scripts/csvsql`

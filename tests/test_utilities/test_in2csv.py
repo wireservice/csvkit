@@ -37,6 +37,9 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     def test_convert_csv(self):
         self.assertConverted('csv', 'examples/testfixed_converted.csv', 'examples/testfixed_converted.csv')
 
+    def test_convert_csv_with_skip_lines(self):
+        self.assertConverted('csv', 'examples/test_skip_lines.csv', 'examples/testfixed_converted.csv', ['--skip-lines', '3'])
+
     def test_convert_dbf(self):
         self.assertConverted('dbf', 'examples/testdbf.dbf', 'examples/testdbf_converted.csv')
 
@@ -58,11 +61,17 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     def test_convert_xls_with_sheet(self):
         self.assertConverted('xls', 'examples/sheets.xls', 'examples/testxls_converted.csv', ['--sheet', 'data'])
 
+    def test_convert_xls_with_skip_lines(self):
+        self.assertConverted('xls', 'examples/test_skip_lines.xls', 'examples/testxls_converted.csv', ['--skip-lines', '3'])
+
     def test_convert_xlsx(self):
         self.assertConverted('xlsx', 'examples/test.xlsx', 'examples/testxlsx_converted.csv')
 
     def test_convert_xlsx_with_sheet(self):
         self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_converted.csv', ['--sheet', 'data'])
+
+    def test_convert_xlsx_with_skip_lines(self):
+        self.assertConverted('xlsx', 'examples/test_skip_lines.xlsx', 'examples/testxlsx_converted.csv', ['--skip-lines', '3'])
 
     def test_csv_no_headers(self):
         self.assertLines(['--no-header-row', 'examples/no_header_row.csv'], [

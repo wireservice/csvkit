@@ -91,13 +91,15 @@ class In2CSV(CSVKitUtility):
         if filetype == 'csv':
             kwargs.update(self.reader_kwargs)
             kwargs['sniff_limit'] = self.args.sniff_limit
-            kwargs['header'] = not self.args.no_header_row
+
+        if filetype not in ('dbf', 'geojson', 'json', 'ndjson'):
+            kwargs['skip_lines'] = self.args.skip_lines
 
         if filetype != 'dbf':
             kwargs['column_types'] = self.get_column_types()
 
         # Convert the file.
-        if filetype == 'csv' and self.args.no_inference:
+        if filetype == 'csv' and self.args.no_inference and not self.args.skip_lines:
             reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
             writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
             writer.writerows(reader)
