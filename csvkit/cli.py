@@ -82,7 +82,7 @@ class CSVKitUtility(object):
         # Ensure SIGPIPE doesn't throw an exception
         # Prevents [Errno 32] Broken pipe errors, e.g. when piping to 'head'
         # To test from the shell:
-        #  python -c "for i in range(5000): print 'a,b,c'" | csvlook | head
+        #  python -c "for i in range(5000): print('a,b,c')" | csvlook | head
         # Without this fix you will see at the end:
         #  [Errno 32] Broken pipe
         # With this fix, there should be no error
