@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import sys
-
 import agate
 from sqlalchemy import create_engine
 

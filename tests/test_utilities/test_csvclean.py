@@ -50,7 +50,6 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             if error_lines:
                 os.remove(error_file)
 
-
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/bad.csv']):
             launch_new_instance()

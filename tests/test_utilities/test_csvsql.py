@@ -108,7 +108,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         self.assertTrue('Chicago Tribune' in sql)
 
     def test_query_with_prefix(self):
-        sql = self.get_output(['--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
+        self.get_output(['--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
 
         engine = create_engine('sqlite:///' + self.db_file)
         connection = engine.connect()
@@ -117,7 +117,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         index = Index('myindex', table.c.a, unique=True)
         index.create(bind=connection)
 
-        sql = self.get_output(['--prefix', 'OR IGNORE', '--no-create', '--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
+        self.get_output(['--prefix', 'OR IGNORE', '--no-create', '--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
 
     def test_query_with_stdin(self):
         input_file = six.StringIO("a,b,c\n1,2,3\n")
