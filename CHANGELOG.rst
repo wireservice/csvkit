@@ -14,6 +14,7 @@ Improvements:
 * :doc:`/scripts/csvsql` adds a :code:`--overwrite` flag to drop any existing table with the same name before creating.
 * :doc:`/scripts/csvstat` adds a :code:`--freq-count` option to set the maximum number of frequent values to display.
 * :doc:`/scripts/in2csv` adds a :code:`--names` flag to print Excel sheet names.
+* :doc:`/scripts/in2csv` adds a :code:`--write-sheets` option to write the named Excel sheets to files.
 * :doc:`/scripts/sql2csv` adds an :code:`--encoding` option to specify the encoding of the input query file.
 
 Fixes:

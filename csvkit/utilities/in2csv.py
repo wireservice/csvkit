@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+from os.path import splitext
 
 import agate
 import agatedbf  # noqa
@@ -42,6 +43,8 @@ class In2CSV(CSVKitUtility):
                                     help='Display sheet names from the input Excel file.')
         self.argparser.add_argument('--sheet', dest='sheet', type=option_parser,
                                     help='The name of the Excel sheet to operate on.')
+        self.argparser.add_argument('--write-sheets', dest='write_sheets', type=option_parser,
+                                    help='The names of the Excel sheets to write to files, or "-" to write all sheets.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
@@ -95,9 +98,6 @@ class In2CSV(CSVKitUtility):
         elif filetype == 'fixed':
             raise ValueError('schema must not be null when format is "fixed"')
 
-        if self.args.sheet:
-            kwargs['sheet'] = self.args.sheet
-
         if filetype == 'csv':
             kwargs.update(self.reader_kwargs)
             kwargs['sniff_limit'] = self.args.sniff_limit
@@ -125,14 +125,35 @@ class In2CSV(CSVKitUtility):
             elif filetype == 'ndjson':
                 table = agate.Table.from_json(self.input_file, key=self.args.key, newline=True, **kwargs)
             elif filetype == 'xls':
-                table = agate.Table.from_xls(self.input_file, **kwargs)
+                table = agate.Table.from_xls(self.input_file, sheet=self.args.sheet, **kwargs)
             elif filetype == 'xlsx':
-                table = agate.Table.from_xlsx(self.input_file, **kwargs)
+                table = agate.Table.from_xlsx(self.input_file, sheet=self.args.sheet, **kwargs)
             elif filetype == 'dbf':
                 if not hasattr(self.input_file, 'name'):
                     raise ValueError('DBF files can not be converted from stdin. You must pass a filename.')
                 table = agate.Table.from_dbf(self.input_file.name, **kwargs)
             table.to_csv(self.output_file)
+
+        if self.args.write_sheets:
+            # Close and re-open the file, as the file object has been mutated or closed.
+            self.input_file.close()
+
+            self.input_file = open(self.args.input_path, 'rb')
+
+            if self.args.write_sheets == '-':
+                sheets = None
+            else:
+                sheets = [int(sheet) if sheet.isdigit() else sheet for sheet in self.args.write_sheets.split(',')]
+
+            if filetype == 'xls':
+                tableset = agate.TableSet.from_xls(self.input_file, sheets=sheets, **kwargs)
+            elif filetype == 'xlsx':
+                tableset = agate.TableSet.from_xlsx(self.input_file, sheets=sheets, **kwargs)
+
+            base = splitext(self.input_file.name)[0]
+            for i, table in enumerate(tableset.values()):
+                with open('%s_%d.csv' % (base, i), 'w') as f:
+                    table.to_csv(f)
 
         self.input_file.close()
 
