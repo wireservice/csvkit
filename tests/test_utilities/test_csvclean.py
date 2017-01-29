@@ -91,5 +91,5 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         self.assertCleaned(['-e', 'latin1', 'examples/test_latin1.csv'], [
             ['a', 'b', 'c'],
             ['1', '2', '3'],
-            ['4', '5', '©'],
+            ['4', '5', u'©'],
         ])
