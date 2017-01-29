@@ -5,7 +5,11 @@ from csvkit.exceptions import CSVTestException, LengthMismatchError
 
 def join_rows(rows, joiner=' '):
     """
-    Given a series of rows, return them as a single row where the inner edge cells are merged. By default joins with a single space character, but you can specify new-line, empty string, or anything else with the 'joiner' kwarg.
+    Given a series of rows, return them as a single row where the inner edge
+    cells are merged.
+
+    :param joiner:
+        The separator between cells, a single space by default.
     """
     rows = list(rows)
     fixed_row = rows[0][:]
@@ -47,8 +51,6 @@ class RowChecker(object):
         self.column_names = next(reader)
 
         self.errors = []
-        self.rows_joined = 0
-        self.joins = 0
 
     def checked_rows(self):
         """
@@ -74,9 +76,6 @@ class RowChecker(object):
                         break
 
                     if len(fixed_row) == len(self.column_names):
-                        self.rows_joined += len(joinable_row_errors)
-                        self.joins += 1
-
                         yield fixed_row
 
                         for fixed in joinable_row_errors:
