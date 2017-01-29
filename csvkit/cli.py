@@ -68,6 +68,7 @@ class CSVKitUtility(object):
         self._init_common_parser()
         self.add_arguments()
         self.args = self.argparser.parse_args(args)
+        # Output file is only set during testing.
         if output_file is None:
             self.output_file = sys.stdout
         else:
