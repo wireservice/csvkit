@@ -8,6 +8,7 @@ Description
 Cleans a CSV file of common syntax errors:
 
 * reports rows that have a different number of columns than the header row
+* attempts to correct the CSV by joining short rows into a single row
 
 Note that every csvkit tool does the following:
 
