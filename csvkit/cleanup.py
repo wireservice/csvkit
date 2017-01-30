@@ -20,23 +20,6 @@ def join_rows(rows, joiner=' '):
     return fixed_row
 
 
-def extract_joinable_row_errors(errs):
-    joinable = []
-
-    for err in reversed(errs):
-        if type(err) is not LengthMismatchError:
-            break
-
-        if joinable and err.line_number != joinable[-1].line_number - 1:
-            break
-
-        joinable.append(err)
-
-    joinable.reverse()
-
-    return joinable
-
-
 class RowChecker(object):
     """
     Iterate over rows of a CSV producing cleaned rows and storing error rows.
@@ -45,7 +28,6 @@ class RowChecker(object):
     def __init__(self, reader):
         self.reader = reader
         self.column_names = next(reader)
-
         self.errors = []
         self.rows_joined = 0
         self.joins = 0
@@ -54,39 +36,52 @@ class RowChecker(object):
         """
         A generator which yields rows which are ready to write to output.
         """
+        length = len(self.column_names)
         line_number = self.reader.line_num
+        joinable_row_errors = []
 
         for row in self.reader:
             try:
-                if len(row) != len(self.column_names):
-                    raise LengthMismatchError(line_number, row, len(self.column_names))
+                if len(row) != length:
+                    raise LengthMismatchError(line_number, row, length)
 
                 yield row
+
+                # Don't join rows across valid rows.
+                joinable_row_errors = []
             except LengthMismatchError as e:
                 self.errors.append(e)
 
-                joinable_row_errors = extract_joinable_row_errors(self.errors)
+                # Don't join with long rows.
+                if len(row) > length:
+                    joinable_row_errors = []
+                else:
+                    joinable_row_errors.append(e)
 
-                while joinable_row_errors:
-                    fixed_row = join_rows([err.row for err in joinable_row_errors], joiner=' ')
+                    while joinable_row_errors:
+                        fixed_row = join_rows([error.row for error in joinable_row_errors], joiner=' ')
 
-                    if len(fixed_row) < len(self.column_names):
-                        break
+                        if len(fixed_row) < length:
+                            break
 
-                    if len(fixed_row) == len(self.column_names):
-                        self.rows_joined += len(joinable_row_errors)
-                        self.joins += 1
+                        if len(fixed_row) == length:
+                            self.rows_joined += len(joinable_row_errors)
+                            self.joins += 1
 
-                        yield fixed_row
+                            yield fixed_row
 
-                        for fixed in joinable_row_errors:
-                            self.errors.remove(fixed)
+                            for fixed in joinable_row_errors:
+                                joinable_row_errors.remove(fixed)
+                                self.errors.remove(fixed)
 
-                        break
+                            break
 
-                    joinable_row_errors = joinable_row_errors[1:]  # keep trying in case we're too long because of a straggler
+                        joinable_row_errors = joinable_row_errors[1:]  # keep trying in case we're too long because of a straggler
 
             except CSVTestException as e:
                 self.errors.append(e)
+
+                # Don't join rows across other errors.
+                joinable_row_errors = []
 
             line_number = self.reader.line_num
