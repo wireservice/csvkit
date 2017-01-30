@@ -67,3 +67,11 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             ['b'],
             ['2'],
         ])
+
+    def test_ragged(self):
+        self.assertRows(['-c', 'column_c', 'examples/bad.csv'], [
+            ['column_c'],
+            [],
+            [],
+            ['17'],
+        ])
