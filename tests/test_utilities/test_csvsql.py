@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import os
 import sys
@@ -99,13 +100,21 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
 
         input_file.close()
 
-    def test_query(self):
+    def test_query_text(self):
         sql = self.get_output(['--insert', '--query', "SELECT text FROM testfixed_converted WHERE text LIKE 'Chicago%'", 'examples/testfixed_converted.csv'])
 
-        self.assertTrue('text' in sql)
-        self.assertTrue('Chicago Reader' in sql)
-        self.assertTrue('Chicago Sun-Times' in sql)
-        self.assertTrue('Chicago Tribune' in sql)
+        self.assertEqual(sql,
+            "text\n"
+            "Chicago Reader\n"
+            "Chicago Sun-Times\n"
+            "Chicago Tribune\n")
+
+    def test_query_file(self):
+        sql = self.get_output(['--query', 'examples/test_query.sql', 'examples/testfixed_converted.csv'])
+
+        self.assertEqual(sql,
+            "question,text\n"
+            "36,©\n")
 
     def test_query_with_prefix(self):
         self.get_output(['--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
@@ -119,7 +128,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
 
         self.get_output(['--prefix', 'OR IGNORE', '--no-create', '--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
 
-    def test_query_with_stdin(self):
+    def test_query(self):
         input_file = six.StringIO("a,b,c\n1,2,3\n")
 
         with stdin_as_string(input_file):

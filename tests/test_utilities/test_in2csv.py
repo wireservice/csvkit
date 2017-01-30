@@ -30,8 +30,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
     def test_version(self):
         with self.assertRaises(SystemExit) as e:
-            output = self.get_output(['-V'])
-            self.assertRegex(output, r'csvcut \d+.\d+.\d+')
+            self.get_output(['-V'])
 
         self.assertEqual(e.exception.code, 0)
 
