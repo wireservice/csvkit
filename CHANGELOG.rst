@@ -24,6 +24,7 @@ Fixes:
 * :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
 * :doc:`/scripts/csvstat` will no longer crash when :code:`--freq` is set.
 * :doc:`/scripts/in2csv` restores support for :code:`--no-inference` for Excel files.
+* :doc:`/scripts/in2csv` restores support for converting Excel files from standard input.
 * :doc:`/scripts/in2csv` accepts utf-8 arguments to the :code:`--sheet` option in Python 2.
 
 1.0.1 - December 29, 2016
