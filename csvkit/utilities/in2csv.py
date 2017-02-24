@@ -48,6 +48,8 @@ class In2CSV(CSVKitUtility):
                                     help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
     def main(self):
+        path = self.args.input_path
+
         # Determine the file type.
         if self.args.filetype:
             filetype = self.args.filetype
@@ -58,9 +60,9 @@ class In2CSV(CSVKitUtility):
         elif self.args.key:
             filetype = 'json'
         else:
-            if not self.args.input_path or self.args.input_path == '-':
+            if not path or path == '-':
                 self.argparser.error('You must specify a format when providing data via STDIN (pipe).')
-            filetype = convert.guess_format(self.args.input_path)
+            filetype = convert.guess_format(path)
             if not filetype:
                 self.argparser.error('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
@@ -69,9 +71,15 @@ class In2CSV(CSVKitUtility):
 
         # Set the input file.
         if filetype in ('xls', 'xlsx'):
-            self.input_file = open(self.args.input_path, 'rb')
+            if not path or path == '-':
+                if six.PY2:
+                    self.input_file = six.BytesIO(sys.stdin.read())
+                else:
+                    self.input_file = six.BytesIO(sys.stdin.buffer.read())
+            else:
+                self.input_file = open(path, 'rb')
         else:
-            self.input_file = self._open_input_file(self.args.input_path)
+            self.input_file = self._open_input_file(path)
 
         if self.args.names_only:
             sheet_names = None
