@@ -9,7 +9,7 @@ from csvkit.cli import CSVKitUtility, make_default_headers
 
 class CSVStack(CSVKitUtility):
     description = 'Stack up the rows from multiple CSV files, optionally adding a grouping value.'
-    override_flags = ['f', 'K', 'L', 'date-format', 'datetime-format']
+    override_flags = ['f', 'L', 'date-format', 'datetime-format']
 
     def add_arguments(self):
         self.argparser.add_argument(metavar="FILE", nargs='+', dest='input_paths', default=['-'],
@@ -45,6 +45,14 @@ class CSVStack(CSVKitUtility):
         output = agate.csv.writer(self.output_file, **self.writer_kwargs)
 
         for i, f in enumerate(self.input_files):
+            if isinstance(self.args.skip_lines, int):
+                skip_lines = self.args.skip_lines
+                while skip_lines > 0:
+                    f.readline()
+                    skip_lines -= 1
+            else:
+                raise ValueError('skip_lines argument must be an int')
+
             rows = agate.csv.reader(f, **self.reader_kwargs)
 
             # If we have header rows, use them
