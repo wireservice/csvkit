@@ -59,7 +59,7 @@ class In2CSV(CSVKitUtility):
         else:
             return open(path, 'rb')
 
-    def sheet_names(self):
+    def sheet_names(self, filetype):
         if filetype == 'xls':
             return xlrd.open_workbook(file_contents=self.input_file.read()).sheet_names()
         elif filetype == 'xlsx':
@@ -94,7 +94,7 @@ class In2CSV(CSVKitUtility):
             self.input_file = self._open_input_file(path)
 
         if self.args.names_only:
-            sheets = self.sheet_names()
+            sheets = self.sheet_names(filetype)
             if sheets:
                 for sheet in sheets:
                     self.output_file.write('%s\n' % sheet)
@@ -154,7 +154,7 @@ class In2CSV(CSVKitUtility):
             self.input_file = self.open_excel_input_file(path)
 
             if self.args.write_sheets == '-':
-                sheets = self.sheet_names()
+                sheets = self.sheet_names(filetype)
             else:
                 sheets = [int(sheet) if sheet.isdigit() else sheet for sheet in self.args.write_sheets.split(',')]
 
