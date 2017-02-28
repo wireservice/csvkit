@@ -134,15 +134,9 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         with stdin_as_string(input_file):
             sql = self.get_output(['--query', 'SELECT m.usda_id, avg(i.sepal_length) AS mean_sepal_length FROM iris AS i JOIN irismeta AS m ON (i.species = m.species) GROUP BY m.species', 'examples/iris.csv', 'examples/irismeta.csv'])
 
-            if six.PY2:
-                self.assertTrue('usda_id,mean_sepal_length' in sql)
-                self.assertTrue('IRSE,5.006' in sql)
-                self.assertTrue('IRVE2,5.936' in sql)
-                self.assertTrue('IRVI,6.588' in sql)
-            else:
-                self.assertTrue('usda_id,mean_sepal_length' in sql)
-                self.assertTrue('IRSE,5.005' in sql)
-                self.assertTrue('IRVE2,5.936' in sql)
-                self.assertTrue('IRVI,6.587' in sql)
+            self.assertTrue('usda_id,mean_sepal_length' in sql)
+            self.assertTrue('IRSE,5.00' in sql)
+            self.assertTrue('IRVE2,5.936' in sql)
+            self.assertTrue('IRVI,6.58' in sql)
 
         input_file.close()

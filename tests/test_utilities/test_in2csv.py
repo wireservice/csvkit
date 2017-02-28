@@ -190,12 +190,12 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
     def test_convert_xlsx_with_write_sheets(self):
         try:
-            self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_converted.csv', ['--sheet', 'data', '--write-sheets', "ʤ,1"])
+            self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_noinference_converted.csv', ['--no-inference', '--sheet', 'data', '--write-sheets', "ʤ,1"])
             with open('examples/sheets_0.csv', 'r') as f:
                 with open('examples/testxlsx_unicode_converted.csv', 'r') as g:
                     self.assertEqual(f.read(), g.read())
             with open('examples/sheets_1.csv', 'r') as f:
-                with open('examples/testxlsx_converted.csv', 'r') as g:
+                with open('examples/testxlsx_noinference_converted.csv', 'r') as g:
                     self.assertEqual(f.read(), g.read())
             self.assertFalse(os.path.exists('examples/sheets_2.csv'))
         finally:
