@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os
+import os.path
 
 import agate
 
@@ -31,7 +31,7 @@ class CSVStack(CSVKitUtility):
             self.argparser.error('You must specify at least one file to stack.')
 
         if self.args.group_by_filenames:
-            groups = [os.path.split(f.name)[1] for f in self.input_files]
+            groups = [os.path.basename(f.name) for f in self.input_files]
         elif self.args.groups:
             groups = self.args.groups.split(',')
 
