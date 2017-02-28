@@ -56,5 +56,5 @@ Convert a comma-separated file to a pipe-delimited file::
 
 Convert to carriage return line-endings::
 
-    csvformat -M $"\r" examples/dummy.csv
+    csvformat -M $'\r' examples/dummy.csv
 

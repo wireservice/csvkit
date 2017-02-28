@@ -152,22 +152,25 @@ class CSVSQL(CSVKitUtility):
 
         if self.connection:
             if self.args.query:
+                if os.path.exists(self.args.query):
+                    with open(self.args.query, 'r') as f:
+                        query = f.read()
+                else:
+                    query = self.args.query
+
                 # Execute the specified SQL queries
-                queries = self.args.query.split(';')
+                queries = query.split(';')
                 rows = None
 
                 for q in queries:
-                    if q:
+                    if q.strip():
                         rows = self.connection.execute(q)
 
                 # Output the result of the last query as CSV
-                try:
-                    output = agate.csv.writer(self.output_file, **self.writer_kwargs)
-                    output.writerow(rows._metadata.keys)
-                    for row in rows:
-                        output.writerow(row)
-                except AttributeError:
-                    pass
+                output = agate.csv.writer(self.output_file, **self.writer_kwargs)
+                output.writerow(rows._metadata.keys)
+                for row in rows:
+                    output.writerow(row)
 
             transaction.commit()
 

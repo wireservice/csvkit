@@ -67,3 +67,7 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             ['b'],
             ['2'],
         ])
+
+    def test_ragged(self):
+        # Test that csvcut doesn't error when a row is short.
+        self.get_output(['-c', 'column_c', 'examples/bad.csv'])

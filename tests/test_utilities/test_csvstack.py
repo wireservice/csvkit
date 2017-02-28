@@ -19,6 +19,13 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def test_skip_lines(self):
+        self.assertRows(['--skip-lines', '3', 'examples/test_skip_lines.csv', 'examples/test_skip_lines.csv'], [
+            ['a', 'b', 'c'],
+            ['1', '2', '3'],
+            ['1', '2', '3'],
+        ])
+
     def test_single_file_stack(self):
         self.assertRows(['examples/dummy.csv'], [
             ['a', 'b', 'c'],

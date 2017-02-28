@@ -34,6 +34,10 @@ Sort CSV files. Like the Unix "sort" command, but for tabular data::
 
 See also: :doc:`../common_arguments`.
 
+.. note ::
+
+    If your file is large, try :code:`sort -t, file.csv` instead.
+
 Examples
 ========
 
