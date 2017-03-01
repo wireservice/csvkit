@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import os
-from pkg_resources import iter_entry_points
+import os.path
 import sys
+from pkg_resources import iter_entry_points
 
 import agate
 import agatesql  # noqa
@@ -109,7 +109,7 @@ class CSVSQL(CSVKitUtility):
                     table_name = "stdin"
                 else:
                     # Use filename as table name
-                    table_name = os.path.splitext(os.path.split(f.name)[1])[0]
+                    table_name = os.path.splitext(os.path.basename(f.name))[0]
 
             table = None
 

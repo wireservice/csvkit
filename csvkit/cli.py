@@ -5,8 +5,8 @@ import bz2
 import codecs
 import gzip
 import itertools
-import os.path
 import sys
+from os.path import splitext
 
 import agate
 import six
@@ -213,7 +213,7 @@ class CSVKitUtility(object):
             else:
                 f = sys.stdin
         else:
-            (_, extension) = os.path.splitext(path)
+            extension = splitext(path)[1]
 
             if extension == '.gz':
                 f = LazyFile(gzip.open, path, mode, **kwargs)

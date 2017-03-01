@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+from os.path import splitext
 
 import agate
 import agatedbf  # noqa
@@ -42,10 +43,27 @@ class In2CSV(CSVKitUtility):
                                     help='Display sheet names from the input Excel file.')
         self.argparser.add_argument('--sheet', dest='sheet', type=option_parser,
                                     help='The name of the Excel sheet to operate on.')
+        self.argparser.add_argument('--write-sheets', dest='write_sheets', type=option_parser,
+                                    help='The names of the Excel sheets to write to files, or "-" to write all sheets.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
                                     help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
+
+    def open_excel_input_file(self, path):
+        if not path or path == '-':
+            if six.PY2:
+                return six.BytesIO(sys.stdin.read())
+            else:
+                return six.BytesIO(sys.stdin.buffer.read())
+        else:
+            return open(path, 'rb')
+
+    def sheet_names(self, filetype):
+        if filetype == 'xls':
+            return xlrd.open_workbook(file_contents=self.input_file.read()).sheet_names()
+        elif filetype == 'xlsx':
+            return openpyxl.load_workbook(self.input_file, read_only=True, data_only=True).sheetnames
 
     def main(self):
         path = self.args.input_path
@@ -71,25 +89,15 @@ class In2CSV(CSVKitUtility):
 
         # Set the input file.
         if filetype in ('xls', 'xlsx'):
-            if not path or path == '-':
-                if six.PY2:
-                    self.input_file = six.BytesIO(sys.stdin.read())
-                else:
-                    self.input_file = six.BytesIO(sys.stdin.buffer.read())
-            else:
-                self.input_file = open(path, 'rb')
+            self.input_file = self.open_excel_input_file(path)
         else:
             self.input_file = self._open_input_file(path)
 
         if self.args.names_only:
-            sheet_names = None
-            if filetype == 'xls':
-                sheet_names = xlrd.open_workbook(file_contents=self.input_file.read()).sheet_names()
-            elif filetype == 'xlsx':
-                sheet_names = openpyxl.load_workbook(self.input_file, read_only=True, data_only=True).sheetnames
-            if sheet_names:
-                for name in sheet_names:
-                    self.output_file.write('%s\n' % name)
+            sheets = self.sheet_names(filetype)
+            if sheets:
+                for sheet in sheets:
+                    self.output_file.write('%s\n' % sheet)
             else:
                 self.argparser.error('You cannot use the -n or --names options with non-Excel files.')
             self.input_file.close()
@@ -102,9 +110,6 @@ class In2CSV(CSVKitUtility):
             schema = self._open_input_file(self.args.schema)
         elif filetype == 'fixed':
             raise ValueError('schema must not be null when format is "fixed"')
-
-        if self.args.sheet:
-            kwargs['sheet'] = self.args.sheet
 
         if filetype == 'csv':
             kwargs.update(self.reader_kwargs)
@@ -133,14 +138,35 @@ class In2CSV(CSVKitUtility):
             elif filetype == 'ndjson':
                 table = agate.Table.from_json(self.input_file, key=self.args.key, newline=True, **kwargs)
             elif filetype == 'xls':
-                table = agate.Table.from_xls(self.input_file, **kwargs)
+                table = agate.Table.from_xls(self.input_file, sheet=self.args.sheet, **kwargs)
             elif filetype == 'xlsx':
-                table = agate.Table.from_xlsx(self.input_file, **kwargs)
+                table = agate.Table.from_xlsx(self.input_file, sheet=self.args.sheet, **kwargs)
             elif filetype == 'dbf':
                 if not hasattr(self.input_file, 'name'):
                     raise ValueError('DBF files can not be converted from stdin. You must pass a filename.')
                 table = agate.Table.from_dbf(self.input_file.name, **kwargs)
             table.to_csv(self.output_file)
+
+        if self.args.write_sheets:
+            # Close and re-open the file, as the file object has been mutated or closed.
+            self.input_file.close()
+
+            self.input_file = self.open_excel_input_file(path)
+
+            if self.args.write_sheets == '-':
+                sheets = self.sheet_names(filetype)
+            else:
+                sheets = [int(sheet) if sheet.isdigit() else sheet for sheet in self.args.write_sheets.split(',')]
+
+            if filetype == 'xls':
+                tables = agate.Table.from_xls(self.input_file, sheet=sheets, **kwargs)
+            elif filetype == 'xlsx':
+                tables = agate.Table.from_xlsx(self.input_file, sheet=sheets, **kwargs)
+
+            base = splitext(self.input_file.name)[0]
+            for i, table in enumerate(tables.values()):
+                with open('%s_%d.csv' % (base, i), 'w') as f:
+                    table.to_csv(f)
 
         self.input_file.close()
 
