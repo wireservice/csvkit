@@ -32,7 +32,8 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                             If present, a sqlalchemy connection string to use to
                             directly execute generated SQL on a database.
       --query QUERY         Execute one or more SQL queries delimited by ";" and
-                            output the result of the last query as CSV.
+                            output the result of the last query as CSV. QUERY
+                            may be a filename.
       --insert              In addition to creating the table, also insert the
                             data into the table. Only valid when --db is
                             specified.
@@ -45,6 +46,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                             checks. Useful when sampling big tables.
       --no-create           Skip creating a table. Only valid when --insert is
                             specified.
+      --overwrite           Drop the table before creating.
       --blanks              Do not coerce empty strings to NULL values.
       --db-schema DB_SCHEMA
                             Optional name of database schema to create table(s)

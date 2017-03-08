@@ -41,6 +41,9 @@ The header line is required though the columns may be in any order::
                             of objects to be converted when processing JSON.
       -n, --names           Display sheet names from the input Excel file.
       --sheet SHEET         The name of the Excel sheet to operate on.
+      --write-sheets WRITE_SHEETS
+                            The names of the Excel sheets to write to files, or
+                            "-" to write all sheets.
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                             Limit CSV dialect sniffing to the specified number of
                             bytes. Specify "0" to disable sniffing entirely.
