@@ -74,6 +74,11 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             '2,"Expected 3 columns, found 2 columns",,I\'m too short!\n',
         ])
 
+    def test_no_header_row(self):
+        self.assertCleaned('no_header_row', [
+            '1,2,3\n',
+        ], [])
+
     def test_removes_optional_quote_characters(self):
         self.assertCleaned('optional_quote_characters', [
             'a,b,c\n',
