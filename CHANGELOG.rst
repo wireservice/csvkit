@@ -9,8 +9,9 @@ Improvements:
 * Add a :code:`--date-format` option to set a strptime date format string.
 * Add a :code:`--datetime-format` option to set a strptime datetime format string.
 * :code:`-I` is the short option for :code:`--no-inference`.
-* :doc:`/scripts/csvclean`, :doc:`/scripts/csvjson` support :code:`--no-header-row`.
+* :doc:`/scripts/csvclean`, :doc:`/scripts/csvformat`, :doc:`/scripts/csvjson` support :code:`--no-header-row`.
 * :doc:`/scripts/csvclean` is faster and no longer requires exponential time in the worst case.
+* :doc:`/scripts/csvformat` supports :code:`--linenumbers` and `--zero` (no-op).
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
 * :doc:`/scripts/csvsql` adds a :code:`--prefix` option to add expressions like OR IGNORE or OR REPLACE following the INSERT keyword.
 * :doc:`/scripts/csvsql` adds a :code:`--overwrite` flag to drop any existing table with the same name before creating.

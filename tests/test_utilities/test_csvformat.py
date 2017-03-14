@@ -27,6 +27,17 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
             '1|2|3',
         ])
 
+    def test_no_header_row(self):
+        self.assertLines(['--no-header-row', 'examples/no_header_row.csv'], [
+            '1,2,3',
+        ])
+
+    def test_linenumbers(self):
+        self.assertLines(['--linenumbers', 'examples/dummy.csv'], [
+            'line_number,a,b,c',
+            '1,1,2,3',
+        ])
+
     def test_delimiter(self):
         self.assertLines(['-D', '|', 'examples/dummy.csv'], [
             'a|b|c',
