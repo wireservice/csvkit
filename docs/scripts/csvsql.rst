@@ -47,7 +47,6 @@ Generate SQL statements for a CSV file or execute those statements directly on a
       --no-create           Skip creating a table. Only valid when --insert is
                             specified.
       --overwrite           Drop the table before creating.
-      --blanks              Do not coerce empty strings to NULL values.
       --db-schema DB_SCHEMA
                             Optional name of database schema to create table(s)
                             in.

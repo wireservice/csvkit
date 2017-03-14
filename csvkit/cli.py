@@ -167,6 +167,9 @@ class CSVKitUtility(object):
         if 'S' not in self.override_flags:
             self.argparser.add_argument('-S', '--skipinitialspace', dest='skipinitialspace', action='store_true',
                                         help='Ignore whitespace immediately following the delimiter.')
+        if 'blanks' not in self.override_flags:
+            self.argparser.add_argument('--blanks', dest='blanks', action='store_true',
+                                        help='Do not coerce empty, "na", "n/a", "none", "null", "." strings to NULL values.')
         if 'date-format' not in self.override_flags:
             self.argparser.add_argument('--date-format', dest='date_format',
                                         help='Specify a strptime date format string like "%%m/%%d/%%Y".')
@@ -284,19 +287,21 @@ class CSVKitUtility(object):
 
     def get_column_types(self):
         if getattr(self.args, 'blanks', None):
-            text_type = agate.Text(cast_nulls=False)
+            null_values = ()
+            text_type = agate.Text(null_values=null_values, cast_nulls=False)
         else:
-            text_type = agate.Text()
+            null_values = agate.data_types.base.DEFAULT_NULL_VALUES
+            text_type = agate.Text(null_values=null_values)
 
         if self.args.no_inference:
             return agate.TypeTester(types=[text_type])
         else:
             return agate.TypeTester(types=[
-                agate.Boolean(),
-                agate.Number(locale=self.args.locale),
-                agate.TimeDelta(),
-                agate.Date(date_format=self.args.date_format),
-                agate.DateTime(datetime_format=self.args.datetime_format),
+                agate.Boolean(null_values=null_values),
+                agate.Number(null_values=null_values, locale=self.args.locale),
+                agate.TimeDelta(null_values=null_values),
+                agate.Date(null_values=null_values, date_format=self.args.date_format),
+                agate.DateTime(null_values=null_values, datetime_format=self.args.datetime_format),
                 text_type
             ])
 

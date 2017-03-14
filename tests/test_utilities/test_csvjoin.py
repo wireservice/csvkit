@@ -44,6 +44,18 @@ class TestCSVJoin(CSVKitTestCase, EmptyFileTests):
         with open('examples/join_short.csv') as f:
             self.assertEqual(output.readlines(), f.readlines())
 
+    def test_no_blanks(self):
+        self.assertRows(['examples/blanks.csv', 'examples/blanks.csv'], [
+            ['a', 'b', 'c', 'd', 'e', 'f', 'a2', 'b2', 'c2', 'd2', 'e2', 'f2'],
+            ['', '', '', '', '', '', '', '', '', '', '', ''],
+        ])
+
+    def test_blanks(self):
+        self.assertRows(['--blanks', 'examples/blanks.csv', 'examples/blanks.csv'], [
+            ['a', 'b', 'c', 'd', 'e', 'f', 'a2', 'b2', 'c2', 'd2', 'e2', 'f2'],
+            ['', 'NA', 'N/A', 'NONE', 'NULL', '.', '', 'NA', 'N/A', 'NONE', 'NULL', '.'],
+        ])
+
     def test_no_header_row(self):
         output = self.get_output_as_io(['-c', '1', '--no-header-row', 'examples/join_a.csv', 'examples/join_no_header_row.csv'])
         self.assertEqual(len(output.readlines()), 3)

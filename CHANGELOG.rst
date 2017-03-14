@@ -8,6 +8,7 @@ Improvements:
 * Add a :code:`--locale` option to set the locale of any formatted numbers.
 * Add a :code:`--date-format` option to set a strptime date format string.
 * Add a :code:`--datetime-format` option to set a strptime datetime format string.
+* Make :code:`--blanks` a common argument across all tools.
 * :code:`-I` is the short option for :code:`--no-inference`.
 * :doc:`/scripts/csvclean`, :doc:`/scripts/csvjson`, :doc:`/scripts/csvpy` support :code:`--no-header-row`.
 * :doc:`/scripts/csvclean` is faster and no longer requires exponential time in the worst case.

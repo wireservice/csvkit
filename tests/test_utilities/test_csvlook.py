@@ -35,6 +35,20 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             '| True | 4 | 5 |',
         ])
 
+    def test_no_blanks(self):
+        self.assertLines(['examples/blanks.csv'], [
+            '| a | b | c | d | e | f |',
+            '| - | - | - | - | - | - |',
+            '|   |   |   |   |   |   |',
+        ])
+
+    def test_blanks(self):
+        self.assertLines(['--blanks', 'examples/blanks.csv'], [
+            '| a | b  | c   | d    | e    | f |',
+            '| - | -- | --- | ---- | ---- | - |',
+            '|   | NA | N/A | NONE | NULL | . |',
+        ])
+
     def test_no_header_row(self):
         self.assertLines(['--no-header-row', 'examples/no_header_row3.csv'], [
             '| a | b | c |',
