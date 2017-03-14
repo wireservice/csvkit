@@ -18,6 +18,7 @@ Improvements:
 * :doc:`/scripts/csvsql` accepts a file name for the :code:`--query` option.
 * :doc:`/scripts/csvsql` supports :code:`--linenumbers` (no-op).
 * :doc:`/scripts/csvstat` adds a :code:`--freq-count` option to set the maximum number of frequent values to display.
+* :doc:`/scripts/csvstat` supports :code:`--linenumbers` (no-op).
 * :doc:`/scripts/in2csv` adds a :code:`--names` flag to print Excel sheet names.
 * :doc:`/scripts/in2csv` adds a :code:`--write-sheets` option to write the named Excel sheets to files.
 * :doc:`/scripts/sql2csv` adds an :code:`--encoding` option to specify the encoding of the input query file.
