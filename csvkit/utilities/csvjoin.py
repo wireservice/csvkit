@@ -8,6 +8,7 @@ from csvkit.cli import CSVKitUtility, match_column_identifier
 class CSVJoin(CSVKitUtility):
     description = 'Execute a SQL-like join to merge CSV files on a specified column or columns.'
     epilog = 'Note that the join operation requires reading all files into memory. Don\'t try this on very large files.'
+    # Override 'f' because the utility accepts multiple files.
     override_flags = ['f']
 
     def add_arguments(self):
