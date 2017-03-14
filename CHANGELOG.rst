@@ -9,9 +9,10 @@ Improvements:
 * Add a :code:`--date-format` option to set a strptime date format string.
 * Add a :code:`--datetime-format` option to set a strptime datetime format string.
 * :code:`-I` is the short option for :code:`--no-inference`.
-* :doc:`/scripts/csvclean`, :doc:`/scripts/csvjson` support :code:`--no-header-row`.
+* :doc:`/scripts/csvclean`, :doc:`/scripts/csvjson`, :doc:`/scripts/csvpy` support :code:`--no-header-row`.
 * :doc:`/scripts/csvclean` is faster and no longer requires exponential time in the worst case.
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
+* :doc:`/scripts/csvpy` supports :code:`--linenumbers` (no-op) and :code:`--zero` (no-op).
 * :doc:`/scripts/csvsql` adds a :code:`--prefix` option to add expressions like OR IGNORE or OR REPLACE following the INSERT keyword.
 * :doc:`/scripts/csvsql` adds a :code:`--overwrite` flag to drop any existing table with the same name before creating.
 * :doc:`/scripts/csvsql` accepts a file name for the :code:`--query` option.
@@ -23,6 +24,7 @@ Improvements:
 Fixes:
 
 * :doc:`/scripts/csvgrep` no longer ignores common arguments if :code:`--linenumbers` is set.
+* :doc:`/scripts/csvpy` again supports IPython.
 * :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
 * :doc:`/scripts/csvstat` will no longer crash when :code:`--freq` is set.
 * :doc:`/scripts/in2csv` restores support for :code:`--no-inference` for Excel files.
