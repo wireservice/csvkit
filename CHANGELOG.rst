@@ -11,6 +11,7 @@ Improvements:
 * :code:`-I` is the short option for :code:`--no-inference`.
 * :doc:`/scripts/csvclean` is faster and no longer requires exponential time in the worst case.
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
+* :doc:`/scripts/csvjson` supports :code:`--no-header-row`.
 * :doc:`/scripts/csvsql` adds a :code:`--prefix` option to add expressions like OR IGNORE or OR REPLACE following the INSERT keyword.
 * :doc:`/scripts/csvsql` adds a :code:`--overwrite` flag to drop any existing table with the same name before creating.
 * :doc:`/scripts/csvsql` accepts a file name for the :code:`--query` option.

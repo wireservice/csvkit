@@ -18,7 +18,6 @@ from csvkit.cli import CSVKitUtility, match_column_identifier
 
 class CSVJSON(CSVKitUtility):
     description = 'Convert a CSV file into JSON (or GeoJSON).'
-    override_flags = ['H']
     buffers_input = True
 
     def add_arguments(self):
