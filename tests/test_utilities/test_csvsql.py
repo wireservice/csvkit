@@ -65,6 +65,14 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         self.assertTrue('b DECIMAL NOT NULL' in sql)
         self.assertTrue('c DECIMAL NOT NULL' in sql)
 
+    def test_linenumbers(self):
+        sql = self.get_output(['--tables', 'foo', '--linenumbers', 'examples/dummy.csv'])
+
+        self.assertTrue('CREATE TABLE foo' in sql)
+        self.assertTrue('a BOOLEAN NOT NULL' in sql)
+        self.assertTrue('b DECIMAL NOT NULL' in sql)
+        self.assertTrue('c DECIMAL NOT NULL' in sql)
+
     def test_stdin(self):
         input_file = six.StringIO('a,b,c\n4,2,3\n')
 

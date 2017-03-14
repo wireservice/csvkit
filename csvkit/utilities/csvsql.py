@@ -15,7 +15,8 @@ DIALECTS = dialects.__all__ + tuple(e.name for e in iter_entry_points('sqlalchem
 
 class CSVSQL(CSVKitUtility):
     description = 'Generate SQL statements for one or more CSV files, or execute those statements directly on a database, and execute one or more SQL queries.'
-    override_flags = ['l', 'f']
+    # Override 'f' because the utility accepts multiple files.
+    override_flags = ['f']
 
     def add_arguments(self):
 

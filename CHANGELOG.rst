@@ -16,6 +16,7 @@ Improvements:
 * :doc:`/scripts/csvsql` adds a :code:`--prefix` option to add expressions like OR IGNORE or OR REPLACE following the INSERT keyword.
 * :doc:`/scripts/csvsql` adds a :code:`--overwrite` flag to drop any existing table with the same name before creating.
 * :doc:`/scripts/csvsql` accepts a file name for the :code:`--query` option.
+* :doc:`/scripts/csvsql` supports :code:`--linenumbers` (no-op).
 * :doc:`/scripts/csvstat` adds a :code:`--freq-count` option to set the maximum number of frequent values to display.
 * :doc:`/scripts/in2csv` adds a :code:`--names` flag to print Excel sheet names.
 * :doc:`/scripts/in2csv` adds a :code:`--write-sheets` option to write the named Excel sheets to files.
