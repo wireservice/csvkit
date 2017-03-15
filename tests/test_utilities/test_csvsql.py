@@ -55,7 +55,6 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         self.assertTrue('e BOOLEAN' in sql)
         self.assertTrue('f BOOLEAN' in sql)
 
-
     def test_blanks(self):
         sql = self.get_output(['--tables', 'foo', '--blanks', 'examples/blanks.csv'])
 
