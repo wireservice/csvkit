@@ -6,7 +6,6 @@ except ImportError:
     import unittest
 
 from csvkit.cleanup import join_rows
-from csvkit.exceptions import CSVTestException, LengthMismatchError
 
 
 class TestCleanup(unittest.TestCase):
