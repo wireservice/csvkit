@@ -169,7 +169,7 @@ class CSVKitUtility(object):
                                         help='Ignore whitespace immediately following the delimiter.')
         if 'blanks' not in self.override_flags:
             self.argparser.add_argument('--blanks', dest='blanks', action='store_true',
-                                        help='Do not coerce empty, "na", "n/a", "none", "null", "." strings to NULL values.')
+                                        help='Do not convert "", "na", "n/a", "none", "null", "." to NULL.')
         if 'date-format' not in self.override_flags:
             self.argparser.add_argument('--date-format', dest='date_format',
                                         help='Specify a strptime date format string like "%%m/%%d/%%Y".')
@@ -197,7 +197,7 @@ class CSVKitUtility(object):
                                         help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
 
         self.argparser.add_argument('-V', '--version', action='version', version='%(prog)s 1.0.2',
-                                        help='Display version information and exit.')
+                                    help='Display version information and exit.')
 
     def _open_input_file(self, path):
         """
@@ -287,23 +287,22 @@ class CSVKitUtility(object):
 
     def get_column_types(self):
         if getattr(self.args, 'blanks', None):
-            null_values = ()
-            text_type = agate.Text(null_values=null_values, cast_nulls=False)
+            type_kwargs = {'null_values': ()}
         else:
-            null_values = agate.data_types.base.DEFAULT_NULL_VALUES
-            text_type = agate.Text(null_values=null_values)
+            type_kwargs = {}
 
-        if self.args.no_inference:
-            return agate.TypeTester(types=[text_type])
-        else:
-            return agate.TypeTester(types=[
-                agate.Boolean(null_values=null_values),
-                agate.Number(null_values=null_values, locale=self.args.locale),
-                agate.TimeDelta(null_values=null_values),
-                agate.Date(null_values=null_values, date_format=self.args.date_format),
-                agate.DateTime(null_values=null_values, datetime_format=self.args.datetime_format),
-                text_type
-            ])
+        types = [agate.Text(**type_kwargs)]
+
+        if not self.args.no_inference:
+            types = [
+                agate.Boolean(**type_kwargs),
+                agate.Number(locale=self.args.locale, **type_kwargs),
+                agate.TimeDelta(**type_kwargs),
+                agate.Date(date_format=self.args.date_format, **type_kwargs),
+                agate.DateTime(datetime_format=self.args.datetime_format, **type_kwargs),
+            ] + types
+
+        return agate.TypeTester(types=types)
 
     def get_column_offset(self):
         if self.args.zero_based:
