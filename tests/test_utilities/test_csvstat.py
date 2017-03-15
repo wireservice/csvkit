@@ -31,6 +31,11 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
     def test_encoding(self):
         self.get_output(['-e', 'latin1', 'examples/test_latin1.csv'])
 
+    def test_linenumbers(self):
+        output = self.get_output(['-c', '2', '--linenumbers', 'examples/dummy.csv'])
+        self.assertNotIn('1. "a"', output)
+        self.assertIn('2. "b"', output)
+
     def test_no_header_row(self):
         output = self.get_output(['-c', '2', '--no-header-row', 'examples/no_header_row.csv'])
         self.assertNotIn('1. "a"', output)

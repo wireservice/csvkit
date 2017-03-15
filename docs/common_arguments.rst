@@ -29,6 +29,8 @@ All tools which accept CSV as input share a set of common command-line arguments
                         Specify the locale (en_US) of any formatted numbers.
   -S, --skipinitialspace
                         Ignore whitespace immediately following the delimiter.
+  --blanks              Do not coerce empty, "na", "n/a", "none", "null", "."
+                        strings to NULL values.
   --date-format DATE_FORMAT
                         Specify a strptime date format string like "%m/%d/%Y".
   --datetime-format DATETIME_FORMAT

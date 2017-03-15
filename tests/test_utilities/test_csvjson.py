@@ -30,6 +30,14 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         js = json.loads(self.get_output(['examples/sniff_limit.csv']))
         self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})
 
+    def test_no_blanks(self):
+        js = json.loads(self.get_output(['examples/blanks.csv']))
+        self.assertDictEqual(js[0], {'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None})
+
+    def test_blanks(self):
+        js = json.loads(self.get_output(['--blanks', 'examples/blanks.csv']))
+        self.assertDictEqual(js[0], {'a': '', 'b': 'NA', 'c': 'N/A', 'd': 'NONE', 'e': 'NULL', 'f': '.'})
+
     def test_no_header_row(self):
         js = json.loads(self.get_output(['--no-header-row', 'examples/no_header_row.csv']))
         self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})

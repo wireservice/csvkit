@@ -9,7 +9,8 @@ from csvkit.cli import CSVKitUtility, make_default_headers
 
 class CSVStack(CSVKitUtility):
     description = 'Stack up the rows from multiple CSV files, optionally adding a grouping value.'
-    override_flags = ['f', 'L', 'date-format', 'datetime-format']
+    # Override 'f' because the utility accepts multiple files.
+    override_flags = ['f', 'L', 'blanks', 'date-format', 'datetime-format']
 
     def add_arguments(self):
         self.argparser.add_argument(metavar="FILE", nargs='+', dest='input_paths', default=['-'],

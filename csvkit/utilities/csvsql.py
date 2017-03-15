@@ -15,7 +15,8 @@ DIALECTS = dialects.__all__ + tuple(e.name for e in iter_entry_points('sqlalchem
 
 class CSVSQL(CSVKitUtility):
     description = 'Generate SQL statements for one or more CSV files, or execute those statements directly on a database, and execute one or more SQL queries.'
-    override_flags = ['l', 'f']
+    # Override 'f' because the utility accepts multiple files.
+    override_flags = ['f']
 
     def add_arguments(self):
 
@@ -39,8 +40,6 @@ class CSVSQL(CSVKitUtility):
                                     help='Skip creating a table. Only valid when --insert is specified.')
         self.argparser.add_argument('--overwrite', dest='overwrite', action='store_true',
                                     help='Drop the table before creating.')
-        self.argparser.add_argument('--blanks', dest='blanks', action='store_true',
-                                    help='Do not coerce empty strings to NULL values.')
         self.argparser.add_argument('--db-schema', dest='db_schema',
                                     help='Optional name of database schema to create table(s) in.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,

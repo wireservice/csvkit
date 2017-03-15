@@ -7,7 +7,6 @@ from csvkit.cli import CSVKitUtility
 
 class CSVPy(CSVKitUtility):
     description = 'Load a CSV file into a CSV reader and then drop into a Python shell.'
-    override_flags = ['l', 'zero', 'H']
 
     def add_arguments(self):
         self.argparser.add_argument('--dict', dest='as_dict', action='store_true',
@@ -38,6 +37,7 @@ class CSVPy(CSVKitUtility):
 
         try:
             from IPython.frontend.terminal.embed import InteractiveShellEmbed
+            exec('%s = variable' % variable_name)
             ipy = InteractiveShellEmbed(banner1=welcome_message)
             ipy()
         except ImportError:

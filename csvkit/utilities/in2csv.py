@@ -21,6 +21,7 @@ SUPPORTED_FORMATS = ['csv', 'dbf', 'fixed', 'geojson', 'json', 'ndjson', 'xls', 
 class In2CSV(CSVKitUtility):
     description = 'Convert common, but less awesome, tabular data formats to CSV.'
     epilog = 'Some command-line flags only pertain to specific input formats.'
+    # The utility handles the input file.
     override_flags = ['f']
 
     def add_arguments(self):

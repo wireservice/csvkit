@@ -8,15 +8,19 @@ Improvements:
 * Add a :code:`--locale` option to set the locale of any formatted numbers.
 * Add a :code:`--date-format` option to set a strptime date format string.
 * Add a :code:`--datetime-format` option to set a strptime datetime format string.
+* Make :code:`--blanks` a common argument across all tools.
 * :code:`-I` is the short option for :code:`--no-inference`.
-* :doc:`/scripts/csvclean`, :doc:`/scripts/csvformat`, :doc:`/scripts/csvjson` support :code:`--no-header-row`.
+* :doc:`/scripts/csvclean`, :doc:`/scripts/csvformat`, :doc:`/scripts/csvjson`, :doc:`/scripts/csvpy` support :code:`--no-header-row`.
 * :doc:`/scripts/csvclean` is faster and no longer requires exponential time in the worst case.
 * :doc:`/scripts/csvformat` supports :code:`--linenumbers` and `--zero` (no-op).
 * :doc:`/scripts/csvjoin` supports :code:`--snifflimit` and :code:`--no-inference`.
+* :doc:`/scripts/csvpy` supports :code:`--linenumbers` (no-op) and :code:`--zero` (no-op).
 * :doc:`/scripts/csvsql` adds a :code:`--prefix` option to add expressions like OR IGNORE or OR REPLACE following the INSERT keyword.
 * :doc:`/scripts/csvsql` adds a :code:`--overwrite` flag to drop any existing table with the same name before creating.
 * :doc:`/scripts/csvsql` accepts a file name for the :code:`--query` option.
+* :doc:`/scripts/csvsql` supports :code:`--linenumbers` (no-op).
 * :doc:`/scripts/csvstat` adds a :code:`--freq-count` option to set the maximum number of frequent values to display.
+* :doc:`/scripts/csvstat` supports :code:`--linenumbers` (no-op).
 * :doc:`/scripts/in2csv` adds a :code:`--names` flag to print Excel sheet names.
 * :doc:`/scripts/in2csv` adds a :code:`--write-sheets` option to write the named Excel sheets to files.
 * :doc:`/scripts/sql2csv` adds an :code:`--encoding` option to specify the encoding of the input query file.
@@ -24,6 +28,7 @@ Improvements:
 Fixes:
 
 * :doc:`/scripts/csvgrep` no longer ignores common arguments if :code:`--linenumbers` is set.
+* :doc:`/scripts/csvpy` again supports IPython.
 * :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
 * :doc:`/scripts/csvstat` will no longer crash when :code:`--freq` is set.
 * :doc:`/scripts/in2csv` restores support for :code:`--no-inference` for Excel files.
