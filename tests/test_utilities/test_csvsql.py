@@ -44,6 +44,28 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         self.assertTrue('time TIMESTAMP' in sql)
         self.assertTrue('datetime TIMESTAMP' in sql)
 
+    def test_no_blanks(self):
+        sql = self.get_output(['--tables', 'foo', 'examples/blanks.csv'])
+
+        self.assertTrue('CREATE TABLE foo' in sql)
+        self.assertTrue('a BOOLEAN' in sql)
+        self.assertTrue('b BOOLEAN' in sql)
+        self.assertTrue('c BOOLEAN' in sql)
+        self.assertTrue('d BOOLEAN' in sql)
+        self.assertTrue('e BOOLEAN' in sql)
+        self.assertTrue('f BOOLEAN' in sql)
+
+    def test_blanks(self):
+        sql = self.get_output(['--tables', 'foo', '--blanks', 'examples/blanks.csv'])
+
+        self.assertTrue('CREATE TABLE foo' in sql)
+        self.assertTrue('a VARCHAR NOT NULL' in sql)
+        self.assertTrue('b VARCHAR(2) NOT NULL' in sql)
+        self.assertTrue('c VARCHAR(3) NOT NULL' in sql)
+        self.assertTrue('d VARCHAR(4) NOT NULL' in sql)
+        self.assertTrue('e VARCHAR(4) NOT NULL' in sql)
+        self.assertTrue('f VARCHAR(1) NOT NULL' in sql)
+
     def test_no_inference(self):
         sql = self.get_output(['--tables', 'foo', '--no-inference', 'examples/testfixed_converted.csv'])
 
