@@ -38,6 +38,8 @@ class CSVSQL(CSVKitUtility):
                                     help='Generate a schema without length limits or null checks. Useful when sampling big tables.')
         self.argparser.add_argument('--no-create', dest='no_create', action='store_true',
                                     help='Skip creating a table. Only valid when --insert is specified.')
+        self.argparser.add_argument('--create-if-not-exists', dest='create_if_not_exists', action='store_true',
+                                    help='Create table if it does not exist, otherwise keep going. Only valid when --insert is specified.')
         self.argparser.add_argument('--overwrite', dest='overwrite', action='store_true',
                                     help='Drop the table before creating.')
         self.argparser.add_argument('--db-schema', dest='db_schema',
@@ -67,7 +69,13 @@ class CSVSQL(CSVKitUtility):
             self.argparser.error('The --insert option is only valid when either --db or --query is specified.')
 
         if self.args.no_create and not self.args.insert:
-            self.argparser.error('The --no-create option is only valid --insert is also specified.')
+            self.argparser.error('The --no-create option is only valid if --insert is also specified.')
+
+        if self.args.create_if_not_exists and not self.args.insert:
+            self.argparser.error('The --create-if-not-exists option is only valid if --insert is also specified.')
+
+        if self.args.no_create and self.args.create_if_not_exists:
+            self.argparser.error('The --no-create and --create-if-not-exists options are mutually exclusive.')
 
         # Lazy open files
         for path in self.args.input_paths:
@@ -132,6 +140,7 @@ class CSVSQL(CSVKitUtility):
                         table_name,
                         overwrite=self.args.overwrite,
                         create=not self.args.no_create,
+                        create_if_not_exists=self.args.create_if_not_exists,
                         insert=self.args.insert and len(table.rows) > 0,
                         prefixes=self.args.prefix,
                         db_schema=self.args.db_schema,
