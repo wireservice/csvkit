@@ -158,6 +158,10 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
 
         self.get_output(['--prefix', 'OR IGNORE', '--no-create', '--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
 
+    def test_create_if_not_exists(self):
+        self.get_output(['--insert', '--create-if-not-exists', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv'])
+        self.get_output(['--insert', '--create-if-not-exists', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo2.csv'])
+
     def test_query(self):
         input_file = six.StringIO("a,b,c\n1,2,3\n")
 
