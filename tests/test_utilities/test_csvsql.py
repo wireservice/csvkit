@@ -6,6 +6,7 @@ import sys
 
 import six
 from sqlalchemy import Index, MetaData, Table, create_engine
+from sqlalchemy.exc import OperationalError
 
 try:
     from mock import patch
@@ -161,6 +162,13 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
     def test_create_if_not_exists(self):
         self.get_output(['--insert', '--create-if-not-exists', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv'])
         self.get_output(['--insert', '--create-if-not-exists', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo2.csv'])
+
+    def test_create_if_not_exists_error(self):
+        self.get_output(['--insert', '--tables', 'foobad', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv'])
+        try:
+            self.get_output(['--insert', '--tables', 'foobad', '--db', 'sqlite:///' + self.db_file, 'examples/foo2.csv'])
+        except OperationalError:
+            pass
 
     def test_query(self):
         input_file = six.StringIO("a,b,c\n1,2,3\n")
