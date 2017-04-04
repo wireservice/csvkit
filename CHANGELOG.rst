@@ -3,7 +3,7 @@
 
 Backwards-incompatible changes:
 
-* :doc:`/scripts/csvclean` now writes its output to standard output and its errors to standard error, instead of to ``basename_out.csv`` and ``basename_err.csv`` files. Consequently, it no longer supports a :code:`--dry-run` flag outputs summary information like ``No errors.``, ``42 errors logged to basename_err.csv`` or ``42 rows were joined/reduced to 24 rows after eliminating expected internal line breaks.``.
+* :doc:`/scripts/csvclean` now writes its output to standard output and its errors to standard error, instead of to ``basename_out.csv`` and ``basename_err.csv`` files. Consequently, it no longer supports a :code:`--dry-run` flag to output summary information like ``No errors.``, ``42 errors logged to basename_err.csv`` or ``42 rows were joined/reduced to 24 rows after eliminating expected internal line breaks.``.
 
 Improvements:
 
