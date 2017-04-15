@@ -1,0 +1,125 @@
+#!/usr/bin/perl -w
+
+use English;
+use FileCache;
+use File::Temp;
+
+my $delimiter = shift;
+my $buffer = shift;
+
+$delimiter ||= ",";
+# Use at most 1000M before flushing
+$buffer ||= "1000M";
+$buffer = multiply_binary_prefix($buffer);
+# Perl makes the buffer baloon to 10 times the requested value
+$buffer /= 10;
+# max_col_size will be lowered after first line read.
+$max_col_size = $buffer;
+my $delimiter_regexp = $delimiter;
+$delimiter_regexp =~ s/(\W)/\\$1/g;
+my @current;
+my $col_no_last_line = 0;
+my $lineno = 0;
+my %col;
+while(<>) {
+    chomp;
+    my $col_no = 0;
+    my @to_be_flushed = ();
+    map {
+	push(@{$col{$col_no}},$_);
+	$col_size{$col_no} += length $_;
+	if($col_size{$col_no} > $max_col_size) {
+	    push @to_be_flushed, $col_no;
+	    $col_size{$col_no} = 0;
+	}
+	$col_no++;
+    } split /$delimiter_regexp/o, $_; # This should do de-csv'ing
+    if(@to_be_flushed) {
+	flush(\%col,@to_be_flushed);
+    }
+    if($col_no != $col_no_last_line) {
+	if(0 == $col_no_last_line) {
+	    # This is first time around
+	    $col_no_last_line = $col_no;
+	    $max_col_size = $buffer/$col_no_last_line;
+	} else {
+	    warning("Number of columns in line $NR: $col_no != $col_no_last_line\n");
+	}
+    }
+}
+flush(\%col);
+merge();
+
+sub flush {
+    my $col_ref = shift;
+    my @cols_to_flush = @_;
+    if(not @cols_to_flush) {
+	@cols_to_flush = keys %$col_ref;
+    }
+    for my $c (@cols_to_flush) {
+	$Global::tempfile{$c} ||= tmpnam();
+	my $fh = cacheout $Global::tempfile{$c};
+	# This will print one delimiter too much, which we will deal with later
+	print $fh map { $_,$delimiter } @{$col_ref->{$c}};
+	delete $col_ref->{$c};
+    }
+}
+
+sub merge {
+    for my $c (sort keys %Global::tempfile) {
+	my $fh = cacheout $Global::tempfile{$c};
+	# truncate by length of delimiter to get rid of the last $delimiter
+	seek $fh,-length($delimiter),SEEK_END;
+	truncate $fh, tell $fh;
+	# Make sure the file is closed of writing
+	close $fh;
+	open($fh, "<", $Global::tempfile{$c}) || die;
+	my $buf;
+	while(sysread($fh,$buf,1000_000)) {
+	    print $buf;
+	}
+	print "\n";
+	unlink $Global::tempfile{$c};
+    }
+}
+
+sub warning {
+    my @w = @_;
+    print STDERR "transpose: Warning: ", @w;
+}
+
+sub error {
+    my @w = @_;
+    print STDERR "transpose: Error: ", @w;
+}
+
+sub multiply_binary_prefix {
+    # Evalualte numbers with binary prefix
+    # k=10^3, m=10^6, g=10^9, t=10^12, p=10^15, e=10^18, z=10^21, y=10^24
+    # K=2^10, M=2^20, G=2^30, T=2^40, P=2^50, E=2^70, Z=2^80, Y=2^80
+    # Ki=2^10, Mi=2^20, Gi=2^30, Ti=2^40, Pi=2^50, Ei=2^70, Zi=2^80, Yi=2^80
+    # ki=2^10, mi=2^20, gi=2^30, ti=2^40, pi=2^50, ei=2^70, zi=2^80, yi=2^80
+    # 13G = 13*1024*1024*1024 = 13958643712
+    my $s = shift;
+    $s =~ s/k/*1000/g;
+    $s =~ s/M/*1000*1000/g;
+    $s =~ s/G/*1000*1000*1000/g;
+    $s =~ s/T/*1000*1000*1000*1000/g;
+    $s =~ s/P/*1000*1000*1000*1000*1000/g;
+    $s =~ s/E/*1000*1000*1000*1000*1000*1000/g;
+    $s =~ s/Z/*1000*1000*1000*1000*1000*1000*1000/g;
+    $s =~ s/Y/*1000*1000*1000*1000*1000*1000*1000*1000/g;
+    $s =~ s/X/*1000*1000*1000*1000*1000*1000*1000*1000*1000/g;
+
+    $s =~ s/Ki?/*1024/gi;
+    $s =~ s/Mi?/*1024*1024/gi;
+    $s =~ s/Gi?/*1024*1024*1024/gi;
+    $s =~ s/Ti?/*1024*1024*1024*1024/gi;
+    $s =~ s/Pi?/*1024*1024*1024*1024*1024/gi;
+    $s =~ s/Ei?/*1024*1024*1024*1024*1024*1024/gi;
+    $s =~ s/Zi?/*1024*1024*1024*1024*1024*1024*1024/gi;
+    $s =~ s/Yi?/*1024*1024*1024*1024*1024*1024*1024*1024/gi;
+    $s =~ s/Xi?/*1024*1024*1024*1024*1024*1024*1024*1024*1024/gi;
+    $s = eval $s;
+    return $s;
+}
