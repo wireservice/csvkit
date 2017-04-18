@@ -1,0 +1,220 @@
+#!/usr/bin/env python
+# vim: ai ts=4 sts=4 et sw=4 coding=utf-8
+
+import re
+import os
+import sys
+import imp
+import itertools
+from types import UnicodeType
+import difflib
+
+from csvkit import CSVKitReader, CSVKitWriter
+from csvkit.cli import CSVFileType, CSVKitUtility, match_column_identifier
+
+class CSVDiff(CSVKitUtility):
+    description = """
+    Diff two csv files
+    Each row of diff begins with a two-letter code:
+	    Code    Meaning
+	    '- '    row unique to file 1
+	    '+ '    row unique to file 2
+	    '  '    row common to both files
+	    '? '    row different in both files, only different cell values are shown
+    Followed by the filename of the row and the cell values.
+    Note: when called with --ignorediff, a single row is given for each pair of
+          matching rows, without line numbers or file information"""
+    override_flags = 'f'
+
+    def add_arguments(self):
+        self.argparser.add_argument('files', metavar="FILES", nargs='+', type=CSVFileType(),
+                            help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
+        self.argparser.add_argument('-n', '--noequal', dest='no_equal', action='store_true', default=False,
+                        help='Exclude identical rows common to both files.')
+        self.argparser.add_argument('-o', '--onlydiffcells', dest='only_diff', action='store_true', default=False,
+                        help='For rows that are different, only show cells with values that are NOT common to both rows.')
+        self.argparser.add_argument('-i', '--ignorediff', dest='only_equal', action='store_true', default=False,
+                        help='Only show identical rows common to both files.')
+        self.argparser.add_argument('-m', '--colnames', dest='colnames', action='store_true', default=False,
+                        help='Include column names from both files.')
+        self.argparser.add_argument('-c', '--columns', dest='columns',
+                            help='The column name(s) on which to decide row difference and similarity. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
+
+    def _parse_join_column_names(self, join_string):
+        """
+        Parse a list of join columns.
+        """
+        return map(str.strip, join_string.split(','))
+
+    def main(self):
+        if len(self.args.files) != 2:
+            sys.exit('You must specify exactly two files to diff.')
+
+        if self.args.columns:
+            join_column_names = self._parse_join_column_names(self.args.columns)
+
+            if len(join_column_names) == 1:
+                join_column_names = join_column_names * len(self.args.files)
+
+            if len(join_column_names) != len(self.args.files):
+                sys.exit('The number of diff column names must match the number of files, or be a single column name that exists in all files.')
+
+        output = CSVKitWriter(sys.stdout, **self.writer_kwargs)
+
+        def nth(iterable, n, default=None):
+            "Returns the nth item or a default value"
+            return next(itertools.islice(iterable, n, None), default)
+
+        reader1 = CSVKitReader(self.args.files[0], **self.reader_kwargs)
+        reader2 = CSVKitReader(self.args.files[1], **self.reader_kwargs)
+
+        # read lines
+        file1 = [r for r in reader1]
+        file2 = [r for r in reader2]
+
+        file1_column_names = file1[0]
+        file2_column_names = file2[0]
+
+        if self.args.colnames:
+            output.writerow(['  ', '', self.args.files[0].name] + file1_column_names)
+            output.writerow(['  ', '', self.args.files[1].name] + file2_column_names)
+
+        # identify longest file
+        longest = 'file1' if len(file1) >= len(file2) else 'file2'
+        len_longest = len(eval(longest))
+
+        # create two iterators that yield line numbers
+	# up to the last line of the longest file
+        r1, r2 = itertools.tee((l for l in xrange(len_longest)), 2)
+
+	# get the first line number for both files
+        n1 = r1.next()
+        n2 = r2.next()
+
+        def only_target_cells(row1, row2):
+            i1 = file1_column_names.index(join_column_names[0])
+            i2 = file2_column_names.index(join_column_names[1])
+            i1lead = ['' for i in xrange(i1)]
+            i1tail = ['' for i in xrange(i1, len(row1))]
+            i2lead = ['' for i in xrange(i2)]
+            i2tail = ['' for i in xrange(i2, len(row2))]
+            return i1lead + [row1[i1]] + i1tail, i2lead + [row2[i2]] + i2tail
+
+	# TODO make sure this will never stop short
+	# because of line deletions or inserts
+        for n in xrange(len_longest):
+            # get nth line of each file or empty list
+            s1 = nth(file1, n1, [])
+            s2 = nth(file2, n2, [])
+            if s1 == s2:
+                if not self.args.no_equal or self.args.only_equal:
+                    if s1 and s2:
+                        if self.args.only_equal:
+                            output.writerow(s1)
+                        else:
+                            output.writerow(['  ', n1, self.args.files[0].name] + s1)
+                            output.writerow(['  ', n2, self.args.files[1].name] + s2)
+                # increment both line counters
+		n1 = r1.next()
+		n2 = r2.next()
+                continue
+            else:
+                # see if they are equal, but out of order
+                if s1 in file2:
+                    # s1 is present in file2 on a differnt line,
+                    # so write the line in file2 that is on the same line as s1
+                    if not self.args.only_equal:
+                        output.writerow(['+ ', n2, self.args.files[1].name] + s2)
+                    # increment ONE line counter
+                    x2 = r2.next()
+                    # get line number of match from file2
+                    n2 = file2.index(s1)
+                    # get row from file2
+                    s2 = file2[n2]
+                    # replace row with empty list so row
+                    # will not be matched again and line
+                    # numbers will be preserved
+                    file2[n2] = []
+                elif s2 in file1:
+                    # s2 is present in file1 on a differnt line,
+                    # so write the line in file1 that is on the same line as s2
+                    if not self.args.only_equal:
+                        output.writerow(['- ', n1, self.args.files[0].name] + s1)
+                    # increment ONE line counter
+                    x1 = r1.next()
+                    # get line number of match from file1
+                    n1 = file1.index(s2)
+                    # get row from file2
+                    s1 = file1[n1]
+                    # replace row with empty list so row
+                    # will not be matched again and line
+                    # numbers will be preserved
+                    file1[n1] = []
+
+            matcher = difflib.SequenceMatcher(None, s1, s2)
+            # lists to hold row comparison results
+            s1res = []
+            s2res = []
+            # loop through the opcodes for these rows
+            for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+                if tag == 'delete':
+                    for c in s1[i1:i2]:
+                        s1res.append(c)
+                        s2res.append('')
+
+                elif tag == 'equal':
+                    for c in s1[i1:i2]:
+                        v = '' if self.args.only_diff else c
+                        s1res.append(v)
+                    for c in s2[j1:j2]:
+                        v = '' if self.args.only_diff else c
+                        s2res.append(v)
+
+                elif tag == 'insert':
+                    for c in s2[j1:j2]:
+                        s1res.append('')
+                        s2res.append(c)
+
+                elif tag == 'replace':
+                    for c in s1[i1:i2]:
+                        s1res.append(c)
+                    for c in s2[j1:j2]:
+                        s2res.append(c)
+
+            if s1res == s2res:
+                if s1res and s2res:
+                    # handle equal, out-of-order rows separately
+                    if not self.args.no_equal or self.args.only_equal:
+                        if self.args.only_equal:
+                            # write one original row (without diff info)
+                            output.writerow(s1res)
+                        else:
+                            # write both rows (with diff info)
+                            output.writerow(['  ', n1, self.args.files[0].name] + s1res)
+                            output.writerow(['  ', n2, self.args.files[1].name] + s2res)
+            else:
+                if self.args.columns:
+                    # get cells in target columns
+                    s1resc, s2resc = only_target_cells(s1res, s2res)
+                    if s1resc and s2resc:
+                        if s1resc != s2resc:
+                            if self.args.only_diff:
+                                # write only target cells for only_diff option (padded with empty cells)
+                                output.writerow(['? ', n1, self.args.files[0].name] + s1resc)
+                                output.writerow(['? ', n2, self.args.files[1].name] + s2resc)
+                            else:
+                                # otherwise write entire rows
+                                output.writerow(['? ', n1, self.args.files[0].name] + s1res)
+                                output.writerow(['? ', n2, self.args.files[1].name] + s2res)
+                else:
+                    if not self.args.only_equal:
+                        output.writerow(['? ', n1, self.args.files[0].name] + s1res)
+                        output.writerow(['? ', n2, self.args.files[1].name] + s2res)
+            # increment both line counters
+            n1 = r1.next()
+            n2 = r2.next()
+
+
+if __name__ == "__main__":
+    utility = CSVDiff()
+    utility.main()
