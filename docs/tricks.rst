@@ -126,14 +126,10 @@ First, make sure that you can open a ``python`` interpreter and run :code:`impor
 Python standard output encoding errors
 --------------------------------------
 
-Sometimes Python may have a problem discovering the encoding of standard output, to which the results of different CSVKit are printed, e.g. when piping the result to a different command, like::
-
-    csvlook somefile.csv | less
-
-It may be manifested with an error message like::
+If, when running a command like :code:`csvlook dummy.csv | less` you get an error like::
 
     'ascii' codec can't encode character u'\u0105' in position 2: ordinal not in range(128)
 
-In such a case the simplest you can do is to point to Python what encoding of standard streams is with `PYTHONIOENCODING` environment variable, e.g.::
+The simplest option is to set the encoding that Python uses for standard streams, using the :code:`PYTHONIOENCODING` environment variable::
 
-    PYTHONIOENCODING=utf8 csvlook somefile.csv | less
+    PYTHONIOENCODING=utf8 csvlook dummy.csv | less
