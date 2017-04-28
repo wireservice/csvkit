@@ -28,6 +28,7 @@ Improvements:
 Fixes:
 
 * :doc:`/scripts/csvgrep` no longer ignores common arguments if :code:`--linenumbers` is set.
+* :doc:`/scripts/csvjson` supports Decimal.
 * :doc:`/scripts/csvpy` again supports IPython.
 * :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
 * :doc:`/scripts/csvstat` will no longer crash when :code:`--freq` is set.

@@ -2,6 +2,7 @@
 
 import codecs
 import datetime
+import decimal
 
 try:
     from collections import OrderedDict
@@ -56,6 +57,8 @@ class CSVJSON(CSVKitUtility):
         def default(obj):
             if isinstance(obj, (datetime.date, datetime.datetime)):
                 return obj.isoformat()
+            elif isinstance(obj, decimal.Decimal):
+                return str(obj)
             raise TypeError('%s is not JSON serializable' % repr(obj))
 
         def dump_json(data, newline=False):
