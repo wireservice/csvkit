@@ -23,6 +23,7 @@ Processing
     scripts/csvcut
     scripts/csvgrep
     scripts/csvjoin
+    scripts/csvsed
     scripts/csvsort
     scripts/csvstack
 
