@@ -15,5 +15,6 @@ Report a bug
   * the input file (rename the :code:`.csv` to :code:`.txt` for GitHub)
   * the output text (including the traceback)
   * the Python version (:code:`python --version`)
+  * the operating system and version
 
 Thanks!
