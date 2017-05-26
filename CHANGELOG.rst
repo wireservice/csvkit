@@ -1,6 +1,10 @@
 1.0.3
 -----
 
+Fixes:
+
+* :doc:`/scripts/in2csv` respects :code:`--no-header-row` when :code:`--no-inference` is set.
+
 1.0.2 - April 28, 2017
 ----------------------
 
