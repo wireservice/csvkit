@@ -123,7 +123,7 @@ class In2CSV(CSVKitUtility):
             kwargs['column_types'] = self.get_column_types()
 
         # Convert the file.
-        if filetype == 'csv' and self.args.no_inference and not self.args.skip_lines:
+        if filetype == 'csv' and self.args.no_inference and not self.args.no_header_row and not self.args.skip_lines:
             reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
             writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
             writer.writerows(reader)
