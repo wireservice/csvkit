@@ -73,3 +73,4 @@ The following individuals have contributed code to csvkit:
 * Éric Araujo
 * Sam Stuck
 * Edward Betts
+* Jake Zimmerman

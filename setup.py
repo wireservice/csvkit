@@ -7,7 +7,7 @@ install_requires = [
     'agate>=1.6.0',
     'agate-excel>=0.2.1',
     'agate-dbf>=0.2.0',
-    'agate-sql>=0.5.1',
+    'agate-sql>=0.5.2',
     'six>=1.6.1'
 ]
 
@@ -18,7 +18,7 @@ if sys.version_info < (2, 7):
 
 setup(
     name='csvkit',
-    version='1.0.2',
+    version='1.0.3',
     description='A suite of command-line tools for working with CSV, the king of tabular file formats.',
     long_description=open('README.rst').read(),
     author='Christopher Groskopf',

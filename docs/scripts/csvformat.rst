@@ -58,3 +58,6 @@ Convert to carriage return line-endings::
 
     csvformat -M $'\r' examples/dummy.csv
 
+To avoid escaping quote characters when using :code:`--quoting 3`, add :code:`--out-quotechar ""`::
+
+    csvformat -u 3 -U 3 -Q "" examples/optional_quote_characters.csv

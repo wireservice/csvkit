@@ -1,5 +1,8 @@
-1.0.2
+1.0.3
 -----
+
+1.0.2 - April 28, 2017
+----------------------
 
 Improvements:
 
@@ -19,6 +22,7 @@ Improvements:
 * :doc:`/scripts/csvsql` adds a :code:`--overwrite` flag to drop any existing table with the same name before creating.
 * :doc:`/scripts/csvsql` accepts a file name for the :code:`--query` option.
 * :doc:`/scripts/csvsql` supports :code:`--linenumbers` (no-op).
+* :doc:`/scripts/csvsql` adds a :code:`--create-if-not-exists` flag to not abort if the table already exists.
 * :doc:`/scripts/csvstat` adds a :code:`--freq-count` option to set the maximum number of frequent values to display.
 * :doc:`/scripts/csvstat` supports :code:`--linenumbers` (no-op).
 * :doc:`/scripts/in2csv` adds a :code:`--names` flag to print Excel sheet names.
@@ -28,6 +32,7 @@ Improvements:
 Fixes:
 
 * :doc:`/scripts/csvgrep` no longer ignores common arguments if :code:`--linenumbers` is set.
+* :doc:`/scripts/csvjson` supports Decimal.
 * :doc:`/scripts/csvpy` again supports IPython.
 * :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
 * :doc:`/scripts/csvstat` will no longer crash when :code:`--freq` is set.

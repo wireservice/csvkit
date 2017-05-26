@@ -188,7 +188,7 @@ class CSVStat(CSVKitUtility):
                     stat = table.aggregate(op(column_id))
 
                     if isinstance(stat, Decimal):
-                        stat = format_decimal(stat)
+                        stat = format_decimal(stat, locale=agate.config.get_option('default_locale'))
             except:
                 stat = None
 

@@ -122,3 +122,14 @@ Are you seeing this error message, even after running :code:`pip install psycopg
     http://www.sqlalchemy.org/docs/dialects/
 
 First, make sure that you can open a ``python`` interpreter and run :code:`import psycopg2`. If you see an error containing ``mach-o, but wrong architecture``, you may need to reinstall ``psycopg2`` with :code:`export ARCHFLAGS="-arch i386" pip install --upgrade psycopg2` (`source <http://www.destructuring.net/2013/07/31/trouble-installing-psycopg2-on-osx/>`_). If you see another error, you may be able to find a solution on StackOverflow.
+
+Python standard output encoding errors
+--------------------------------------
+
+If, when running a command like :code:`csvlook dummy.csv | less` you get an error like::
+
+    'ascii' codec can't encode character u'\u0105' in position 2: ordinal not in range(128)
+
+The simplest option is to set the encoding that Python uses for standard streams, using the :code:`PYTHONIOENCODING` environment variable::
+
+    PYTHONIOENCODING=utf8 csvlook dummy.csv | less
