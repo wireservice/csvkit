@@ -50,6 +50,8 @@ class CSVGrep(CSVKitUtility):
             pattern = re.compile(self.args.regex)
         elif self.args.matchfile:
             lines = set(line.rstrip() for line in self.args.matchfile)
+            self.args.matchfile.close()
+            self.args.matchfile = None
 
             def pattern(x):
                 return x in lines
