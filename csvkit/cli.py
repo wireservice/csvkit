@@ -362,8 +362,13 @@ class CSVKitUtility(object):
         rows = agate.csv.reader(f, **self.reader_kwargs)
         column_names = next(rows)
 
-        for i, c in enumerate(column_names, start):
-            output.write('%3i: %s\n' % (i, c))
+        if getattr(self.args, 'line_numbers', None):
+            for i, c in enumerate(column_names, start):
+                output.write('%3i: %s\n' % (i, c))
+        else:
+            for c in column_names:
+                output.write('%s\n' % c)
+
 
 
 def make_default_headers(n):
