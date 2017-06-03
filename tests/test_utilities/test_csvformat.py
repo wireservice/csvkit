@@ -33,6 +33,12 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
             '1|2|3',
         ])
 
+    def test_escaped_delimiter(self):
+        self.assertLines(['-D', '\t', 'examples/dummy.csv'], [
+            'a\tb\tc',
+            '1\t2\t3',
+        ])
+
     def test_tab_delimiter(self):
         self.assertLines(['-T', 'examples/dummy.csv'], [
             'a\tb\tc',
@@ -50,6 +56,17 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
 
         input_file.close()
 
+    def test_escaped_quotechar(self):
+        input_file = six.StringIO('a,b,c\n1\a2,3,4\n')
+
+        with stdin_as_string(input_file):
+            self.assertLines(['-Q', '\a'], [
+                'a,b,c',
+                '\a1\a\a2\a,3,4',
+            ])
+
+        input_file.close()
+
     def test_doublequote(self):
         input_file = six.StringIO('a\n"a ""quoted"" string"')
 
@@ -57,6 +74,17 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
             self.assertLines(['-P', '#', '-B'], [
                 'a',
                 'a #"quoted#" string',
+            ])
+
+        input_file.close()
+
+    def test_escaped_doublequote(self):
+        input_file = six.StringIO('a\n"a ""quoted"" string"')
+
+        with stdin_as_string(input_file):
+            self.assertLines(['-P', '\f', '-B'], [
+                'a',
+                'a \f"quoted\f" string',
             ])
 
         input_file.close()
@@ -75,4 +103,9 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
     def test_lineterminator(self):
         self.assertLines(['-M', 'XYZ', 'examples/dummy.csv'], [
             'a,b,cXYZ1,2,3XYZ',
+        ], newline_at_eof=False)
+
+    def test_escaped_lineterminator(self):
+        self.assertLines(['-M', '\r', 'examples/dummy.csv'], [
+            'a,b,c\r1,2,3\r',
         ], newline_at_eof=False)

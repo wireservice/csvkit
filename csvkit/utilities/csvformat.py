@@ -31,12 +31,15 @@ class CSVFormat(CSVKitUtility):
         if self.args.out_tabs:
             kwargs['delimiter'] = '\t'
         elif self.args.out_delimiter:
-            kwargs['delimiter'] = self.args.out_delimiter
+            kwargs['delimiter'] = self.args.out_delimiter.decode('string_escape')
 
         for arg in ('quotechar', 'quoting', 'doublequote', 'escapechar', 'lineterminator'):
             value = getattr(self.args, 'out_%s' % arg)
             if value is not None:
-                kwargs[arg] = value
+                if arg in ('quotechar', 'escapechar', 'lineterminator'):
+                    kwargs[arg] = value.decode('string_escape')
+                else:
+                    kwargs[arg] = value
 
         return kwargs
 
