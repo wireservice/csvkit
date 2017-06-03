@@ -55,6 +55,20 @@ Print the indices and names of all columns::
       9: TOTAL
      10: 
 
+Print only the names of all columns, by removing the indices with the :code:`cut` command::
+
+    csvcut -n examples/realdata/FY09_EDU_Recipients_by_State.csv | cut -c6-
+    State Name
+    State Abbreviate
+    Code
+    Montgomery GI Bill-Active Duty
+    Montgomery GI Bill- Selective Reserve
+    Dependents' Educational Assistance
+    Reserve Educational Assistance Program
+    Post-Vietnam Era Veteran's Educational Assistance Program
+    TOTAL
+
+
 Extract the first and third columns::
 
     csvcut -c 1,3 examples/realdata/FY09_EDU_Recipients_by_State.csv
