@@ -74,4 +74,6 @@ The following individuals have contributed code to csvkit:
 * Sam Stuck
 * Edward Betts
 * Jake Zimmerman
+* Bryan Rankin
+* Przemek Wesołek
 * Karl Fogel
