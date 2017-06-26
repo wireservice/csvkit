@@ -38,7 +38,7 @@ All tools which accept CSV as input share a set of common command-line arguments
                         "%m/%d/%Y %I:%M %p".
   -H, --no-header-row   Specify that the input CSV file has no header row.
                         Will create default headers (A,B,C,...).
-  -L SKIP_LINES, --skip-lines SKIP_LINES
+  -K SKIP_LINES, --skip-lines SKIP_LINES
                         Specify the number of initial lines to skip (e.g.
                         comments, copyright notices, empty rows).
   -v, --verbose         Print detailed tracebacks when errors occur.
