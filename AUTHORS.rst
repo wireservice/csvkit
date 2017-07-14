@@ -77,3 +77,5 @@ The following individuals have contributed code to csvkit:
 * Bryan Rankin
 * Przemek Wesołek
 * Karl Fogel
+* sterlingpetersen
+* kjedamzik
