@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 import re
+import sys
 from argparse import FileType
 
 import agate
+import six
 
 from csvkit.cli import CSVKitUtility
 from csvkit.grep import FilteringCSVReader
@@ -14,13 +16,20 @@ class CSVGrep(CSVKitUtility):
     override_flags = ['L', 'blanks', 'date-format', 'datetime-format']
 
     def add_arguments(self):
+        # I feel that there ought to be a better way to do this across Python 2 and 3.
+        def option_parser(bytestring):
+            if six.PY2:
+                return bytestring.decode(sys.getfilesystemencoding())
+            else:
+                return bytestring
+
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                                     help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
                                     help='A comma separated list of column indices or names to be searched.')
-        self.argparser.add_argument('-m', '--match', dest="pattern", action='store',
+        self.argparser.add_argument('-m', '--match', dest="pattern", action='store', type=option_parser,
                                     help='The string to search for.')
-        self.argparser.add_argument('-r', '--regex', dest='regex', action='store',
+        self.argparser.add_argument('-r', '--regex', dest='regex', action='store', type=option_parser,
                                     help='If specified, must be followed by a regular expression which will be tested against the specified columns.')
         self.argparser.add_argument('-f', '--file', dest='matchfile', type=FileType('r'), action='store',
                                     help='If specified, must be the path to a file. For each tested row, if any line in the file (stripped of line separators) is an exact match for the cell value, the row will pass.')

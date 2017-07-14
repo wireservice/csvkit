@@ -3,6 +3,7 @@
 
 Fixes:
 
+* :doc:`/scripts/csvgrep` accepts utf-8 arguments to the :code:`--match` and :code:`--regex` options in Python 2.
 * :doc:`/scripts/in2csv` respects :code:`--no-header-row` when :code:`--no-inference` is set.
 
 1.0.2 - April 28, 2017
