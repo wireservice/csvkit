@@ -46,6 +46,8 @@ class In2CSV(CSVKitUtility):
                                     help='The name of the Excel sheet to operate on.')
         self.argparser.add_argument('--write-sheets', dest='write_sheets', type=option_parser,
                                     help='The names of the Excel sheets to write to files, or "-" to write all sheets.')
+        self.argparser.add_argument('--encoding-xls', dest='encoding_xls',
+                                    help='Specify the encoding of the input XLS file.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
@@ -139,7 +141,7 @@ class In2CSV(CSVKitUtility):
             elif filetype == 'ndjson':
                 table = agate.Table.from_json(self.input_file, key=self.args.key, newline=True, **kwargs)
             elif filetype == 'xls':
-                table = agate.Table.from_xls(self.input_file, sheet=self.args.sheet, **kwargs)
+                table = agate.Table.from_xls(self.input_file, sheet=self.args.sheet, encoding_override=self.args.encoding_xls, **kwargs)
             elif filetype == 'xlsx':
                 table = agate.Table.from_xlsx(self.input_file, sheet=self.args.sheet, **kwargs)
             elif filetype == 'dbf':

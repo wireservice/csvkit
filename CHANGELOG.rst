@@ -1,6 +1,10 @@
 1.0.3
 -----
 
+Improvements:
+
+* :doc:`/scripts/in2csv` adds a :code:`--encoding-xls` option to specify the encoding of the input XLS file.
+
 Fixes:
 
 * :doc:`/scripts/csvgrep` accepts utf-8 arguments to the :code:`--match` and :code:`--regex` options in Python 2.
