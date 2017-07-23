@@ -44,6 +44,10 @@ class CSVSQL(CSVKitUtility):
                                     help='Drop the table before creating.')
         self.argparser.add_argument('--db-schema', dest='db_schema',
                                     help='Optional name of database schema to create table(s) in.')
+        self.argparser.add_argument('--execute-before-insert', dest='execute_before_insert',
+                                    help='SQL to execute before inserts are performed')
+        self.argparser.add_argument('--execute-after-insert', dest='execute_after_insert',
+                                    help='SQL to execute after inserts are performed')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
@@ -135,6 +139,8 @@ class CSVSQL(CSVKitUtility):
 
             if table:
                 if self.connection:
+                    if self.args.execute_before_insert:
+                        self.connection.execute(self.args.execute_before_insert)
                     table.to_sql(
                         self.connection,
                         table_name,
@@ -146,6 +152,8 @@ class CSVSQL(CSVKitUtility):
                         db_schema=self.args.db_schema,
                         constraints=not self.args.no_constraints
                     )
+                    if self.args.execute_after_insert:
+                        self.connection.execute(self.args.execute_after_insert)
 
                 # Output SQL statements
                 else:
