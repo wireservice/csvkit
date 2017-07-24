@@ -79,3 +79,4 @@ The following individuals have contributed code to csvkit:
 * Karl Fogel
 * sterlingpetersen
 * kjedamzik
+* John Vandenberg
