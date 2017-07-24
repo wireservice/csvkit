@@ -92,10 +92,39 @@ class CSVJSON(CSVKitUtility):
             )
 
             features = []
+
+            global min_lon, min_lat, max_lon, max_lat
+
             min_lon = None
             min_lat = None
             max_lon = None
             max_lat = None
+
+            def update_boundary_lat(lat):
+                global min_lat, max_lat
+
+                if min_lat is None or lat < min_lat:
+                    min_lat = lat
+                if max_lat is None or lat > max_lat:
+                    max_lat = lat
+
+            def update_boundary_lon(lon):
+                global min_lon, max_lon
+
+                if min_lon is None or lon < min_lon:
+                    min_lon = lon
+                if max_lon is None or lon > max_lon:
+                    max_lon = lon
+
+            def update_boundary_coords(coords):
+                if (isinstance(coords, list) and len(coords) == 2 and
+                        isinstance(coords[0], (float, int)) and
+                        isinstance(coords[1], (float, int))):
+                    update_boundary_lon(coords[0])
+                    update_boundary_lat(coords[1])
+                else:
+                    for coord in coords:
+                        update_boundary_coords(coord)
 
             lat_column = match_column_identifier(table.column_names, self.args.lat, self.args.zero_based)
             lon_column = match_column_identifier(table.column_names, self.args.lon, self.args.zero_based)
@@ -110,39 +139,48 @@ class CSVJSON(CSVKitUtility):
                 feature['type'] = 'Feature'
                 properties = OrderedDict()
                 geoid = None
+                geo_type = 'Point'
                 lat = None
                 lon = None
+                coords = None
 
                 for i, c in enumerate(row):
                     if i == lat_column:
+                        if c is None:
+                            continue
                         try:
                             lat = float(c)
                         except ValueError:
                             lat = None
-                        if min_lat is None or lat < min_lat:
-                            min_lat = lat
-                        if max_lat is None or lat > max_lat:
-                            max_lat = lat
+                        update_boundary_lat(lat)
                     elif i == lon_column:
+                        if c is None:
+                            continue
                         try:
                             lon = float(c)
                         except ValueError:
                             lon = None
-                        if min_lon is None or lon < min_lon:
-                            min_lon = lon
-                        if max_lon is None or lon > max_lon:
-                            max_lon = lon
+                        update_boundary_lon(lon)
                     elif i == id_column:
                         geoid = c
+                    elif table.column_names[i] == 'type':
+                        geo_type = c
+                    elif table.column_names[i] == 'geojson':
+                        geojson = json.loads(c)
+                        coords = geojson['coordinates']
+                        update_boundary_coords(coords)
                     elif c is not None:
                         properties[table.column_names[i]] = c
 
                 if id_column is not None:
                     feature['id'] = geoid
 
+                if lon and lat:
+                    coords = [lon, lat]
+
                 feature['geometry'] = OrderedDict([
-                    ('type', 'Point'),
-                    ('coordinates', [lon, lat])
+                    ('type', geo_type),
+                    ('coordinates', coords)
                 ])
                 feature['properties'] = properties
                 features.append(feature)
