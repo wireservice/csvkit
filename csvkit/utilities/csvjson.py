@@ -134,7 +134,7 @@ class CSVJSON(CSVKitUtility):
                             max_lon = lon
                     elif i == id_column:
                         geoid = c
-                    else:
+                    elif c:
                         properties[table.column_names[i]] = c
 
                 if id_column is not None:

@@ -73,7 +73,9 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         for feature in geojson['features']:
             self.assertEqual(feature['type'], 'Feature')
             self.assertFalse('id' in feature)
-            self.assertEqual(len(feature['properties']), 10)
+            self.assertIn('properties', feature)
+            self.assertIsInstance(feature['properties'], dict)
+            self.assertGreater(len(feature['properties']), 1)
 
             geometry = feature['geometry']
 
@@ -92,7 +94,9 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         for feature in geojson['features']:
             self.assertEqual(feature['type'], 'Feature')
             self.assertTrue('id' in feature)
-            self.assertEqual(len(feature['properties']), 9)
+            self.assertIn('properties', feature)
+            self.assertIsInstance(feature['properties'], dict)
+            self.assertGreater(len(feature['properties']), 1)
 
             geometry = feature['geometry']
 
