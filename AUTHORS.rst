@@ -80,3 +80,4 @@ The following individuals have contributed code to csvkit:
 * sterlingpetersen
 * kjedamzik
 * John Vandenberg
+* Olivier Lacan
