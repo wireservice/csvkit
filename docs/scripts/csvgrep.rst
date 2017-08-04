@@ -24,8 +24,8 @@ Filter tabular data to only those rows where certain columns contain a given val
       -n, --names           Display column names and indices from the input CSV
                             and exit.
       -c COLUMNS, --columns COLUMNS
-                            A comma separated list of column indices or names to
-                            be searched.
+                            A comma separated list of column indices, names or
+                            ranges to be searched, e.g. "1,id,3-5".
       -m PATTERN, --match PATTERN
                             The string to search for.
       -r REGEX, --regex REGEX

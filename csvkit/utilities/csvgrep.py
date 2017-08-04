@@ -26,7 +26,7 @@ class CSVGrep(CSVKitUtility):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                                     help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
-                                    help='A comma separated list of column indices or names to be searched.')
+                                    help='A comma separated list of column indices, names or ranges to be searched, e.g. "1,id,3-5".')
         self.argparser.add_argument('-m', '--match', dest="pattern", action='store', type=option_parser,
                                     help='The string to search for.')
         self.argparser.add_argument('-r', '--regex', dest='regex', action='store', type=option_parser,

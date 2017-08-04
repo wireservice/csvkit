@@ -402,8 +402,8 @@ def match_column_identifier(column_names, c, column_offset=1):
 def parse_column_identifiers(ids, column_names, column_offset=1, excluded_columns=None):
     """
     Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
-    Ranges of integers can be specified with two integers separated by a '-' or ':' character. Ranges of
-    non-integers (e.g. column names) are not supported.
+    Ranges of integers can be specified with two integers separated by a '-' or ':' character.
+    Ranges of non-integers (e.g. column names) are not supported.
     Note: Column indices are 1-based.
     """
     if not column_names:

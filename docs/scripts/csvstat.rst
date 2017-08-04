@@ -27,8 +27,9 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
       -n, --names           Display column names and indices from the input CSV
                             and exit.
       -c COLUMNS, --columns COLUMNS
-                            A comma separated list of column indices or names to
-                            be examined. Defaults to all columns.
+                            A comma separated list of column indices, names or
+                            ranges to be examined, e.g. "1,id,3-5". Defaults to
+                            all columns.
       --type                Only output data type.
       --nulls               Only output whether columns contains nulls.
       --unique              Only output counts of unique values.

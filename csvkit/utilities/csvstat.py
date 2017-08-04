@@ -71,7 +71,7 @@ class CSVStat(CSVKitUtility):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                                     help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
-                                    help='A comma separated list of column indices or names to be examined. Defaults to all columns.')
+                                    help='A comma separated list of column indices, names or ranges to be examined, e.g. "1,id,3-5". Defaults to all columns.')
         self.argparser.add_argument('--type', dest='type_only', action='store_true',
                                     help='Only output data type.')
         self.argparser.add_argument('--nulls', dest='nulls_only', action='store_true',
