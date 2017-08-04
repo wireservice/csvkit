@@ -222,7 +222,7 @@ class CSVStat(CSVKitUtility):
                         v = table.aggregate(op(column_id))
 
                         if isinstance(v, Decimal):
-                            v = format_decimal(v)
+                            v = format_decimal(v, locale=agate.config.get_option('default_locale'))
 
                         stats[op_name] = v
                 except:
@@ -266,7 +266,7 @@ class CSVStat(CSVKitUtility):
                             v = row[column_name]
 
                             if isinstance(v, Decimal):
-                                v = format_decimal(v)
+                                v = format_decimal(v, locale=agate.config.get_option('default_locale'))
                         else:
                             v = six.text_type(row[column_name])
 
