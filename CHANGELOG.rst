@@ -10,7 +10,11 @@ Improvements:
 Fixes:
 
 * :doc:`/scripts/csvgrep` accepts utf-8 arguments to the :code:`--match` and :code:`--regex` options in Python 2.
+* :doc:`/scripts/csvsql` sets a DECIMAL's precision and scale and a VARCHAR's length to avoid dialect-specific errors.
+* :doc:`/scripts/csvstack` no longer opens all files at once.
 * :doc:`/scripts/in2csv` respects :code:`--no-header-row` when :code:`--no-inference` is set.
+
+csvkit is no longer tested on PyPy.
 
 1.0.2 - April 28, 2017
 ----------------------
