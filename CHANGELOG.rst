@@ -3,6 +3,7 @@
 
 Improvements:
 
+* :doc:`/scripts/csvgrep` adds a :code:`--any-match` (:code:`-a`) flag to select rows where any column matches instead of all columns.
 * :doc:`/scripts/csvjson` no longer emits a property if its value is null.
 * :doc:`/scripts/in2csv` adds a :code:`--encoding-xls` option to specify the encoding of the input XLS file.
 
