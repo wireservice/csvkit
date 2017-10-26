@@ -35,7 +35,8 @@ class CSVGrep(CSVKitUtility):
                                     help='If specified, must be the path to a file. For each tested row, if any line in the file (stripped of line separators) is an exact match for the cell value, the row will pass.')
         self.argparser.add_argument('-i', '--invert-match', dest='inverse', action='store_true',
                                     help='If specified, select non-matching instead of matching rows.')
-
+        self.argparser.add_argument('-a', '--any-match', dest='any_match', action='store_true',
+                                    help='If specified, select rows where any column matches instead of all columns.')
     def main(self):
         if self.args.names_only:
             self.print_column_names()
@@ -67,7 +68,7 @@ class CSVGrep(CSVKitUtility):
             pattern = self.args.pattern
 
         patterns = dict((column_id, pattern) for column_id in column_ids)
-        filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse=self.args.inverse)
+        filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse=self.args.inverse, any_match=self.args.any_match)
 
         output = agate.csv.writer(self.output_file, **writer_kwargs)
         output.writerow(column_names)
