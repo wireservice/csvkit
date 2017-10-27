@@ -10,3 +10,6 @@ docs/_build
 .coverage
 .tox
 cover
+
+# makefile cache
+.image
