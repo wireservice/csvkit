@@ -1,6 +1,6 @@
 REPO  ?= wireservice
 IMG    = $(REPO)/csvkit
-SRC    = $(wildcard csvkit/*.py) $(wildcard csvkit/convert/*.py) $(wildcard csvkit/utilities/*py)
+SRC    = $(wildcard csvkit/*.py) $(wildcard csvkit/convert/*.py) $(wildcard csvkit/utilities/*.py)
 
 clean:
 	@rm -f .image
