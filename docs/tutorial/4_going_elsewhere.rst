@@ -64,7 +64,7 @@ For the programmers out there, the command line is rarely as functional as just 
 .. code-block:: none
 
     Welcome! "data.csv" has been loaded in a reader object named "reader".
-    >>> print len(list(reader))
+    >>> print(len(list(reader)))
     1037
     >>> quit()
 
