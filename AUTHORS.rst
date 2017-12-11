@@ -82,3 +82,5 @@ The following individuals have contributed code to csvkit:
 * John Vandenberg
 * Olivier Lacan
 * Adrien Delessert
+* Forest Gregg
+* Aliaksei Urbanski
