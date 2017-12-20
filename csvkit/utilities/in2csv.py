@@ -87,9 +87,6 @@ class In2CSV(CSVKitUtility):
             if not filetype:
                 self.argparser.error('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
-        # Buffer standard input if the input file is in CSV format or if performing type inference.
-        self.buffers_input = filetype == 'csv' or not self.args.no_inference
-
         # Set the input file.
         if filetype in ('xls', 'xlsx'):
             self.input_file = self.open_excel_input_file(path)
