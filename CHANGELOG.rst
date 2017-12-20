@@ -13,6 +13,7 @@ Fixes:
 * :doc:`/scripts/csvsql` sets a DECIMAL's precision and scale and a VARCHAR's length to avoid dialect-specific errors.
 * :doc:`/scripts/csvstack` no longer opens all files at once.
 * :doc:`/scripts/in2csv` respects :code:`--no-header-row` when :code:`--no-inference` is set.
+* :doc:`/scripts/in2csv` CSV-to-CSV conversion streams input and output only if :code:`--snifflimit` is :code:`0`.
 
 csvkit is no longer tested on PyPy.
 

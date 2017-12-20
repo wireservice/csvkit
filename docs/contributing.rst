@@ -93,7 +93,7 @@ Currently, the following tools buffer:
 * :doc:`/scripts/csvsort`
 * :doc:`/scripts/csvsql`
 * :doc:`/scripts/csvstat`
-* :doc:`/scripts/in2csv` unless ``--format`` is ``ndjson`` and ``--no-inference`` is set, or ``--format`` is ``csv`` and ``--no-inference`` is set but ``--no-header-row`` and ``--skip-lines`` are not
+* :doc:`/scripts/in2csv` unless ``--format`` is ``ndjson`` and ``--no-inference`` is set, or if ``--format`` is ``csv``, ``--snifflimit`` is ``0`` and ``--no-inference`` is set but ``--no-header-row`` and ``--skip-lines`` are not
 
 Legalese
 ========
