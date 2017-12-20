@@ -187,7 +187,7 @@ class CSVJSON(CSVKitUtility):
                 self.output_file,
                 key=self.args.key,
                 newline=self.args.streamOutput,
-                indent=self.args.indent
+                indent=self.args.indent,
             )
 
 
