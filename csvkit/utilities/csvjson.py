@@ -19,7 +19,6 @@ from csvkit.cli import CSVKitUtility, match_column_identifier
 
 class CSVJSON(CSVKitUtility):
     description = 'Convert a CSV file into JSON (or GeoJSON).'
-    buffers_input = True
 
     def add_arguments(self):
         self.argparser.add_argument('-i', '--indent', dest='indent', type=int, default=None,
@@ -162,7 +161,7 @@ class CSVJSON(CSVKitUtility):
                 ])
 
             dump_json(output)
-        elif self.args.streamOutput and self.args.no_inference and not self.args.skip_lines:
+        elif self.args.streamOutput and self.args.no_inference and not self.args.skip_lines and self.args.sniff_limit == 0:
             rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
             column_names = next(rows)
 
@@ -187,7 +186,7 @@ class CSVJSON(CSVKitUtility):
                 self.output_file,
                 key=self.args.key,
                 newline=self.args.streamOutput,
-                indent=self.args.indent
+                indent=self.args.indent,
             )
 
 

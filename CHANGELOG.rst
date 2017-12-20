@@ -5,14 +5,17 @@ Improvements:
 
 * :doc:`/scripts/csvgrep` adds a :code:`--any-match` (:code:`-a`) flag to select rows where any column matches instead of all columns.
 * :doc:`/scripts/csvjson` no longer emits a property if its value is null.
+* :doc:`/scripts/csvpy` reports an error message if input is provided via STDIN.
 * :doc:`/scripts/in2csv` adds a :code:`--encoding-xls` option to specify the encoding of the input XLS file.
 
 Fixes:
 
 * :doc:`/scripts/csvgrep` accepts utf-8 arguments to the :code:`--match` and :code:`--regex` options in Python 2.
+* :doc:`/scripts/csvjson` streams input and output only if :code:`--snifflimit` is :code:`0`.
 * :doc:`/scripts/csvsql` sets a DECIMAL's precision and scale and a VARCHAR's length to avoid dialect-specific errors.
 * :doc:`/scripts/csvstack` no longer opens all files at once.
 * :doc:`/scripts/in2csv` respects :code:`--no-header-row` when :code:`--no-inference` is set.
+* :doc:`/scripts/in2csv` CSV-to-CSV conversion streams input and output only if :code:`--snifflimit` is :code:`0`.
 
 csvkit is no longer tested on PyPy.
 
