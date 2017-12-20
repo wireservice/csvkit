@@ -161,7 +161,7 @@ class CSVJSON(CSVKitUtility):
                 ])
 
             dump_json(output)
-        elif self.args.streamOutput and self.args.no_inference and not self.args.skip_lines:
+        elif self.args.streamOutput and self.args.no_inference and not self.args.skip_lines and self.args.sniff_limit == 0:
             rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
             column_names = next(rows)
 
