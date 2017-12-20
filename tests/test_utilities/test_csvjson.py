@@ -62,7 +62,7 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
 
     def test_keying(self):
         js = json.loads(self.get_output(['-k', 'a', 'examples/dummy.csv']))
-        self.assertDictEqual(js, {'True': {'a': True, 'c': 3.0, 'b': 2.0}})
+        self.assertDictEqual(js, {'true': {'a': True, 'c': 3.0, 'b': 2.0}})
 
     def test_duplicate_keys(self):
         output_file = six.StringIO()
