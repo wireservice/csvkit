@@ -8,12 +8,15 @@ Description
 Generate SQL statements for a CSV file or execute those statements directly on a database. In the latter case supports both creating tables and inserting data::
 
     usage: csvsql [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                  [-v] [--zero] [-V]
+                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
+                  [-S] [--blanks] [--date-format DATE_FORMAT]
+                  [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
+                  [-l] [--zero] [-V]
                   [-i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase}]
                   [--db CONNECTION_STRING] [--query QUERY] [--insert]
-                  [--tables TABLE_NAMES] [--no-constraints] [--no-create]
-                  [--blanks] [--db-schema DB_SCHEMA] [-y SNIFF_LIMIT] [-I]
+                  [--prefix PREFIX] [--tables TABLE_NAMES] [--no-constraints]
+                  [--no-create] [--create-if-not-exists] [--overwrite]
+                  [--db-schema DB_SCHEMA] [-y SNIFF_LIMIT] [-I]
                   [FILE [FILE ...]]
 
     Generate SQL statements for one or more CSV files, or execute those statements
@@ -46,6 +49,9 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                             checks. Useful when sampling big tables.
       --no-create           Skip creating a table. Only valid when --insert is
                             specified.
+      --create-if-not-exists
+                            Create table if it does not exist, otherwise keep
+                            going. Only valid when --insert is specified.
       --overwrite           Drop the table before creating.
       --db-schema DB_SCHEMA
                             Optional name of database schema to create table(s)

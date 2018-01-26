@@ -9,7 +9,8 @@ Filters and truncates CSV files. Like the Unix "cut" command, but for tabular da
 
     usage: csvcut [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                  [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS] [-C NOT_COLUMNS] [-x]
+                  [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS]
+                  [-C NOT_COLUMNS] [-x]
                   [FILE]
 
     Filter and truncate CSV files. Like the Unix "cut" command, but for tabular
