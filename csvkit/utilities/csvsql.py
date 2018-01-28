@@ -19,7 +19,7 @@ class CSVSQL(CSVKitUtility):
     override_flags = ['f']
 
     def add_arguments(self):
-        self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
+        self.argparser.add_argument(metavar='FILE', nargs='*', dest='input_paths', default=['-'],
                                     help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=DIALECTS,
                                     help='Dialect of SQL to generate. Only valid when --db is not specified.')

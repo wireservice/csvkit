@@ -32,7 +32,7 @@ class In2CSV(CSVKitUtility):
             else:
                 return bytestring
 
-        self.argparser.add_argument(metavar="FILE", nargs='?', dest='input_path',
+        self.argparser.add_argument(metavar='FILE', nargs='?', dest='input_path',
                                     help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-f', '--format', dest='filetype',
                                     help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(SUPPORTED_FORMATS)))
