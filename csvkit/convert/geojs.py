@@ -42,7 +42,10 @@ def geojson2csv(f, key=None, **kwargs):
                 property_fields.append(prop)
 
         geometry = feature['geometry']
-        geometry_type = geometry.get('type')
+        if geometry:
+            geometry_type = geometry.get('type')
+        else:
+            geometry_type = None
         if geometry_type == 'Point':
             longitude, latitude = geometry['coordinates']
         else:
