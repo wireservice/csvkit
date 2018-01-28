@@ -24,13 +24,17 @@ class CSVJSON(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument('-i', '--indent', dest='indent', type=int,
                                     help='Indent the output JSON this many spaces. Disabled by default.')
-        self.argparser.add_argument('-k', '--key', dest='key', type=str,
+        self.argparser.add_argument('-k', '--key', dest='key',
                                     help='Output JSON as an array of objects keyed by a given column, KEY, rather than as a list. All values in the column must be unique. If --lat and --lon are also specified, this column will be used as GeoJSON Feature ID.')
-        self.argparser.add_argument('--lat', dest='lat', type=str,
+        self.argparser.add_argument('--lat', dest='lat',
                                     help='A column index or name containing a latitude. Output will be GeoJSON instead of JSON. Only valid if --lon is also specified.')
-        self.argparser.add_argument('--lon', dest='lon', type=str,
+        self.argparser.add_argument('--lon', dest='lon',
                                     help='A column index or name containing a longitude. Output will be GeoJSON instead of JSON. Only valid if --lat is also specified.')
-        self.argparser.add_argument('--crs', dest='crs', type=str,
+        self.argparser.add_argument('--type', dest='type',
+                                    help='A column index or name containing a GeoJSON type. Output will be GeoJSON instead of JSON. Only valid if --lat and --lon are also specified.')
+        self.argparser.add_argument('--geojson', dest='geojson',
+                                    help='A column index or name containing a GeoJSON feature. Output will be GeoJSON instead of JSON. Only valid if --lat and --lon are also specified.')
+        self.argparser.add_argument('--crs', dest='crs',
                                     help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
         self.argparser.add_argument('--stream', dest='streamOutput', action='store_true',
                                     help='Output JSON as a stream of newline-separated objects, rather than an as an array.')
@@ -77,12 +81,15 @@ class CSVJSON(CSVKitUtility):
         """
         if self.args.lat and not self.args.lon:
             self.argparser.error('--lon is required whenever --lat is specified.')
-
         if self.args.lon and not self.args.lat:
             self.argparser.error('--lat is required whenever --lon is specified.')
 
         if self.args.crs and not self.args.lat:
             self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
+        if self.args.type and not self.args.lat:
+            self.argparser.error('--type is only allowed when --lat and --lon are also specified.')
+        if self.args.geojson and not self.args.lat:
+            self.argparser.error('--geojson is only allowed when --lat and --lon are also specified.')
 
         if self.args.streamOutput and (self.args.lat or self.args.lon or self.args.key):
             self.argparser.error('--stream is only allowed if --lat, --lon and --key are not specified.')
@@ -98,13 +105,44 @@ class CSVJSON(CSVKitUtility):
             )
 
             features = []
-            min_lon = None
-            min_lat = None
-            max_lon = None
-            max_lat = None
+
+            self.min_lon = None
+            self.min_lat = None
+            self.max_lon = None
+            self.max_lat = None
+
+            def update_boundary_lat(lat):
+                if self.min_lat is None or lat < self.min_lat:
+                    self.min_lat = lat
+                if self.max_lat is None or lat > self.max_lat:
+                    self.max_lat = lat
+
+            def update_boundary_lon(lon):
+                if self.min_lon is None or lon < self.min_lon:
+                    self.min_lon = lon
+                if self.max_lon is None or lon > self.max_lon:
+                    self.max_lon = lon
+
+            def update_boundary_coordinates(coordinates):
+                if (isinstance(coordinates, list) and len(coordinates) == 2 and
+                        isinstance(coordinates[0], (float, int)) and
+                        isinstance(coordinates[1], (float, int))):
+                    update_boundary_lon(coordinates[0])
+                    update_boundary_lat(coordinates[1])
+                else:
+                    for coordinate in coordinates:
+                        update_boundary_coordinates(coordinate)
 
             lat_column = match_column_identifier(table.column_names, self.args.lat, self.args.zero_based)
             lon_column = match_column_identifier(table.column_names, self.args.lon, self.args.zero_based)
+            if self.args.type:
+                type_column = match_column_identifier(table.column_names, self.args.type, self.args.zero_based)
+            else:
+                type_column = None
+            if self.args.geojson:
+                geojson_column = match_column_identifier(table.column_names, self.args.geojson, self.args.zero_based)
+            else:
+                geojson_column = None
 
             if self.args.key:
                 id_column = match_column_identifier(table.column_names, self.args.key, self.args.zero_based)
@@ -115,47 +153,56 @@ class CSVJSON(CSVKitUtility):
                 feature = OrderedDict()
                 feature['type'] = 'Feature'
                 properties = OrderedDict()
-                geoid = None
+                feature_id = None
+                geometry_type = 'Point'
                 lat = None
                 lon = None
+                coordinates = None
 
                 for i, c in enumerate(row):
                     if i == lat_column:
+                        if c is None:
+                            continue
                         try:
                             lat = float(c)
                         except ValueError:
                             lat = None
-                        if min_lat is None or lat < min_lat:
-                            min_lat = lat
-                        if max_lat is None or lat > max_lat:
-                            max_lat = lat
+                        update_boundary_lat(lat)
                     elif i == lon_column:
+                        if c is None:
+                            continue
                         try:
                             lon = float(c)
                         except ValueError:
                             lon = None
-                        if min_lon is None or lon < min_lon:
-                            min_lon = lon
-                        if max_lon is None or lon > max_lon:
-                            max_lon = lon
+                        update_boundary_lon(lon)
                     elif i == id_column:
-                        geoid = c
+                        feature_id = c
+                    elif i == type_column:
+                        geometry_type = c
+                    elif i == geojson_column:
+                        geojson = json.loads(c)
+                        coordinates = geojson['coordinates']
+                        update_boundary_coordinates(coordinates)
                     elif c is not None:
                         properties[table.column_names[i]] = c
 
                 if id_column is not None:
-                    feature['id'] = geoid
+                    feature['id'] = feature_id
+
+                if lon and lat:
+                    coordinates = [lon, lat]
 
                 feature['geometry'] = OrderedDict([
-                    ('type', 'Point'),
-                    ('coordinates', [lon, lat])
+                    ('type', geometry_type),
+                    ('coordinates', coordinates)
                 ])
                 feature['properties'] = properties
                 features.append(feature)
 
             output = OrderedDict([
                 ('type', 'FeatureCollection'),
-                ('bbox', [min_lon, min_lat, max_lon, max_lat]),
+                ('bbox', [self.min_lon, self.min_lat, self.max_lon, self.max_lat]),
                 ('features', features)
             ])
 
