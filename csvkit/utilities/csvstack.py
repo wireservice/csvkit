@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os.path
+import sys
 
 import agate
 
@@ -13,7 +14,7 @@ class CSVStack(CSVKitUtility):
     override_flags = ['f', 'L', 'blanks', 'date-format', 'datetime-format']
 
     def add_arguments(self):
-        self.argparser.add_argument(metavar="FILE", nargs='+', dest='input_paths', default=['-'],
+        self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
                                     help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-g', '--groups', dest='groups',
                                     help='A comma-separated list of values to add as "grouping factors", one for each CSV being stacked. These will be added to the stacked CSV as a new column. You may specify a name for the grouping column using the -n flag.')
@@ -23,8 +24,8 @@ class CSVStack(CSVKitUtility):
                                     help='Use the filename of each input file as its grouping value. When specified, -g will be ignored.')
 
     def main(self):
-        if not self.args.input_paths:
-            self.argparser.error('You must specify at least one file to stack.')
+        if sys.stdin.isatty() and not self.args.input_paths:
+            sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
 
         has_groups = self.args.group_by_filenames or self.args.groups
 

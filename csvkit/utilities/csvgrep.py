@@ -37,10 +37,14 @@ class CSVGrep(CSVKitUtility):
                                     help='If specified, select non-matching instead of matching rows.')
         self.argparser.add_argument('-a', '--any-match', dest='any_match', action='store_true',
                                     help='If specified, select rows where any column matches instead of all columns.')
+
     def main(self):
         if self.args.names_only:
             self.print_column_names()
             return
+
+        if self.additional_input_expected():
+            sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
 
         if not self.args.columns:
             self.argparser.error('You must specify at least one column to search using the -c option.')

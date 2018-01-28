@@ -18,6 +18,9 @@ class CSVClean(CSVKitUtility):
                                     help='Do not create output files. Information about what would have been done will be printed to STDERR.')
 
     def main(self):
+        if self.additional_input_expected():
+            sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
+
         reader = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
 
         if self.args.dryrun:

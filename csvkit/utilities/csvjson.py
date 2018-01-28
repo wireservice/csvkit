@@ -3,6 +3,7 @@
 import codecs
 import datetime
 import decimal
+import sys
 
 try:
     from collections import OrderedDict
@@ -39,6 +40,12 @@ class CSVJSON(CSVKitUtility):
                                     help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
     def main(self):
+        if self.additional_input_expected():
+            if self.args.streamOutput and self.args.no_inference and not self.args.skip_lines and self.args.sniff_limit == 0:
+                sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
+            else:
+                self.argparser.error('You must provide an input file or piped data.')
+
         # We need to do this dance here, because we aren't writing through agate.
         if six.PY2:
             stream = codecs.getwriter('utf-8')(self.output_file)

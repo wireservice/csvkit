@@ -21,6 +21,9 @@ class CSVLook(CSVKitUtility):
                                     help='Disable type inference when parsing the input.')
 
     def main(self):
+        if self.additional_input_expected():
+            self.argparser.error('You must provide an input file or piped data.')
+
         table = agate.Table.from_csv(
             self.input_file,
             skip_lines=self.args.skip_lines,

@@ -106,6 +106,9 @@ class CSVStat(CSVKitUtility):
             self.print_column_names()
             return
 
+        if self.additional_input_expected():
+            self.argparser.error('You must provide an input file or piped data.')
+
         operations = [op for op in OPERATIONS.keys() if getattr(self.args, op + '_only')]
 
         if len(operations) > 1:

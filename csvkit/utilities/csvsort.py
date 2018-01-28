@@ -25,6 +25,9 @@ class CSVSort(CSVKitUtility):
             self.print_column_names()
             return
 
+        if self.additional_input_expected():
+            self.argparser.error('You must provide an input file or piped data.')
+
         table = agate.Table.from_csv(
             self.input_file,
             skip_lines=self.args.skip_lines,

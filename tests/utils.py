@@ -1,5 +1,24 @@
 #!/usr/bin/env python
 
+"""
+To test standard input (without piped data), run each of:
+
+* csvclean
+* csvcut -c 1
+* csvformat
+* csvgrep -c 1 -m d
+* csvjson --no-inference --stream --snifflimit 0
+* csvstack
+* in2csv --format csv --no-inference --snifflimit 0
+
+And paste:
+
+"a","b","c"
+"g","h","i"
+"d","e","f"
+
+"""
+
 import sys
 import warnings
 from contextlib import contextmanager

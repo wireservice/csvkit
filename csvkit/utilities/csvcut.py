@@ -9,6 +9,8 @@ https://gist.github.com/561347/9846ebf8d0a69b06681da9255ffe3d3f59ec2c97
 Used and modified with permission.
 """
 
+import sys
+
 import agate
 
 from csvkit.cli import CSVKitUtility
@@ -32,6 +34,9 @@ class CSVCut(CSVKitUtility):
         if self.args.names_only:
             self.print_column_names()
             return
+
+        if self.additional_input_expected():
+            sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
 
         rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids(**self.reader_kwargs)
 

@@ -19,7 +19,6 @@ class CSVSQL(CSVKitUtility):
     override_flags = ['f']
 
     def add_arguments(self):
-
         self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
                                     help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=DIALECTS,
@@ -50,6 +49,9 @@ class CSVSQL(CSVKitUtility):
                                     help='Disable type inference when parsing the input.')
 
     def main(self):
+        if sys.stdin.isatty() and not self.args.input_paths:
+            self.argparser.error('You must provide an input file or piped data.')
+
         self.input_files = []
         self.connection = None
         self.table_names = []

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import sys
+
 import agate
 
 from csvkit.cli import CSVKitUtility
@@ -41,6 +43,9 @@ class CSVFormat(CSVKitUtility):
         return kwargs
 
     def main(self):
+        if self.additional_input_expected():
+            sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
+
         reader = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
         writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
         writer.writerows(reader)

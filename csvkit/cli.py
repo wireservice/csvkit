@@ -368,6 +368,9 @@ class CSVKitUtility(object):
         for i, c in enumerate(column_names, start):
             output.write('%3i: %s\n' % (i, c))
 
+    def additional_input_expected(self):
+        return sys.stdin.isatty() and not self.args.input_path
+
 
 def make_default_headers(n):
     """
