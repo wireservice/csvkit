@@ -6,11 +6,13 @@ Improvements:
 * :doc:`/scripts/csvgrep` adds a :code:`--any-match` (:code:`-a`) flag to select rows where any column matches instead of all columns.
 * :doc:`/scripts/csvjson` no longer emits a property if its value is null.
 * :doc:`/scripts/csvsql` adds a :code:`--unique-constraint` option to list names of columns to include in a UNIQUE constraint.
+* :doc:`/scripts/csvsql` adds :code:`--before-insert` and :code:`--after-insert` options to run commands before and after the INSERT command.
 * :doc:`/scripts/csvpy` reports an error message if input is provided via STDIN.
 * :doc:`/scripts/in2csv` adds a :code:`--encoding-xls` option to specify the encoding of the input XLS file.
 * :doc:`/scripts/in2csv` supports :code:`--no-header-row` on XLS and XLSX files.
 * Suppress agate warning about column names not specified when using :code:`--no-header-row`.
 * Prompt the user if additional input is expected (i.e. if no input file or piped data is provided).
+* Update to agate-excel 0.2.2, agate-sql 0.5.3.
 
 Fixes:
 

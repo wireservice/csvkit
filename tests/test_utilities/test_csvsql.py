@@ -5,7 +5,6 @@ import os
 import sys
 
 import six
-from sqlalchemy import Index, MetaData, Table, create_engine
 from sqlalchemy.exc import IntegrityError, OperationalError
 
 try:
@@ -14,6 +13,7 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvsql import CSVSQL, launch_new_instance
+from csvkit.utilities.sql2csv import SQL2CSV
 from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 
 
@@ -37,7 +37,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         sql = self.get_output(['--tables', 'foo', 'examples/testfixed_converted.csv'])
 
         self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  text VARCHAR(17) NOT NULL, 
+  text VARCHAR NOT NULL, 
   date DATE, 
   integer DECIMAL, 
   boolean BOOLEAN, 
@@ -65,12 +65,12 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         sql = self.get_output(['--tables', 'foo', '--blanks', 'examples/blanks.csv'])
 
         self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  a VARCHAR(1) NOT NULL, 
-  b VARCHAR(2) NOT NULL, 
-  c VARCHAR(3) NOT NULL, 
-  d VARCHAR(4) NOT NULL, 
-  e VARCHAR(4) NOT NULL, 
-  f VARCHAR(1) NOT NULL
+  a VARCHAR NOT NULL, 
+  b VARCHAR NOT NULL, 
+  c VARCHAR NOT NULL, 
+  d VARCHAR NOT NULL, 
+  e VARCHAR NOT NULL, 
+  f VARCHAR NOT NULL
 );
 ''')  # noqa
 
@@ -78,14 +78,14 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         sql = self.get_output(['--tables', 'foo', '--no-inference', 'examples/testfixed_converted.csv'])
 
         self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  text VARCHAR(17) NOT NULL, 
-  date VARCHAR(10), 
-  integer VARCHAR(3), 
-  boolean VARCHAR(5), 
-  float VARCHAR(11), 
-  time VARCHAR(8), 
-  datetime VARCHAR(19), 
-  empty_column VARCHAR(1)
+  text VARCHAR NOT NULL, 
+  date VARCHAR, 
+  integer VARCHAR, 
+  boolean VARCHAR, 
+  float VARCHAR, 
+  time VARCHAR, 
+  datetime VARCHAR, 
+  empty_column VARCHAR
 );
 ''')  # noqa
 
@@ -139,7 +139,9 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         input_file = six.StringIO("a,b,c\n1,2,3\n")
 
         with stdin_as_string(input_file):
-            sql = self.get_output(['--query', 'SELECT m.usda_id, avg(i.sepal_length) AS mean_sepal_length FROM iris AS i JOIN irismeta AS m ON (i.species = m.species) GROUP BY m.species', 'examples/iris.csv', 'examples/irismeta.csv'])
+            sql = self.get_output(['--query', 'SELECT m.usda_id, avg(i.sepal_length) AS mean_sepal_length FROM iris '
+                                   'AS i JOIN irismeta AS m ON (i.species = m.species) GROUP BY m.species',
+                                   'examples/iris.csv', 'examples/irismeta.csv'])
 
             self.assertTrue('usda_id,mean_sepal_length' in sql)
             self.assertTrue('IRSE,5.00' in sql)
@@ -158,7 +160,8 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_query_text(self):
-        sql = self.get_output(['--insert', '--query', 'SELECT text FROM testfixed_converted WHERE text LIKE "Chicago%"', 'examples/testfixed_converted.csv'])
+        sql = self.get_output(['--query', 'SELECT text FROM testfixed_converted WHERE text LIKE "Chicago%"',
+                               'examples/testfixed_converted.csv'])
 
         self.assertEqual(sql,
             "text\n"
@@ -173,28 +176,38 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
             "question,text\n"
             "36,©\n")
 
-    def test_prefix(self):
-        self.get_output(['--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
+    def test_before_after_insert(self):
+        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', 'examples/dummy.csv', '--before-insert',
+                         'SELECT 1; CREATE TABLE foobar (date DATE)', '--after-insert', 'INSERT INTO dummy VALUES (0, 5, 6)'])
 
-        engine = create_engine('sqlite:///' + self.db_file)
-        connection = engine.connect()
-        metadata = MetaData(connection)
-        table = Table('dummy', metadata, autoload=True, autoload_with=connection)
-        index = Index('myindex', table.c.a, unique=True)
-        index.create(bind=connection)
+        output_file = six.StringIO()
+        utility = SQL2CSV(['--db', 'sqlite:///' + self.db_file, '--query', 'SELECT * FROM foobar'], output_file)
+        utility.run()
+        output = output_file.getvalue()
+        output_file.close()
+        self.assertEqual(output, 'date\n')
 
-        self.get_output(['--prefix', 'OR IGNORE', '--no-create', '--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
+        output_file = six.StringIO()
+        utility = SQL2CSV(['--db', 'sqlite:///' + self.db_file, '--query', 'SELECT * FROM dummy'], output_file)
+        utility.run()
+        output = output_file.getvalue()
+        output_file.close()
+        self.assertEqual(output, 'a,b,c\n1,2,3\n0,5,6\n')
 
-    def test_query_with_unique_constraint(self):
-        self.get_output(['--insert', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv', '--unique-constraint', 'id'])
+    def test_no_prefix_unique_constraint(self):
+        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', 'examples/dummy.csv', '--unique-constraint', 'a'])
         with self.assertRaises(IntegrityError):
-            self.get_output(['--insert', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv', '--no-create'])
+            self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', 'examples/dummy.csv', '--no-create'])
+
+    def test_prefix_unique_constraint(self):
+        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', 'examples/dummy.csv', '--unique-constraint', 'a'])
+        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', 'examples/dummy.csv', '--no-create', '--prefix', 'OR IGNORE'])
 
     def test_no_create_if_not_exists(self):
-        self.get_output(['--insert', '--tables', 'foobad', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv'])
+        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', '--tables', 'foo', 'examples/foo1.csv'])
         with self.assertRaises(OperationalError):
-            self.get_output(['--insert', '--tables', 'foobad', '--db', 'sqlite:///' + self.db_file, 'examples/foo2.csv'])
+            self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', '--tables', 'foo', 'examples/foo2.csv'])
 
     def test_create_if_not_exists(self):
-        self.get_output(['--insert', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv'])
-        self.get_output(['--insert', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo2.csv', '--create-if-not-exists'])
+        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', '--tables', 'foo', 'examples/foo1.csv'])
+        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', '--tables', 'foo', 'examples/foo2.csv', '--create-if-not-exists'])
