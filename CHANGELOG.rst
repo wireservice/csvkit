@@ -12,6 +12,7 @@ Improvements:
 * :doc:`/scripts/in2csv` supports :code:`--no-header-row` on XLS and XLSX files.
 * Suppress agate warning about column names not specified when using :code:`--no-header-row`.
 * Prompt the user if additional input is expected (i.e. if no input file or piped data is provided).
+* Update to agate-excel 0.2.2, agate-sql 0.5.3.
 
 Fixes:
 
