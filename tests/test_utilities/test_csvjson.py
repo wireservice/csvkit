@@ -92,7 +92,7 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
             self.assertTrue(isinstance(geometry['coordinates'][1], float))
 
     def test_geojson_shape(self):
-        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', 'examples/test_geojson.csv']))
+        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', '--type', 'type', '--geojson', 'geojson', 'examples/test_geojson.csv']))
 
         self.assertEqual(geojson['type'], 'FeatureCollection')
         self.assertFalse('crs' in geojson)
