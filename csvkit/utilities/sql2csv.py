@@ -36,7 +36,7 @@ class SQL2CSV(CSVKitUtility):
         )
 
     def main(self):
-        if self.additional_input_expected():
+        if self.additional_input_expected() and not self.args.query:
             self.argparser.error('You must provide an input file or piped data.')
 
         try:
