@@ -9,10 +9,10 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
 
     usage: csvstat [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                    [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                   [-v] [--zero] [-V] [--csv] [-n] [-c COLUMNS] [--type] [--nulls]
-                   [--unique] [--min] [--max] [--sum] [--mean] [--median]
-                   [--stdev] [--len] [--freq] [--freq-count FREQ_COUNT] [--count]
-                   [-y SNIFF_LIMIT]
+                   [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [--csv] [-n]
+                   [-c COLUMNS] [--type] [--nulls] [--unique] [--min] [--max]
+                   [--sum] [--mean] [--median] [--stdev] [--len] [--freq]
+                   [--freq-count FREQ_COUNT] [--count] [-y SNIFF_LIMIT]
                    [FILE]
 
     Print descriptive statistics for each column in a CSV file.

@@ -7,6 +7,7 @@ Improvements:
 * :doc:`/scripts/csvjson` no longer emits a property if its value is null.
 * :doc:`/scripts/csvpy` reports an error message if input is provided via STDIN.
 * :doc:`/scripts/in2csv` adds a :code:`--encoding-xls` option to specify the encoding of the input XLS file.
+* :doc:`/scripts/in2csv` supports :code:`--no-header-row` on XLS and XLSX files.
 
 Fixes:
 
