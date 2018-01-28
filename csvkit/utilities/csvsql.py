@@ -84,6 +84,10 @@ class CSVSQL(CSVKitUtility):
             self.argparser.error('The --create-if-not-exists option is only valid if --insert is also specified.')
         if self.args.overwrite and not self.args.insert:
             self.argparser.error('The --overwrite option is only valid if --insert is also specified.')
+        if self.args.before_insert and not self.args.insert:
+            self.argparser.error('The --before_insert option is only valid if --insert is also specified.')
+        if self.args.after_insert and not self.args.insert:
+            self.argparser.error('The --after_insert option is only valid if --insert is also specified.')
 
         if self.args.no_create and self.args.create_if_not_exists:
             self.argparser.error('The --no-create and --create-if-not-exists options are mutually exclusive.')
