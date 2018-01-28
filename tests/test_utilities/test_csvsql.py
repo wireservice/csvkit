@@ -185,13 +185,11 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
 
         self.get_output(['--prefix', 'OR IGNORE', '--no-create', '--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
 
+    def test_no_create_if_not_exists(self):
+        self.get_output(['--insert', '--tables', 'foobad', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv'])
+        with self.assertRaises(OperationalError):
+            self.get_output(['--insert', '--tables', 'foobad', '--db', 'sqlite:///' + self.db_file, 'examples/foo2.csv'])
+
     def test_create_if_not_exists(self):
         self.get_output(['--insert', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv'])
         self.get_output(['--insert', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo2.csv', '--create-if-not-exists'])
-
-    def test_create_if_not_exists_error(self):
-        self.get_output(['--insert', '--tables', 'foobad', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv'])
-        try:
-            self.get_output(['--insert', '--tables', 'foobad', '--db', 'sqlite:///' + self.db_file, 'examples/foo2.csv'])
-        except OperationalError:
-            pass
