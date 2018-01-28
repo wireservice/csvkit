@@ -16,7 +16,7 @@ class SQL2CSV(CSVKitUtility):
                                     help='An sqlalchemy connection string to connect to a database.',)
         self.argparser.add_argument(metavar='FILE', nargs='?', dest='input_path',
                                     help='The file to use as SQL query. If both FILE and QUERY are omitted, query will be read from STDIN.')
-        self.argparser.add_argument('--query', default=None,
+        self.argparser.add_argument('--query',
                                     help="The SQL query to execute. If specified, it overrides FILE and STDIN.")
         self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
                                     help='Specify the encoding of the input query file.')

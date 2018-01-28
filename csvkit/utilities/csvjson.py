@@ -22,15 +22,15 @@ class CSVJSON(CSVKitUtility):
     description = 'Convert a CSV file into JSON (or GeoJSON).'
 
     def add_arguments(self):
-        self.argparser.add_argument('-i', '--indent', dest='indent', type=int, default=None,
+        self.argparser.add_argument('-i', '--indent', dest='indent', type=int,
                                     help='Indent the output JSON this many spaces. Disabled by default.')
-        self.argparser.add_argument('-k', '--key', dest='key', type=str, default=None,
+        self.argparser.add_argument('-k', '--key', dest='key', type=str,
                                     help='Output JSON as an array of objects keyed by a given column, KEY, rather than as a list. All values in the column must be unique. If --lat and --lon are also specified, this column will be used as GeoJSON Feature ID.')
-        self.argparser.add_argument('--lat', dest='lat', type=str, default=None,
+        self.argparser.add_argument('--lat', dest='lat', type=str,
                                     help='A column index or name containing a latitude. Output will be GeoJSON instead of JSON. Only valid if --lon is also specified.')
-        self.argparser.add_argument('--lon', dest='lon', type=str, default=None,
+        self.argparser.add_argument('--lon', dest='lon', type=str,
                                     help='A column index or name containing a longitude. Output will be GeoJSON instead of JSON. Only valid if --lat is also specified.')
-        self.argparser.add_argument('--crs', dest='crs', type=str, default=None,
+        self.argparser.add_argument('--crs', dest='crs', type=str,
                                     help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
         self.argparser.add_argument('--stream', dest='streamOutput', action='store_true',
                                     help='Output JSON as a stream of newline-separated objects, rather than an as an array.')
