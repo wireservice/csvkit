@@ -37,7 +37,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         sql = self.get_output(['--tables', 'foo', 'examples/testfixed_converted.csv'])
 
         self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  text VARCHAR(17) NOT NULL, 
+  text VARCHAR NOT NULL, 
   date DATE, 
   integer DECIMAL, 
   boolean BOOLEAN, 
@@ -65,12 +65,12 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         sql = self.get_output(['--tables', 'foo', '--blanks', 'examples/blanks.csv'])
 
         self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  a VARCHAR(1) NOT NULL, 
-  b VARCHAR(2) NOT NULL, 
-  c VARCHAR(3) NOT NULL, 
-  d VARCHAR(4) NOT NULL, 
-  e VARCHAR(4) NOT NULL, 
-  f VARCHAR(1) NOT NULL
+  a VARCHAR NOT NULL, 
+  b VARCHAR NOT NULL, 
+  c VARCHAR NOT NULL, 
+  d VARCHAR NOT NULL, 
+  e VARCHAR NOT NULL, 
+  f VARCHAR NOT NULL
 );
 ''')  # noqa
 
@@ -78,14 +78,14 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         sql = self.get_output(['--tables', 'foo', '--no-inference', 'examples/testfixed_converted.csv'])
 
         self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  text VARCHAR(17) NOT NULL, 
-  date VARCHAR(10), 
-  integer VARCHAR(3), 
-  boolean VARCHAR(5), 
-  float VARCHAR(11), 
-  time VARCHAR(8), 
-  datetime VARCHAR(19), 
-  empty_column VARCHAR(1)
+  text VARCHAR NOT NULL, 
+  date VARCHAR, 
+  integer VARCHAR, 
+  boolean VARCHAR, 
+  float VARCHAR, 
+  time VARCHAR, 
+  datetime VARCHAR, 
+  empty_column VARCHAR
 );
 ''')  # noqa
 
