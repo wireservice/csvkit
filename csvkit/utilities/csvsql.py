@@ -24,7 +24,7 @@ class CSVSQL(CSVKitUtility):
         self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=DIALECTS,
                                     help='Dialect of SQL to generate. Only valid when --db is not specified.')
         self.argparser.add_argument('--db', dest='connection_string',
-                                    help='If present, a sqlalchemy connection string to use to directly execute generated SQL on a database.')
+                                    help='If present, a SQLAlchemy connection string to use to directly execute generated SQL on a database.')
         self.argparser.add_argument('--query',
                                     help='Execute one or more SQL queries delimited by ";" and output the result of the last query as CSV. QUERY may be a filename.')
         self.argparser.add_argument('--insert', dest='insert', action='store_true',
@@ -151,7 +151,8 @@ class CSVSQL(CSVKitUtility):
             if table:
                 if self.connection:
                     if self.args.before_insert:
-                        self.connection.execute(self.args.before_insert)
+                        for query in self.args.before_insert.split(';'):
+                            self.connection.execute(query)
 
                     table.to_sql(
                         self.connection,
@@ -167,7 +168,8 @@ class CSVSQL(CSVKitUtility):
                     )
 
                     if self.args.after_insert:
-                        self.connection.execute(self.args.after_insert)
+                        for query in self.args.after_insert.split(';'):
+                            self.connection.execute(query)
 
                 # Output SQL statements
                 else:
@@ -189,7 +191,7 @@ class CSVSQL(CSVKitUtility):
                 else:
                     query = self.args.query
 
-                # Execute the specified SQL queries
+                # Execute the specified SQL queries.
                 queries = query.split(';')
                 rows = None
 
