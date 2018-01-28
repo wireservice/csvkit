@@ -17,9 +17,12 @@ Converting fixed width requires that you provide a schema file with the "-s" opt
 The header line is required though the columns may be in any order::
 
     usage: in2csv [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                  [-v] [-l] [--zero] [-V] [-f FILETYPE] [-s SCHEMA] [-k KEY] [-n]
-                  [--sheet SHEET] [-y SNIFF_LIMIT] [-I]
+                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
+                  [-S] [--blanks] [--date-format DATE_FORMAT]
+                  [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
+                  [-l] [--zero] [-V] [-f FILETYPE] [-s SCHEMA] [-k KEY] [-n]
+                  [--sheet SHEET] [--write-sheets WRITE_SHEETS]
+                  [--encoding-xls ENCODING_XLS] [-y SNIFF_LIMIT] [-I]
                   [FILE]
 
     Convert common, but less awesome, tabular data formats to CSV.
@@ -47,7 +50,8 @@ The header line is required though the columns may be in any order::
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                             Limit CSV dialect sniffing to the specified number of
                             bytes. Specify "0" to disable sniffing entirely.
-      -I, --no-inference    Disable type inference when parsing CSV input.
+      -I, --no-inference    Disable type inference (and --locale, --date-format,
+                            --datetime-format) when parsing CSV input.
 
     Some command-line flags only pertain to specific input formats.
 

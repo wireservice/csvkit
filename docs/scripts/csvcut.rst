@@ -9,7 +9,8 @@ Filters and truncates CSV files. Like the Unix "cut" command, but for tabular da
 
     usage: csvcut [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                  [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS] [-C NOT_COLUMNS] [-x]
+                  [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS]
+                  [-C NOT_COLUMNS] [-x]
                   [FILE]
 
     Filter and truncate CSV files. Like the Unix "cut" command, but for tabular
@@ -24,11 +25,13 @@ Filters and truncates CSV files. Like the Unix "cut" command, but for tabular da
       -n, --names           Display column names and indices from the input CSV
                             and exit.
       -c COLUMNS, --columns COLUMNS
-                            A comma separated list of column indices or names to
-                            be extracted. Defaults to all columns.
+                            A comma separated list of column indices, names or
+                            ranges to be extracted, e.g. "1,id,3-5". Defaults to
+                            all columns.
       -C NOT_COLUMNS, --not-columns NOT_COLUMNS
-                            A comma separated list of column indices or names to
-                            be excluded. Defaults to no columns.
+                            A comma separated list of column indices, names or
+                            ranges to be excluded, e.g. "1,id,3-5". Defaults to no
+                            columns.
       -x, --delete-empty-rows
                             After cutting, delete rows which are completely empty.
 

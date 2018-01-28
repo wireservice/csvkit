@@ -5,7 +5,7 @@ Power tools
 csvjoin: merging related data
 =============================
 
-One of the most common operations that we need to perform on data is "joining" it to other, related data. For instance, given a dataset about equipment supplied to counties in Nebraska, one might reasonably want to merge that with a dataset containing the population of each county. :doc:`/scripts/csvjoin` allows us to take two those two datasets (equipment and population) and merge them, much like you might do with a SQL ``JOIN`` query. In order to demonstrate this, let's grab a second dataset:
+One of the most common operations that we need to perform on data is "joining" it to other, related data. For instance, given a dataset about equipment supplied to counties in Nebraska, one might reasonably want to merge that with a dataset containing the population of each county. :doc:`/scripts/csvjoin` allows us to take those two datasets (equipment and population) and merge them, much like you might do with a SQL ``JOIN`` query. In order to demonstrate this, let's grab a second dataset:
 
 .. code-block:: bash
 

@@ -87,13 +87,13 @@ Currently, the following tools stream:
 Currently, the following tools buffer:
 
 * :doc:`/scripts/csvjoin`
-* :doc:`/scripts/csvjson` unless ``--stream`` and ``--no-inference`` are set but ``--skip-lines`` is not
+* :doc:`/scripts/csvjson` unless ``--no-inference --stream --snifflimit 0`` is set and ``--skip-lines`` isn't set
 * :doc:`/scripts/csvlook`
 * :doc:`/scripts/csvpy`
 * :doc:`/scripts/csvsort`
 * :doc:`/scripts/csvsql`
 * :doc:`/scripts/csvstat`
-* :doc:`/scripts/in2csv` unless ``--format`` is ``ndjson`` and ``--no-inference`` is set, or ``--format`` is ``csv`` and ``--no-inference`` is set but ``--no-header-row`` and ``--skip-lines`` are not
+* :doc:`/scripts/in2csv` unless ``--format ndjson --no-inference`` is set, or unless ``--format csv --no-inference --snifflimit 0`` is set and ``--no-header-row`` and ``--skip-lines`` aren't set
 
 Legalese
 ========

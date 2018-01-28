@@ -9,10 +9,10 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
 
     usage: csvstat [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                    [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                   [-v] [--zero] [-V] [--csv] [-n] [-c COLUMNS] [--type] [--nulls]
-                   [--unique] [--min] [--max] [--sum] [--mean] [--median]
-                   [--stdev] [--len] [--freq] [--freq-count FREQ_COUNT] [--count]
-                   [-y SNIFF_LIMIT]
+                   [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [--csv] [-n]
+                   [-c COLUMNS] [--type] [--nulls] [--unique] [--min] [--max]
+                   [--sum] [--mean] [--median] [--stdev] [--len] [--freq]
+                   [--freq-count FREQ_COUNT] [--count] [-y SNIFF_LIMIT]
                    [FILE]
 
     Print descriptive statistics for each column in a CSV file.
@@ -27,8 +27,9 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
       -n, --names           Display column names and indices from the input CSV
                             and exit.
       -c COLUMNS, --columns COLUMNS
-                            A comma separated list of column indices or names to
-                            be examined. Defaults to all columns.
+                            A comma separated list of column indices, names or
+                            ranges to be examined, e.g. "1,id,3-5". Defaults to
+                            all columns.
       --type                Only output data type.
       --nulls               Only output whether columns contains nulls.
       --unique              Only output counts of unique values.

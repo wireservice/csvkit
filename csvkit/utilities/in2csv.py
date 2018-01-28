@@ -32,7 +32,7 @@ class In2CSV(CSVKitUtility):
             else:
                 return bytestring
 
-        self.argparser.add_argument(metavar="FILE", nargs='?', dest='input_path',
+        self.argparser.add_argument(metavar='FILE', nargs='?', dest='input_path',
                                     help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-f', '--format', dest='filetype',
                                     help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(SUPPORTED_FORMATS)))
@@ -87,9 +87,6 @@ class In2CSV(CSVKitUtility):
             if not filetype:
                 self.argparser.error('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
-        # Buffer standard input if the input file is in CSV format or if performing type inference.
-        self.buffers_input = filetype == 'csv' or not self.args.no_inference
-
         # Set the input file.
         if filetype in ('xls', 'xlsx'):
             self.input_file = self.open_excel_input_file(path)
@@ -118,14 +115,17 @@ class In2CSV(CSVKitUtility):
             kwargs.update(self.reader_kwargs)
             kwargs['sniff_limit'] = self.args.sniff_limit
 
-        if filetype not in ('dbf', 'geojson', 'json', 'ndjson'):
+        if filetype in ('xls', 'xlsx'):
+            kwargs['header'] = not self.args.no_header_row
+
+        if filetype not in ('dbf', 'geojson', 'json', 'ndjson'):  # csv, fixed, xls, xlsx
             kwargs['skip_lines'] = self.args.skip_lines
 
         if filetype != 'dbf':
             kwargs['column_types'] = self.get_column_types()
 
         # Convert the file.
-        if filetype == 'csv' and self.args.no_inference and not self.args.no_header_row and not self.args.skip_lines:
+        if filetype == 'csv' and self.args.no_inference and not self.args.no_header_row and not self.args.skip_lines and self.args.sniff_limit == 0:
             reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
             writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
             writer.writerows(reader)

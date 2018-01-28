@@ -19,11 +19,6 @@ Executes arbitrary commands against a SQL database and outputs the results as a 
 
     optional arguments:
       -h, --help            show this help message and exit
-      -v, --verbose         Print detailed tracebacks when errors occur.
-      -l, --linenumbers     Insert a column of line numbers at the front of the
-                            output. Useful when piping to grep or as a simple
-                            primary key.
-      -V, --version         Display version information and exit.
       --db CONNECTION_STRING
                             An sqlalchemy connection string to connect to a
                             database.

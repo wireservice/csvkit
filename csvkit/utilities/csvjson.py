@@ -3,6 +3,7 @@
 import codecs
 import datetime
 import decimal
+import sys
 
 try:
     from collections import OrderedDict
@@ -19,18 +20,17 @@ from csvkit.cli import CSVKitUtility, match_column_identifier
 
 class CSVJSON(CSVKitUtility):
     description = 'Convert a CSV file into JSON (or GeoJSON).'
-    buffers_input = True
 
     def add_arguments(self):
-        self.argparser.add_argument('-i', '--indent', dest='indent', type=int, default=None,
+        self.argparser.add_argument('-i', '--indent', dest='indent', type=int,
                                     help='Indent the output JSON this many spaces. Disabled by default.')
-        self.argparser.add_argument('-k', '--key', dest='key', type=str, default=None,
+        self.argparser.add_argument('-k', '--key', dest='key', type=str,
                                     help='Output JSON as an array of objects keyed by a given column, KEY, rather than as a list. All values in the column must be unique. If --lat and --lon are also specified, this column will be used as GeoJSON Feature ID.')
-        self.argparser.add_argument('--lat', dest='lat', type=str, default=None,
+        self.argparser.add_argument('--lat', dest='lat', type=str,
                                     help='A column index or name containing a latitude. Output will be GeoJSON instead of JSON. Only valid if --lon is also specified.')
-        self.argparser.add_argument('--lon', dest='lon', type=str, default=None,
+        self.argparser.add_argument('--lon', dest='lon', type=str,
                                     help='A column index or name containing a longitude. Output will be GeoJSON instead of JSON. Only valid if --lat is also specified.')
-        self.argparser.add_argument('--crs', dest='crs', type=str, default=None,
+        self.argparser.add_argument('--crs', dest='crs', type=str,
                                     help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
         self.argparser.add_argument('--stream', dest='streamOutput', action='store_true',
                                     help='Output JSON as a stream of newline-separated objects, rather than an as an array.')
@@ -40,6 +40,12 @@ class CSVJSON(CSVKitUtility):
                                     help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
     def main(self):
+        if self.additional_input_expected():
+            if self.args.streamOutput and self.args.no_inference and not self.args.skip_lines and self.args.sniff_limit == 0:
+                sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
+            else:
+                self.argparser.error('You must provide an input file or piped data.')
+
         # We need to do this dance here, because we aren't writing through agate.
         if six.PY2:
             stream = codecs.getwriter('utf-8')(self.output_file)
@@ -134,7 +140,7 @@ class CSVJSON(CSVKitUtility):
                             max_lon = lon
                     elif i == id_column:
                         geoid = c
-                    else:
+                    elif c is not None:
                         properties[table.column_names[i]] = c
 
                 if id_column is not None:
@@ -162,7 +168,7 @@ class CSVJSON(CSVKitUtility):
                 ])
 
             dump_json(output)
-        elif self.args.streamOutput and self.args.no_inference and not self.args.skip_lines:
+        elif self.args.streamOutput and self.args.no_inference and not self.args.skip_lines and self.args.sniff_limit == 0:
             rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
             column_names = next(rows)
 
@@ -187,7 +193,7 @@ class CSVJSON(CSVKitUtility):
                 self.output_file,
                 key=self.args.key,
                 newline=self.args.streamOutput,
-                indent=self.args.indent
+                indent=self.args.indent,
             )
 
 
