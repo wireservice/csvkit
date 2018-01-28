@@ -10,10 +10,6 @@
     :target: https://coveralls.io/r/wireservice/csvkit
     :alt: Coverage Status
 
-.. image:: https://img.shields.io/pypi/dw/csvkit.svg
-    :target: https://pypi.python.org/pypi/csvkit
-    :alt: PyPI downloads
-
 .. image:: https://img.shields.io/pypi/v/csvkit.svg
     :target: https://pypi.python.org/pypi/csvkit
     :alt: Version
