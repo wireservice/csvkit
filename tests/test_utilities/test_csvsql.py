@@ -135,19 +135,30 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
 
         input_file.close()
 
-    def test_empty_with_query(self):
+    def test_query(self):
+        input_file = six.StringIO("a,b,c\n1,2,3\n")
+
+        with stdin_as_string(input_file):
+            sql = self.get_output(['--query', 'SELECT m.usda_id, avg(i.sepal_length) AS mean_sepal_length FROM iris AS i JOIN irismeta AS m ON (i.species = m.species) GROUP BY m.species', 'examples/iris.csv', 'examples/irismeta.csv'])
+
+            self.assertTrue('usda_id,mean_sepal_length' in sql)
+            self.assertTrue('IRSE,5.00' in sql)
+            self.assertTrue('IRVE2,5.936' in sql)
+            self.assertTrue('IRVI,6.58' in sql)
+
+        input_file.close()
+
+    def test_query_empty(self):
         input_file = six.StringIO()
 
         with stdin_as_string(input_file):
-            output_file = six.StringIO()
-            utility = CSVSQL(['--query', 'select 1'], output_file)
-            utility.run()
-            output_file.close()
+            output = self.get_output(['--query', 'SELECT 1'])
+            self.assertEqual(output, '1\n1\n')
 
         input_file.close()
 
     def test_query_text(self):
-        sql = self.get_output(['--insert', '--query', "SELECT text FROM testfixed_converted WHERE text LIKE 'Chicago%'", 'examples/testfixed_converted.csv'])
+        sql = self.get_output(['--insert', '--query', 'SELECT text FROM testfixed_converted WHERE text LIKE "Chicago%"', 'examples/testfixed_converted.csv'])
 
         self.assertEqual(sql,
             "text\n"
@@ -162,7 +173,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
             "question,text\n"
             "36,©\n")
 
-    def test_query_with_prefix(self):
+    def test_prefix(self):
         self.get_output(['--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
 
         engine = create_engine('sqlite:///' + self.db_file)
@@ -184,16 +195,3 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
             self.get_output(['--insert', '--tables', 'foobad', '--db', 'sqlite:///' + self.db_file, 'examples/foo2.csv'])
         except OperationalError:
             pass
-
-    def test_query(self):
-        input_file = six.StringIO("a,b,c\n1,2,3\n")
-
-        with stdin_as_string(input_file):
-            sql = self.get_output(['--query', 'SELECT m.usda_id, avg(i.sepal_length) AS mean_sepal_length FROM iris AS i JOIN irismeta AS m ON (i.species = m.species) GROUP BY m.species', 'examples/iris.csv', 'examples/irismeta.csv'])
-
-            self.assertTrue('usda_id,mean_sepal_length' in sql)
-            self.assertTrue('IRSE,5.00' in sql)
-            self.assertTrue('IRVE2,5.936' in sql)
-            self.assertTrue('IRVI,6.58' in sql)
-
-        input_file.close()
