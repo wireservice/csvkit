@@ -70,17 +70,17 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         self.assertRaisesRegex(ValueError, 'Value True is not unique in the key column.', utility.run)
         output_file.close()
 
-    def test_geojson_point(self):
-        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', 'examples/test_geo.csv']))
+    def test_geojson_with_id(self):
+        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', '-k', 'slug', 'examples/test_geo.csv']))
 
         self.assertEqual(geojson['type'], 'FeatureCollection')
-        self.assertFalse('crs' in geojson)
+        self.assertNotIn('crs', geojson)
         self.assertEqual(geojson['bbox'], [-95.334619, 32.299076986939205, -95.250699, 32.351434])
         self.assertEqual(len(geojson['features']), 17)
 
         for feature in geojson['features']:
             self.assertEqual(feature['type'], 'Feature')
-            self.assertFalse('id' in feature)
+            self.assertIn('id', feature)
             self.assertIn('properties', feature)
             self.assertIsInstance(feature['properties'], dict)
             self.assertGreater(len(feature['properties']), 1)
@@ -88,20 +88,41 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
             geometry = feature['geometry']
 
             self.assertEqual(len(geometry['coordinates']), 2)
-            self.assertTrue(isinstance(geometry['coordinates'][0], float))
-            self.assertTrue(isinstance(geometry['coordinates'][1], float))
+            self.assertIsInstance(geometry['coordinates'][0], float)
+            self.assertIsInstance(geometry['coordinates'][1], float)
+
+    def test_geojson_point(self):
+        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', 'examples/test_geo.csv']))
+
+        self.assertEqual(geojson['type'], 'FeatureCollection')
+        self.assertNotIn('crs', geojson)
+        self.assertEqual(geojson['bbox'], [-95.334619, 32.299076986939205, -95.250699, 32.351434])
+        self.assertEqual(len(geojson['features']), 17)
+
+        for feature in geojson['features']:
+            self.assertEqual(feature['type'], 'Feature')
+            self.assertNotIn('id', feature)
+            self.assertIn('properties', feature)
+            self.assertIsInstance(feature['properties'], dict)
+            self.assertGreater(len(feature['properties']), 1)
+
+            geometry = feature['geometry']
+
+            self.assertEqual(len(geometry['coordinates']), 2)
+            self.assertIsInstance(geometry['coordinates'][0], float)
+            self.assertIsInstance(geometry['coordinates'][1], float)
 
     def test_geojson_shape(self):
         geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', '--type', 'type', '--geometry', 'geojson', 'examples/test_geojson.csv']))
 
         self.assertEqual(geojson['type'], 'FeatureCollection')
-        self.assertFalse('crs' in geojson)
+        self.assertNotIn('crs', geojson)
         self.assertEqual(geojson['bbox'], [100.0, 0.0, 105.0, 1.0])
         self.assertEqual(len(geojson['features']), 3)
 
         for feature in geojson['features']:
             self.assertEqual(feature['type'], 'Feature')
-            self.assertFalse('id' in feature)
+            self.assertNotIn('id', feature)
             self.assertIn('properties', feature)
             self.assertIsInstance(feature['properties'], dict)
             self.assertIn('prop0', feature['properties'].keys())
@@ -121,39 +142,14 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         self.assertEqual(geojson['features'][2]['geometry']['coordinates'],
                          [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]]])
 
-    def test_geojson_with_id(self):
-        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', '-k', 'slug', 'examples/test_geo.csv']))
-
-        self.assertEqual(geojson['type'], 'FeatureCollection')
-        self.assertFalse('crs' in geojson)
-        self.assertEqual(geojson['bbox'], [-95.334619, 32.299076986939205, -95.250699, 32.351434])
-        self.assertEqual(len(geojson['features']), 17)
-
-        for feature in geojson['features']:
-            self.assertEqual(feature['type'], 'Feature')
-            self.assertTrue('id' in feature)
-            self.assertIn('properties', feature)
-            self.assertIsInstance(feature['properties'], dict)
-            self.assertGreater(len(feature['properties']), 1)
-
-            geometry = feature['geometry']
-
-            self.assertEqual(len(geometry['coordinates']), 2)
-            self.assertTrue(isinstance(geometry['coordinates'][0], float))
-            self.assertTrue(isinstance(geometry['coordinates'][1], float))
-
     def test_geojson_with_crs(self):
         geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', '--crs', 'EPSG:4269', 'examples/test_geo.csv']))
+        self.assertIn('crs', geojson)
+        self.assertEqual(geojson['crs'], {'type': 'name', 'properties': {'name': 'EPSG:4269'}})
 
-        self.assertEqual(geojson['type'], 'FeatureCollection')
-        self.assertTrue('crs' in geojson)
-        self.assertEqual(geojson['bbox'], [-95.334619, 32.299076986939205, -95.250699, 32.351434])
-        self.assertEqual(len(geojson['features']), 17)
-
-        crs = geojson['crs']
-
-        self.assertEqual(crs['type'], 'name')
-        self.assertEqual(crs['properties']['name'], 'EPSG:4269')
+    def test_geojson_with_no_bbox(self):
+        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude', '--no-bbox', 'examples/test_geo.csv']))
+        self.assertNotIn('bbox', geojson)
 
     def test_ndjson(self):
         self.assertLines(['--stream', 'examples/testjson_converted.csv'], [

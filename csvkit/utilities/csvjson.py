@@ -36,6 +36,8 @@ class CSVJSON(CSVKitUtility):
                                     help='A column index or name containing a GeoJSON geometry. Output will be GeoJSON instead of JSON. Only valid if --lat and --lon are also specified.')
         self.argparser.add_argument('--crs', dest='crs',
                                     help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
+        self.argparser.add_argument('--no-bbox', dest='no_bbox', action='store_true',
+                                    help='Disable the calculation of a bounding box.')
         self.argparser.add_argument('--stream', dest='streamOutput', action='store_true',
                                     help='Output JSON as a stream of newline-separated objects, rather than an as an array.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
@@ -164,20 +166,22 @@ class CSVJSON(CSVKitUtility):
                             lat = float(c)
                         except ValueError:
                             lat = None
-                        update_boundary_lat(lat)
+                        if not self.args.no_bbox:
+                            update_boundary_lat(lat)
                     elif i == lon_column:
                         try:
                             lon = float(c)
                         except ValueError:
                             lon = None
-                        update_boundary_lon(lon)
+                        if not self.args.no_bbox:
+                            update_boundary_lon(lon)
                     elif i == id_column:
                         feature_id = c
                     elif i == type_column:
                         pass  # Prevent "type" from being added to "properties".
                     elif i == geometry_column:
                         geometry = json.loads(c)
-                        if 'coordinates' in geometry:
+                        if not self.args.no_bbox and 'coordinates' in geometry:
                             update_boundary_coordinates(geometry['coordinates'])
                     elif c:
                         properties[table.column_names[i]] = c
@@ -195,11 +199,15 @@ class CSVJSON(CSVKitUtility):
                     ])
                 features.append(feature)
 
-            output = OrderedDict([
+            items = [
                 ('type', 'FeatureCollection'),
-                ('bbox', [self.min_lon, self.min_lat, self.max_lon, self.max_lat]),
-                ('features', features)
-            ])
+                ('features', features),
+            ]
+
+            if not self.args.no_bbox:
+                items.insert(1, ('bbox', [self.min_lon, self.min_lat, self.max_lon, self.max_lat]))
+
+            output = OrderedDict(items)
 
             if self.args.crs:
                 output['crs'] = OrderedDict([
