@@ -280,7 +280,9 @@ class CSVKitUtility(object):
                 # Special case handling for Unicode errors, which behave very strangely
                 # when cast with unicode()
                 if t == UnicodeDecodeError:
-                    sys.stderr.write('Your file is not "%s" encoded. Please specify the correct encoding with the -e flag. Use the -v flag to see the complete error.\n' % self.args.encoding)
+                    sys.stderr.write('Your file is not "%s" encoded. Please specify the correct encoding with the -e '
+                                     'flag or with the PYTHONIOENCODING environment variable. Use the -v flag to see '
+                                     'the complete error.\n' % self.args.encoding)
                 else:
                     sys.stderr.write('%s\n' % six.text_type(value))
 
