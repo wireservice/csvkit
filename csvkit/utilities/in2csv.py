@@ -87,9 +87,6 @@ class In2CSV(CSVKitUtility):
             if not filetype:
                 self.argparser.error('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
-        # Buffer standard input if the input file is in CSV format or if performing type inference.
-        self.buffers_input = filetype == 'csv' or not self.args.no_inference
-
         # Set the input file.
         if filetype in ('xls', 'xlsx'):
             self.input_file = self.open_excel_input_file(path)
@@ -125,7 +122,7 @@ class In2CSV(CSVKitUtility):
             kwargs['column_types'] = self.get_column_types()
 
         # Convert the file.
-        if filetype == 'csv' and self.args.no_inference and not self.args.no_header_row and not self.args.skip_lines:
+        if filetype == 'csv' and self.args.no_inference and not self.args.no_header_row and not self.args.skip_lines and self.args.sniff_limit == 0:
             reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
             writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
             writer.writerows(reader)

@@ -59,7 +59,6 @@ class CSVKitUtility(object):
     description = ''
     epilog = ''
     override_flags = ''
-    buffers_input = False
 
     def __init__(self, args=None, output_file=None):
         """
@@ -204,17 +203,14 @@ class CSVKitUtility(object):
         Open the input file specified on the command line.
         """
         if six.PY2:
-            mode = 'rb'
+            mode = 'Urb'
             kwargs = {}
         else:
-            mode = 'rt'
+            mode = 'rt'  # default
             kwargs = {'encoding': self.args.encoding}
 
         if not path or path == '-':
-            if self.buffers_input:
-                f = six.StringIO(sys.stdin.read())
-            else:
-                f = sys.stdin
+            f = sys.stdin
         else:
             extension = splitext(path)[1]
 

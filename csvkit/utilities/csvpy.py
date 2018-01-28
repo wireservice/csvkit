@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import sys
+
 import agate
 
 from csvkit.cli import CSVKitUtility
@@ -15,6 +17,9 @@ class CSVPy(CSVKitUtility):
                                     help='Load the CSV file into an agate table.')
 
     def main(self):
+        if self.input_file == sys.stdin:
+            self.argparser.error('csvpy cannot accept input on STDIN (pipe).')
+
         # Attempt reading filename, will cause lazy loader to access file and raise error if it does not exist
         filename = self.input_file.name
 
