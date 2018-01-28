@@ -40,9 +40,6 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         self.assertEqual(test_order, new_order)
 
     def test_no_blanks(self):
-        pass
-
-    def test_blanks(self):
         reader = self.get_output_as_reader(['examples/blanks.csv'])
         test_order = [
             ['a', 'b', 'c', 'd', 'e', 'f'],
@@ -51,7 +48,7 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         new_order = [r for r in reader]
         self.assertEqual(test_order, new_order)
 
-    def test_no_header_row(self):
+    def test_blanks(self):
         reader = self.get_output_as_reader(['--blanks', 'examples/blanks.csv'])
         test_order = [
             ['a', 'b', 'c', 'd', 'e', 'f'],
@@ -59,6 +56,12 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         ]
         new_order = [r for r in reader]
         self.assertEqual(test_order, new_order)
+
+    def test_no_header_row(self):
+        self.assertRows(['--no-header-row', '--no-inference', 'examples/no_header_row.csv'], [
+            ['a', 'b', 'c'],
+            ['1', '2', '3'],
+        ])
 
     def test_no_inference(self):
         reader = self.get_output_as_reader(['--no-inference', '-c', '1', 'examples/test_literal_order.csv'])
