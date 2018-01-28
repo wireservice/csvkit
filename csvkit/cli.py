@@ -6,6 +6,7 @@ import codecs
 import gzip
 import itertools
 import sys
+import warnings
 from os.path import splitext
 
 import agate
@@ -110,7 +111,11 @@ class CSVKitUtility(object):
             self.input_file = self._open_input_file(self.args.input_path)
 
         try:
-            self.main()
+            with warnings.catch_warnings():
+                if getattr(self.args, 'no_header_row', None):
+                    warnings.filterwarnings(action='ignore', message='Column names not specified', module='agate')
+
+                self.main()
         finally:
             if 'f' not in self.override_flags:
                 self.input_file.close()

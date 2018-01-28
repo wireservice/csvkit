@@ -3,6 +3,7 @@
 
 Improvements:
 
+* Suppress agate warning about column names not specified when using :code:`--no-header-row`.
 * :doc:`/scripts/csvgrep` adds a :code:`--any-match` (:code:`-a`) flag to select rows where any column matches instead of all columns.
 * :doc:`/scripts/csvjson` no longer emits a property if its value is null.
 * :doc:`/scripts/csvpy` reports an error message if input is provided via STDIN.
