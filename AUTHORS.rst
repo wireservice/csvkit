@@ -82,3 +82,4 @@ The following individuals have contributed code to csvkit:
 * John Vandenberg
 * Olivier Lacan
 * Adrien Delessert
+* Ghislain Antony Vaillant
