@@ -23,7 +23,7 @@ Fixes:
 * :doc:`/scripts/csvstack` no longer opens all files at once.
 * :doc:`/scripts/in2csv` respects :code:`--no-header-row` when :code:`--no-inference` is set.
 * :doc:`/scripts/in2csv` CSV-to-CSV conversion streams input and output only if :code:`--snifflimit` is :code:`0`.
-* :doc:`/scripts/in2csv` supports GeoJSON files with: ``geometry`` set to ``null``, missing Point ``coordinates``.
+* :doc:`/scripts/in2csv` supports GeoJSON files with: ``geometry`` set to ``null``, missing Point ``coordinates``, altitude coordinate values.
 
 csvkit is no longer tested on PyPy.
 
