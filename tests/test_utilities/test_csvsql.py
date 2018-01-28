@@ -158,7 +158,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_query_text(self):
-        sql = self.get_output(['--insert', '--query', 'SELECT text FROM testfixed_converted WHERE text LIKE "Chicago%"', 'examples/testfixed_converted.csv'])
+        sql = self.get_output(['--query', 'SELECT text FROM testfixed_converted WHERE text LIKE "Chicago%"', 'examples/testfixed_converted.csv'])
 
         self.assertEqual(sql,
             "text\n"
@@ -173,19 +173,16 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
             "question,text\n"
             "36,©\n")
 
+    def test_no_prefix(self):
+        self.get_output(['--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv', '--unique-constraint', 'a'])
+        with self.assertRaises(IntegrityError):
+            self.get_output(['--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv', '--no-create'])
+
     def test_prefix(self):
-        self.get_output(['--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
+        self.get_output(['--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv', '--unique-constraint', 'a'])
+        self.get_output(['--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv', '--no-create', '--prefix', 'OR IGNORE'])
 
-        engine = create_engine('sqlite:///' + self.db_file)
-        connection = engine.connect()
-        metadata = MetaData(connection)
-        table = Table('dummy', metadata, autoload=True, autoload_with=connection)
-        index = Index('myindex', table.c.a, unique=True)
-        index.create(bind=connection)
-
-        self.get_output(['--prefix', 'OR IGNORE', '--no-create', '--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
-
-    def test_query_with_unique_constraint(self):
+    def test_unique_constraint(self):
         self.get_output(['--insert', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv', '--unique-constraint', 'id'])
         with self.assertRaises(IntegrityError):
             self.get_output(['--insert', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv', '--no-create'])
