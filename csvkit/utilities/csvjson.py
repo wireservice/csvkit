@@ -32,8 +32,8 @@ class CSVJSON(CSVKitUtility):
                                     help='A column index or name containing a longitude. Output will be GeoJSON instead of JSON. Only valid if --lat is also specified.')
         self.argparser.add_argument('--type', dest='type',
                                     help='A column index or name containing a GeoJSON type. Output will be GeoJSON instead of JSON. Only valid if --lat and --lon are also specified.')
-        self.argparser.add_argument('--geojson', dest='geojson',
-                                    help='A column index or name containing a GeoJSON feature. Output will be GeoJSON instead of JSON. Only valid if --lat and --lon are also specified.')
+        self.argparser.add_argument('--geometry', dest='geometry',
+                                    help='A column index or name containing a GeoJSON geometry. Output will be GeoJSON instead of JSON. Only valid if --lat and --lon are also specified.')
         self.argparser.add_argument('--crs', dest='crs',
                                     help='A coordinate reference system string to be included with GeoJSON output. Only valid if --lat and --lon are also specified.')
         self.argparser.add_argument('--stream', dest='streamOutput', action='store_true',
@@ -88,8 +88,8 @@ class CSVJSON(CSVKitUtility):
             self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
         if self.args.type and not self.args.lat:
             self.argparser.error('--type is only allowed when --lat and --lon are also specified.')
-        if self.args.geojson and not self.args.lat:
-            self.argparser.error('--geojson is only allowed when --lat and --lon are also specified.')
+        if self.args.geometry and not self.args.lat:
+            self.argparser.error('--geometry is only allowed when --lat and --lon are also specified.')
 
         if self.args.streamOutput and (self.args.lat or self.args.lon or self.args.key):
             self.argparser.error('--stream is only allowed if --lat, --lon and --key are not specified.')
@@ -124,9 +124,7 @@ class CSVJSON(CSVKitUtility):
                     self.max_lon = lon
 
             def update_boundary_coordinates(coordinates):
-                if (isinstance(coordinates, list) and len(coordinates) == 2 and
-                        isinstance(coordinates[0], (float, int)) and
-                        isinstance(coordinates[1], (float, int))):
+                if len(coordinates) == 2:
                     update_boundary_lon(coordinates[0])
                     update_boundary_lat(coordinates[1])
                 else:
@@ -139,10 +137,10 @@ class CSVJSON(CSVKitUtility):
                 type_column = match_column_identifier(table.column_names, self.args.type, self.args.zero_based)
             else:
                 type_column = None
-            if self.args.geojson:
-                geojson_column = match_column_identifier(table.column_names, self.args.geojson, self.args.zero_based)
+            if self.args.geometry:
+                geometry_column = match_column_identifier(table.column_names, self.args.geometry, self.args.zero_based)
             else:
-                geojson_column = None
+                geometry_column = None
 
             if self.args.key:
                 id_column = match_column_identifier(table.column_names, self.args.key, self.args.zero_based)
@@ -154,23 +152,20 @@ class CSVJSON(CSVKitUtility):
                 feature['type'] = 'Feature'
                 properties = OrderedDict()
                 feature_id = None
-                geometry_type = 'Point'
                 lat = None
                 lon = None
-                coordinates = None
+                geometry = None
 
                 for i, c in enumerate(row):
+                    if c is None:
+                        continue
                     if i == lat_column:
-                        if c is None:
-                            continue
                         try:
                             lat = float(c)
                         except ValueError:
                             lat = None
                         update_boundary_lat(lat)
                     elif i == lon_column:
-                        if c is None:
-                            continue
                         try:
                             lon = float(c)
                         except ValueError:
@@ -179,25 +174,25 @@ class CSVJSON(CSVKitUtility):
                     elif i == id_column:
                         feature_id = c
                     elif i == type_column:
-                        geometry_type = c
-                    elif i == geojson_column:
-                        geojson = json.loads(c)
-                        coordinates = geojson['coordinates']
-                        update_boundary_coordinates(coordinates)
-                    elif c is not None:
+                        pass  # Prevent "type" from being added to "properties".
+                    elif i == geometry_column:
+                        geometry = json.loads(c)
+                        if 'coordinates' in geometry:
+                            update_boundary_coordinates(geometry['coordinates'])
+                    elif c:
                         properties[table.column_names[i]] = c
 
                 if id_column is not None:
                     feature['id'] = feature_id
 
-                if lon and lat:
-                    coordinates = [lon, lat]
-
-                feature['geometry'] = OrderedDict([
-                    ('type', geometry_type),
-                    ('coordinates', coordinates)
-                ])
                 feature['properties'] = properties
+                if geometry or lat is None and lon is None:
+                    feature['geometry'] = geometry
+                elif lon and lat:
+                    feature['geometry'] = OrderedDict([
+                        ('type', 'Point'),
+                        ('coordinates', [lon, lat])
+                    ])
                 features.append(feature)
 
             output = OrderedDict([

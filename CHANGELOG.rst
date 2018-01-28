@@ -5,7 +5,7 @@ Improvements:
 
 * :doc:`/scripts/csvgrep` adds a :code:`--any-match` (:code:`-a`) flag to select rows where any column matches instead of all columns.
 * :doc:`/scripts/csvjson` no longer emits a property if its value is null.
-* :doc:`/scripts/csvjson` adds :code:`--type` and :code:`--geojson` options to emit non-Point GeoJSON features.
+* :doc:`/scripts/csvjson` adds :code:`--type` and :code:`--geometry` options to emit non-Point GeoJSON features.
 * :doc:`/scripts/csvsql` adds a :code:`--unique-constraint` option to list names of columns to include in a UNIQUE constraint.
 * :doc:`/scripts/csvsql` adds :code:`--before-insert` and :code:`--after-insert` options to run commands before and after the INSERT command.
 * :doc:`/scripts/csvpy` reports an error message if input is provided via STDIN.
@@ -23,6 +23,7 @@ Fixes:
 * :doc:`/scripts/csvstack` no longer opens all files at once.
 * :doc:`/scripts/in2csv` respects :code:`--no-header-row` when :code:`--no-inference` is set.
 * :doc:`/scripts/in2csv` CSV-to-CSV conversion streams input and output only if :code:`--snifflimit` is :code:`0`.
+* :doc:`/scripts/in2csv` supports GeoJSON files with: ``geometry`` set to ``null``, missing Point ``coordinates``.
 
 csvkit is no longer tested on PyPy.
 
