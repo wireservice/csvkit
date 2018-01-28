@@ -8,9 +8,9 @@ Description
 Convert a CSV file to a custom output format.::
 
     usage: csvformat [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                     [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-v]
-                     [-V] [-D OUT_DELIMITER] [-T] [-Q OUT_QUOTECHAR]
-                     [-U {0,1,2,3}] [-B] [-P OUT_ESCAPECHAR]
+                     [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S]
+                     [--blanks] [-K SKIP_LINES] [-v] [-V] [-D OUT_DELIMITER] [-T]
+                     [-Q OUT_QUOTECHAR] [-U {0,1,2,3}] [-B] [-P OUT_ESCAPECHAR]
                      [-M OUT_LINETERMINATOR]
                      [FILE]
 

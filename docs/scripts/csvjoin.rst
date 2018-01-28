@@ -8,9 +8,11 @@ Description
 Merges two or more CSV tables together using a method analogous to SQL JOIN operation. By default it performs an inner join, but full outer, left outer, and right outer are also available via flags. Key columns are specified with the -c flag (either a single column which exists in all tables, or a comma-separated list of columns with one corresponding to each). If the columns flag is not provided then the tables will be merged "sequentially", that is they will be merged in row order with no filtering::
 
     usage: csvjoin [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                   [-v] [-l] [--zero] [-V] [-c COLUMNS] [--outer] [--left]
-                   [--right] [-y SNIFF_LIMIT] [-I]
+                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
+                   [-S] [--blanks] [--date-format DATE_FORMAT]
+                   [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
+                   [-l] [--zero] [-V] [-c COLUMNS] [--outer] [--left] [--right]
+                   [-y SNIFF_LIMIT] [-I]
                    [FILE [FILE ...]]
 
     Execute a SQL-like join to merge CSV files on a specified column or columns.

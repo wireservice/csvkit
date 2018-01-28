@@ -7,13 +7,12 @@ from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
 class CSVSort(CSVKitUtility):
     description = 'Sort CSV files. Like the Unix "sort" command, but for tabular data.'
-    buffers_input = True
 
     def add_arguments(self):
         self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
                                     help='Display column names and indices from the input CSV and exit.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
-                                    help='A comma separated list of column indices or names to sort by. Defaults to all columns.')
+                                    help='A comma separated list of column indices, names or ranges to sort by, e.g. "1,id,3-5". Defaults to all columns.')
         self.argparser.add_argument('-r', '--reverse', dest='reverse', action='store_true',
                                     help='Sort in descending order.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
@@ -25,6 +24,9 @@ class CSVSort(CSVKitUtility):
         if self.args.names_only:
             self.print_column_names()
             return
+
+        if self.additional_input_expected():
+            self.argparser.error('You must provide an input file or piped data.')
 
         table = agate.Table.from_csv(
             self.input_file,

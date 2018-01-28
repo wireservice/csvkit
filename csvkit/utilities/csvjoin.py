@@ -12,7 +12,7 @@ class CSVJoin(CSVKitUtility):
     override_flags = ['f']
 
     def add_arguments(self):
-        self.argparser.add_argument(metavar="FILE", nargs='*', dest='input_paths', default=['-'],
+        self.argparser.add_argument(metavar='FILE', nargs='*', dest='input_paths', default=['-'],
                                     help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
         self.argparser.add_argument('-c', '--columns', dest='columns',
                                     help='The column name(s) on which to join. Should be either one name (or index) or a comma-separated list with one name (or index) for each file, in the same order that the files were specified. May also be left unspecified, in which case the two files will be joined sequentially without performing any matching.')
