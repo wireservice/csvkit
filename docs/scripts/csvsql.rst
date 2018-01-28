@@ -15,8 +15,9 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                   [-i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase}]
                   [--db CONNECTION_STRING] [--query QUERY] [--insert]
                   [--prefix PREFIX] [--tables TABLE_NAMES] [--no-constraints]
-                  [--no-create] [--create-if-not-exists] [--overwrite]
-                  [--db-schema DB_SCHEMA] [-y SNIFF_LIMIT] [-I]
+                  [--unique-constraint UNIQUE_CONSTRAINT] [--no-create]
+                  [--create-if-not-exists] [--overwrite] [--db-schema DB_SCHEMA]
+                  [-y SNIFF_LIMIT] [-I]
                   [FILE [FILE ...]]
 
     Generate SQL statements for one or more CSV files, or execute those statements
@@ -35,24 +36,28 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                             If present, a sqlalchemy connection string to use to
                             directly execute generated SQL on a database.
       --query QUERY         Execute one or more SQL queries delimited by ";" and
-                            output the result of the last query as CSV. QUERY
-                            may be a filename.
+                            output the result of the last query as CSV. QUERY may
+                            be a filename.
       --insert              In addition to creating the table, also insert the
                             data into the table. Only valid when --db is
                             specified.
       --prefix PREFIX       Add an expression following the INSERT keyword, like
-                            IGNORE or REPLACE.
-      --tables TABLE_NAMES  Specify the names of the tables to be created. By
-                            default, the tables will be named after the filenames
-                            without extensions or "stdin".
+                            OR IGNORE or OR REPLACE.
+      --tables TABLE_NAMES  A comma-separated list of names of tables to be
+                            created. By default, the tables will be named after
+                            the filenames without extensions or "stdin".
       --no-constraints      Generate a schema without length limits or null
                             checks. Useful when sampling big tables.
+      --unique-constraint UNIQUE_CONSTRAINT
+                            A column-separated list of names of columns to include
+                            in a UNIQUE constraint.
       --no-create           Skip creating a table. Only valid when --insert is
                             specified.
       --create-if-not-exists
                             Create table if it does not exist, otherwise keep
                             going. Only valid when --insert is specified.
-      --overwrite           Drop the table before creating.
+      --overwrite           Drop the table before creating. Only valid when
+                            --insert is specified.
       --db-schema DB_SCHEMA
                             Optional name of database schema to create table(s)
                             in.
@@ -60,6 +65,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                             Limit CSV dialect sniffing to the specified number of
                             bytes. Specify "0" to disable sniffing entirely.
       -I, --no-inference    Disable type inference when parsing the input.
+
 
 See also: :doc:`../common_arguments`.
 

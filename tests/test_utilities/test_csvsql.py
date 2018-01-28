@@ -6,7 +6,7 @@ import sys
 
 import six
 from sqlalchemy import Index, MetaData, Table, create_engine
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import IntegrityError, OperationalError
 
 try:
     from mock import patch
@@ -184,6 +184,11 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         index.create(bind=connection)
 
         self.get_output(['--prefix', 'OR IGNORE', '--no-create', '--insert', '--db', 'sqlite:///' + self.db_file, 'examples/dummy.csv'])
+
+    def test_query_with_unique_constraint(self):
+        self.get_output(['--insert', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv', '--unique-constraint', 'id'])
+        with self.assertRaises(IntegrityError):
+            self.get_output(['--insert', '--tables', 'foo', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv', '--no-create'])
 
     def test_no_create_if_not_exists(self):
         self.get_output(['--insert', '--tables', 'foobad', '--db', 'sqlite:///' + self.db_file, 'examples/foo1.csv'])

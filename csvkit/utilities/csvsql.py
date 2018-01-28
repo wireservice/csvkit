@@ -25,22 +25,24 @@ class CSVSQL(CSVKitUtility):
                                     help='Dialect of SQL to generate. Only valid when --db is not specified.')
         self.argparser.add_argument('--db', dest='connection_string',
                                     help='If present, a sqlalchemy connection string to use to directly execute generated SQL on a database.')
-        self.argparser.add_argument('--query', default=None,
-                                    help='Execute one or more SQL queries delimited by ";" and output the result of the last query as CSV.')
+        self.argparser.add_argument('--query',
+                                    help='Execute one or more SQL queries delimited by ";" and output the result of the last query as CSV. QUERY may be a filename.')
         self.argparser.add_argument('--insert', dest='insert', action='store_true',
                                     help='In addition to creating the table, also insert the data into the table. Only valid when --db is specified.')
         self.argparser.add_argument('--prefix', action='append', default=[],
                                     help='Add an expression following the INSERT keyword, like OR IGNORE or OR REPLACE.')
         self.argparser.add_argument('--tables', dest='table_names',
-                                    help='Specify the names of the tables to be created. By default, the tables will be named after the filenames without extensions or "stdin".')
+                                    help='A comma-separated list of names of tables to be created. By default, the tables will be named after the filenames without extensions or "stdin".')
         self.argparser.add_argument('--no-constraints', dest='no_constraints', action='store_true',
                                     help='Generate a schema without length limits or null checks. Useful when sampling big tables.')
+        self.argparser.add_argument('--unique-constraint', dest='unique_constraint',
+                                    help='A column-separated list of names of columns to include in a UNIQUE constraint.')
         self.argparser.add_argument('--no-create', dest='no_create', action='store_true',
                                     help='Skip creating a table. Only valid when --insert is specified.')
         self.argparser.add_argument('--create-if-not-exists', dest='create_if_not_exists', action='store_true',
                                     help='Create table if it does not exist, otherwise keep going. Only valid when --insert is specified.')
         self.argparser.add_argument('--overwrite', dest='overwrite', action='store_true',
-                                    help='Drop the table before creating.')
+                                    help='Drop the table before creating. Only valid when --insert is specified.')
         self.argparser.add_argument('--db-schema', dest='db_schema',
                                     help='Optional name of database schema to create table(s) in.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
@@ -55,9 +57,12 @@ class CSVSQL(CSVKitUtility):
         self.input_files = []
         self.connection = None
         self.table_names = []
+        self.unique_constraint = []
 
         if self.args.table_names:
             self.table_names = self.args.table_names.split(',')
+        if self.args.unique_constraint:
+            self.unique_constraint = self.args.unique_constraint.split(',')
 
         # Create an SQLite database in memory if no connection string is specified
         if self.args.query and not self.args.connection_string:
@@ -66,15 +71,15 @@ class CSVSQL(CSVKitUtility):
 
         if self.args.dialect and self.args.connection_string:
             self.argparser.error('The --dialect option is only valid when neither --db nor --query are specified.')
-
         if self.args.insert and not self.args.connection_string:
             self.argparser.error('The --insert option is only valid when either --db or --query is specified.')
 
         if self.args.no_create and not self.args.insert:
             self.argparser.error('The --no-create option is only valid if --insert is also specified.')
-
         if self.args.create_if_not_exists and not self.args.insert:
             self.argparser.error('The --create-if-not-exists option is only valid if --insert is also specified.')
+        if self.args.overwrite and not self.args.insert:
+            self.argparser.error('The --overwrite option is only valid if --insert is also specified.')
 
         if self.args.no_create and self.args.create_if_not_exists:
             self.argparser.error('The --no-create and --create-if-not-exists options are mutually exclusive.')
@@ -146,7 +151,8 @@ class CSVSQL(CSVKitUtility):
                         insert=self.args.insert and len(table.rows) > 0,
                         prefixes=self.args.prefix,
                         db_schema=self.args.db_schema,
-                        constraints=not self.args.no_constraints
+                        constraints=not self.args.no_constraints,
+                        unique_constraint=self.unique_constraint
                     )
 
                 # Output SQL statements
@@ -155,7 +161,8 @@ class CSVSQL(CSVKitUtility):
                         table_name,
                         dialect=self.args.dialect,
                         db_schema=self.args.db_schema,
-                        constraints=not self.args.no_constraints
+                        constraints=not self.args.no_constraints,
+                        unique_constraint=self.unique_constraint
                     )
 
                     self.output_file.write('%s\n' % statement)
