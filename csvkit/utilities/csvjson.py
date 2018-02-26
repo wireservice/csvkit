@@ -48,19 +48,17 @@ class CSVJSON(CSVKitUtility):
     def __init__(self, args=None, output_file=None):
         super(CSVJSON, self).__init__(args, output_file)
 
-        # We need to do this dance here, because we aren't writing through agate.
-        if six.PY2:
-            self.stream = codecs.getwriter('utf-8')(self.output_file)
-        else:
-            self.stream = self.output_file
-
         self.json_kwargs = {
             'ensure_ascii': False,
             'indent': self.args.indent,
         }
 
+        # We need to do this stream dance here, because we aren't writing through agate.
         if six.PY2:
+            self.stream = codecs.getwriter('utf-8')(self.output_file)
             self.json_kwargs['encoding'] = 'utf-8'
+        else:
+            self.stream = self.output_file
 
     def main(self):
         """
