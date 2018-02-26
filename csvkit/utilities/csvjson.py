@@ -255,10 +255,10 @@ class CSVJSON(CSVKitUtility):
             return OrderedDict(items)
 
         def feature_for_row(self, row):
-            feature = OrderedDict({
-                'type': 'Feature',
-                'properties': OrderedDict()
-            })
+            feature = OrderedDict([
+                ('type', 'Feature'),
+                ('properties', OrderedDict())
+            ])
 
             for i, c in enumerate(row):
                 # Prevent "type" or geo fields from being added to properties.
