@@ -145,32 +145,70 @@ class CSVJSON(CSVKitUtility):
             self.dump_json(data, newline=True)
 
     def output_geojson(self):
-        features = []
-        bounds = self.GeoJsonBounds()
-
         table = self.read_csv_to_table()
+        geojson_generator = self.GeoJsonGenerator(self.args, table.column_names)
 
-        lat_column = match_column_identifier(table.column_names, self.args.lat, self.args.zero_based)
-        lon_column = match_column_identifier(table.column_names, self.args.lon, self.args.zero_based)
-        if self.args.type:
-            type_column = match_column_identifier(table.column_names, self.args.type, self.args.zero_based)
-        else:
-            type_column = None
-        if self.args.geometry:
-            geometry_column = match_column_identifier(table.column_names, self.args.geometry, self.args.zero_based)
-        else:
-            geometry_column = None
+        self.dump_json(geojson_generator.generate_feature_collection(table))
 
-        if self.args.key:
-            id_column = match_column_identifier(table.column_names, self.args.key, self.args.zero_based)
-        else:
-            id_column = None
+    class GeoJsonGenerator:
+        def __init__(self, args, column_names):
+            self.args = args
+            self.column_names = column_names
+            self.type_column = None
+            self.geometry_column = None
+            self.id_column = None
 
-        for row in table.rows:
-            feature = OrderedDict()
-            feature['type'] = 'Feature'
-            properties = OrderedDict()
-            feature_id = None
+            self.lat_column = match_column_identifier(column_names, self.args.lat, self.args.zero_based)
+            self.lon_column = match_column_identifier(column_names, self.args.lon, self.args.zero_based)
+
+            if self.args.type:
+                self.type_column = match_column_identifier(column_names, self.args.type, self.args.zero_based)
+
+            if self.args.geometry:
+                self.geometry_column = match_column_identifier(column_names, self.args.geometry, self.args.zero_based)
+
+            if self.args.key:
+                self.id_column = match_column_identifier(column_names, self.args.key, self.args.zero_based)
+
+        def generate_feature_collection(self, table):
+            features = []
+            bounds = self.GeoJsonBounds()
+
+            for row in table.rows:
+                feature = self.feature_for_row(row)
+                if (not self.args.no_bbox) and ('geometry' in feature) and ('coordinates' in feature['geometry']):
+                    bounds.update_coordinates(feature['geometry']['coordinates'])
+
+                features.append(feature)
+
+            items = [
+                ('type', 'FeatureCollection'),
+                ('features', features),
+            ]
+
+            if not self.args.no_bbox:
+                items.insert(1, ('bbox', bounds.bbox()))
+
+            if self.args.crs:
+                items.append(
+                    (
+                        'crs',
+                        OrderedDict([
+                            ('type', 'name'),
+                            ('properties', {
+                                'name': self.args.crs
+                            })
+                        ])
+                    ))
+
+            return OrderedDict(items)
+
+        def feature_for_row(self, row):
+            feature = OrderedDict({
+                'type': 'Feature',
+                'properties': OrderedDict()
+            })
+
             lat = None
             lon = None
             geometry = None
@@ -178,35 +216,27 @@ class CSVJSON(CSVKitUtility):
             for i, c in enumerate(row):
                 if c is None:
                     continue
-                if i == lat_column:
+
+                if i == self.lat_column:
                     try:
                         lat = float(c)
                     except ValueError:
                         lat = None
-                    if not self.args.no_bbox:
-                        bounds.update_lat(lat)
-                elif i == lon_column:
+                elif i == self.lon_column:
                     try:
                         lon = float(c)
                     except ValueError:
                         lon = None
-                    if not self.args.no_bbox:
-                        bounds.update_lon(lon)
-                elif i == id_column:
-                    feature_id = c
-                elif i == type_column:
+                elif i == self.id_column:
+                    if self.id_column is not None:
+                        feature['id'] = c
+                elif i == self.type_column:
                     pass  # Prevent "type" from being added to "properties".
-                elif i == geometry_column:
+                elif i == self.geometry_column:
                     geometry = json.loads(c)
-                    if not self.args.no_bbox and 'coordinates' in geometry:
-                        bounds.update_coordinates(geometry['coordinates'])
                 elif c:
-                    properties[table.column_names[i]] = c
+                    feature['properties'][self.column_names[i]] = c
 
-            if id_column is not None:
-                feature['id'] = feature_id
-
-            feature['properties'] = properties
             if geometry or lat is None and lon is None:
                 feature['geometry'] = geometry
             elif lon and lat:
@@ -214,57 +244,39 @@ class CSVJSON(CSVKitUtility):
                     ('type', 'Point'),
                     ('coordinates', [lon, lat])
                 ])
-            features.append(feature)
 
-        items = [
-            ('type', 'FeatureCollection'),
-            ('features', features),
-        ]
+            return feature
 
-        if not self.args.no_bbox:
-            items.insert(1, ('bbox', bounds.bbox()))
 
-        output = OrderedDict(items)
+        class GeoJsonBounds:
+            def __init__(self):
+                self.min_lon = None
+                self.min_lat = None
+                self.max_lon = None
+                self.max_lat = None
 
-        if self.args.crs:
-            output['crs'] = OrderedDict([
-                ('type', 'name'),
-                ('properties', {
-                    'name': self.args.crs
-                })
-            ])
+            def bbox(self):
+                return [self.min_lon, self.min_lat, self.max_lon, self.max_lat]
 
-        self.dump_json(output)
+            def update_lat(self, lat):
+                if self.min_lat is None or lat < self.min_lat:
+                    self.min_lat = lat
+                if self.max_lat is None or lat > self.max_lat:
+                    self.max_lat = lat
 
-    class GeoJsonBounds:
-        def __init__(self):
-            self.min_lon = None
-            self.min_lat = None
-            self.max_lon = None
-            self.max_lat = None
+            def update_lon(self, lon):
+                if self.min_lon is None or lon < self.min_lon:
+                    self.min_lon = lon
+                if self.max_lon is None or lon > self.max_lon:
+                    self.max_lon = lon
 
-        def bbox(self):
-            return [self.min_lon, self.min_lat, self.max_lon, self.max_lat]
-
-        def update_lat(self, lat):
-            if self.min_lat is None or lat < self.min_lat:
-                self.min_lat = lat
-            if self.max_lat is None or lat > self.max_lat:
-                self.max_lat = lat
-
-        def update_lon(self, lon):
-            if self.min_lon is None or lon < self.min_lon:
-                self.min_lon = lon
-            if self.max_lon is None or lon > self.max_lon:
-                self.max_lon = lon
-
-        def update_coordinates(self, coordinates):
-            if len(coordinates) <= 3 and isinstance(coordinates[0], (float, int)):
-                self.update_lon(coordinates[0])
-                self.update_lat(coordinates[1])
-            else:
-                for coordinate in coordinates:
-                    self.update_coordinates(coordinate)
+            def update_coordinates(self, coordinates):
+                if len(coordinates) <= 3 and isinstance(coordinates[0], (float, int)):
+                    self.update_lon(coordinates[0])
+                    self.update_lat(coordinates[1])
+                else:
+                    for coordinate in coordinates:
+                        self.update_coordinates(coordinate)
 
 
 def launch_new_instance():
