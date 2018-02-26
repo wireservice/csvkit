@@ -67,20 +67,21 @@ class CSVJSON(CSVKitUtility):
         Convert CSV to JSON.
         """
 
-        if self.additional_input_expected():
-            if self.can_stream_output():
+        if self.can_stream():
+            if self.additional_input_expected():
                 sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
-            else:
-                self.argparser.error('You must provide an input file or piped data.')
 
-        if self.args.lat and self.args.lon:
-            if self.can_stream_output():
+            if self.is_geo():
                 self.streaming_output_ndgeojson()
             else:
-                self.output_geojson()
-        else:
-            if self.can_stream_output():
                 self.streaming_output_ndjson()
+
+        else:
+            if self.additional_input_expected():
+                self.argparser.error('You must provide an input file or piped data.')
+
+            if self.is_geo():
+                self.output_geojson()
             else:
                 self.output_json()
 
@@ -96,11 +97,14 @@ class CSVJSON(CSVKitUtility):
         if newline:
             self.stream.write("\n")
 
-    def can_stream_output(self):
+    def can_stream(self):
         return (self.args.streamOutput
                 and self.args.no_inference
                 and not self.args.skip_lines
                 and self.args.sniff_limit == 0)
+
+    def is_geo(self):
+        return self.args.lat and self.args.lon
 
     def validate_args(self):
         if self.args.lat and not self.args.lon:
