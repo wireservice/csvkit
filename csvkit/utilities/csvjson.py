@@ -76,17 +76,7 @@ class CSVJSON(CSVKitUtility):
         if self.args.lat and self.args.lon:
             self.output_geojson()
         elif self.can_stream_output():
-            rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
-            column_names = next(rows)
-
-            for row in rows:
-                data = OrderedDict()
-                for i, column in enumerate(column_names):
-                    try:
-                        data[column] = row[i]
-                    except IndexError:
-                        data[column] = None
-                self.dump_json(data, newline=True)
+            self.output_ndjson_stream()
         else:
             self.read_csv_to_table().to_json(
                 self.output_file,
@@ -137,6 +127,19 @@ class CSVJSON(CSVKitUtility):
             column_types=self.get_column_types(),
             **self.reader_kwargs
         )
+
+    def output_ndjson_stream(self):
+        rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
+        column_names = next(rows)
+
+        for row in rows:
+            data = OrderedDict()
+            for i, column in enumerate(column_names):
+                try:
+                    data[column] = row[i]
+                except IndexError:
+                    data[column] = None
+            self.dump_json(data, newline=True)
 
     def output_geojson(self):
         table = self.read_csv_to_table()
