@@ -78,12 +78,7 @@ class CSVJSON(CSVKitUtility):
         elif self.can_stream_output():
             self.output_ndjson_stream()
         else:
-            self.read_csv_to_table().to_json(
-                self.output_file,
-                key=self.args.key,
-                newline=self.args.streamOutput,
-                indent=self.args.indent,
-            )
+            self.output_json()
 
     def dump_json(self, data, newline=False):
         def default(obj):
@@ -126,6 +121,14 @@ class CSVJSON(CSVKitUtility):
             sniff_limit=self.args.sniff_limit,
             column_types=self.get_column_types(),
             **self.reader_kwargs
+        )
+
+    def output_json(self):
+        self.read_csv_to_table().to_json(
+            self.output_file,
+            key=self.args.key,
+            newline=self.args.streamOutput,
+            indent=self.args.indent,
         )
 
     def output_ndjson_stream(self):
