@@ -46,6 +46,8 @@ class CSVJSON(CSVKitUtility):
                                     help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
     def main(self):
+        self.validate_args()
+
         if self.additional_input_expected():
             if self.can_stream_output():
                 sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
@@ -81,20 +83,6 @@ class CSVJSON(CSVKitUtility):
         """
         Convert CSV to JSON.
         """
-        if self.args.lat and not self.args.lon:
-            self.argparser.error('--lon is required whenever --lat is specified.')
-        if self.args.lon and not self.args.lat:
-            self.argparser.error('--lat is required whenever --lon is specified.')
-
-        if self.args.crs and not self.args.lat:
-            self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
-        if self.args.type and not self.args.lat:
-            self.argparser.error('--type is only allowed when --lat and --lon are also specified.')
-        if self.args.geometry and not self.args.lat:
-            self.argparser.error('--geometry is only allowed when --lat and --lon are also specified.')
-
-        if self.args.streamOutput and (self.args.lat or self.args.lon or self.args.key):
-            self.argparser.error('--stream is only allowed if --lat, --lon and --key are not specified.')
 
         # GeoJSON
         if self.args.lat and self.args.lon:
@@ -251,6 +239,22 @@ class CSVJSON(CSVKitUtility):
                 and self.args.no_inference
                 and not self.args.skip_lines
                 and self.args.sniff_limit == 0)
+
+    def validate_args(self):
+        if self.args.lat and not self.args.lon:
+            self.argparser.error('--lon is required whenever --lat is specified.')
+        if self.args.lon and not self.args.lat:
+            self.argparser.error('--lat is required whenever --lon is specified.')
+
+        if self.args.crs and not self.args.lat:
+            self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
+        if self.args.type and not self.args.lat:
+            self.argparser.error('--type is only allowed when --lat and --lon are also specified.')
+        if self.args.geometry and not self.args.lat:
+            self.argparser.error('--geometry is only allowed when --lat and --lon are also specified.')
+
+        if self.args.streamOutput and (self.args.lat or self.args.lon or self.args.key):
+            self.argparser.error('--stream is only allowed if --lat, --lon and --key are not specified.')
 
 
 def launch_new_instance():
