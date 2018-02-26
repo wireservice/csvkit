@@ -45,6 +45,23 @@ class CSVJSON(CSVKitUtility):
         self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
                                     help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
+    def __init__(self, args=None, output_file=None):
+        super(CSVJSON, self).__init__(args, output_file)
+
+        # We need to do this dance here, because we aren't writing through agate.
+        if six.PY2:
+            self.stream = codecs.getwriter('utf-8')(self.output_file)
+        else:
+            self.stream = self.output_file
+
+        self.json_kwargs = {
+            'ensure_ascii': False,
+            'indent': self.args.indent,
+        }
+
+        if six.PY2:
+            self.json_kwargs['encoding'] = 'utf-8'
+
     def main(self):
         """
         Convert CSV to JSON.
@@ -57,32 +74,6 @@ class CSVJSON(CSVKitUtility):
                 sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
             else:
                 self.argparser.error('You must provide an input file or piped data.')
-
-        # We need to do this dance here, because we aren't writing through agate.
-        if six.PY2:
-            stream = codecs.getwriter('utf-8')(self.output_file)
-        else:
-            stream = self.output_file
-
-        json_kwargs = {
-            'ensure_ascii': False,
-            'indent': self.args.indent,
-        }
-
-        if six.PY2:
-            json_kwargs['encoding'] = 'utf-8'
-
-        def default(obj):
-            if isinstance(obj, (datetime.date, datetime.datetime)):
-                return obj.isoformat()
-            elif isinstance(obj, decimal.Decimal):
-                return str(obj)
-            raise TypeError('%s is not JSON serializable' % repr(obj))
-
-        def dump_json(data, newline=False):
-            json.dump(data, stream, default=default, **json_kwargs)
-            if newline:
-                stream.write("\n")
 
         # GeoJSON
         if self.args.lat and self.args.lon:
@@ -205,7 +196,7 @@ class CSVJSON(CSVKitUtility):
                     })
                 ])
 
-            dump_json(output)
+            self.dump_json(output)
         elif self.can_stream_output():
             rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
             column_names = next(rows)
@@ -217,7 +208,7 @@ class CSVJSON(CSVKitUtility):
                         data[column] = row[i]
                     except IndexError:
                         data[column] = None
-                dump_json(data, newline=True)
+                self.dump_json(data, newline=True)
         else:
             table = agate.Table.from_csv(
                 self.input_file,
@@ -233,6 +224,18 @@ class CSVJSON(CSVKitUtility):
                 newline=self.args.streamOutput,
                 indent=self.args.indent,
             )
+
+    def dump_json(self, data, newline=False):
+        def default(obj):
+            if isinstance(obj, (datetime.date, datetime.datetime)):
+                return obj.isoformat()
+            elif isinstance(obj, decimal.Decimal):
+                return str(obj)
+            raise TypeError('%s is not JSON serializable' % repr(obj))
+
+        json.dump(data, self.stream, default=default, **self.json_kwargs)
+        if newline:
+            self.stream.write("\n")
 
     def can_stream_output(self):
         return (self.args.streamOutput
