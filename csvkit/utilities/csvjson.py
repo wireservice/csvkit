@@ -75,122 +75,8 @@ class CSVJSON(CSVKitUtility):
             else:
                 self.argparser.error('You must provide an input file or piped data.')
 
-        # GeoJSON
         if self.args.lat and self.args.lon:
-            table = self.read_csv_to_table()
-
-            features = []
-
-            self.min_lon = None
-            self.min_lat = None
-            self.max_lon = None
-            self.max_lat = None
-
-            def update_boundary_lat(lat):
-                if self.min_lat is None or lat < self.min_lat:
-                    self.min_lat = lat
-                if self.max_lat is None or lat > self.max_lat:
-                    self.max_lat = lat
-
-            def update_boundary_lon(lon):
-                if self.min_lon is None or lon < self.min_lon:
-                    self.min_lon = lon
-                if self.max_lon is None or lon > self.max_lon:
-                    self.max_lon = lon
-
-            def update_boundary_coordinates(coordinates):
-                if len(coordinates) <= 3 and isinstance(coordinates[0], (float, int)):
-                    update_boundary_lon(coordinates[0])
-                    update_boundary_lat(coordinates[1])
-                else:
-                    for coordinate in coordinates:
-                        update_boundary_coordinates(coordinate)
-
-            lat_column = match_column_identifier(table.column_names, self.args.lat, self.args.zero_based)
-            lon_column = match_column_identifier(table.column_names, self.args.lon, self.args.zero_based)
-            if self.args.type:
-                type_column = match_column_identifier(table.column_names, self.args.type, self.args.zero_based)
-            else:
-                type_column = None
-            if self.args.geometry:
-                geometry_column = match_column_identifier(table.column_names, self.args.geometry, self.args.zero_based)
-            else:
-                geometry_column = None
-
-            if self.args.key:
-                id_column = match_column_identifier(table.column_names, self.args.key, self.args.zero_based)
-            else:
-                id_column = None
-
-            for row in table.rows:
-                feature = OrderedDict()
-                feature['type'] = 'Feature'
-                properties = OrderedDict()
-                feature_id = None
-                lat = None
-                lon = None
-                geometry = None
-
-                for i, c in enumerate(row):
-                    if c is None:
-                        continue
-                    if i == lat_column:
-                        try:
-                            lat = float(c)
-                        except ValueError:
-                            lat = None
-                        if not self.args.no_bbox:
-                            update_boundary_lat(lat)
-                    elif i == lon_column:
-                        try:
-                            lon = float(c)
-                        except ValueError:
-                            lon = None
-                        if not self.args.no_bbox:
-                            update_boundary_lon(lon)
-                    elif i == id_column:
-                        feature_id = c
-                    elif i == type_column:
-                        pass  # Prevent "type" from being added to "properties".
-                    elif i == geometry_column:
-                        geometry = json.loads(c)
-                        if not self.args.no_bbox and 'coordinates' in geometry:
-                            update_boundary_coordinates(geometry['coordinates'])
-                    elif c:
-                        properties[table.column_names[i]] = c
-
-                if id_column is not None:
-                    feature['id'] = feature_id
-
-                feature['properties'] = properties
-                if geometry or lat is None and lon is None:
-                    feature['geometry'] = geometry
-                elif lon and lat:
-                    feature['geometry'] = OrderedDict([
-                        ('type', 'Point'),
-                        ('coordinates', [lon, lat])
-                    ])
-                features.append(feature)
-
-            items = [
-                ('type', 'FeatureCollection'),
-                ('features', features),
-            ]
-
-            if not self.args.no_bbox:
-                items.insert(1, ('bbox', [self.min_lon, self.min_lat, self.max_lon, self.max_lat]))
-
-            output = OrderedDict(items)
-
-            if self.args.crs:
-                output['crs'] = OrderedDict([
-                    ('type', 'name'),
-                    ('properties', {
-                        'name': self.args.crs
-                    })
-                ])
-
-            self.dump_json(output)
+            self.output_geojson()
         elif self.can_stream_output():
             rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
             column_names = next(rows)
@@ -253,6 +139,122 @@ class CSVJSON(CSVKitUtility):
             column_types=self.get_column_types(),
             **self.reader_kwargs
         )
+
+    def output_geojson(self):
+        table = self.read_csv_to_table()
+
+        features = []
+
+        self.min_lon = None
+        self.min_lat = None
+        self.max_lon = None
+        self.max_lat = None
+
+        def update_boundary_lat(lat):
+            if self.min_lat is None or lat < self.min_lat:
+                self.min_lat = lat
+            if self.max_lat is None or lat > self.max_lat:
+                self.max_lat = lat
+
+        def update_boundary_lon(lon):
+            if self.min_lon is None or lon < self.min_lon:
+                self.min_lon = lon
+            if self.max_lon is None or lon > self.max_lon:
+                self.max_lon = lon
+
+        def update_boundary_coordinates(coordinates):
+            if len(coordinates) <= 3 and isinstance(coordinates[0], (float, int)):
+                update_boundary_lon(coordinates[0])
+                update_boundary_lat(coordinates[1])
+            else:
+                for coordinate in coordinates:
+                    update_boundary_coordinates(coordinate)
+
+        lat_column = match_column_identifier(table.column_names, self.args.lat, self.args.zero_based)
+        lon_column = match_column_identifier(table.column_names, self.args.lon, self.args.zero_based)
+        if self.args.type:
+            type_column = match_column_identifier(table.column_names, self.args.type, self.args.zero_based)
+        else:
+            type_column = None
+        if self.args.geometry:
+            geometry_column = match_column_identifier(table.column_names, self.args.geometry, self.args.zero_based)
+        else:
+            geometry_column = None
+
+        if self.args.key:
+            id_column = match_column_identifier(table.column_names, self.args.key, self.args.zero_based)
+        else:
+            id_column = None
+
+        for row in table.rows:
+            feature = OrderedDict()
+            feature['type'] = 'Feature'
+            properties = OrderedDict()
+            feature_id = None
+            lat = None
+            lon = None
+            geometry = None
+
+            for i, c in enumerate(row):
+                if c is None:
+                    continue
+                if i == lat_column:
+                    try:
+                        lat = float(c)
+                    except ValueError:
+                        lat = None
+                    if not self.args.no_bbox:
+                        update_boundary_lat(lat)
+                elif i == lon_column:
+                    try:
+                        lon = float(c)
+                    except ValueError:
+                        lon = None
+                    if not self.args.no_bbox:
+                        update_boundary_lon(lon)
+                elif i == id_column:
+                    feature_id = c
+                elif i == type_column:
+                    pass  # Prevent "type" from being added to "properties".
+                elif i == geometry_column:
+                    geometry = json.loads(c)
+                    if not self.args.no_bbox and 'coordinates' in geometry:
+                        update_boundary_coordinates(geometry['coordinates'])
+                elif c:
+                    properties[table.column_names[i]] = c
+
+            if id_column is not None:
+                feature['id'] = feature_id
+
+            feature['properties'] = properties
+            if geometry or lat is None and lon is None:
+                feature['geometry'] = geometry
+            elif lon and lat:
+                feature['geometry'] = OrderedDict([
+                    ('type', 'Point'),
+                    ('coordinates', [lon, lat])
+                ])
+            features.append(feature)
+
+        items = [
+            ('type', 'FeatureCollection'),
+            ('features', features),
+        ]
+
+        if not self.args.no_bbox:
+            items.insert(1, ('bbox', [self.min_lon, self.min_lat, self.max_lon, self.max_lat]))
+
+        output = OrderedDict(items)
+
+        if self.args.crs:
+            output['crs'] = OrderedDict([
+                ('type', 'name'),
+                ('properties', {
+                    'name': self.args.crs
+                })
+            ])
+
+        self.dump_json(output)
 
 
 def launch_new_instance():
