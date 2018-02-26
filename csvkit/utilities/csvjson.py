@@ -47,7 +47,7 @@ class CSVJSON(CSVKitUtility):
 
     def main(self):
         if self.additional_input_expected():
-            if self.args.streamOutput and self.args.no_inference and not self.args.skip_lines and self.args.sniff_limit == 0:
+            if self.can_stream_output():
                 sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
             else:
                 self.argparser.error('You must provide an input file or piped data.')
@@ -218,7 +218,7 @@ class CSVJSON(CSVKitUtility):
                 ])
 
             dump_json(output)
-        elif self.args.streamOutput and self.args.no_inference and not self.args.skip_lines and self.args.sniff_limit == 0:
+        elif self.can_stream_output():
             rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
             column_names = next(rows)
 
@@ -245,6 +245,12 @@ class CSVJSON(CSVKitUtility):
                 newline=self.args.streamOutput,
                 indent=self.args.indent,
             )
+
+    def can_stream_output(self):
+        return (self.args.streamOutput
+                and self.args.no_inference
+                and not self.args.skip_lines
+                and self.args.sniff_limit == 0)
 
 
 def launch_new_instance():
