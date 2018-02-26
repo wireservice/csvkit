@@ -77,13 +77,7 @@ class CSVJSON(CSVKitUtility):
 
         # GeoJSON
         if self.args.lat and self.args.lon:
-            table = agate.Table.from_csv(
-                self.input_file,
-                skip_lines=self.args.skip_lines,
-                sniff_limit=self.args.sniff_limit,
-                column_types=self.get_column_types(),
-                **self.reader_kwargs
-            )
+            table = self.read_csv_to_table()
 
             features = []
 
@@ -210,15 +204,7 @@ class CSVJSON(CSVKitUtility):
                         data[column] = None
                 self.dump_json(data, newline=True)
         else:
-            table = agate.Table.from_csv(
-                self.input_file,
-                skip_lines=self.args.skip_lines,
-                sniff_limit=self.args.sniff_limit,
-                column_types=self.get_column_types(),
-                **self.reader_kwargs
-            )
-
-            table.to_json(
+            self.read_csv_to_table().to_json(
                 self.output_file,
                 key=self.args.key,
                 newline=self.args.streamOutput,
@@ -258,6 +244,15 @@ class CSVJSON(CSVKitUtility):
 
         if self.args.streamOutput and (self.args.lat or self.args.lon or self.args.key):
             self.argparser.error('--stream is only allowed if --lat, --lon and --key are not specified.')
+
+    def read_csv_to_table(self):
+        return agate.Table.from_csv(
+            self.input_file,
+            skip_lines=self.args.skip_lines,
+            sniff_limit=self.args.sniff_limit,
+            column_types=self.get_column_types(),
+            **self.reader_kwargs
+        )
 
 
 def launch_new_instance():
