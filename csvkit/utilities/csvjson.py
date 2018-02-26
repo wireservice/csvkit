@@ -46,6 +46,10 @@ class CSVJSON(CSVKitUtility):
                                     help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
     def main(self):
+        """
+        Convert CSV to JSON.
+        """
+
         self.validate_args()
 
         if self.additional_input_expected():
@@ -79,10 +83,6 @@ class CSVJSON(CSVKitUtility):
             json.dump(data, stream, default=default, **json_kwargs)
             if newline:
                 stream.write("\n")
-
-        """
-        Convert CSV to JSON.
-        """
 
         # GeoJSON
         if self.args.lat and self.args.lon:
