@@ -181,6 +181,8 @@ class CSVJSON(CSVKitUtility):
         def __init__(self, args, column_names):
             self.args = args
             self.column_names = column_names
+            self.lat_column = None
+            self.lon_column = None
             self.type_column = None
             self.geometry_column = None
             self.id_column = None
@@ -258,43 +260,45 @@ class CSVJSON(CSVKitUtility):
                 'properties': OrderedDict()
             })
 
-            lat = None
-            lon = None
-            geometry = None
-
             for i, c in enumerate(row):
-                if c is None:
+                # Prevent "type" or geo fields from being added to properties.
+                if (
+                    c is None or
+                    i == self.type_column or
+                    i == self.lat_column or
+                    i == self.lon_column or
+                    i == self.geometry_column
+                ):
                     continue
-
-                if i == self.lat_column:
-                    try:
-                        lat = float(c)
-                    except ValueError:
-                        lat = None
-                elif i == self.lon_column:
-                    try:
-                        lon = float(c)
-                    except ValueError:
-                        lon = None
                 elif i == self.id_column:
-                    if self.id_column is not None:
-                        feature['id'] = c
-                elif i == self.type_column:
-                    pass  # Prevent "type" from being added to "properties".
-                elif i == self.geometry_column:
-                    geometry = json.loads(c)
+                    feature['id'] = c
                 elif c:
                     feature['properties'][self.column_names[i]] = c
 
-            if geometry or lat is None and lon is None:
-                feature['geometry'] = geometry
-            elif lon and lat:
-                feature['geometry'] = OrderedDict([
+            feature['geometry'] = self.geometry_for_row(row)
+
+            return feature
+
+        def geometry_for_row(self, row):
+            lat = None
+            lon = None
+
+            if self.geometry_column is not None:
+                return json.loads(row[self.geometry_column])
+
+            if self.lat_column is not None and self.lon_column is not None:
+                try:
+                    lon = float(row[self.lon_column])
+                    lat = float(row[self.lat_column])
+                except ValueError:
+                    lon = None
+                    lat = None
+
+            if lon and lat:
+                return OrderedDict([
                     ('type', 'Point'),
                     ('coordinates', [lon, lat])
                 ])
-
-            return feature
 
         class GeoJsonBounds:
             def __init__(self):
