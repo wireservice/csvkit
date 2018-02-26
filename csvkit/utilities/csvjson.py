@@ -141,13 +141,19 @@ class CSVJSON(CSVKitUtility):
 
     def output_geojson(self):
         table = self.read_csv_to_table()
-        geojson_generator = self.GeoJsonGenerator(self.args, table.column_names)
+        geojson_generator = self.GeoJsonGenerator(self.args,
+                                                  table.column_names)
 
         if self.args.streamOutput:
             for row in table.rows:
-                self.dump_json(geojson_generator.feature_for_row(row), newline=True)
+                self.dump_json(
+                    geojson_generator.feature_for_row(row),
+                    newline=True
+                )
         else:
-            self.dump_json(geojson_generator.generate_feature_collection(table))
+            self.dump_json(
+                geojson_generator.generate_feature_collection(table)
+            )
 
     def streaming_output_ndjson(self):
         rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
@@ -168,7 +174,8 @@ class CSVJSON(CSVKitUtility):
         geojson_generator = self.GeoJsonGenerator(self.args, column_names)
 
         for row in rows:
-            self.dump_json(geojson_generator.feature_for_row(row), newline=True)
+            self.dump_json(geojson_generator.feature_for_row(row),
+                           newline=True)
 
     class GeoJsonGenerator:
         def __init__(self, args, column_names):
@@ -178,17 +185,38 @@ class CSVJSON(CSVKitUtility):
             self.geometry_column = None
             self.id_column = None
 
-            self.lat_column = match_column_identifier(column_names, self.args.lat, self.args.zero_based)
-            self.lon_column = match_column_identifier(column_names, self.args.lon, self.args.zero_based)
+            self.lat_column = match_column_identifier(
+                column_names,
+                self.args.lat,
+                self.args.zero_based
+            )
+
+            self.lon_column = match_column_identifier(
+                column_names,
+                self.args.lon,
+                self.args.zero_based
+            )
 
             if self.args.type:
-                self.type_column = match_column_identifier(column_names, self.args.type, self.args.zero_based)
+                self.type_column = match_column_identifier(
+                    column_names,
+                    self.args.type,
+                    self.args.zero_based
+                )
 
             if self.args.geometry:
-                self.geometry_column = match_column_identifier(column_names, self.args.geometry, self.args.zero_based)
+                self.geometry_column = match_column_identifier(
+                    column_names,
+                    self.args.geometry,
+                    self.args.zero_based
+                )
 
             if self.args.key:
-                self.id_column = match_column_identifier(column_names, self.args.key, self.args.zero_based)
+                self.id_column = match_column_identifier(
+                    column_names,
+                    self.args.key,
+                    self.args.zero_based
+                )
 
         def generate_feature_collection(self, table):
             features = []
@@ -268,7 +296,6 @@ class CSVJSON(CSVKitUtility):
 
             return feature
 
-
         class GeoJsonBounds:
             def __init__(self):
                 self.min_lon = None
@@ -299,7 +326,10 @@ class CSVJSON(CSVKitUtility):
                     self.max_lon = lon
 
             def update_coordinates(self, coordinates):
-                if len(coordinates) <= 3 and isinstance(coordinates[0], (float, int)):
+                if (
+                    len(coordinates) <= 3 and
+                    isinstance(coordinates[0], (float, int))
+                ):
                     self.update_lon(coordinates[0])
                     self.update_lat(coordinates[1])
                 else:
