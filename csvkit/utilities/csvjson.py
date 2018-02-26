@@ -74,11 +74,15 @@ class CSVJSON(CSVKitUtility):
                 self.argparser.error('You must provide an input file or piped data.')
 
         if self.args.lat and self.args.lon:
-            self.output_geojson()
-        elif self.can_stream_output():
-            self.output_ndjson_stream()
+            if self.can_stream_output():
+                self.streaming_output_ndgeojson()
+            else:
+                self.output_geojson()
         else:
-            self.output_json()
+            if self.can_stream_output():
+                self.streaming_output_ndjson()
+            else:
+                self.output_json()
 
     def dump_json(self, data, newline=False):
         def default(obj):
@@ -111,8 +115,8 @@ class CSVJSON(CSVKitUtility):
         if self.args.geometry and not self.args.lat:
             self.argparser.error('--geometry is only allowed when --lat and --lon are also specified.')
 
-        if self.args.streamOutput and (self.args.lat or self.args.lon or self.args.key):
-            self.argparser.error('--stream is only allowed if --lat, --lon and --key are not specified.')
+        if self.args.key and self.args.streamOutput and not (self.args.lat and self.args.lon):
+            self.argparser.error('--key is only allowed with --stream when --lat and --lon are also specified.')
 
     def read_csv_to_table(self):
         return agate.Table.from_csv(
@@ -131,7 +135,17 @@ class CSVJSON(CSVKitUtility):
             indent=self.args.indent,
         )
 
-    def output_ndjson_stream(self):
+    def output_geojson(self):
+        table = self.read_csv_to_table()
+        geojson_generator = self.GeoJsonGenerator(self.args, table.column_names)
+
+        if self.args.streamOutput:
+            for row in table.rows:
+                self.dump_json(geojson_generator.feature_for_row(row), newline=True)
+        else:
+            self.dump_json(geojson_generator.generate_feature_collection(table))
+
+    def streaming_output_ndjson(self):
         rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
         column_names = next(rows)
 
@@ -144,11 +158,13 @@ class CSVJSON(CSVKitUtility):
                     data[column] = None
             self.dump_json(data, newline=True)
 
-    def output_geojson(self):
-        table = self.read_csv_to_table()
-        geojson_generator = self.GeoJsonGenerator(self.args, table.column_names)
+    def streaming_output_ndgeojson(self):
+        rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
+        column_names = next(rows)
+        geojson_generator = self.GeoJsonGenerator(self.args, column_names)
 
-        self.dump_json(geojson_generator.generate_feature_collection(table))
+        for row in rows:
+            self.dump_json(geojson_generator.feature_for_row(row), newline=True)
 
     class GeoJsonGenerator:
         def __init__(self, args, column_names):
