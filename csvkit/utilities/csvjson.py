@@ -48,6 +48,8 @@ class CSVJSON(CSVKitUtility):
     def __init__(self, args=None, output_file=None):
         super(CSVJSON, self).__init__(args, output_file)
 
+        self.validate_args()
+
         self.json_kwargs = {
             'ensure_ascii': False,
             'indent': self.args.indent,
@@ -64,8 +66,6 @@ class CSVJSON(CSVKitUtility):
         """
         Convert CSV to JSON.
         """
-
-        self.validate_args()
 
         if self.additional_input_expected():
             if self.can_stream_output():
