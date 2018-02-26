@@ -145,34 +145,10 @@ class CSVJSON(CSVKitUtility):
             self.dump_json(data, newline=True)
 
     def output_geojson(self):
-        table = self.read_csv_to_table()
-
         features = []
+        bounds = self.GeoJsonBounds()
 
-        self.min_lon = None
-        self.min_lat = None
-        self.max_lon = None
-        self.max_lat = None
-
-        def update_boundary_lat(lat):
-            if self.min_lat is None or lat < self.min_lat:
-                self.min_lat = lat
-            if self.max_lat is None or lat > self.max_lat:
-                self.max_lat = lat
-
-        def update_boundary_lon(lon):
-            if self.min_lon is None or lon < self.min_lon:
-                self.min_lon = lon
-            if self.max_lon is None or lon > self.max_lon:
-                self.max_lon = lon
-
-        def update_boundary_coordinates(coordinates):
-            if len(coordinates) <= 3 and isinstance(coordinates[0], (float, int)):
-                update_boundary_lon(coordinates[0])
-                update_boundary_lat(coordinates[1])
-            else:
-                for coordinate in coordinates:
-                    update_boundary_coordinates(coordinate)
+        table = self.read_csv_to_table()
 
         lat_column = match_column_identifier(table.column_names, self.args.lat, self.args.zero_based)
         lon_column = match_column_identifier(table.column_names, self.args.lon, self.args.zero_based)
@@ -208,14 +184,14 @@ class CSVJSON(CSVKitUtility):
                     except ValueError:
                         lat = None
                     if not self.args.no_bbox:
-                        update_boundary_lat(lat)
+                        bounds.update_lat(lat)
                 elif i == lon_column:
                     try:
                         lon = float(c)
                     except ValueError:
                         lon = None
                     if not self.args.no_bbox:
-                        update_boundary_lon(lon)
+                        bounds.update_lon(lon)
                 elif i == id_column:
                     feature_id = c
                 elif i == type_column:
@@ -223,7 +199,7 @@ class CSVJSON(CSVKitUtility):
                 elif i == geometry_column:
                     geometry = json.loads(c)
                     if not self.args.no_bbox and 'coordinates' in geometry:
-                        update_boundary_coordinates(geometry['coordinates'])
+                        bounds.update_coordinates(geometry['coordinates'])
                 elif c:
                     properties[table.column_names[i]] = c
 
@@ -246,7 +222,7 @@ class CSVJSON(CSVKitUtility):
         ]
 
         if not self.args.no_bbox:
-            items.insert(1, ('bbox', [self.min_lon, self.min_lat, self.max_lon, self.max_lat]))
+            items.insert(1, ('bbox', bounds.bbox()))
 
         output = OrderedDict(items)
 
@@ -259,6 +235,36 @@ class CSVJSON(CSVKitUtility):
             ])
 
         self.dump_json(output)
+
+    class GeoJsonBounds:
+        def __init__(self):
+            self.min_lon = None
+            self.min_lat = None
+            self.max_lon = None
+            self.max_lat = None
+
+        def bbox(self):
+            return [self.min_lon, self.min_lat, self.max_lon, self.max_lat]
+
+        def update_lat(self, lat):
+            if self.min_lat is None or lat < self.min_lat:
+                self.min_lat = lat
+            if self.max_lat is None or lat > self.max_lat:
+                self.max_lat = lat
+
+        def update_lon(self, lon):
+            if self.min_lon is None or lon < self.min_lon:
+                self.min_lon = lon
+            if self.max_lon is None or lon > self.max_lon:
+                self.max_lon = lon
+
+        def update_coordinates(self, coordinates):
+            if len(coordinates) <= 3 and isinstance(coordinates[0], (float, int)):
+                self.update_lon(coordinates[0])
+                self.update_lat(coordinates[1])
+            else:
+                for coordinate in coordinates:
+                    self.update_coordinates(coordinate)
 
 
 def launch_new_instance():
