@@ -7,6 +7,7 @@ Improvements:
 * :doc:`/scripts/csvjson` no longer emits a property if its value is null.
 * :doc:`/scripts/csvjson` adds :code:`--type` and :code:`--geometry` options to emit non-Point GeoJSON features.
 * :doc:`/scripts/csvjson` adds a :code:`--no-bbox` option to disable the calculation of a bounding box.
+* :doc:`/scripts/csvjson` supports :code:`--stream` for newline-delimited GeoJSON.
 * :doc:`/scripts/csvsql` adds a :code:`--unique-constraint` option to list names of columns to include in a UNIQUE constraint.
 * :doc:`/scripts/csvsql` adds :code:`--before-insert` and :code:`--after-insert` options to run commands before and after the INSERT command.
 * :doc:`/scripts/csvpy` reports an error message if input is provided via STDIN.
