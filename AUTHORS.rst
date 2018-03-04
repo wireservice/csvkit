@@ -84,3 +84,4 @@ The following individuals have contributed code to csvkit:
 * Ghislain Antony Vaillant
 * Forest Gregg
 * Aliaksei Urbanski
+* Reid Beels
