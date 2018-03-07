@@ -111,3 +111,7 @@ Group rows by one column::
 You can also use CSVSQL to "directly" query one or more CSV files. Please note that this will create an in-memory SQL database, so it won't be very fast::
 
     csvsql --query  "select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species" examples/iris.csv examples/irismeta.csv
+
+Concatenate two columns::
+
+    csvsql --query "select a||b from 'dummy3'" examples/dummy3.csv
