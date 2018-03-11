@@ -30,7 +30,6 @@ The following individuals have contributed code to csvkit:
 * Matt Dudys
 * Joakim Lundborg
 * Federico Scrinzi
-* Chris Rosenthal
 * Shane StClair
 * raistlin7447
 * Alex Dergachev
@@ -74,3 +73,15 @@ The following individuals have contributed code to csvkit:
 * Sam Stuck
 * Edward Betts
 * Jake Zimmerman
+* Bryan Rankin
+* Przemek Wesołek
+* Karl Fogel
+* sterlingpetersen
+* kjedamzik
+* John Vandenberg
+* Olivier Lacan
+* Adrien Delessert
+* Ghislain Antony Vaillant
+* Forest Gregg
+* Aliaksei Urbanski
+* Reid Beels

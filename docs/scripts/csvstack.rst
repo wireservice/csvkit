@@ -9,8 +9,8 @@ Stack up the rows from multiple CSV files, optionally adding a grouping value to
 
     usage: csvstack [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                     [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                    [-v] [-l] [--zero] [-V] [-g GROUPS] [-n GROUP_NAME]
-                    [--filenames]
+                    [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-g GROUPS]
+                    [-n GROUP_NAME] [--filenames]
                     FILE [FILE ...]
 
     Stack up the rows from multiple CSV files, optionally adding a grouping value.

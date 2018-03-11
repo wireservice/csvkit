@@ -32,7 +32,7 @@ class In2CSV(CSVKitUtility):
             else:
                 return bytestring
 
-        self.argparser.add_argument(metavar="FILE", nargs='?', dest='input_path',
+        self.argparser.add_argument(metavar='FILE', nargs='?', dest='input_path',
                                     help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         self.argparser.add_argument('-f', '--format', dest='filetype',
                                     help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(SUPPORTED_FORMATS)))
@@ -46,6 +46,8 @@ class In2CSV(CSVKitUtility):
                                     help='The name of the Excel sheet to operate on.')
         self.argparser.add_argument('--write-sheets', dest='write_sheets', type=option_parser,
                                     help='The names of the Excel sheets to write to files, or "-" to write all sheets.')
+        self.argparser.add_argument('--encoding-xls', dest='encoding_xls',
+                                    help='Specify the encoding of the input XLS file.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
@@ -85,9 +87,6 @@ class In2CSV(CSVKitUtility):
             if not filetype:
                 self.argparser.error('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
-        # Buffer standard input if the input file is in CSV format or if performing type inference.
-        self.buffers_input = filetype == 'csv' or not self.args.no_inference
-
         # Set the input file.
         if filetype in ('xls', 'xlsx'):
             self.input_file = self.open_excel_input_file(path)
@@ -116,14 +115,17 @@ class In2CSV(CSVKitUtility):
             kwargs.update(self.reader_kwargs)
             kwargs['sniff_limit'] = self.args.sniff_limit
 
-        if filetype not in ('dbf', 'geojson', 'json', 'ndjson'):
+        if filetype in ('xls', 'xlsx'):
+            kwargs['header'] = not self.args.no_header_row
+
+        if filetype not in ('dbf', 'geojson', 'json', 'ndjson'):  # csv, fixed, xls, xlsx
             kwargs['skip_lines'] = self.args.skip_lines
 
         if filetype != 'dbf':
             kwargs['column_types'] = self.get_column_types()
 
         # Convert the file.
-        if filetype == 'csv' and self.args.no_inference and not self.args.skip_lines:
+        if filetype == 'csv' and self.args.no_inference and not self.args.no_header_row and not self.args.skip_lines and self.args.sniff_limit == 0:
             reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
             writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
             writer.writerows(reader)
@@ -139,7 +141,7 @@ class In2CSV(CSVKitUtility):
             elif filetype == 'ndjson':
                 table = agate.Table.from_json(self.input_file, key=self.args.key, newline=True, **kwargs)
             elif filetype == 'xls':
-                table = agate.Table.from_xls(self.input_file, sheet=self.args.sheet, **kwargs)
+                table = agate.Table.from_xls(self.input_file, sheet=self.args.sheet, encoding_override=self.args.encoding_xls, **kwargs)
             elif filetype == 'xlsx':
                 table = agate.Table.from_xlsx(self.input_file, sheet=self.args.sheet, **kwargs)
             elif filetype == 'dbf':

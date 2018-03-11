@@ -8,8 +8,10 @@ Description
 Renders a CSV to the command line in a Markdown-compatible, fixed-width format::
 
     usage: csvlook [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                   [-v] [-l] [--zero] [-V] [--max-rows MAX_ROWS]
+                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
+                   [-S] [--blanks] [--date-format DATE_FORMAT]
+                   [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
+                   [-l] [--zero] [-V] [--max-rows MAX_ROWS]
                    [--max-columns MAX_COLUMNS]
                    [--max-column-width MAX_COLUMN_WIDTH] [-y SNIFF_LIMIT] [-I]
                    [FILE]

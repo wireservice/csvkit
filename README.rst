@@ -1,18 +1,14 @@
-.. image:: https://secure.travis-ci.org/wireservice/csvkit.png
+.. image:: https://secure.travis-ci.org/wireservice/csvkit.svg
     :target: https://travis-ci.org/wireservice/csvkit
     :alt: Build Status
 
-.. image:: https://gemnasium.com/wireservice/csvkit.png
+.. image:: https://gemnasium.com/wireservice/csvkit.svg
     :target: https://gemnasium.com/wireservice/csvkit
     :alt: Dependency Status
 
-.. image:: https://coveralls.io/repos/wireservice/csvkit/badge.png?branch=master
+.. image:: https://coveralls.io/repos/wireservice/csvkit/badge.svg?branch=master
     :target: https://coveralls.io/r/wireservice/csvkit
     :alt: Coverage Status
-
-.. image:: https://img.shields.io/pypi/dw/csvkit.svg
-    :target: https://pypi.python.org/pypi/csvkit
-    :alt: PyPI downloads
 
 .. image:: https://img.shields.io/pypi/v/csvkit.svg
     :target: https://pypi.python.org/pypi/csvkit

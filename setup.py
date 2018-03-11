@@ -5,9 +5,9 @@ from setuptools import setup
 
 install_requires = [
     'agate>=1.6.0',
-    'agate-excel>=0.2.1',
+    'agate-excel>=0.2.2',
     'agate-dbf>=0.2.0',
-    'agate-sql>=0.5.2',
+    'agate-sql>=0.5.3',
     'six>=1.6.1'
 ]
 

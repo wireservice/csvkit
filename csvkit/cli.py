@@ -6,6 +6,7 @@ import codecs
 import gzip
 import itertools
 import sys
+import warnings
 from os.path import splitext
 
 import agate
@@ -59,7 +60,6 @@ class CSVKitUtility(object):
     description = ''
     epilog = ''
     override_flags = ''
-    buffers_input = False
 
     def __init__(self, args=None, output_file=None):
         """
@@ -111,7 +111,11 @@ class CSVKitUtility(object):
             self.input_file = self._open_input_file(self.args.input_path)
 
         try:
-            self.main()
+            with warnings.catch_warnings():
+                if getattr(self.args, 'no_header_row', None):
+                    warnings.filterwarnings(action='ignore', message='Column names not specified', module='agate')
+
+                self.main()
         finally:
             if 'f' not in self.override_flags:
                 self.input_file.close()
@@ -135,7 +139,7 @@ class CSVKitUtility(object):
 
         # Input
         if 'f' not in self.override_flags:
-            self.argparser.add_argument(metavar="FILE", nargs='?', dest='input_path',
+            self.argparser.add_argument(metavar='FILE', nargs='?', dest='input_path',
                                         help='The CSV file to operate on. If omitted, will accept input on STDIN.')
         if 'd' not in self.override_flags:
             self.argparser.add_argument('-d', '--delimiter', dest='delimiter',
@@ -204,17 +208,14 @@ class CSVKitUtility(object):
         Open the input file specified on the command line.
         """
         if six.PY2:
-            mode = 'rb'
+            mode = 'Urb'
             kwargs = {}
         else:
-            mode = 'rt'
+            mode = 'rt'  # default
             kwargs = {'encoding': self.args.encoding}
 
         if not path or path == '-':
-            if self.buffers_input:
-                f = six.StringIO(sys.stdin.read())
-            else:
-                f = sys.stdin
+            f = sys.stdin
         else:
             extension = splitext(path)[1]
 
@@ -279,7 +280,9 @@ class CSVKitUtility(object):
                 # Special case handling for Unicode errors, which behave very strangely
                 # when cast with unicode()
                 if t == UnicodeDecodeError:
-                    sys.stderr.write('Your file is not "%s" encoded. Please specify the correct encoding with the -e flag. Use the -v flag to see the complete error.\n' % self.args.encoding)
+                    sys.stderr.write('Your file is not "%s" encoded. Please specify the correct encoding with the -e '
+                                     'flag or with the PYTHONIOENCODING environment variable. Use the -v flag to see '
+                                     'the complete error.\n' % self.args.encoding)
                 else:
                     sys.stderr.write('%s\n' % six.text_type(value))
 
@@ -365,6 +368,9 @@ class CSVKitUtility(object):
         for i, c in enumerate(column_names, start):
             output.write('%3i: %s\n' % (i, c))
 
+    def additional_input_expected(self):
+        return sys.stdin.isatty() and not self.args.input_path
+
 
 def make_default_headers(n):
     """
@@ -402,8 +408,8 @@ def match_column_identifier(column_names, c, column_offset=1):
 def parse_column_identifiers(ids, column_names, column_offset=1, excluded_columns=None):
     """
     Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
-    Ranges of integers can be specified with two integers separated by a '-' or ':' character. Ranges of
-    non-integers (e.g. column names) are not supported.
+    Ranges of integers can be specified with two integers separated by a '-' or ':' character.
+    Ranges of non-integers (e.g. column names) are not supported.
     Note: Column indices are 1-based.
     """
     if not column_names:

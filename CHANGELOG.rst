@@ -1,6 +1,34 @@
 1.0.3
 -----
 
+Improvements:
+
+* :doc:`/scripts/csvgrep` adds a :code:`--any-match` (:code:`-a`) flag to select rows where any column matches instead of all columns.
+* :doc:`/scripts/csvjson` no longer emits a property if its value is null.
+* :doc:`/scripts/csvjson` adds :code:`--type` and :code:`--geometry` options to emit non-Point GeoJSON features.
+* :doc:`/scripts/csvjson` adds a :code:`--no-bbox` option to disable the calculation of a bounding box.
+* :doc:`/scripts/csvjson` supports :code:`--stream` for newline-delimited GeoJSON.
+* :doc:`/scripts/csvsql` adds a :code:`--unique-constraint` option to list names of columns to include in a UNIQUE constraint.
+* :doc:`/scripts/csvsql` adds :code:`--before-insert` and :code:`--after-insert` options to run commands before and after the INSERT command.
+* :doc:`/scripts/csvpy` reports an error message if input is provided via STDIN.
+* :doc:`/scripts/in2csv` adds a :code:`--encoding-xls` option to specify the encoding of the input XLS file.
+* :doc:`/scripts/in2csv` supports :code:`--no-header-row` on XLS and XLSX files.
+* Suppress agate warning about column names not specified when using :code:`--no-header-row`.
+* Prompt the user if additional input is expected (i.e. if no input file or piped data is provided).
+* Update to `agate-excel 0.2.2 <http://agate-excel.readthedocs.io/en/0.2.2/#changelog>`_, `agate-sql 0.5.3 <http://agate-sql.readthedocs.io/en/0.5.3/#changelog>`_.
+
+Fixes:
+
+* :doc:`/scripts/csvgrep` accepts utf-8 arguments to the :code:`--match` and :code:`--regex` options in Python 2.
+* :doc:`/scripts/csvjson` streams input and output only if :code:`--snifflimit` is :code:`0`.
+* :doc:`/scripts/csvsql` sets a DECIMAL's precision and scale and a VARCHAR's length to avoid dialect-specific errors.
+* :doc:`/scripts/csvstack` no longer opens all files at once.
+* :doc:`/scripts/in2csv` respects :code:`--no-header-row` when :code:`--no-inference` is set.
+* :doc:`/scripts/in2csv` CSV-to-CSV conversion streams input and output only if :code:`--snifflimit` is :code:`0`.
+* :doc:`/scripts/in2csv` supports GeoJSON files with: ``geometry`` set to ``null``, missing Point ``coordinates``, altitude coordinate values.
+
+csvkit is no longer tested on PyPy.
+
 1.0.2 - April 28, 2017
 ----------------------
 

@@ -53,6 +53,12 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     def test_convert_csv_with_skip_lines(self):
         self.assertConverted('csv', 'examples/test_skip_lines.csv', 'examples/dummy.csv', ['--skip-lines', '3', '--no-inference'])
 
+    def test_convert_tsv(self):
+        self.assertConverted('csv', 'examples/dummy.tsv', 'examples/dummy.csv', ['--no-inference'])
+
+    def test_convert_tsv_streaming(self):
+        self.assertConverted('csv', 'examples/dummy.tsv', 'examples/dummy.csv', ['--no-inference', '--snifflimit', '0', '--tabs'])
+
     def test_convert_dbf(self):
         self.assertConverted('dbf', 'examples/testdbf.dbf', 'examples/testdbf_converted.csv')
 
@@ -99,10 +105,10 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         self.assertConverted('xlsx', 'examples/test_skip_lines.xlsx', 'examples/testxlsx_converted.csv', ['--skip-lines', '3'])
 
     def test_csv_no_headers(self):
-        self.assertLines(['--no-header-row', 'examples/no_header_row.csv'], [
-            'a,b,c',
-            'True,2,3',
-        ])
+        self.assertConverted('csv', 'examples/no_header_row.csv', 'examples/dummy.csv', ['--no-header-row', '--no-inference'])
+
+    def test_csv_no_headers_streaming(self):
+        self.assertConverted('csv', 'examples/no_header_row.csv', 'examples/dummy.csv', ['--no-header-row', '--no-inference', '--snifflimit', '0'])
 
     def test_csv_datetime_inference(self):
         input_file = six.StringIO('a\n2015-01-01T00:00:00Z')
