@@ -9,7 +9,7 @@ Release process
     * setup.py
     * docs/conf.py
     * csvkit/cli.py
-#. Tag the release: ``git tag -a x.y.z; git push --tags``
+#. Tag the release: ``git tag -a x.y.z -m 'x.y.z release.'; git push --tags``
 #. Roll out to PyPI: ``python setup.py sdist upload``
 #. Iterate the version number in all files where it is specified. (see list above)
 #. Flag the new version for building on `Read the Docs <https://readthedocs.org/dashboard/csvkit/versions/>`_. 
