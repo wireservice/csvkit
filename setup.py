@@ -18,7 +18,7 @@ if sys.version_info < (2, 7):
 
 setup(
     name='csvkit',
-    version='1.0.3',
+    version='1.0.4',
     description='A suite of command-line tools for working with CSV, the king of tabular file formats.',
     long_description=open('README.rst').read(),
     author='Christopher Groskopf',

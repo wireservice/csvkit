@@ -200,7 +200,7 @@ class CSVKitUtility(object):
             self.argparser.add_argument('--zero', dest='zero_based', action='store_true',
                                         help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
 
-        self.argparser.add_argument('-V', '--version', action='version', version='%(prog)s 1.0.3',
+        self.argparser.add_argument('-V', '--version', action='version', version='%(prog)s 1.0.4',
                                     help='Display version information and exit.')
 
     def _open_input_file(self, path):
