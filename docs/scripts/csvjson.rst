@@ -37,9 +37,16 @@ Converts a CSV file into JSON or GeoJSON (depending on flags)::
       --lon LON             A column index or name containing a longitude. Output
                             will be GeoJSON instead of JSON. Only valid if --lat
                             is also specified.
+      --type TYPE           A column index or name containing a GeoJSON type.
+                            Output will be GeoJSON instead of JSON. Only valid if
+                            --lat and --lon are also specified.
+      --geometry GEOMETRY   A column index or name containing a GeoJSON geometry.
+                            Output will be GeoJSON instead of JSON. Only valid if
+                            --lat and --lon are also specified.
       --crs CRS             A coordinate reference system string to be included
                             with GeoJSON output. Only valid if --lat and --lon are
                             also specified.
+      --no-bbox             Disable the calculation of a bounding box.
       --stream              Output JSON as a stream of newline-separated objects,
                             rather than an as an array.
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
