@@ -37,7 +37,7 @@ See also: :doc:`../common_arguments`.
 
 .. warn::
 
-    If you redirect output to an input file like ``csvstack file.csv > file.csv``, the file will grow indefinitely.
+    If you redirect output to an input file like :code:`csvstack file.csv > file.csv`, the file will grow indefinitely.
 
 Examples
 ========

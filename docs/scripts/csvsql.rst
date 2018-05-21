@@ -76,7 +76,7 @@ If you prefer not to enter your password in the connection string, store the pas
 
 .. note::
 
-    Using the ``--query`` option may cause rounding (in Python 2) or introduce [Python floating point issues](https://docs.python.org/3.4/tutorial/floatingpoint.html) (in Python 3).
+    Using the :code:`--query` option may cause rounding (in Python 2) or introduce [Python floating point issues](https://docs.python.org/3.4/tutorial/floatingpoint.html) (in Python 3).
 
 Examples
 ========
@@ -90,7 +90,7 @@ Create a table and import data from the CSV directly into PostgreSQL::
     createdb test
     csvsql --db postgresql:///test --tables fy09 --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
 
-For large tables it may not be practical to process the entire table. One solution to this is to analyze a sample of the table. In this case it can be useful to turn off length limits and null checks with the ``no-constraints`` option::
+For large tables it may not be practical to process the entire table. One solution to this is to analyze a sample of the table. In this case it can be useful to turn off length limits and null checks with the :code:`--no-constraints` option::
 
     head -n 20 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsql --no-constraints --tables fy09
 

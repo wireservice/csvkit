@@ -25,13 +25,13 @@ Set the encoding to ``utf-8-sig``, for example::
 Specifying STDIN as a file
 --------------------------
 
-Most tools use ``STDIN`` as input if no filename is given, but tools that accept multiple inputs like :doc:`scripts/csvjoin` and :doc:`scripts/csvstack` don't. To use ``STDIN`` as an input to these tools, use ``-`` as the filename. For example, these three commands produce the same output::
+Most tools use ``STDIN`` as input if no filename is given, but tools that accept multiple inputs like :doc:`/scripts/csvjoin` and :doc:`/scripts/csvstack` don't. To use ``STDIN`` as an input to these tools, use ``-`` as the filename. For example, these three commands produce the same output::
 
     csvstat examples/dummy.csv
     cat examples/dummy.csv | csvstat
     cat examples/dummy.csv | csvstat -
 
-``csvstack`` can take a filename and ``STDIN`` as input, for example::
+:doc:`/scripts/csvstack` can take a filename and ``STDIN`` as input, for example::
 
     cat examples/dummy.csv | csvstack examples/dummy3.csv -
 
@@ -81,7 +81,7 @@ CSV formatting and parsing
 * Are values appearing in incorrect columns?
 * Does the output combine multiple fields into a single column with double-quotes?
 * Does the outplit split a single field into multiple columns?
-* Are ``csvstat -c 1`` and ``csvstat --count`` reporting inconsistent row counts?
+* Are :code:`csvstat -c 1` and :code:`csvstat --count` reporting inconsistent row counts?
 * Do you see ``Row # has # values, but Table only has # columns.``?
 
 These may be symptoms of CSV sniffing gone wrong. As there is no single, standard CSV format, csvkit uses Python's `csv.Sniffer <https://docs.python.org/3.5/library/csv.html#csv.Sniffer>`_ to deduce the format of a CSV file: that is, the field delimiter and quote character. By default, the entire file is sent for sniffing, which can be slow. You can send a small sample with the :code:`--snifflimit` option. If you're encountering any cases above, you can try setting :code:`--snifflimit 0` to disable sniffing and set the :code:`--delimiter` and :code:`--quotechar` options yourself.

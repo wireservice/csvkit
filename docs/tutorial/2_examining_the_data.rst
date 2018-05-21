@@ -7,9 +7,9 @@ csvstat: statistics without code
 
 In the previous section we saw how we could use :doc:`csvlook` and :doc:`csvcut` to view slices of our data. This is a good tool for exploring a dataset, but in practice we usually need to get the broadest possible view before we can start diving into specifics.
 
-:doc:`/scripts/csvstat` is designed to give us just such a broad understanding of our data. Inspired by the ``summary()`` function from the computational statistics programming language `"R" <http://www.r-project.org/>`_, ``csvstat`` will generate summary statistics for all the data in a CSV file.
+:doc:`/scripts/csvstat` is designed to give us just such a broad understanding of our data. Inspired by the ``summary()`` function from the computational statistics programming language `"R" <http://www.r-project.org/>`_, :doc:`/scripts/csvstat` will generate summary statistics for all the data in a CSV file.
 
-Let's examine summary statistics for a few columns from our dataset. As we learned in the last section, we can use ``csvcut`` and a pipe to pick out the columns we want:
+Let's examine summary statistics for a few columns from our dataset. As we learned in the last section, we can use :doc:`/scripts/csvcut` and a pipe to pick out the columns we want:
 
 .. code-block:: bash
 
@@ -72,7 +72,7 @@ As a journalist, this quick glance at the data gave me a tremendous amount of in
 csvgrep: find the data you need
 ===============================
 
-After reviewing the summary statistics you might wonder what equipment was received by a particular county. To get a simple answer to the question we can use :doc:`/scripts/csvgrep` to search for the state's name amongst the rows. Let's also use ``csvcut`` to just look at the columns we care about and ``csvlook`` to format the output:
+After reviewing the summary statistics you might wonder what equipment was received by a particular county. To get a simple answer to the question we can use :doc:`/scripts/csvgrep` to search for the state's name amongst the rows. Let's also use :doc:`/scripts/csvcut` to just look at the columns we care about and :doc:`/scripts/csvlook` to format the output:
 
 .. code-block:: bash
 
