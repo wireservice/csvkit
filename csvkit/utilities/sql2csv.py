@@ -44,8 +44,8 @@ class SQL2CSV(CSVKitUtility):
         except ImportError:
             raise ImportError("You don't appear to have the necessary database backend installed for connection "
                               "string you're trying to use. Available backends include:\n\nPostgreSQL:\tpip install "
-                              "psycopg2\nMySQL:\t\tpip install MySQL-python\n\nFor details on connection strings and "
-                              "other backends, please see the SQLAlchemy documentation on dialects at:\n\n"
+                              "psycopg2\nMySQL:\t\tpip install mysql-connector-python\n\nFor details on connection "
+                              "strings and other backends, please see the SQLAlchemy documentation on dialects at:\n\n"
                               "http://www.sqlalchemy.org/docs/dialects/\n\n")
 
         connection = engine.connect()
