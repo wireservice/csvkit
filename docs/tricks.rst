@@ -51,7 +51,7 @@ csvkit is supported on:
 * Python 3.3+
 * `PyPy <http://pypy.org/>`_
 
-It is tested on OS X, and has also been used on Linux and Windows.
+It is tested on macOS, and has also been used on Linux and Windows.
 
 If installing on Ubuntu, you may need to install Python's development headers first::
 
@@ -63,7 +63,7 @@ If the installation is successful but csvkit's tools fail, you may need to updat
     pip install --upgrade setuptools
     pip install --upgrade csvkit
 
-On OS X, if you see ``OSError: [Errno 1] Operation not permitted``, try::
+On macOS, if you see ``OSError: [Errno 1] Operation not permitted``, try::
 
     sudo pip install --ignore-installed csvkit
 

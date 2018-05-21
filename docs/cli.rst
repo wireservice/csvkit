@@ -26,6 +26,13 @@ Processing
     scripts/csvsort
     scripts/csvstack
 
+To transpose CSVs, consider `csvtool <http://colin.maudry.com/csvtool-manual-page/>`_. Install ``csvtool`` on Linux using your package manager, or on macOS using::
+
+    brew install ocaml
+    opam install csv
+    ln -s ~/.opam/system/bin/csvtool /usr/local/bin/
+    csvtool --help
+
 Output and Analysis
 ===================
 
@@ -39,7 +46,7 @@ Output and Analysis
     scripts/csvsql
     scripts/csvstat
 
-To diff CSVs, consider `daff <http://paulfitz.github.io/daff/>`_. An alternative to :doc:`csvsql` is `q <https://github.com/harelba/q>`_.
+To diff CSVs, consider `daff <https://github.com/paulfitz/daff>`_. An alternative to :doc:`csvsql` is `q <https://github.com/harelba/q>`_.
 
 Common arguments
 ================
