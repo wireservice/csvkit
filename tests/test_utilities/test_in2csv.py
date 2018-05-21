@@ -104,6 +104,11 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     def test_convert_xlsx_with_skip_lines(self):
         self.assertConverted('xlsx', 'examples/test_skip_lines.xlsx', 'examples/testxlsx_converted.csv', ['--skip-lines', '3'])
 
+
+    def test_names(self):
+        self.assertLines(['--names', 'examples/sheets.xlsx'], [
+        ])
+
     def test_csv_no_headers(self):
         self.assertConverted('csv', 'examples/no_header_row.csv', 'examples/dummy.csv', ['--no-header-row', '--no-inference'])
 

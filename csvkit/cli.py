@@ -354,19 +354,16 @@ class CSVKitUtility(object):
         if getattr(self.args, 'no_header_row', None):
             raise RequiredHeaderError('You cannot use --no-header-row with the -n or --names options.')
 
-        f = self.input_file
-        output = self.output_file
-
         if getattr(self.args, 'zero_based', None):
             start = 0
         else:
             start = 1
 
-        rows = agate.csv.reader(f, **self.reader_kwargs)
+        rows = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
         column_names = next(rows)
 
         for i, c in enumerate(column_names, start):
-            output.write('%3i: %s\n' % (i, c))
+            self.output_file.write('%3i: %s\n' % (i, c))
 
     def additional_input_expected(self):
         return sys.stdin.isatty() and not self.args.input_path
