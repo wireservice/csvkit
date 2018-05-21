@@ -97,7 +97,7 @@ CSV data interpretation
 
 These may be symptoms of csvkit's type inference being too aggressive for your data. CSV is a text format, but it may contain text representing numbers, dates, booleans or other types. csvkit attempts to reverse engineer that text into proper data types—a process called "type inference".
 
-For some data, type inference can be error prone. If necessary you can disable it with the To :code:`--no-inference` switch. This will force all columns to be treated as regular text.
+For some data, type inference can be error prone. If necessary you can disable it with the :code:`--no-inference` switch. This will force all columns to be treated as regular text.
 
 Slow performance
 ----------------
