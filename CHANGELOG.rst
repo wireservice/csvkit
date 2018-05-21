@@ -3,6 +3,7 @@
 
 Fixes:
 
+* :doc:`/scripts/csvsql` supports UPDATE commands.
 * :doc:`/scripts/csvstat` no longer errors on non-finite numbers.
 
 1.0.3 - March 11, 2018

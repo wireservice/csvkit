@@ -200,10 +200,11 @@ class CSVSQL(CSVKitUtility):
                         rows = self.connection.execute(q)
 
                 # Output the result of the last query as CSV
-                output = agate.csv.writer(self.output_file, **self.writer_kwargs)
-                output.writerow(rows._metadata.keys)
-                for row in rows:
-                    output.writerow(row)
+                if rows.returns_rows:
+                    output = agate.csv.writer(self.output_file, **self.writer_kwargs)
+                    output.writerow(rows._metadata.keys)
+                    for row in rows:
+                        output.writerow(row)
 
             transaction.commit()
 

@@ -176,6 +176,11 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
             "question,text\n"
             "36,©\n")
 
+    def test_query_update(self):
+        sql = self.get_output(['--query', 'UPDATE dummy SET a=10 WHERE a=1', '--no-inference', 'examples/dummy.csv'])
+
+        self.assertEqual(sql, '')
+
     def test_before_after_insert(self):
         self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', 'examples/dummy.csv', '--before-insert',
                          'SELECT 1; CREATE TABLE foobar (date DATE)', '--after-insert', 'INSERT INTO dummy VALUES (0, 5, 6)'])
