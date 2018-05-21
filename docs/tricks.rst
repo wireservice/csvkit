@@ -63,7 +63,7 @@ If the installation is successful but csvkit's tools fail, you may need to updat
     pip install --upgrade setuptools
     pip install --upgrade csvkit
 
-On OS X, if you see `OSError: [Errno 1] Operation not permitted`, try::
+On OS X, if you see ``OSError: [Errno 1] Operation not permitted``, try::
 
     sudo pip install --ignore-installed csvkit
 
@@ -81,7 +81,8 @@ CSV formatting and parsing
 * Are values appearing in incorrect columns?
 * Does the output combine multiple fields into a single column with double-quotes?
 * Does the outplit split a single field into multiple columns?
-* Are `csvstat -c 1` and `csvstat --count` reporting inconsistent row counts?
+* Are ``csvstat -c 1`` and ``csvstat --count`` reporting inconsistent row counts?
+* Do you see ``Row # has # values, but Table only has # columns.``?
 
 These may be symptoms of CSV sniffing gone wrong. As there is no single, standard CSV format, csvkit uses Python's `csv.Sniffer <https://docs.python.org/3.5/library/csv.html#csv.Sniffer>`_ to deduce the format of a CSV file: that is, the field delimiter and quote character. By default, the entire file is sent for sniffing, which can be slow. You can send a small sample with the :code:`--snifflimit` option. If you're encountering any cases above, you can try setting :code:`--snifflimit 0` to disable sniffing and set the :code:`--delimiter` and :code:`--quotechar` options yourself.
 
