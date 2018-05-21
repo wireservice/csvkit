@@ -85,3 +85,4 @@ The following individuals have contributed code to csvkit:
 * Forest Gregg
 * Aliaksei Urbanski
 * Reid Beels
+* Rodrigo Lemos

@@ -1,6 +1,10 @@
 1.0.4
 -----
 
+Fixes:
+
+* :doc:`/scripts/csvstat` no longer errors on non-finite numbers.
+
 1.0.3 - March 11, 2018
 ----------------------
 
