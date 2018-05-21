@@ -190,7 +190,7 @@ class CSVStat(CSVKitUtility):
                     op = OPERATIONS[op_name]['aggregation']
                     stat = table.aggregate(op(column_id))
 
-                    if isinstance(stat, Decimal):
+                    if isinstance(stat, Decimal) and stat.is_finite():
                         stat = format_decimal(stat, locale=agate.config.get_option('default_locale'))
             except:
                 stat = None
@@ -224,7 +224,7 @@ class CSVStat(CSVKitUtility):
                         op = op_data['aggregation']
                         v = table.aggregate(op(column_id))
 
-                        if isinstance(v, Decimal):
+                        if isinstance(v, Decimal) and v.is_finite():
                             v = format_decimal(v, locale=agate.config.get_option('default_locale'))
 
                         stats[op_name] = v
@@ -268,7 +268,7 @@ class CSVStat(CSVKitUtility):
                         if isinstance(column.data_type, agate.Number):
                             v = row[column_name]
 
-                            if isinstance(v, Decimal):
+                            if isinstance(v, Decimal) and v.is_finite():
                                 v = format_decimal(v, locale=agate.config.get_option('default_locale'))
                         else:
                             v = six.text_type(row[column_name])
