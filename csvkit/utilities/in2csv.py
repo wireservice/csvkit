@@ -62,11 +62,14 @@ class In2CSV(CSVKitUtility):
         else:
             return open(path, 'rb')
 
-    def sheet_names(self, filetype):
+    def sheet_names(self, path, filetype):
+        input_file = self.open_excel_input_file(path)
         if filetype == 'xls':
-            return xlrd.open_workbook(file_contents=self.input_file.read()).sheet_names()
+            sheet_names = xlrd.open_workbook(file_contents=input_file.read()).sheet_names()
         elif filetype == 'xlsx':
-            return openpyxl.load_workbook(self.input_file, read_only=True, data_only=True).sheetnames
+            sheet_names = openpyxl.load_workbook(input_file, read_only=True, data_only=True).sheetnames
+        input_file.close()
+        return sheet_names
 
     def main(self):
         path = self.args.input_path
@@ -87,21 +90,20 @@ class In2CSV(CSVKitUtility):
             if not filetype:
                 self.argparser.error('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
-        # Set the input file.
-        if filetype in ('xls', 'xlsx'):
-            self.input_file = self.open_excel_input_file(path)
-        else:
-            self.input_file = self._open_input_file(path)
-
         if self.args.names_only:
-            sheets = self.sheet_names(filetype)
+            sheets = self.sheet_names(path, filetype)
             if sheets:
                 for sheet in sheets:
                     self.output_file.write('%s\n' % sheet)
             else:
                 self.argparser.error('You cannot use the -n or --names options with non-Excel files.')
-            self.input_file.close()
             return
+
+        # Set the input file.
+        if filetype in ('xls', 'xlsx'):
+            self.input_file = self.open_excel_input_file(path)
+        else:
+            self.input_file = self._open_input_file(path)
 
         # Set the reader's arguments.
         kwargs = {}
@@ -157,12 +159,12 @@ class In2CSV(CSVKitUtility):
             self.input_file = self.open_excel_input_file(path)
 
             if self.args.write_sheets == '-':
-                sheets = self.sheet_names(filetype)
+                sheets = self.sheet_names(path, filetype)
             else:
                 sheets = [int(sheet) if sheet.isdigit() else sheet for sheet in self.args.write_sheets.split(',')]
 
             if filetype == 'xls':
-                tables = agate.Table.from_xls(self.input_file, sheet=sheets, **kwargs)
+                tables = agate.Table.from_xls(self.input_file, sheet=sheets, encoding_override=self.args.encoding_xls, **kwargs)
             elif filetype == 'xlsx':
                 tables = agate.Table.from_xlsx(self.input_file, sheet=sheets, **kwargs)
 
