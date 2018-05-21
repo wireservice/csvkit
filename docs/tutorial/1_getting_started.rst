@@ -137,11 +137,11 @@ Now that we understand :doc:`/scripts/in2csv`, :doc:`/scripts/csvlook` and :doc:
 
 In addition to specifying filenames, all csvkit tools accept an input file via "standard in". This means that, using the ``|`` ("pipe") character we can use the output of one csvkit tool as the input of the next.
 
-In the example above, the output of ``csvcut`` becomes the input to ``csvlook``. This also allow us to pipe output to standard Unix commands such as ``head``, which prints only the first ten lines of its input. Here, the output of ``csvlook`` becomes the input of ``head``.
+In the example above, the output of :doc:`/scripts/csvcut` becomes the input to :doc:`/scripts/csvlook`. This also allow us to pipe output to standard Unix commands such as ``head``, which prints only the first ten lines of its input. Here, the output of :doc:`/scripts/csvlook` becomes the input of ``head``.
 
 Piping is a core feature of csvkit. Of course, you can always write the output of each command to a file using ``>``. However, it's often faster and more convenient to use pipes to chain several commands together.
 
-We can also pipe ``in2csv``, allowing us to combine all our previous operations into one:
+We can also pipe :doc:`/scripts/in2csv`, allowing us to combine all our previous operations into one:
 
 .. code-block:: bash
 

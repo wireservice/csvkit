@@ -14,7 +14,7 @@ Note that every csvkit tool does the following:
 
 * removes optional quote characters, unless the `--quoting` (`-u`) option is set to change this behavior
 * changes the field delimiter to a comma, if the input delimiter is set with the `--delimiter` (`-d`) or `--tabs` (`-t`) options
-* changes the record delimiter to a line feed
+* changes the record delimiter to a line feed (LF or ``\n``)
 * changes the quote character to a double-quotation mark, if the character is set with the `--quotechar` (`-q`) option
 * changes the character encoding to UTF-8, if the input encoding is set with the `--encoding` (`-e`) option
 
@@ -47,3 +47,7 @@ Test a file with known bad rows::
 
     Line 1: Expected 3 columns, found 4 columns
     Line 2: Expected 3 columns, found 2 columns
+
+To change the line ending from line feed (LF or ``\n``) to carriage return and line feed (CRLF or ``\r\n``) use::
+
+    csvformat -M $'\r\n' examples/dummy.csv

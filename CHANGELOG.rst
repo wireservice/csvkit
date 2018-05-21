@@ -1,6 +1,13 @@
 1.0.4
 -----
 
+Fixes:
+
+* :code:`--names` works with :code:`--skip-lines`.
+* :doc:`/scripts/in2csv` writes XLS sheets without encoding errors in Python 2.
+* :doc:`/scripts/csvsql` supports UPDATE commands.
+* :doc:`/scripts/csvstat` no longer errors on non-finite numbers.
+
 1.0.3 - March 11, 2018
 ----------------------
 

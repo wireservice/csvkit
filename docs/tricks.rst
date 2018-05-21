@@ -25,13 +25,13 @@ Set the encoding to ``utf-8-sig``, for example::
 Specifying STDIN as a file
 --------------------------
 
-Most tools use ``STDIN`` as input if no filename is given, but tools that accept multiple inputs like :doc:`scripts/csvjoin` and :doc:`scripts/csvstack` don't. To use ``STDIN`` as an input to these tools, use ``-`` as the filename. For example, these three commands produce the same output::
+Most tools use ``STDIN`` as input if no filename is given, but tools that accept multiple inputs like :doc:`/scripts/csvjoin` and :doc:`/scripts/csvstack` don't. To use ``STDIN`` as an input to these tools, use ``-`` as the filename. For example, these three commands produce the same output::
 
     csvstat examples/dummy.csv
     cat examples/dummy.csv | csvstat
     cat examples/dummy.csv | csvstat -
 
-``csvstack`` can take a filename and ``STDIN`` as input, for example::
+:doc:`/scripts/csvstack` can take a filename and ``STDIN`` as input, for example::
 
     cat examples/dummy.csv | csvstack examples/dummy3.csv -
 
@@ -63,7 +63,7 @@ If the installation is successful but csvkit's tools fail, you may need to updat
     pip install --upgrade setuptools
     pip install --upgrade csvkit
 
-On macOS, if you see `OSError: [Errno 1] Operation not permitted`, try::
+On macOS, if you see ``OSError: [Errno 1] Operation not permitted``, try::
 
     sudo pip install --ignore-installed csvkit
 
@@ -81,7 +81,8 @@ CSV formatting and parsing
 * Are values appearing in incorrect columns?
 * Does the output combine multiple fields into a single column with double-quotes?
 * Does the outplit split a single field into multiple columns?
-* Are `csvstat -c 1` and `csvstat --count` reporting inconsistent row counts?
+* Are :code:`csvstat -c 1` and :code:`csvstat --count` reporting inconsistent row counts?
+* Do you see ``Row # has # values, but Table only has # columns.``?
 
 These may be symptoms of CSV sniffing gone wrong. As there is no single, standard CSV format, csvkit uses Python's `csv.Sniffer <https://docs.python.org/3.5/library/csv.html#csv.Sniffer>`_ to deduce the format of a CSV file: that is, the field delimiter and quote character. By default, the entire file is sent for sniffing, which can be slow. You can send a small sample with the :code:`--snifflimit` option. If you're encountering any cases above, you can try setting :code:`--snifflimit 0` to disable sniffing and set the :code:`--delimiter` and :code:`--quotechar` options yourself.
 
@@ -96,7 +97,7 @@ CSV data interpretation
 
 These may be symptoms of csvkit's type inference being too aggressive for your data. CSV is a text format, but it may contain text representing numbers, dates, booleans or other types. csvkit attempts to reverse engineer that text into proper data types—a process called "type inference".
 
-For some data, type inference can be error prone. If necessary you can disable it with the To :code:`--no-inference` switch. This will force all columns to be treated as regular text.
+For some data, type inference can be error prone. If necessary you can disable it with the :code:`--no-inference` switch. This will force all columns to be treated as regular text.
 
 Slow performance
 ----------------
@@ -108,14 +109,14 @@ If a tool is too slow to be practical for your data try setting the :code:`--sni
 Database errors
 ---------------
 
-Are you seeing this error message, even after running :code:`pip install psycopg2` or :code:`pip install MySQL-python`?
+Are you seeing this error message, even after running :code:`pip install psycopg2` or :code:`pip install mysql-connector-python`?
 
 ::
 
     You don't appear to have the necessary database backend installed for connection string you're trying to use. Available backends include:
 
     Postgresql: pip install psycopg2
-    MySQL:      pip install MySQL-python
+    MySQL:      pip install mysql-connector-python
 
     For details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at:
 

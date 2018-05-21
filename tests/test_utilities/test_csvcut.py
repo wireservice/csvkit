@@ -71,3 +71,10 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
     def test_ragged(self):
         # Test that csvcut doesn't error when a row is short.
         self.get_output(['-c', 'column_c', 'examples/bad.csv'])
+
+    def test_names_with_skip_lines(self):
+        self.assertLines(['--names', '--skip-lines', '3', 'examples/test_skip_lines.csv'], [
+            '  1: a',
+            '  2: b',
+            '  3: c',
+        ])

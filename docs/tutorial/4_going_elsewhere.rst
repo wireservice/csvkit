@@ -5,7 +5,7 @@ Going elsewhere with your data
 csvjson: going online
 =====================
 
-Very frequently one of the last steps in any data analysis is to get the data onto the web for display as a table, map or chart. CSV is rarely the ideal format for this. More often than not what you want is JSON and that's where :doc:`/scripts/csvjson` comes in. ``csvjson`` takes an input CSV and outputs neatly formatted JSON. For the sake of illustration, let's use ``csvcut`` and ``csvgrep`` to convert just a small slice of our data:
+Very frequently one of the last steps in any data analysis is to get the data onto the web for display as a table, map or chart. CSV is rarely the ideal format for this. More often than not what you want is JSON and that's where :doc:`/scripts/csvjson` comes in. :doc:`/scripts/csvjson` takes an input CSV and outputs neatly formatted JSON. For the sake of illustration, let's use :doc:`/scripts/csvcut` and :doc:`/scripts/csvgrep` to convert just a small slice of our data:
 
 .. code-block:: bash
 
@@ -50,7 +50,7 @@ A common usage of turning a CSV into a JSON file is for usage as a lookup table 
         }
     }
 
-For making maps, ``csvjson`` can also output GeoJSON, see its :doc:`/scripts/csvjson` for more details.
+For making maps, :doc:`/scripts/csvjson` can also output GeoJSON, see its :doc:`/scripts/csvjson` for more details.
 
 csvpy: going into code
 ======================

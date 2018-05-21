@@ -106,7 +106,7 @@ Since both files contain a fips column, we can use that to join the two. In our 
     | NANCE      | RIFLE,7.62 MILLIMETER                                          |            3,730 |
     | NANCE      | RIFLE,7.62 MILLIMETER                                          |            3,730 |
 
-Two counties with fewer than one-thousand residents were the recipients of 5.56 millimeter assault rifles. This simple example demonstrates the power of joining datasets. Although SQL will always be a more flexible option, ``csvjoin`` will often get you where you need to go faster.
+Two counties with fewer than one-thousand residents were the recipients of 5.56 millimeter assault rifles. This simple example demonstrates the power of joining datasets. Although SQL will always be a more flexible option, :doc:`/scripts/csvjoin` will often get you where you need to go faster.
 
 csvstack: combining subsets
 ===========================
@@ -164,14 +164,14 @@ Using csvstat we can see that our ``region.csv`` contains both datasets:
 
     Row count: 2611
 
-If you supply the ``-g`` flag then ``csvstack`` can also add a "grouping column" to each row, so that you can tell which file each row came from. In this case we don't need this, but you can imagine a situation in which instead of having a ``county`` column each of this datasets had simply been named ``nebraska.csv`` and ``kansas.csv``. In that case, using a grouping column would prevent us from losing information when we stacked them.
+If you supply the :code:`-g` flag then :doc:`/scripts/csvstack` can also add a "grouping column" to each row, so that you can tell which file each row came from. In this case we don't need this, but you can imagine a situation in which instead of having a ``county`` column each of this datasets had simply been named ``nebraska.csv`` and ``kansas.csv``. In that case, using a grouping column would prevent us from losing information when we stacked them.
 
 csvsql and sql2csv: ultimate power
 ==================================
 
-Sometimes (almost always), the command-line isn't enough. It would be crazy to try to do all your analysis using command-line tools. Often times, the correct tool for data analysis is SQL. :doc:`/scripts/csvsql` and :doc:`/scripts/sql2csv` form a bridge that eases migrating your data into and out of a SQL database. For smaller datasets ``csvsql`` can also leverage `sqlite <https://www.sqlite.org/>`_ to allow execution of ad hoc SQL queries without ever touching a database.
+Sometimes (almost always), the command-line isn't enough. It would be crazy to try to do all your analysis using command-line tools. Often times, the correct tool for data analysis is SQL. :doc:`/scripts/csvsql` and :doc:`/scripts/sql2csv` form a bridge that eases migrating your data into and out of a SQL database. For smaller datasets :doc:`/scripts/csvsql` can also leverage `sqlite <https://www.sqlite.org/>`_ to allow execution of ad hoc SQL queries without ever touching a database.
 
-By default, ``csvsql`` will generate a create table statement for your data. You can specify what sort of database you are using with the ``-i`` flag:
+By default, :doc:`/scripts/csvsql` will generate a create table statement for your data. You can specify what sort of database you are using with the ``-i`` flag:
 
 .. code-block:: bash
 
@@ -199,27 +199,27 @@ By default, ``csvsql`` will generate a create table statement for your data. You
             margin_of_error DECIMAL NOT NULL
     );
 
-Here we have the sqlite "create table" statement for our joined data. You'll see that, like ``csvstat``, ``csvsql`` has done its best to infer the column types.
+Here we have the sqlite "create table" statement for our joined data. You'll see that, like :doc:`/scripts/csvstat`, :doc:`/scripts/csvsql` has done its best to infer the column types.
 
-Often you won't care about storing the SQL statements locally. You can also use ``csvsql`` to create the table directly in the database on your local machine. If you add the ``--insert`` option the data will also be imported:
+Often you won't care about storing the SQL statements locally. You can also use :doc:`/scripts/csvsql` to create the table directly in the database on your local machine. If you add the :code:`--insert` option the data will also be imported:
 
 .. code-block:: bash
 
     csvsql --db sqlite:///leso.db --insert joined.csv
 
-How can we check that our data was imported successfully? We could use the sqlite command-line interface, but rather than worry about the specifics of another tool, we can also use ``sql2csv``:
+How can we check that our data was imported successfully? We could use the sqlite command-line interface, but rather than worry about the specifics of another tool, we can also use :doc:`/scripts/sql2csv`:
 
 .. code-block:: bash
 
     sql2csv --db sqlite:///leso.db --query "select * from joined"
 
-Note that the ``--query`` parameter to ``sql2csv`` accepts any SQL query. For example, to export Douglas county from the ``joined`` table from our sqlite database, we would run:
+Note that the :code:`--query` parameter to :doc:`/scripts/sql2csv` accepts any SQL query. For example, to export Douglas county from the ``joined`` table from our sqlite database, we would run:
 
 .. code-block:: bash
 
     sql2csv --db sqlite:///leso.db --query "select * from joined where county='DOUGLAS';" > douglas.csv
 
-Sometimes, if you will only be running a single query, even constructing the database is a waste of time. For that case, you can actually skip the database entirely and ``csvsql`` will create one in memory for you:
+Sometimes, if you will only be running a single query, even constructing the database is a waste of time. For that case, you can actually skip the database entirely and :doc:`/scripts/csvsql` will create one in memory for you:
 
 .. code-block:: bash
 
@@ -230,4 +230,4 @@ SQL queries directly on CSVs! Keep in mind when using this that you are loading 
 Summing up
 ==========
 
-``csvjoin``, ``csvstack``, ``csvsql`` and ``sql2csv`` represent the power tools of csvkit. Using these tools can vastly simplify processes that would otherwise require moving data between other systems. But what about cases where these tools still don't cut it? What if you need to move your data onto the web or into a legacy database system? We've got a few solutions for those problems in our final section, :doc:`4_going_elsewhere`.
+:doc:`/scripts/csvjoin`, :doc:`/scripts/csvstack`, :doc:`/scripts/csvsql` and :doc:`/scripts/sql2csv` represent the power tools of csvkit. Using these tools can vastly simplify processes that would otherwise require moving data between other systems. But what about cases where these tools still don't cut it? What if you need to move your data onto the web or into a legacy database system? We've got a few solutions for those problems in our final section, :doc:`4_going_elsewhere`.
