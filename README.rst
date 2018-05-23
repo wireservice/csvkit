@@ -2,10 +2,6 @@
     :target: https://travis-ci.org/wireservice/csvkit
     :alt: Build Status
 
-.. image:: https://gemnasium.com/wireservice/csvkit.svg
-    :target: https://gemnasium.com/wireservice/csvkit
-    :alt: Dependency Status
-
 .. image:: https://coveralls.io/repos/wireservice/csvkit/badge.svg?branch=master
     :target: https://coveralls.io/r/wireservice/csvkit
     :alt: Coverage Status
