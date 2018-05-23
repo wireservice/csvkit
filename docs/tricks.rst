@@ -52,6 +52,12 @@ csvkit is supported on:
 
 It is tested on macOS, and has also been used on Linux and Windows.
 
+If installing on macOS, you may need to install Homebrew first::
+
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    brew install python
+    pip install csvkit
+
 If installing on Ubuntu, you may need to install Python's development headers first::
 
     sudo apt-get install python-dev python-pip python-setuptools build-essential
@@ -101,7 +107,7 @@ For some data, type inference can be error prone. If necessary you can disable i
 Slow performance
 ----------------
 
-csvkit's tools fall into two categories: Those that load an entire CSV into memory (e.g. :doc:`/scripts/csvstat`) and those that only read data one row at a time (e.g. :doc:`/scripts/csvcut`). Those that stream results will generally be very fast. For those that buffer the entire file, the slowest part of that process is typically the "type inference" described in the previous section.
+csvkit's tools fall into two categories: Those that load an entire CSV into memory (e.g. :doc:`/scripts/csvstat`) and those that only read data one row at a time (e.g. :doc:`/scripts/csvcut`). Those that stream results will generally be very fast. See :doc:`contributing` for a full list. For those that buffer the entire file, the slowest part of that process is typically the "type inference" described in the previous section.
 
 If a tool is too slow to be practical for your data try setting the :code:`--snifflimit` option or using the :code:`--no-inference`.
 
