@@ -49,7 +49,6 @@ csvkit is supported on:
 
 * Python 2.7+
 * Python 3.3+
-* `PyPy <http://pypy.org/>`_
 
 It is tested on macOS, and has also been used on Linux and Windows.
 
