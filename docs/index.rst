@@ -7,6 +7,8 @@ About
 
 .. include:: ../README.rst
 
+First time? See :doc:`tutorial`.
+
 Why csvkit?
 ===========
 
