@@ -15,7 +15,7 @@ First time? See :doc:`tutorial`.
 
 .. note::
 
-    Remember that to change the field separator, line terminator, etc. of the **output**, you must use :doc:`/scripts/csvformat`.
+    To change the field separator, line terminator, etc. of the **output**, you must use :doc:`/scripts/csvformat`.
 
 .. note::
 
