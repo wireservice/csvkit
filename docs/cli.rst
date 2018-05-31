@@ -33,6 +33,8 @@ To transpose CSVs, consider `csvtool <http://colin.maudry.com/csvtool-manual-pag
     ln -s ~/.opam/system/bin/csvtool /usr/local/bin/
     csvtool --help
 
+To run ``sed``-like commands on CSV files, consider `csvsed <https://github.com/metagriffin/csvsed>`_.
+
 Output and Analysis
 ===================
 
