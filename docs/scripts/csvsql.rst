@@ -17,7 +17,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                   [--prefix PREFIX] [--tables TABLE_NAMES] [--no-constraints]
                   [--unique-constraint UNIQUE_CONSTRAINT] [--no-create]
                   [--create-if-not-exists] [--overwrite] [--db-schema DB_SCHEMA]
-                  [-y SNIFF_LIMIT] [-I]
+                  [-y SNIFF_LIMIT] [-I] [--chunk-size NUM]
                   [FILE [FILE ...]]
 
     Generate SQL statements for one or more CSV files, or execute those statements
@@ -65,7 +65,9 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                             Limit CSV dialect sniffing to the specified number of
                             bytes. Specify "0" to disable sniffing entirely.
       -I, --no-inference    Disable type inference when parsing the input.
-
+      --chunk-size NUM
+                            Chunk size for batch insert into the table.
+                            Only valid when --insert is specified.
 
 See also: :doc:`../common_arguments`.
 
