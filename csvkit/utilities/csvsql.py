@@ -53,6 +53,8 @@ class CSVSQL(CSVKitUtility):
                                     help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
         self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
                                     help='Disable type inference when parsing the input.')
+        self.argparser.add_argument('--chunk-size', dest='chunk_size', type=int,
+                                    help='Optional chunk size. Only valid when --insert is specified.')
 
     def main(self):
         if sys.stdin.isatty() and not self.args.input_paths:
@@ -85,9 +87,11 @@ class CSVSQL(CSVKitUtility):
         if self.args.overwrite and not self.args.insert:
             self.argparser.error('The --overwrite option is only valid if --insert is also specified.')
         if self.args.before_insert and not self.args.insert:
-            self.argparser.error('The --before_insert option is only valid if --insert is also specified.')
+            self.argparser.error('The --before-insert option is only valid if --insert is also specified.')
         if self.args.after_insert and not self.args.insert:
-            self.argparser.error('The --after_insert option is only valid if --insert is also specified.')
+            self.argparser.error('The --after-insert option is only valid if --insert is also specified.')
+        if self.args.chunk_size and not self.args.insert:
+            self.argparser.error('The --chunk-size option is only valid if --insert is also specified.')
 
         if self.args.no_create and self.args.create_if_not_exists:
             self.argparser.error('The --no-create and --create-if-not-exists options are mutually exclusive.')
@@ -164,7 +168,8 @@ class CSVSQL(CSVKitUtility):
                         prefixes=self.args.prefix,
                         db_schema=self.args.db_schema,
                         constraints=not self.args.no_constraints,
-                        unique_constraint=self.unique_constraint
+                        unique_constraint=self.unique_constraint,
+                        chunk_size=self.args.chunk_size
                     )
 
                     if self.args.after_insert:
