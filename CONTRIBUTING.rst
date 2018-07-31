@@ -11,9 +11,10 @@ Report a bug
 * Run the csvkit tool with the :code:`-v` (:code:`--verbose`) flag
 * Open a new issue and include:
 
-  * the csvkit command (for example, :code:`csvstat -v test.csv`)
+  * the csvkit command with the :code:`-v` (:code:`--verbose`) flag (for example, :code:`csvstat -v test.csv`)
   * the input file (rename the :code:`.csv` to :code:`.txt` for GitHub)
   * the output text (including the traceback)
+  * the csvkit version (:code:`csvcut --version`)
   * the Python version (:code:`python --version`)
   * the operating system and version
 
