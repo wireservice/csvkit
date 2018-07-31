@@ -54,7 +54,7 @@ class CSVSQL(CSVKitUtility):
         self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
                                     help='Disable type inference when parsing the input.')
         self.argparser.add_argument('--chunk-size', dest='chunk_size', type=int,
-                                    help='Optional chunk size. Only valid when --insert is specified.')
+                                    help='Chunk size for batch insert into the table. Only valid when --insert is specified.')
 
     def main(self):
         if sys.stdin.isatty() and not self.args.input_paths:

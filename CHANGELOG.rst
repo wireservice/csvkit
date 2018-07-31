@@ -1,6 +1,10 @@
 1.0.4
 -----
 
+Improvements:
+
+* :doc:`/scripts/csvsql` adds a :code:`--chunk-size` option to set the chunk size when batch inserting into a table.
+
 Fixes:
 
 * :code:`--names` works with :code:`--skip-lines`.
