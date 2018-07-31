@@ -86,3 +86,4 @@ The following individuals have contributed code to csvkit:
 * Aliaksei Urbanski
 * Reid Beels
 * Rodrigo Lemos
+* Victor Noagbodji
