@@ -13,14 +13,14 @@ import csvkit
 @unittest.skipIf(six.PY3, "Not supported in Python 3.")
 class TestCSVKitReader(unittest.TestCase):
     def test_utf8(self):
-        with open('examples/test_utf8.csv') as f:
+        with open('examples/test_utf8.csv', 'rb') as f:
             reader = csvkit.CSVKitReader(f, encoding='utf-8')
             self.assertEqual(next(reader), ['a', 'b', 'c'])
             self.assertEqual(next(reader), ['1', '2', '3'])
             self.assertEqual(next(reader), ['4', '5', u'ʤ'])
 
     def test_reader_alias(self):
-        with open('examples/test_utf8.csv') as f:
+        with open('examples/test_utf8.csv', 'rb') as f:
             reader = csvkit.reader(f, encoding='utf-8')
             self.assertEqual(next(reader), ['a', 'b', 'c'])
             self.assertEqual(next(reader), ['1', '2', '3'])
@@ -120,4 +120,3 @@ class TestCSVKitDictWriter(unittest.TestCase):
         result = self.output.getvalue()
 
         self.assertEqual(result, 'a,b,c\n1,2,☃\n')
-
