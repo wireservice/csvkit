@@ -6,7 +6,6 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-  - "3.7"
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == "2.7" ]]; then pip install -r requirements-py2.txt; fi
   - if [[ $TRAVIS_PYTHON_VERSION == "pypy" ]]; then pip install -r requirements-py2.txt; fi
@@ -14,5 +13,4 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then pip install -r requirements-py3.txt; fi
   - if [[ $TRAVIS_PYTHON_VERSION == "3.5" ]]; then pip install -r requirements-py3.txt; fi
   - if [[ $TRAVIS_PYTHON_VERSION == "3.6" ]]; then pip install -r requirements-py3.txt; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == "3.7" ]]; then pip install -r requirements-py3.txt; fi
 script: nosetests
