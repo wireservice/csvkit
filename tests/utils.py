@@ -20,16 +20,12 @@ And paste:
 """
 
 import sys
+import unittest
 import warnings
 from contextlib import contextmanager
 
 import agate
 import six
-
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
 
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 

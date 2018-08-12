@@ -2,6 +2,8 @@
 
 import sys
 
+import six
+
 import agate
 
 try:
@@ -47,11 +49,11 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_unique(self):
         output = self.get_output(['-c', 'county', 'examples/realdata/ks_1033_data.csv'])
-        self.assertRegex(output, r'Unique values:\s+73')
+        six.assertRegex(self, output, r'Unique values:\s+73')
 
     def test_max_length(self):
         output = self.get_output(['-c', 'county', 'examples/realdata/ks_1033_data.csv'])
-        self.assertRegex(output, r'Longest value:\s+12')
+        six.assertRegex(self, output, r'Longest value:\s+12')
 
     def test_freq_list(self):
         output = self.get_output(['examples/realdata/ks_1033_data.csv'])
