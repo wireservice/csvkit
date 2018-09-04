@@ -6,7 +6,7 @@ from setuptools import setup
 install_requires = [
     'xlrd>=0.7.1',
     'sqlalchemy>=0.6.6',
-    'openpyxl==2.2.0',
+    'openpyxl==2.2.5',
     'six>=1.6.1',
     'python-dateutil==2.2'
 ]
