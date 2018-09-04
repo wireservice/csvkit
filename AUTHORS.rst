@@ -87,3 +87,5 @@ The following individuals have contributed code to csvkit:
 * Reid Beels
 * Rodrigo Lemos
 * Victor Noagbodji
+* Connor McArthur
+* Matěj Cepl
