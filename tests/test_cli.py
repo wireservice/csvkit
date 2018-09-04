@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
+import unittest
 
 from csvkit.cli import match_column_identifier, parse_column_identifiers
 
