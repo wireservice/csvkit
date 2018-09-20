@@ -59,3 +59,7 @@ Search for rows relating to states with names beginning with the letter "I"::
 Search for rows that do not contain an empty state cell::
 
     csvgrep -c 1 -r "^$" -i examples/realdata/FY09_EDU_Recipients_by_State.csv
+
+Perform a case-insensitive search::
+
+    csvgrep -c 1 -r "(?i)illinois" examples/realdata/FY09_EDU_Recipients_by_State.csv
