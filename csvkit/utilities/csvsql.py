@@ -46,7 +46,7 @@ class CSVSQL(CSVKitUtility):
         self.argparser.add_argument('--create-if-not-exists', dest='create_if_not_exists', action='store_true',
                                     help='Create table if it does not exist, otherwise keep going. Only valid when --insert is specified.')
         self.argparser.add_argument('--overwrite', dest='overwrite', action='store_true',
-                                    help='Drop the table before creating. Only valid when --insert is specified.')
+                                    help='Drop the table before creating. Only valid when --insert is specified and --no-create is not specified.')
         self.argparser.add_argument('--db-schema', dest='db_schema',
                                     help='Optional name of database schema to create table(s) in.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
@@ -86,6 +86,8 @@ class CSVSQL(CSVKitUtility):
             self.argparser.error('The --create-if-not-exists option is only valid if --insert is also specified.')
         if self.args.overwrite and not self.args.insert:
             self.argparser.error('The --overwrite option is only valid if --insert is also specified.')
+        if self.args.overwrite and self.args.no_create:
+            self.argparser.error('The --overwrite option is only valid if --no-create is not specified.')
         if self.args.before_insert and not self.args.insert:
             self.argparser.error('The --before-insert option is only valid if --insert is also specified.')
         if self.args.after_insert and not self.args.insert:

@@ -57,7 +57,8 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                             Create table if it does not exist, otherwise keep
                             going. Only valid when --insert is specified.
       --overwrite           Drop the table before creating. Only valid when
-                            --insert is specified.
+                            --insert is specified and --no-create is not
+                            specified.
       --db-schema DB_SCHEMA
                             Optional name of database schema to create table(s)
                             in.
