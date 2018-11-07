@@ -41,6 +41,10 @@ See also: :doc:`../common_arguments`.
 
     csvcut does not implement row filtering, for this you should pipe data to :doc:`csvgrep`.
 
+.. note::
+
+    If a data row is longer than the header row, its additional columns are truncated. Use :doc:`csvclean` first to fix such rows.
+
 Examples
 ========
 
@@ -71,7 +75,6 @@ Print only the names of all columns, by removing the indices with the :code:`cut
     Post-Vietnam Era Veteran's Educational Assistance Program
     TOTAL
 
-
 Extract the first and third columns::
 
     csvcut -c 1,3 examples/realdata/FY09_EDU_Recipients_by_State.csv
@@ -92,4 +95,3 @@ Extract a column that may not exist in all files::
 Display a column's unique values::
 
     csvcut -c 1 examples/realdata/FY09_EDU_Recipients_by_State.csv | sed 1d | sort | uniq
-
