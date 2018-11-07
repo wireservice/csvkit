@@ -98,10 +98,7 @@ class CSVJSON(CSVKitUtility):
             self.stream.write("\n")
 
     def can_stream(self):
-        return (self.args.streamOutput
-                and self.args.no_inference
-                and not self.args.skip_lines
-                and self.args.sniff_limit == 0)
+        return self.args.streamOutput and self.args.no_inference and self.args.sniff_limit == 0 and not self.args.skip_lines
 
     def is_geo(self):
         return self.args.lat and self.args.lon
@@ -141,19 +138,13 @@ class CSVJSON(CSVKitUtility):
 
     def output_geojson(self):
         table = self.read_csv_to_table()
-        geojson_generator = self.GeoJsonGenerator(self.args,
-                                                  table.column_names)
+        geojson_generator = self.GeoJsonGenerator(self.args, table.column_names)
 
         if self.args.streamOutput:
             for row in table.rows:
-                self.dump_json(
-                    geojson_generator.feature_for_row(row),
-                    newline=True
-                )
+                self.dump_json(geojson_generator.feature_for_row(row), newline=True)
         else:
-            self.dump_json(
-                geojson_generator.generate_feature_collection(table)
-            )
+            self.dump_json(geojson_generator.generate_feature_collection(table))
 
     def streaming_output_ndjson(self):
         rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
@@ -174,51 +165,31 @@ class CSVJSON(CSVKitUtility):
         geojson_generator = self.GeoJsonGenerator(self.args, column_names)
 
         for row in rows:
-            self.dump_json(geojson_generator.feature_for_row(row),
-                           newline=True)
+            self.dump_json(geojson_generator.feature_for_row(row), newline=True)
 
     class GeoJsonGenerator:
         def __init__(self, args, column_names):
             self.args = args
             self.column_names = column_names
-            self.lat_column = None
-            self.lon_column = None
-            self.type_column = None
-            self.geometry_column = None
-            self.id_column = None
 
-            self.lat_column = match_column_identifier(
-                column_names,
-                self.args.lat,
-                self.args.zero_based
-            )
+            self.lat_column = match_column_identifier(column_names, self.args.lat, self.args.zero_based)
 
-            self.lon_column = match_column_identifier(
-                column_names,
-                self.args.lon,
-                self.args.zero_based
-            )
+            self.lon_column = match_column_identifier(column_names, self.args.lon, self.args.zero_based)
 
             if self.args.type:
-                self.type_column = match_column_identifier(
-                    column_names,
-                    self.args.type,
-                    self.args.zero_based
-                )
+                self.type_column = match_column_identifier(column_names, self.args.type, self.args.zero_based)
+            else:
+                self.type_column = None
 
             if self.args.geometry:
-                self.geometry_column = match_column_identifier(
-                    column_names,
-                    self.args.geometry,
-                    self.args.zero_based
-                )
+                self.geometry_column = match_column_identifier(column_names, self.args.geometry, self.args.zero_based)
+            else:
+                self.geometry_column = None
 
             if self.args.key:
-                self.id_column = match_column_identifier(
-                    column_names,
-                    self.args.key,
-                    self.args.zero_based
-                )
+                self.id_column = match_column_identifier(column_names, self.args.key, self.args.zero_based)
+            else:
+                self.id_column = None
 
         def generate_feature_collection(self, table):
             features = []
@@ -241,34 +212,24 @@ class CSVJSON(CSVKitUtility):
                 items.insert(1, ('bbox', bounds.bbox()))
 
             if self.args.crs:
-                items.append(
-                    (
-                        'crs',
-                        OrderedDict([
-                            ('type', 'name'),
-                            ('properties', {
-                                'name': self.args.crs
-                            })
-                        ])
-                    ))
+                items.append(('crs', OrderedDict([
+                    ('type', 'name'),
+                    ('properties', {
+                        'name': self.args.crs,
+                    }),
+                ])))
 
             return OrderedDict(items)
 
         def feature_for_row(self, row):
             feature = OrderedDict([
                 ('type', 'Feature'),
-                ('properties', OrderedDict())
+                ('properties', OrderedDict()),
             ])
 
             for i, c in enumerate(row):
                 # Prevent "type" or geo fields from being added to properties.
-                if (
-                    c is None or
-                    i == self.type_column or
-                    i == self.lat_column or
-                    i == self.lon_column or
-                    i == self.geometry_column
-                ):
+                if c is None or i in (self.type_column, self.lat_column, self.lon_column, self.geometry_column):
                     continue
                 elif i == self.id_column:
                     feature['id'] = c
@@ -297,7 +258,7 @@ class CSVJSON(CSVKitUtility):
             if lon and lat:
                 return OrderedDict([
                     ('type', 'Point'),
-                    ('coordinates', [lon, lat])
+                    ('coordinates', [lon, lat]),
                 ])
 
         class GeoJsonBounds:
@@ -311,10 +272,7 @@ class CSVJSON(CSVKitUtility):
                 return [self.min_lon, self.min_lat, self.max_lon, self.max_lat]
 
             def add_feature(self, feature):
-                if (
-                    'geometry' in feature and
-                    'coordinates' in feature['geometry']
-                ):
+                if 'geometry' in feature and 'coordinates' in feature['geometry']:
                     self.update_coordinates(feature['geometry']['coordinates'])
 
             def update_lat(self, lat):
@@ -330,10 +288,7 @@ class CSVJSON(CSVKitUtility):
                     self.max_lon = lon
 
             def update_coordinates(self, coordinates):
-                if (
-                    len(coordinates) <= 3 and
-                    isinstance(coordinates[0], (float, int))
-                ):
+                if len(coordinates) <= 3 and isinstance(coordinates[0], (float, int)):
                     self.update_lon(coordinates[0])
                     self.update_lat(coordinates[1])
                 else:
