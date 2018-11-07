@@ -62,6 +62,12 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             ['1'],
         ])
 
+    def test_delete_empty(self):
+        self.assertRows(['-c', 'column_c', '--delete-empty-rows', 'examples/bad.csv'], [
+            ['column_c'],
+            ['17'],
+        ])
+
     def test_no_header_row(self):
         self.assertRows(['-c', '2', '--no-header-row', 'examples/no_header_row.csv'], [
             ['b'],
