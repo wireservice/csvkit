@@ -299,10 +299,11 @@ class CSVKitUtility(object):
         if not self.args.no_inference:
             types = [
                 agate.Boolean(**type_kwargs),
-                agate.Number(locale=self.args.locale, **type_kwargs),
                 agate.TimeDelta(**type_kwargs),
                 agate.Date(date_format=self.args.date_format, **type_kwargs),
                 agate.DateTime(datetime_format=self.args.datetime_format, **type_kwargs),
+                # This is a different order than agate's default, in order to parse dates like "20010101".
+                agate.Number(locale=self.args.locale, **type_kwargs),
             ] + types
 
         return agate.TypeTester(types=types)
