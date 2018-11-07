@@ -76,19 +76,12 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_ragged(self):
         # Test that csvcut doesn't error when a row is short.
-        self.assertRows(['-c', 'column_c', 'examples/bad.csv'], [
-            ['column_c'],
-            [],
-            [],
-            ['17'],
-        ])
+        self.get_output(['-c', 'column_c', 'examples/bad.csv'])
 
     def test_truncate(self):
         # Test that csvcut truncates long rows.
-        self.assertRows(['-C', 'column_a,column_b', 'examples/bad.csv'], [
+        self.assertRows(['-C', 'column_a,column_b', '--delete-empty-rows', 'examples/bad.csv'], [
             ['column_c'],
-            [],
-            [],
             ['17'],
         ])
 
