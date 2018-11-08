@@ -95,3 +95,7 @@ Extract a column that may not exist in all files::
 Display a column's unique values::
 
     csvcut -c 1 examples/realdata/FY09_EDU_Recipients_by_State.csv | sed 1d | sort | uniq
+
+Or::
+
+    csvcut -c 1 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsql --query 'SELECT DISTINCT("State Name") FROM stdin'
