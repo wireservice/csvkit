@@ -14,6 +14,7 @@ Fixes:
 * :doc:`/scripts/csvjoin` no longer errors if given a single file.
 * :doc:`/scripts/csvsql` supports UPDATE commands.
 * :doc:`/scripts/csvstat` no longer errors on non-finite numbers.
+* :doc:`/scripts/csvstat` respects all command-line arguments when :code:`--count` is set.
 * :doc:`/scripts/in2csv` writes XLS sheets without encoding errors in Python 2.
 
 1.0.3 - March 11, 2018

@@ -124,7 +124,7 @@ class CSVStat(CSVKitUtility):
             self.output_file = codecs.getwriter('utf-8')(self.output_file)
 
         if self.args.count_only:
-            count = len(list(agate.csv.reader(self.input_file)))
+            count = len(list(agate.csv.reader(self.skip_lines(), **self.reader_kwargs)))
 
             if not self.args.no_header_row:
                 count -= 1
