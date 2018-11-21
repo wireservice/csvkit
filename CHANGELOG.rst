@@ -11,6 +11,7 @@ Fixes:
 * Dates and datetimes without punctuation can be parsed with :code:`--date-format` and :code:`datetime-format`.
 * Error messages about column indices use 1-based numbering unless :code:`--zero` is set.
 * :doc:`/scripts/csvcut` no longer errors on :code:`--delete-empty-rows` with short rows.
+* :doc:`/scripts/csvjoin` no longer errors if given a single file.
 * :doc:`/scripts/csvsql` supports UPDATE commands.
 * :doc:`/scripts/csvstat` no longer errors on non-finite numbers.
 * :doc:`/scripts/in2csv` writes XLS sheets without encoding errors in Python 2.
