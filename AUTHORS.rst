@@ -89,3 +89,4 @@ The following individuals have contributed code to csvkit:
 * Victor Noagbodji
 * Connor McArthur
 * Matěj Cepl
+* Nicholas Matteo

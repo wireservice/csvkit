@@ -44,6 +44,12 @@ class TestCSVJoin(CSVKitTestCase, EmptyFileTests):
         with open('examples/join_short.csv') as f:
             self.assertEqual(output.readlines(), f.readlines())
 
+    def test_single(self):
+        self.assertRows(['examples/dummy.csv', '--no-inference'], [
+            ['a', 'b', 'c'],
+            ['1', '2', '3'],
+        ])
+
     def test_no_blanks(self):
         self.assertRows(['examples/blanks.csv', 'examples/blanks.csv'], [
             ['a', 'b', 'c', 'd', 'e', 'f', 'a2', 'b2', 'c2', 'd2', 'e2', 'f2'],
