@@ -117,4 +117,8 @@ You can also use CSVSQL to "directly" query one or more CSV files. Please note t
 
 Concatenate two columns::
 
-    csvsql --query "select a||b from 'dummy3'" examples/dummy3.csv
+    csvsql --query "select a || b from 'dummy3'" examples/dummy3.csv
+
+If a column contains null values, you must ``COALESCE`` the column::
+
+    csvsql --query "select a || COALESCE(b, '') from 'sort_ints_nulls'" --no-inference examples/sort_ints_nulls.csv
