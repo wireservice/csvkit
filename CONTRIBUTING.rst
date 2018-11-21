@@ -8,7 +8,7 @@ Report a bug
 ------------
 
 * `Browse the open issues to check that it is not already reported <https://github.com/wireservice/csvkit/issues>`_
-* Run the csvkit tool with the :code:`-v` (:code:`--verbose`) flag
+* Run the csvkit tool (:code:`csvcut`, etc.) with the :code:`-v` (:code:`--verbose`) flag
 * Open a new issue and include:
 
   * the csvkit command with the :code:`-v` (:code:`--verbose`) flag (for example, :code:`csvstat -v test.csv`)
