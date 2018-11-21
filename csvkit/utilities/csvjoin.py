@@ -33,8 +33,8 @@ class CSVJoin(CSVKitUtility):
         for path in self.args.input_paths:
             self.input_files.append(self._open_input_file(path))
 
-        if len(self.input_files) < 2:
-            self.argparser.error('You must specify at least two files to join.')
+        if len(self.input_files) < 1:
+            self.argparser.error('You must specify at least one file to join.')
 
         if self.args.columns:
             join_column_names = self._parse_join_column_names(self.args.columns)
