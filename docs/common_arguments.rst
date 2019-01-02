@@ -37,10 +37,11 @@ csvkit's tools share a set of common command-line arguments. Not every argument 
                         Specify a strptime datetime format string like
                         "%m/%d/%Y %I:%M %p".
   -H, --no-header-row   Specify that the input CSV file has no header row.
-                        Will create default headers (A,B,C,...).
+                        Will create default headers (a,b,c,...).
   -K SKIP_LINES, --skip-lines SKIP_LINES
-                        Specify the number of initial lines to skip (e.g.
-                        comments, copyright notices, empty rows).
+                        Specify the number of initial lines to skip before the
+                        header row (e.g. comments, copyright notices, empty
+                        rows).
   -v, --verbose         Print detailed tracebacks when errors occur.
   -l, --linenumbers     Insert a column of line numbers at the front of the
                         output. Useful when piping to grep or as a simple
