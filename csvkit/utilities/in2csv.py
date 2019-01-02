@@ -150,7 +150,7 @@ class In2CSV(CSVKitUtility):
                 if not hasattr(self.input_file, 'name'):
                     raise ValueError('DBF files can not be converted from stdin. You must pass a filename.')
                 table = agate.Table.from_dbf(self.input_file.name, **kwargs)
-            table.to_csv(self.output_file)
+            table.to_csv(self.output_file, **self.writer_kwargs)
 
         if self.args.write_sheets:
             # Close and re-open the file, as the file object has been mutated or closed.
@@ -171,7 +171,7 @@ class In2CSV(CSVKitUtility):
             base = splitext(self.input_file.name)[0]
             for i, table in enumerate(tables.values()):
                 with open('%s_%d.csv' % (base, i), 'w') as f:
-                    table.to_csv(f)
+                    table.to_csv(f, **self.writer_kwargs)
 
         self.input_file.close()
 
