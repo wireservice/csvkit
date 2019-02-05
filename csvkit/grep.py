@@ -6,7 +6,7 @@ from csvkit.exceptions import ColumnIdentifierError
 
 
 class FilteringCSVReader(six.Iterator):
-    """
+    r"""
     Given any row iterator, only return rows which pass the filter.
     If 'header' is False, then all rows must pass the filter; by default, the first row will be passed
     through untested.
