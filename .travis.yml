@@ -2,6 +2,8 @@ dist: xenial
 sudo: false
 language: python
 cache: pip
+services:
+  - postgresql
 python:
   - "2.7"
   - "3.3"
