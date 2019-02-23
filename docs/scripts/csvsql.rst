@@ -12,7 +12,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                   [-S] [--blanks] [--date-format DATE_FORMAT]
                   [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
                   [-l] [--zero] [-V]
-                  [-i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase}]
+                  [-i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}]
                   [--db CONNECTION_STRING] [--query QUERY] [--insert]
                   [--prefix PREFIX] [--tables TABLE_NAMES] [--no-constraints]
                   [--unique-constraint UNIQUE_CONSTRAINT] [--no-create]
@@ -29,7 +29,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
 
     optional arguments:
       -h, --help            show this help message and exit
-      -i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase}, --dialect {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase}
+      -i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}, --dialect {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}
                             Dialect of SQL to generate. Only valid when --db is
                             not specified.
       --db CONNECTION_STRING
