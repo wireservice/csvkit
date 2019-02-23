@@ -1,8 +1,13 @@
 1.0.4
 -----
 
+Changes:
+
+* Dropped Python 3.3 support (end-of-life was September 29, 2017).
+
 Improvements:
 
+* csvkit is now tested against Python 3.7.
 * :doc:`/scripts/csvsql` adds a :code:`--chunk-size` option to set the chunk size when batch inserting into a table.
 
 Fixes:
