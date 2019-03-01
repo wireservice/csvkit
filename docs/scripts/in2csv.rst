@@ -97,3 +97,7 @@ Fetch csvkit's open issues from the GitHub API, convert the JSON response into a
 Convert a DBase DBF file to an equivalent CSV::
 
     in2csv examples/testdbf.dbf
+
+This tool names unnamed headers. To avoid that behavior, run::
+
+    in2csv --no-header-row examples/test.xlsx | tail -n +2
