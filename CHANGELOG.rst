@@ -1,5 +1,5 @@
-1.0.4
------
+1.0.4 - March 16, 2019
+----------------------
 
 Changes:
 
@@ -7,8 +7,8 @@ Changes:
 
 Improvements:
 
-* csvkit is now tested against Python 3.7.
 * :doc:`/scripts/csvsql` adds a :code:`--chunk-size` option to set the chunk size when batch inserting into a table.
+* csvkit is now tested against Python 3.7.
 
 Fixes:
 
