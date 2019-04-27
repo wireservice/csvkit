@@ -197,7 +197,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         utility.run()
         output = output_file.getvalue()
         output_file.close()
-        self.assertEqual(output, 'a,b,c\n1,2,3\n0,5,6\n')
+        self.assertEqual(output, 'a,b,c\n1,2.0,3.0\n0,5.0,6.0\n')
 
     def test_no_prefix_unique_constraint(self):
         self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', 'examples/dummy.csv', '--unique-constraint', 'a'])

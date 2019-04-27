@@ -45,7 +45,7 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
         if not db:
             db = 'sqlite:///' + self.db_file
 
-        args = ['--db', db, '--tables', 'foo', '--insert', csv_file]
+        args = ['--db', db, '--tables', 'foo', '--insert', csv_file, '--no-inference']
 
         utility = CSVSQL(args)
         utility.run()
