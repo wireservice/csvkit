@@ -26,14 +26,14 @@ Processing
     scripts/csvsort
     scripts/csvstack
 
+To change field values (i.e. to run ``sed`` or ``awk``-like commands on CSV files), consider `miller <https://github.com/johnkerl/miller>`_ (``mlr put``).
+
 To transpose CSVs, consider `csvtool <http://colin.maudry.com/csvtool-manual-page/>`_. Install ``csvtool`` on Linux using your package manager, or on macOS using::
 
     brew install ocaml
     opam install csv
     ln -s ~/.opam/system/bin/csvtool /usr/local/bin/
     csvtool --help
-
-To run ``sed``-like commands on CSV files, consider `csvsed <https://github.com/metagriffin/csvsed>`_.
 
 Output and Analysis
 ===================
@@ -48,7 +48,11 @@ Output and Analysis
     scripts/csvsql
     scripts/csvstat
 
-To diff CSVs, consider `daff <https://github.com/paulfitz/daff>`_. An alternative to :doc:`csvsql` is `q <https://github.com/harelba/q>`_.
+* To draw plots, consider `jp <https://github.com/sgreben/jp>`_.
+* To diff CSVs, consider `daff <https://github.com/paulfitz/daff>`_.
+* To explore CSVs interactively, consider `VisiData <http://visidata.org>`_.
+
+Alternatives to :doc:`csvsql` are `q <https://github.com/harelba/q>`_ and `textql <https://github.com/dinedal/textql>`_.
 
 Common arguments
 ================
