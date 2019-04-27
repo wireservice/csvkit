@@ -18,6 +18,10 @@
     :target: https://pypi.python.org/pypi/csvkit
     :alt: Support Python versions
 
+.. image:: https://img.shields.io/pypi/dm/csvkit.svg
+    :target: https://pypi.python.org/pypi/csvkit
+    :alt: Downloads per month on PyPI
+
 csvkit is a suite of command-line tools for converting to and working with CSV, the king of tabular file formats.
 
 It is inspired by pdftk, GDAL and the original csvcut tool by Joe Germuska and Aaron Bycoffe.
