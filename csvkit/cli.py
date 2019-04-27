@@ -140,7 +140,7 @@ class CSVKitUtility(object):
         # Input
         if 'f' not in self.override_flags:
             self.argparser.add_argument(metavar='FILE', nargs='?', dest='input_path',
-                                        help='The CSV file to operate on. If omitted, will accept input on STDIN.')
+                                        help='The CSV file to operate on. If omitted, will accept input as piped data via STDIN.')
         if 'd' not in self.override_flags:
             self.argparser.add_argument('-d', '--delimiter', dest='delimiter',
                                         help='Delimiting character of the input CSV file.')

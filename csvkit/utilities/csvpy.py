@@ -18,7 +18,7 @@ class CSVPy(CSVKitUtility):
 
     def main(self):
         if self.input_file == sys.stdin:
-            self.argparser.error('csvpy cannot accept input on STDIN (pipe).')
+            self.argparser.error('csvpy cannot accept input as piped data via STDIN.')
 
         # Attempt reading filename, will cause lazy loader to access file and raise error if it does not exist
         filename = self.input_file.name

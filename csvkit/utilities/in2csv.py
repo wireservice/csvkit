@@ -33,7 +33,7 @@ class In2CSV(CSVKitUtility):
                 return bytestring
 
         self.argparser.add_argument(metavar='FILE', nargs='?', dest='input_path',
-                                    help='The CSV file to operate on. If omitted, will accept input on STDIN.')
+                                    help='The CSV file to operate on. If omitted, will accept input as piped data via STDIN.')
         self.argparser.add_argument('-f', '--format', dest='filetype',
                                     help='The format of the input file. If not specified will be inferred from the file type. Supported formats: %s.' % ', '.join(sorted(SUPPORTED_FORMATS)))
         self.argparser.add_argument('-s', '--schema', dest='schema',
@@ -85,7 +85,7 @@ class In2CSV(CSVKitUtility):
             filetype = 'json'
         else:
             if not path or path == '-':
-                self.argparser.error('You must specify a format when providing data via STDIN (pipe).')
+                self.argparser.error('You must specify a format when providing input as piped data via STDIN.')
             filetype = convert.guess_format(path)
             if not filetype:
                 self.argparser.error('Unable to automatically determine the format of the input file. Try specifying a format with --format.')

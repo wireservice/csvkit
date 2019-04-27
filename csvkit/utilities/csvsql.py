@@ -20,7 +20,7 @@ class CSVSQL(CSVKitUtility):
 
     def add_arguments(self):
         self.argparser.add_argument(metavar='FILE', nargs='*', dest='input_paths', default=['-'],
-                                    help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
+                                    help='The CSV file(s) to operate on. If omitted, will accept input as piped data via STDIN.')
         self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=DIALECTS,
                                     help='Dialect of SQL to generate. Only valid when --db is not specified.')
         self.argparser.add_argument('--db', dest='connection_string',

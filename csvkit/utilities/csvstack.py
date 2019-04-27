@@ -15,7 +15,7 @@ class CSVStack(CSVKitUtility):
 
     def add_arguments(self):
         self.argparser.add_argument(metavar='FILE', nargs='*', dest='input_paths', default=['-'],
-                                    help='The CSV file(s) to operate on. If omitted, will accept input on STDIN.')
+                                    help='The CSV file(s) to operate on. If omitted, will accept input as piped data via STDIN.')
         self.argparser.add_argument('-g', '--groups', dest='groups',
                                     help='A comma-separated list of values to add as "grouping factors", one for each CSV being stacked. These will be added to the stacked CSV as a new column. You may specify a name for the grouping column using the -n flag.')
         self.argparser.add_argument('-n', '--group-name', dest='group_name',
