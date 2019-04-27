@@ -17,7 +17,7 @@ Stack up the rows from multiple CSV files, optionally adding a grouping value to
 
     positional arguments:
       FILE                  The CSV file(s) to operate on. If omitted, will accept
-                            input on STDIN.
+                            input as piped data via STDIN.
 
     optional arguments:
       -h, --help            show this help message and exit

@@ -19,7 +19,7 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
 
     positional arguments:
       FILE                  The CSV file to operate on. If omitted, will accept
-                            input on STDIN.
+                            input as piped data via STDIN.
 
     optional arguments:
       -h, --help            show this help message and exit

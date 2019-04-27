@@ -19,7 +19,7 @@ Converts a CSV file into JSON or GeoJSON (depending on flags)::
 
     positional arguments:
       FILE                  The CSV file to operate on. If omitted, will accept
-                            input on STDIN.
+                            input as piped data via STDIN.
 
     optional arguments:
       -h, --help            show this help message and exit

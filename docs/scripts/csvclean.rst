@@ -29,7 +29,7 @@ Outputs [basename]_out.csv and [basename]_err.csv, the former containing all val
 
     positional arguments:
       FILE                  The CSV file to operate on. If omitted, will accept
-                            input on STDIN.
+                            input as piped data via STDIN.
 
     optional arguments:
       -h, --help            show this help message and exit

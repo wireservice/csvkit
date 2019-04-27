@@ -29,7 +29,7 @@ The header line is required though the columns may be in any order::
 
     positional arguments:
       FILE                  The CSV file to operate on. If omitted, will accept
-                            input on STDIN.
+                            input as piped data via STDIN.
 
     optional arguments:
       -h, --help            show this help message and exit

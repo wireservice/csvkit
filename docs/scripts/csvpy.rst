@@ -18,7 +18,7 @@ Loads a CSV file into a :class:`agate.csv.Reader` object and then drops into a P
 
     positional arguments:
       FILE                  The CSV file to operate on. If omitted, will accept
-                            input on STDIN.
+                            input as piped data via STDIN.
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -29,7 +29,7 @@ This tool will automatically use the IPython shell if it is installed, otherwise
 
 .. note::
 
-    Due to platform limitations, csvpy does not accept file input on STDIN. 
+    Due to platform limitations, csvpy does not accept file input as piped data via STDIN. 
 
 See also: :doc:`../common_arguments`.
 
