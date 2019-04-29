@@ -1,6 +1,10 @@
 1.0.5
 -----
 
+Improvements:
+
+* Output error message for memory error even if not :code:`--verbose`.
+
 1.0.4 - March 16, 2019
 ----------------------
 

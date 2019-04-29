@@ -284,7 +284,7 @@ class CSVKitUtility(object):
                                      'flag or with the PYTHONIOENCODING environment variable. Use the -v flag to see '
                                      'the complete error.\n' % self.args.encoding)
                 else:
-                    sys.stderr.write('%s\n' % six.text_type(value))
+                    sys.stderr.write('%s: %s\n' % (t.__name__, six.text_type(value)))
 
         sys.excepthook = handler
 
