@@ -14,6 +14,7 @@ Stack up the rows from multiple CSV files, optionally adding a grouping value to
                     FILE [FILE ...]
 
     Stack up the rows from multiple CSV files, optionally adding a grouping value.
+    Files are assumed to have the same columns in the same order.
 
     positional arguments:
       FILE                  The CSV file(s) to operate on. If omitted, will accept
