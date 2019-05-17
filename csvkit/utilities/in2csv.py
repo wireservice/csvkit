@@ -66,7 +66,7 @@ class In2CSV(CSVKitUtility):
         input_file = self.open_excel_input_file(path)
         if filetype == 'xls':
             sheet_names = xlrd.open_workbook(file_contents=input_file.read()).sheet_names()
-        elif filetype == 'xlsx':
+        else:  # 'xlsx'
             sheet_names = openpyxl.load_workbook(input_file, read_only=True, data_only=True).sheetnames
         input_file.close()
         return sheet_names
@@ -91,8 +91,8 @@ class In2CSV(CSVKitUtility):
                 self.argparser.error('Unable to automatically determine the format of the input file. Try specifying a format with --format.')
 
         if self.args.names_only:
-            sheets = self.sheet_names(path, filetype)
-            if sheets:
+            if filetype in ('xls', 'xlsx'):
+                sheets = self.sheet_names(path, filetype)
                 for sheet in sheets:
                     self.output_file.write('%s\n' % sheet)
             else:

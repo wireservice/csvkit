@@ -5,6 +5,10 @@ Improvements:
 
 * Output error message for memory error even if not :code:`--verbose`.
 
+Fixes:
+
+* :doc:`/scripts/in2csv` Fix error reporting if :code:`--names` used with non-Excel file.
+
 1.0.4 - March 16, 2019
 ----------------------
 
