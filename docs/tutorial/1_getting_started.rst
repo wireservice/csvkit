@@ -112,7 +112,7 @@ csvcut: data scalpel
      13: federal_supply_class
      14: federal_supply_class_name
 
-As you'll can see, our dataset has fourteen columns. Let's take a look at just columns ``2``, ``5`` and ``6``:
+As you can see, our dataset has fourteen columns. Let's take a look at just columns ``2``, ``5`` and ``6``:
 
 .. code-block:: bash
 
