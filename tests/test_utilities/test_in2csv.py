@@ -225,3 +225,35 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
                 path = 'examples/sheets_%d.csv' % suffix
                 if os.path.exists(path):
                     os.remove(path)
+
+    def test_convert_xls_with_write_sheets_with_names(self):
+        try:
+            self.assertConverted('xls', 'examples/sheets.xls', 'examples/testxls_converted.csv', ['--sheet', 'data', '--write-sheets', "ʤ,1", '--write-sheet-names'])
+            with open('examples/sheets_ʤ.csv', 'r') as f:
+                with open('examples/testxls_unicode_converted.csv', 'r') as g:
+                    self.assertEqual(f.read(), g.read())
+            with open('examples/sheets_1.csv', 'r') as f:
+                with open('examples/testxls_converted.csv', 'r') as g:
+                    self.assertEqual(f.read(), g.read())
+            self.assertFalse(os.path.exists('examples/sheets_2.csv'))
+        finally:
+            for suffix in (0, 1):
+                path = 'examples/sheets_%d.csv' % suffix
+                if os.path.exists(path):
+                    os.remove(path)
+
+    def test_convert_xlsx_with_write_sheets_with_names(self):
+        try:
+            self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_noinference_converted.csv', ['--no-inference', '--sheet', 'data', '--write-sheets', "ʤ,1", '--write-sheet-names'])
+            with open('examples/sheets_ʤ.csv', 'r') as f:
+                with open('examples/testxlsx_unicode_converted.csv', 'r') as g:
+                    self.assertEqual(f.read(), g.read())
+            with open('examples/sheets_1.csv', 'r') as f:
+                with open('examples/testxlsx_noinference_converted.csv', 'r') as g:
+                    self.assertEqual(f.read(), g.read())
+            self.assertFalse(os.path.exists('examples/sheets_2.csv'))
+        finally:
+            for suffix in (0, 1):
+                path = 'examples/sheets_%d.csv' % suffix
+                if os.path.exists(path):
+                    os.remove(path)
