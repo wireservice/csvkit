@@ -232,13 +232,15 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
             with open('examples/sheets_ʤ.csv', 'r') as f:
                 with open('examples/testxls_unicode_converted.csv', 'r') as g:
                     self.assertEqual(f.read(), g.read())
-            with open('examples/sheets_1.csv', 'r') as f:
+            with open('examples/sheets_data.csv', 'r') as f:
                 with open('examples/testxls_converted.csv', 'r') as g:
                     self.assertEqual(f.read(), g.read())
+            self.assertFalse(os.path.exists('examples/sheets_0.csv'))
+            self.assertFalse(os.path.exists('examples/sheets_1.csv'))
             self.assertFalse(os.path.exists('examples/sheets_2.csv'))
         finally:
-            for suffix in (0, 1):
-                path = 'examples/sheets_%d.csv' % suffix
+            for suffix in ('ʤ', 'data'):
+                path = 'examples/sheets_%s.csv' % suffix
                 if os.path.exists(path):
                     os.remove(path)
 
@@ -248,12 +250,14 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
             with open('examples/sheets_ʤ.csv', 'r') as f:
                 with open('examples/testxlsx_unicode_converted.csv', 'r') as g:
                     self.assertEqual(f.read(), g.read())
-            with open('examples/sheets_1.csv', 'r') as f:
+            with open('examples/sheets_data.csv', 'r') as f:
                 with open('examples/testxlsx_noinference_converted.csv', 'r') as g:
                     self.assertEqual(f.read(), g.read())
+            self.assertFalse(os.path.exists('examples/sheets_0.csv'))
+            self.assertFalse(os.path.exists('examples/sheets_1.csv'))
             self.assertFalse(os.path.exists('examples/sheets_2.csv'))
         finally:
-            for suffix in (0, 1):
-                path = 'examples/sheets_%d.csv' % suffix
+            for suffix in ('ʤ', 'data'):
+                path = 'examples/sheets_%s.csv' % suffix
                 if os.path.exists(path):
                     os.remove(path)
