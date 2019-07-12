@@ -48,7 +48,7 @@ class In2CSV(CSVKitUtility):
                                     help='The names of the Excel sheets to write to files, or "-" to write all sheets.')
         self.argparser.add_argument('--write-sheet-names', dest='write_sheet_names', action='store_true',
                                     help='Use the sheet name to create the target filename when using --write-sheets.')
-        self.argparser.add_argument('-r', '--regular-expression', dest='regular_expression',
+        self.argparser.add_argument('-r', '--regular-expression', dest='regular_expression', action='store_true',
                                     help='Use regular expression to identify XLS sheet names when using --write-sheets.')
         self.argparser.add_argument('--encoding-xls', dest='encoding_xls',
                                     help='Specify the encoding of the input XLS file.')
