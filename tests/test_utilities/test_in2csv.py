@@ -261,3 +261,18 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
                 path = 'examples/sheets_%s.csv' % suffix
                 if os.path.exists(path):
                     os.remove(path)
+
+    def test_convert_xlsx_with_write_sheets_with_names_and_regexp(self):
+        try:
+            self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_noinference_converted.csv', ['--no-inference', '-r', '--write-sheets', "[a-z]+", '--write-sheet-names'])
+            with open('examples/sheets_data.csv', 'r') as f:
+                with open('examples/testxlsx_noinference_converted.csv', 'r') as g:
+                    self.assertEqual(f.read(), g.read())
+            self.assertFalse(os.path.exists('examples/sheets_0.csv'))
+            self.assertFalse(os.path.exists('examples/sheets_1.csv'))
+            self.assertFalse(os.path.exists('examples/sheets_2.csv'))
+        finally:
+            for suffix in ('data',):
+                path = 'examples/sheets_%s.csv' % suffix
+                if os.path.exists(path):
+                    os.remove(path)

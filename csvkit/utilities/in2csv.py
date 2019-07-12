@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import re
 import sys
 from os.path import splitext
 
@@ -47,7 +47,9 @@ class In2CSV(CSVKitUtility):
         self.argparser.add_argument('--write-sheets', dest='write_sheets', type=option_parser,
                                     help='The names of the Excel sheets to write to files, or "-" to write all sheets.')
         self.argparser.add_argument('--write-sheet-names', dest='write_sheet_names', action='store_true',
-                                    help='Use the sheet name to create the target filename.')
+                                    help='Use the sheet name to create the target filename when using --write-sheets.')
+        self.argparser.add_argument('-r', '--regular-expression', dest='regular_expression',
+                                    help='Use regular expression to identify XLS sheet names when using --write-sheets.')
         self.argparser.add_argument('--encoding-xls', dest='encoding_xls',
                                     help='Specify the encoding of the input XLS file.')
         self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
@@ -162,6 +164,8 @@ class In2CSV(CSVKitUtility):
 
             if self.args.write_sheets == '-':
                 sheets = self.sheet_names(path, filetype)
+            elif self.args.regular_expression:
+                sheets = [sheet for sheet in self.sheet_names(path, filetype) if re.match(self.args.write_sheets, sheet)]
             else:
                 sheets = [int(sheet) if sheet.isdigit() else sheet for sheet in self.args.write_sheets.split(',')]
 
