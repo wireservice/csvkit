@@ -163,7 +163,7 @@ class CSVKitUtility(object):
             self.argparser.add_argument('-z', '--maxfieldsize', dest='field_size_limit', type=int,
                                         help='Maximum length of a single field in the input CSV file.')
         if 'e' not in self.override_flags:
-            self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8',
+            self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8-sig',
                                         help='Specify the encoding of the input CSV file.')
         if 'L' not in self.override_flags:
             self.argparser.add_argument('-L', '--locale', dest='locale', default='en_US',
