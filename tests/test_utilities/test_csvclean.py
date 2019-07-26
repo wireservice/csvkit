@@ -100,6 +100,13 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             '4,5,©\n',
         ], [], ['-e', 'latin1'])
 
+    def test_removes_bom(self):
+        self.assertCleaned('test_utf8_bom', [
+            'foo,bar,baz\n',
+            '1,2,3\n',
+            '4,5,ʤ\n',
+        ], [], [])
+
     def test_dry_run(self):
         output = self.get_output_as_io(['-n', 'examples/bad.csv'])
         self.assertFalse(os.path.exists('examples/bad_err.csv'))
