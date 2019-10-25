@@ -1,6 +1,10 @@
 1.0.5
 -----
 
+Changes:
+
+* Dropped Python 3.4 support (end-of-life was March 18, 2019).
+
 Improvements:
 
 * Output error message for memory error even if not :code:`--verbose`.
@@ -194,8 +198,8 @@ Fixes:
 * Fix broken csvkit module documentation. (#327)
 * Fix version of openpyxl to work around encoding issue. (#391, #288)
 
-0.9.0
------
+0.9.0 - September 8, 2014
+-------------------------
 
 * Write missing sections of the tutorial. (#32)
 * Remove -q arg from sql2csv (conflicts with common flag).
@@ -217,8 +221,8 @@ Fixes:
 * Implement csvformat.
 * Fix bug causing CSVKitDictWriter to output 'utf-8' for blank fields.
 
-0.8.0
------
+0.8.0 - July 27, 2014
+---------------------
 
 * Add pnaimoli to AUTHORS.
 * Fix column specification in csvstat. (#236)
@@ -228,8 +232,8 @@ Fixes:
 * Deprecated DBF support for Python 3+.
 * Add support for Python 3.3 and 3.4 (#239)
 
-0.7.3
------
+0.7.3 - April 27, 2014
+----------------------
 
 * Fix date handling with openpyxl > 2.0 (#285)
 * Add Kristina Durivage to AUTHORS. (#243)
@@ -244,18 +248,18 @@ Fixes:
 * Add Ryan Murphy to AUTHORS.
 * Fix DBF dependency. (#270)
 
-0.7.2
------
+0.7.2 - March 24, 2014
+----------------------
 
 * Fix CHANGELOG for release.
 
-0.7.1
------
+0.7.1 - March 24, 2014
+----------------------
 
 * Fix homepage url in setup.py.
 
-0.7.0
------
+0.7.0 - March 24, 2014
+----------------------
 
 * Fix XLSX datetime normalization bug. (#223)
 * Add raistlin7447 to AUTHORS.
@@ -270,8 +274,13 @@ Fixes:
 * Use case-sensitive name for SQLAlchemy (#237)
 * Add Travis Swicegood to AUTHORS.
 
-0.6.1
------
+0.6.1 - August 20, 2013
+-----------------------
+
+* Fix CHANGELOG for release.
+
+0.6.0 - August 20, 2013
+-----------------------
 
 * Add Chris Rosenthal to AUTHORS.
 * Fix multi-file input to csvsql. (#193)
@@ -290,8 +299,8 @@ Fixes:
 * Add Shane StClair to AUTHORS file.
 * Add --no-inference support to csvsort. (#222)
 
-0.5.0
------
+0.5.0 - August 21, 2012
+-----------------------
 
 * Implement geojson support in csvjson. (#159)
 * Optimize writing of eight bit codecs. (#175)
@@ -303,8 +312,8 @@ Fixes:
 * Added Noah Hoffman to AUTHORS.
 * Make csvlook output compatible with emacs table markup. (#174)
 
-0.4.4
------
+0.4.4 - May 1, 2012
+-------------------
 
 * Add Derek Wilson to AUTHORS.
 * Add Kevin Schaul to AUTHORS.
@@ -318,7 +327,7 @@ Fixes:
 * Add Anton Ian Sipos to AUTHORS.
 * Fix broken pipe errors. (#150)
 
-0.4.3
------
+0.4.3 - February 20, 2012
+-------------------------
 
 * Begin CHANGELOG (a bit late, I'll admit).
