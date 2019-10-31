@@ -11,6 +11,7 @@ Improvements:
 
 Fixes:
 
+* Fix regression in 1.0.4, which caused numbers like ``4.5`` to be parsed as dates.
 * :doc:`/scripts/in2csv` Fix error reporting if :code:`--names` used with non-Excel file.
 
 1.0.4 - March 16, 2019
