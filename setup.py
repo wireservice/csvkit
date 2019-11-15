@@ -23,7 +23,10 @@ setup(
     long_description=open('README.rst').read(),
     author='Christopher Groskopf',
     author_email='chrisgroskopf@gmail.com',
-    url='http://csvkit.rtfd.org/',
+    url='https://github.com/wireservice/csvkit',
+    project_urls={
+        'Documentation': 'https://csvkit.readthedocs.io/en/latest/',
+    },
     license='MIT',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
