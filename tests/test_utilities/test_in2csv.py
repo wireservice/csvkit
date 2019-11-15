@@ -56,9 +56,6 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     def test_numeric_date_format_default(self):
         self.assertConverted('csv', 'examples/test_numeric_date_format.csv', 'examples/test_numeric_date_format.csv')
 
-    def test_date_like_number(self):
-        self.assertConverted('csv', 'examples/date_like_number.csv', 'examples/date_like_number.csv')
-
     def test_convert_csv(self):
         self.assertConverted('csv', 'examples/testfixed_converted.csv', 'examples/testfixed_converted.csv')
 
