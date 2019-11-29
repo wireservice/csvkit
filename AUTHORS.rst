@@ -92,3 +92,4 @@ The following individuals have contributed code to csvkit:
 * Nicholas Matteo
 * Matt Giguere
 * Felix Bünemann
+* Андрій Орєхов
