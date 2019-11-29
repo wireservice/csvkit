@@ -23,15 +23,17 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             launch_new_instance()
 
     def test_runs(self):
+        # Test that csvstat doesn't error on UTF-8 input.
         self.get_output(['examples/test_utf8.csv'])
+
+    def test_encoding(self):
+        # Test that csvstat doesn't error on Latin-1 input.
+        self.get_output(['-e', 'latin1', 'examples/test_latin1.csv'])
 
     def test_columns(self):
         output = self.get_output(['-c', '2', 'examples/testxls_converted.csv'])
         self.assertNotIn('1. "text"', output)
         self.assertIn('2. "date"', output)
-
-    def test_encoding(self):
-        self.get_output(['-e', 'latin1', 'examples/test_latin1.csv'])
 
     def test_linenumbers(self):
         output = self.get_output(['-c', '2', '--linenumbers', 'examples/dummy.csv'])

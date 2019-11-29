@@ -56,6 +56,7 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
         return text.strip()
 
     def test_encoding(self):
+        # Test that csvstat doesn't error on Latin-1 input.
         self.get_output(['-e', 'latin1', 'examples/test.sql'])
 
     def test_query(self):

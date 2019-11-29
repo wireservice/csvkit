@@ -22,10 +22,20 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             launch_new_instance()
 
     def test_runs(self):
-        self.get_output(['examples/test_utf8.csv'])
+        self.assertLines(['examples/test_utf8.csv'], [
+            '| foo | bar | baz |',
+            '| --- | --- | --- |',
+            '|   1 |   2 | 3   |',
+            '|   4 |   5 | ʤ   |',
+        ])
 
     def test_encoding(self):
-        self.get_output(['-e', 'latin1', 'examples/test_latin1.csv'])
+        self.assertLines(['-e', 'latin1', 'examples/test_latin1.csv'], [
+            '| a | b | c |',
+            '| - | - | - |',
+            '| 1 | 2 | 3 |',
+            '| 4 | 5 | © |',
+        ])
 
     def test_simple(self):
         self.assertLines(['examples/dummy3.csv'], [
