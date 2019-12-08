@@ -64,5 +64,4 @@ Add two empty columns to the right of a CSV::
 
 Add a single column to the right of a CSV::
 
-
     echo "new-column" | csvjoin examples/dummy.csv -

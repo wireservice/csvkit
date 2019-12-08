@@ -27,9 +27,9 @@ class CSVStack(CSVKitUtility):
         if sys.stdin.isatty() and not self.args.input_paths:
             sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
 
-        has_groups = self.args.group_by_filenames or self.args.groups
+        has_groups = self.args.groups is not None or self.args.group_by_filenames
 
-        if self.args.groups and not self.args.group_by_filenames:
+        if self.args.groups is not None and not self.args.group_by_filenames:
             groups = self.args.groups.split(',')
 
             if len(groups) != len(self.args.input_paths):
