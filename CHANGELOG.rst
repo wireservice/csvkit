@@ -1,6 +1,10 @@
 1.0.6 - Unreleased
 ------------------
 
+Changes:
+
+* :doc:`/scripts/csvstat` no longer prints "Row count: " when :code:`--count` is set.
+
 1.0.5 - March 2, 2020
 ---------------------
 
