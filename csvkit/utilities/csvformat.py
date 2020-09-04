@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+import csv
+from decimal import Decimal
+import io
 import sys
 
 import agate
@@ -49,9 +52,30 @@ class CSVFormat(CSVKitUtility):
         if self.additional_input_expected():
             sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
 
-        reader = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
+        input_file = self.skip_lines()
+        find_numeric_columns = False
+        numeric_columns = []
+        if 'quoting' in self.writer_kwargs and self.writer_kwargs['quoting'] == csv.QUOTE_NONNUMERIC:
+            # We have to detect which columns are numeric in the input file, to avoid quoting them in the output
+            if 'quoting' not in self.reader_kwargs or self.reader_kwargs['quoting'] != csv.QUOTE_NONNUMERIC:
+                # The reader cannot determine from the input format which columns are numeric;
+                # we'll lend it a hand
+                find_numeric_columns = True
+        if find_numeric_columns:
+            input_data = input_file.read() # we need to cache it to use it twice
+            input_file = io.StringIO(input_data)
+            table = agate.Table.from_csv(input_file, **self.reader_kwargs)
+            numeric_columns = [n for n in range(0, len(table.column_types)) if isinstance(table.column_types[n], agate.Number)]
+            input_file = io.StringIO(input_data) # reload it from the cache for use by the csv reader
+        reader = agate.csv.reader(input_file, **self.reader_kwargs)
         writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
-        writer.writerows(reader)
+        if find_numeric_columns:
+            if 'header' not in self.reader_kwargs or self.reader_kwargs['header']:
+                writer.writerow(next(reader))
+            for row in reader:
+                writer.writerow([Decimal(row[n]) if n in numeric_columns else row[n] for n in range(0, len(row))])
+        else:
+            writer.writerows(reader)
 
 
 def launch_new_instance():
