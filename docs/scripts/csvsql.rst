@@ -76,10 +76,13 @@ For information on connection strings and supported dialects refer to the `SQLAl
 
 If you prefer not to enter your password in the connection string, store the password securely in a `PostgreSQL Password File <https://www.postgresql.org/docs/9.1/static/libpq-pgpass.html>`_, a `MySQL Options File <https://dev.mysql.com/doc/refman/5.7/en/option-files.html>`_ or similar files for other systems.
 
-
 .. note::
 
     Using the :code:`--query` option may cause rounding (in Python 2) or introduce [Python floating point issues](https://docs.python.org/3.4/tutorial/floatingpoint.html) (in Python 3).
+
+.. note::
+
+    Alternatives to :doc:`csvsql` are `q <https://github.com/harelba/q>`_ and `textql <https://github.com/dinedal/textql>`_.
 
 Examples
 ========

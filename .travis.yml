@@ -4,12 +4,11 @@ cache: pip
 services:
   - postgresql
 python:
-  - "2.7"
-  - "3.5"
   - "3.6"
   - "3.7"
+  - "3.8"
 install:
-  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then pip install -r requirements-py3.txt; else pip install -r requirements-py2.txt; fi
+  - pip install -r requirements-py3.txt
   - pip install coveralls
 before_script:
   - psql -U postgres -c 'CREATE DATABASE dummy_test'

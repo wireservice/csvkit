@@ -129,7 +129,7 @@ class CSVStat(CSVKitUtility):
             if not self.args.no_header_row:
                 count -= 1
 
-            self.output_file.write('Row count: %i\n' % count)
+            self.output_file.write('%i\n' % count)
 
             return
 

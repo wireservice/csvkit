@@ -47,7 +47,7 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_count_only(self):
         output = self.get_output(['--count', 'examples/realdata/ks_1033_data.csv'])
-        self.assertEqual(output, 'Row count: 1575\n')
+        self.assertEqual(output, '1575\n')
 
     def test_unique(self):
         output = self.get_output(['-c', 'county', 'examples/realdata/ks_1033_data.csv'])

@@ -38,10 +38,7 @@ Troubleshooting
 Installation
 ------------
 
-csvkit is supported on:
-
-* Python 2.7+
-* Python 3.3+
+csvkit is supported on non-end-of-life versions of Python.
 
 It is tested on macOS, and has also been used on Linux and Windows.
 
