@@ -79,7 +79,7 @@ class CSVFormat(CSVKitUtility):
             if 'header' not in self.reader_kwargs or self.reader_kwargs['header']:
                 writer.writerow(next(reader))
             for row in reader:
-                writer.writerow([Decimal(row[n]) if n in numeric_columns else row[n] for n in range(0, len(row))])
+                writer.writerow([Decimal(row[n]) if n in numeric_columns and row[n] != '' else row[n] for n in range(0, len(row))])
         else:
             # The usual and much quicker case: pipe from the reader to the writer
             writer.writerows(reader)

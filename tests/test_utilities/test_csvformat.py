@@ -84,23 +84,25 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_out_quoting(self):
-        input_file = six.StringIO('4,b,6,d\na,2,3,d\n')
+        input_file = six.StringIO('4,b,6,d\na,2,3,d\n8,9,,z\n')
 
         with stdin_as_string(input_file):
             self.assertLines(['-U', '2'], [
                 '"4","b","6","d"',
                 '"a",2,3,"d"',
+                '"8",9,"","z"',
             ])
 
         input_file.close()
 
     def test_out_quoting_no_header_row(self):
-        input_file = six.StringIO('4,5,6,7\na,2,3,d\n')
+        input_file = six.StringIO('4,5,6,7\na,2,3,d\n8,9,,z\n')
 
         with stdin_as_string(input_file):
             self.assertLines(['-U', '2', '--no-header-row'], [
                 '"4",5,6,"7"',
                 '"a",2,3,"d"',
+                '"8",9,"","z"',
             ])
 
         input_file.close()
