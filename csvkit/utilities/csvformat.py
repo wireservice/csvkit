@@ -53,28 +53,35 @@ class CSVFormat(CSVKitUtility):
             sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
 
         input_file = self.skip_lines()
-        find_numeric_columns = False
+
+        # When using -U 2 (QUOTE_NONNUMERIC), we have to know which columns are numeric in the input file, to avoid quoting them in the output.
+        # If the input file is not in the same QUOTE_NONNUMERIC quoting format, the reader cannot determine which columns are numeric;
+        # we'll have to lend it a hand, but it will be much slower and memory-consuming, so we make this a special case.
+        detect_numeric_columns = False
         numeric_columns = []
         if 'quoting' in self.writer_kwargs and self.writer_kwargs['quoting'] == csv.QUOTE_NONNUMERIC:
-            # We have to detect which columns are numeric in the input file, to avoid quoting them in the output
             if 'quoting' not in self.reader_kwargs or self.reader_kwargs['quoting'] != csv.QUOTE_NONNUMERIC:
-                # The reader cannot determine from the input format which columns are numeric;
-                # we'll lend it a hand
-                find_numeric_columns = True
-        if find_numeric_columns:
-            input_data = input_file.read() # we need to cache it to use it twice
+                detect_numeric_columns = True
+
+        # Find out which columns are numeric if this is required
+        if detect_numeric_columns:
+            input_data = input_file.read() # we need to cache the file's contents to use it twice
             input_file = io.StringIO(input_data)
             table = agate.Table.from_csv(input_file, **self.reader_kwargs)
             numeric_columns = [n for n in range(0, len(table.column_types)) if isinstance(table.column_types[n], agate.Number)]
             input_file = io.StringIO(input_data) # reload it from the cache for use by the csv reader
+
+        # Read and write CSV
         reader = agate.csv.reader(input_file, **self.reader_kwargs)
         writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
-        if find_numeric_columns:
+        if detect_numeric_columns:
+            # Special case where we need to convert numeric columns from strings to decimals
             if 'header' not in self.reader_kwargs or self.reader_kwargs['header']:
                 writer.writerow(next(reader))
             for row in reader:
                 writer.writerow([Decimal(row[n]) if n in numeric_columns else row[n] for n in range(0, len(row))])
         else:
+            # The usual and much quicker case: pipe from the reader to the writer
             writer.writerows(reader)
 
 
