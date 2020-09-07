@@ -69,9 +69,17 @@ class CSVFormat(CSVKitUtility):
 
         # Find out which columns are numeric if this is required
         if detect_numeric_columns:
+            # We create a dumb TypeTester to avoid converting null values detected by agate
+            def DumbTypeTester():
+                # We get agate's normal possible types
+                types = agate.TypeTester()._possible_types
+                for i, t in enumerate(types):
+                    types[i] = t.__class__(null_values=('',))
+                return agate.TypeTester(types=types)
+            # We now load the file's contents in a Table and get which columns contain Numbers
             input_data = input_file.read() # we need to cache the file's contents to use it twice
             input_file = io.StringIO(input_data)
-            table = agate.Table.from_csv(input_file, **self.reader_kwargs)
+            table = agate.Table.from_csv(input_file, column_types=DumbTypeTester(), **self.reader_kwargs)
             numeric_columns = [n for n in range(0, len(table.column_types)) if isinstance(table.column_types[n], agate.Number)]
             input_file = io.StringIO(input_data) # reload it from the cache for use by the csv reader
 

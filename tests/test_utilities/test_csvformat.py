@@ -84,13 +84,14 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_out_quoting(self):
-        input_file = six.StringIO('4,b,6,d\na,2,3,d\n8,9,,z\n')
+        input_file = six.StringIO('4,b,6,d,e\na,2,3,d,NA\n8,9,,z,10\n1.1,2.0,3.00,,11\n')
 
         with stdin_as_string(input_file):
             self.assertLines(['-U', '2'], [
-                '"4","b","6","d"',
-                '"a",2,3,"d"',
-                '"8",9,"","z"',
+                '"4","b","6","d","e"',
+                '"a",2,3,"d","NA"',
+                '"8",9,"","z","10"',
+                '"1.1",2.0,3.00,"","11"',
             ])
 
         input_file.close()
