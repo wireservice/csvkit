@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
 import csv
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 import io
 import sys
 
 import agate
+import six
 
 from csvkit.cli import CSVKitUtility
 
@@ -49,6 +50,9 @@ class CSVFormat(CSVKitUtility):
         return kwargs
 
     def main(self):
+        if six.PY2:
+            sys.stderr = codecs.getwriter('utf-8')(sys.stderr)
+
         if self.additional_input_expected():
             sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
 
@@ -79,7 +83,17 @@ class CSVFormat(CSVKitUtility):
             if 'header' not in self.reader_kwargs or self.reader_kwargs['header']:
                 writer.writerow(next(reader))
             for row in reader:
-                writer.writerow([Decimal(row[n]) if n in numeric_columns and row[n] != '' else row[n] for n in range(0, len(row))])
+                try:
+                    writer.writerow([Decimal(row[n]) if n in numeric_columns and row[n] != '' else row[n] for n in range(0, len(row))])
+                except InvalidOperation as e:
+                    sys.stderr.write(f"Error on line {reader.line_num} ")
+                    for n in numeric_columns:
+                        try:
+                            if row[n] != '':
+                                d = Decimal(row[n])
+                        except InvalidOperation:
+                            sys.stderr.write(f"in column {n}: '{row[n]}' cannot be converted to Decimal.\n")
+                            raise e
         else:
             # The usual and much quicker case: pipe from the reader to the writer
             writer.writerows(reader)
