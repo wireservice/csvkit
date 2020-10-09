@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-
+import itertools
 import sys
 
 import agate
-
-from csvkit.cli import CSVKitUtility
+from csvkit.cli import CSVKitUtility, make_default_headers
 
 
 class CSVFormat(CSVKitUtility):
@@ -51,6 +50,13 @@ class CSVFormat(CSVKitUtility):
 
         reader = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
         writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
+        if self.args.no_header_row:
+            # Peek at a row to get the number of columns.
+            _row = next(reader)
+            reader = itertools.chain([_row], reader)
+            headers = make_default_headers(len(_row))
+            writer.writerow(headers)
+
         writer.writerows(reader)
 
 
