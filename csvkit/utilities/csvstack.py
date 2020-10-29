@@ -73,7 +73,7 @@ class CSVStack(CSVKitUtility):
             else:
                 row = next(rows, [])
 
-                headers = list(make_default_headers(len(row)))
+                headers = make_default_headers(len(row))
 
                 if i == 0:
                     if has_groups:
