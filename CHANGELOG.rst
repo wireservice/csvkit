@@ -7,6 +7,7 @@ Changes:
 
 Fixes:
 
+* :doc:`/scripts/csvformat` creates default headers when :code:`--no-header-row` is set, as documented.
 * :doc:`/scripts/csvstack` no longer errors when :code:`--no-header-row` is combined with :code:`--groups` or :code:`--filenames`.
 
 1.0.5 - March 2, 2020
