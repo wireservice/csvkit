@@ -78,7 +78,7 @@ If you prefer not to enter your password in the connection string, store the pas
 
 .. note::
 
-    Using the :code:`--query` option may cause rounding (in Python 2) or introduce [Python floating point issues](https://docs.python.org/3.4/tutorial/floatingpoint.html) (in Python 3).
+    Using the :code:`--query` option may cause rounding (in Python 2) or introduce `Python floating point issues <https://docs.python.org/3.4/tutorial/floatingpoint.html>`_ (in Python 3).
 
 .. note::
 
