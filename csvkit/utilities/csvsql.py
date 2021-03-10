@@ -107,7 +107,11 @@ class CSVSQL(CSVKitUtility):
             try:
                 engine = create_engine(self.args.connection_string)
             except ImportError:
-                raise ImportError('You don\'t appear to have the necessary database backend installed for connection string you\'re trying to use. Available backends include:\n\nPostgresql:\tpip install psycopg2\nMySQL:\t\tpip install mysql-connector-python\n\nFor details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at: \n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n')
+                raise ImportError("You don't appear to have the necessary database backend installed for connection "
+                                  "string you're trying to use. Available backends include:\n\nPostgreSQL:\tpip install "
+                                  "psycopg2\nMySQL:\t\tpip install mysql-connector-python OR pip install mysqlclient\n\n"
+                                  "For details on connection strings and other backends, please see the SQLAlchemy "
+                                  "documentation on dialects at:\n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n")
 
             self.connection = engine.connect()
 

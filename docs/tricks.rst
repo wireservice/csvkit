@@ -104,14 +104,14 @@ If a tool is too slow to be practical for your data try setting the :code:`--sni
 Database errors
 ---------------
 
-Are you seeing this error message, even after running :code:`pip install psycopg2` or :code:`pip install mysql-connector-python`?
+Are you seeing this error message, even after running :code:`pip install psycopg2`, :code:`pip install mysql-connector-python` or :code:`pip install mysqlclient`?
 
 ::
 
     You don't appear to have the necessary database backend installed for connection string you're trying to use. Available backends include:
 
-    Postgresql: pip install psycopg2
-    MySQL:      pip install mysql-connector-python
+    PostgreSQL: pip install psycopg2
+    MySQL:      pip install mysql-connector-python OR pip install mysqlclient
 
     For details on connection strings and other backends, please see the SQLAlchemy documentation on dialects at:
 
