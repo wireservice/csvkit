@@ -67,7 +67,7 @@ The ``acquisition_cost`` column is type ``Number``. We see that the largest indi
 
 Lastly, the ``ship_date`` column (type ``Date``) shows us that the earliest data is from ``2006`` and the latest from ``2014``. We may also note that an unusually large amount of equipment was shipped in April, 2013.
 
-As a journalist, this quick glance at the data gave me a tremendous amount of information about the dataset. Although we have to be careful about assuming to much from this quick glance (always double-check the numbers mean what you think they mean!) it can be an invaluable way to familiarize yourself with a new dataset.
+As a journalist, this quick glance at the data gave me a tremendous amount of information about the dataset. Although we have to be careful about assuming too much from this quick glance (always double-check the numbers mean what you think they mean!) it can be an invaluable way to familiarize yourself with a new dataset.
 
 csvgrep: find the data you need
 ===============================
