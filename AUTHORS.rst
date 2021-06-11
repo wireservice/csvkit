@@ -94,3 +94,6 @@ The following individuals have contributed code to csvkit:
 * Felix Bünemann
 * Андрій Орєхов
 * Dan Nguyen
+* Christopher Bottoms
+* Tomáš Hrnčiar
+* 谭九鼎
