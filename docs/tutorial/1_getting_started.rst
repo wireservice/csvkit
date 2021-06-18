@@ -59,7 +59,7 @@ You should see a CSV version of the data dumped into your terminal. All csvkit t
 
 ``data.csv`` will now contain a CSV version of our original file. If you aren't familiar with the ``>`` syntax, it means "redirect standard out to a file". If that's hard to remember it may be more convenient to think of it as "save to".
 
-We can verify the that the data is saved to the new file by using the ``cat`` command to print it:
+We can verify that the data is saved to the new file by using the ``cat`` command to print it:
 
 .. code-block:: bash
 
