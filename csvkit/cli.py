@@ -337,13 +337,18 @@ class CSVKitUtility(object):
     def get_rows_and_column_names_and_column_ids(self, **kwargs):
         rows = agate.csv.reader(self.skip_lines(), **kwargs)
 
+        try:
+            next_row = next(rows)
+        except StopIteration:
+            return iter([]), [], []
+
         if self.args.no_header_row:
             # Peek at a row to get the number of columns.
-            row = next(rows)
+            row = next_row
             rows = itertools.chain([row], rows)
             column_names = make_default_headers(len(row))
         else:
-            column_names = next(rows)
+            column_names = next_row
 
         column_offset = self.get_column_offset()
         if self.args.line_numbers:

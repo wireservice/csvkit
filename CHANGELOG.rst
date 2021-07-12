@@ -4,6 +4,7 @@
 Changes:
 
 * :doc:`/scripts/csvstat` no longer prints "Row count: " when :code:`--count` is set.
+* :doc:`/scripts/csvcut` and :doc:`/scripts/csvgrep` no longer error if standard input is null.
 
 Fixes:
 
