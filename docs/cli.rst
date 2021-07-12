@@ -26,7 +26,9 @@ Processing
     scripts/csvsort
     scripts/csvstack
 
-To change field values (i.e. to run ``sed`` or ``awk``-like commands on CSV files), consider `miller <https://github.com/johnkerl/miller>`_ (``mlr put``).
+To deduplicate and merge CSV files, consider `csvdedupe <https://pypi.org/project/csvdedupe/>`__.
+
+To change field values (i.e. to run ``sed`` or ``awk``-like commands on CSV files), consider `miller <https://miller.readthedocs.io/en/latest/>`_ (``mlr put``).
 
 To transpose CSVs, consider `csvtool <https://colin.maudry.com/csvtool-manual-page/>`_. Install ``csvtool`` on Linux using your package manager, or on macOS using::
 
