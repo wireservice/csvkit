@@ -1,0 +1,42 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+    services:
+      postgres:
+        image: postgres:11
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432/tcp
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      # https://github.com/actions/cache/blob/main/examples.md#using-a-script-to-get-cache-location
+      - id: pip-cache
+        run: python -c "from pip._internal.locations import USER_CACHE_DIR; print('::set-output name=dir::' + USER_CACHE_DIR)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      # test_wildcard_on_postgresql is commented out.
+      # - run: psql -U postgres -c 'CREATE DATABASE dummy_test'
+      - run: pip install .[test] coveralls
+      - run: nosetests --with-coverage --cover-package=csvkit
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: coveralls --service=github

@@ -17,11 +17,7 @@ Set up your environment for development::
     cd csvkit
     mkvirtualenv csvkit
 
-    # If running Python 2:
-    pip install -r requirements-py2.txt
-
-    # If running Python 3:
-    pip install -r requirements-py3.txt
+    pip install -e .[test]
 
     python setup.py develop
     tox
