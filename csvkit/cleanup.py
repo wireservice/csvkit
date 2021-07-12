@@ -27,7 +27,10 @@ class RowChecker(object):
 
     def __init__(self, reader):
         self.reader = reader
-        self.column_names = next(reader)
+        try:
+            self.column_names = next(reader)
+        except StopIteration:
+            self.column_names = []
         self.errors = []
         self.rows_joined = 0
         self.joins = 0
