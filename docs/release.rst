@@ -2,18 +2,13 @@
 Release process
 ===============
 
-#. Verify no `high priority issues <https://github.com/wireservice/csvkit/issues?q=is%3Aopen+is%3Aissue+label%3A%22High+Priority%22>`_ are outstanding.
-#. Run the full test suite with fresh environments for all versions: ``tox -r`` (Everything MUST pass.)
-#. Ensure these files all have the correct version number:
-    * CHANGELOG.rst
+#. All tests pass on continuous integration
+#. The changelog is up-to-date and dated
+#. The version number is correct in:
     * setup.py
     * docs/conf.py
     * csvkit/cli.py
-#. Tag the release: ``git tag -a x.y.z -m 'x.y.z release.'; git push --tags``
-#. Roll out to PyPI: ``python setup.py sdist upload``
-#. Iterate the version number in all files where it is specified. (see list above)
-#. Flag the new version for building on `Read the Docs <https://readthedocs.org/dashboard/csvkit/versions/>`_. 
-#. Wait for the documentation build to finish.
-#. Flag the new release as the default documentation version.
-#. Announce the release on Twitter, etc. 
-
+#. Check for new authors: ``git log --invert-grep --author='James McKinney'``
+#. Tag the release: ``git tag -a x.y.z -m 'x.y.z release.'; git push --follow-tags``
+#. Upload to PyPI: ``rm -rf dist; python setup.py sdist bdist_wheel; twine upload dist/*``
+#. Build the documentation on ReadTheDocs manually
