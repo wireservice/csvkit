@@ -1,12 +1,14 @@
-#!/usr/bin/env python
+from setuptools import find_packages, setup
 
-from setuptools import setup
+with open('README.rst') as f:
+    long_description = f.read()
 
 setup(
     name='csvkit',
     version='1.0.6',
     description='A suite of command-line tools for working with CSV, the king of tabular file formats.',
-    long_description=open('README.rst').read(),
+    long_description=long_description,
+    long_description_content_type='text/x-rst',
     author='Christopher Groskopf',
     author_email='chrisgroskopf@gmail.com',
     url='https://github.com/wireservice/csvkit',
@@ -34,11 +36,7 @@ setup(
     project_urls={
         'Documentation': 'https://csvkit.readthedocs.io/en/latest/',
     },
-    packages=[
-        'csvkit',
-        'csvkit.convert',
-        'csvkit.utilities'
-    ],
+    packages=find_packages(exclude=['tests', 'tests.*']),
     entry_points={
         'console_scripts': [
             'csvclean = csvkit.utilities.csvclean:launch_new_instance',
