@@ -22,7 +22,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
       - run: pip install .[test] coveralls
-      - run: nosetests --with-coverage --cover-package=csvkit
+      - env:
+          PYTHONIOENCODING: utf-8
+          PYTHONUTF8: 1
+        run: nosetests --with-coverage --cover-package=csvkit
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: coveralls --service=github
