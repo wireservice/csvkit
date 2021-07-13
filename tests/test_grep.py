@@ -3,8 +3,8 @@
 import re
 import unittest
 
-from csvkit.grep import FilteringCSVReader
 from csvkit.exceptions import ColumnIdentifierError
+from csvkit.grep import FilteringCSVReader
 
 
 class TestGrep(unittest.TestCase):

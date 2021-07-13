@@ -30,7 +30,8 @@ class TestFixed(CSVKitTestCase):
         input_file = six.StringIO('     1   2 3')
 
         with stdin_as_string(input_file):
-            self.assertLines(['--no-inference', '-f', 'fixed', '--schema', 'examples/testfixed_schema_no_inference.csv'], [
+            self.assertLines(['--no-inference', '-f', 'fixed', '--schema',
+                              'examples/testfixed_schema_no_inference.csv'], [
                 'a,b,c',
                 '1,2,3',
             ])

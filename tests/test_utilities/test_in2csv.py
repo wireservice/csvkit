@@ -36,7 +36,8 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         self.assertEqual(e.exception.code, 0)
 
     def test_locale(self):
-        self.assertConverted('csv', 'examples/test_locale.csv', 'examples/test_locale_converted.csv', ['--locale', 'de_DE'])
+        self.assertConverted('csv', 'examples/test_locale.csv',
+                             'examples/test_locale_converted.csv', ['--locale', 'de_DE'])
 
     def test_no_blanks(self):
         self.assertConverted('csv', 'examples/blanks.csv', 'examples/blanks_converted.csv')
@@ -45,13 +46,15 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         self.assertConverted('csv', 'examples/blanks.csv', 'examples/blanks.csv', ['--blanks'])
 
     def test_date_format(self):
-        self.assertConverted('csv', 'examples/test_date_format.csv', 'examples/test_date_format_converted.csv', ['--date-format', '%d/%m/%Y'])
+        self.assertConverted('csv', 'examples/test_date_format.csv',
+                             'examples/test_date_format_converted.csv', ['--date-format', '%d/%m/%Y'])
 
     def test_date_format_default(self):
         self.assertConverted('csv', 'examples/test_date_format.csv', 'examples/test_date_format.csv')
 
     def test_numeric_date_format(self):
-        self.assertConverted('csv', 'examples/test_numeric_date_format.csv', 'examples/test_date_format_converted.csv', ['--date-format', '%Y%m%d'])
+        self.assertConverted('csv', 'examples/test_numeric_date_format.csv',
+                             'examples/test_date_format_converted.csv', ['--date-format', '%Y%m%d'])
 
     def test_numeric_date_format_default(self):
         self.assertConverted('csv', 'examples/test_numeric_date_format.csv', 'examples/test_numeric_date_format.csv')
@@ -63,13 +66,15 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         self.assertConverted('csv', 'examples/testfixed_converted.csv', 'examples/testfixed_converted.csv')
 
     def test_convert_csv_with_skip_lines(self):
-        self.assertConverted('csv', 'examples/test_skip_lines.csv', 'examples/dummy.csv', ['--skip-lines', '3', '--no-inference'])
+        self.assertConverted('csv', 'examples/test_skip_lines.csv', 'examples/dummy.csv',
+                             ['--skip-lines', '3', '--no-inference'])
 
     def test_convert_tsv(self):
         self.assertConverted('csv', 'examples/dummy.tsv', 'examples/dummy.csv', ['--no-inference'])
 
     def test_convert_tsv_streaming(self):
-        self.assertConverted('csv', 'examples/dummy.tsv', 'examples/dummy.csv', ['--no-inference', '--snifflimit', '0', '--tabs'])
+        self.assertConverted('csv', 'examples/dummy.tsv', 'examples/dummy.csv',
+                             ['--no-inference', '--snifflimit', '0', '--tabs'])
 
     def test_convert_dbf(self):
         self.assertConverted('dbf', 'examples/testdbf.dbf', 'examples/testdbf_converted.csv')
@@ -99,7 +104,8 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_convert_xls_with_skip_lines(self):
-        self.assertConverted('xls', 'examples/test_skip_lines.xls', 'examples/testxls_converted.csv', ['--skip-lines', '3'])
+        self.assertConverted('xls', 'examples/test_skip_lines.xls',
+                             'examples/testxls_converted.csv', ['--skip-lines', '3'])
 
     def test_convert_xlsx(self):
         self.assertConverted('xlsx', 'examples/test.xlsx', 'examples/testxlsx_converted.csv')
@@ -114,7 +120,8 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_convert_xlsx_with_skip_lines(self):
-        self.assertConverted('xlsx', 'examples/test_skip_lines.xlsx', 'examples/testxlsx_converted.csv', ['--skip-lines', '3'])
+        self.assertConverted('xlsx', 'examples/test_skip_lines.xlsx',
+                             'examples/testxlsx_converted.csv', ['--skip-lines', '3'])
 
     def test_names(self):
         self.assertLines(['--names', 'examples/sheets.xlsx'], [
@@ -124,10 +131,12 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_csv_no_headers(self):
-        self.assertConverted('csv', 'examples/no_header_row.csv', 'examples/dummy.csv', ['--no-header-row', '--no-inference'])
+        self.assertConverted('csv', 'examples/no_header_row.csv', 'examples/dummy.csv',
+                             ['--no-header-row', '--no-inference'])
 
     def test_csv_no_headers_streaming(self):
-        self.assertConverted('csv', 'examples/no_header_row.csv', 'examples/dummy.csv', ['--no-header-row', '--no-inference', '--snifflimit', '0'])
+        self.assertConverted('csv', 'examples/no_header_row.csv', 'examples/dummy.csv',
+                             ['--no-header-row', '--no-inference', '--snifflimit', '0'])
 
     def test_csv_datetime_inference(self):
         input_file = six.StringIO('a\n2015-01-01T00:00:00Z')
@@ -159,7 +168,9 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_geojson_no_inference(self):
-        input_file = six.StringIO('{"a": 1, "b": 2, "type": "FeatureCollection", "features": [{"geometry": {}, "properties": {"a": 1, "b": 2, "c": 3}}]}')
+        input_file = six.StringIO(
+            '{"a": 1, "b": 2, "type": "FeatureCollection", "features": [{"geometry": {}, "properties": '
+            '{"a": 1, "b": 2, "c": 3}}]}')
 
         with stdin_as_string(input_file):
             self.assertLines(['--no-inference', '-f', 'geojson'], [
@@ -205,7 +216,8 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
     def test_convert_xls_with_write_sheets(self):
         try:
-            self.assertConverted('xls', 'examples/sheets.xls', 'examples/testxls_converted.csv', ['--sheet', 'data', '--write-sheets', "ʤ,1"])
+            self.assertConverted('xls', 'examples/sheets.xls', 'examples/testxls_converted.csv',
+                                 ['--sheet', 'data', '--write-sheets', "ʤ,1"])
             with open('examples/sheets_0.csv', 'r') as f:
                 with open('examples/testxls_unicode_converted.csv', 'r') as g:
                     self.assertEqual(f.read(), g.read())
@@ -221,7 +233,8 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
     def test_convert_xlsx_with_write_sheets(self):
         try:
-            self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_noinference_converted.csv', ['--no-inference', '--sheet', 'data', '--write-sheets', "ʤ,1"])
+            self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_noinference_converted.csv',
+                                 ['--no-inference', '--sheet', 'data', '--write-sheets', "ʤ,1"])
             with open('examples/sheets_0.csv', 'r') as f:
                 with open('examples/testxlsx_unicode_converted.csv', 'r') as g:
                     self.assertEqual(f.read(), g.read())

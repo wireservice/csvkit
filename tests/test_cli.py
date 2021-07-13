@@ -34,7 +34,8 @@ class TestCli(unittest.TestCase):
         self.assertEqual([0, 1, 2, 3], parse_column_identifiers('1,2:4', self.headers))
         self.assertEqual([1, 2, 3, 4], parse_column_identifiers('1,2:4', self.headers, column_offset=0))
         self.assertEqual([4, 2, 5], parse_column_identifiers('more-header-values,3,stuff', self.headers))
-        self.assertEqual([4, 3, 5], parse_column_identifiers('more-header-values,3,stuff', self.headers, column_offset=0))
+        self.assertEqual([4, 3, 5], parse_column_identifiers(
+            'more-header-values,3,stuff', self.headers, column_offset=0))
 
     def test_range_notation_open_ended(self):
         self.assertEqual([0, 1, 2], parse_column_identifiers(':3', self.headers))

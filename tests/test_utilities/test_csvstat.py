@@ -2,9 +2,8 @@
 
 import sys
 
-import six
-
 import agate
+import six
 
 try:
     from mock import patch
@@ -12,7 +11,7 @@ except ImportError:
     from unittest.mock import patch
 
 from csvkit.utilities.csvstat import CSVStat, launch_new_instance
-from tests.utils import CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests
+from tests.utils import ColumnsTests, CSVKitTestCase, EmptyFileTests, NamesTests
 
 
 class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):

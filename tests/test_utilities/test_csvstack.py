@@ -53,6 +53,7 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
             ['dummy2.csv', '1', '2', '3'],
         ])
 
+
 class TestNoHeaderRow(TestCSVStack):
 
     def test_no_header_row_basic(self):

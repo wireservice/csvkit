@@ -3,6 +3,7 @@
 
 import os
 import sys
+from textwrap import dedent
 
 import six
 from sqlalchemy.exc import IntegrityError, OperationalError
@@ -36,78 +37,84 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
     def test_create_table(self):
         sql = self.get_output(['--tables', 'foo', 'examples/testfixed_converted.csv'])
 
-        self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  text VARCHAR NOT NULL, 
-  date DATE, 
-  integer DECIMAL, 
-  boolean BOOLEAN, 
-  float DECIMAL, 
-  time DATETIME, 
-  datetime TIMESTAMP, 
-  empty_column BOOLEAN
-);
-''')  # noqa
+        self.assertEqual(sql.replace('\t', '  '), dedent('''\
+            CREATE TABLE foo (
+              text VARCHAR NOT NULL, 
+              date DATE, 
+              integer DECIMAL, 
+              boolean BOOLEAN, 
+              float DECIMAL, 
+              time DATETIME, 
+              datetime TIMESTAMP, 
+              empty_column BOOLEAN
+            );
+        '''))  # noqa: W291
 
     def test_no_blanks(self):
         sql = self.get_output(['--tables', 'foo', 'examples/blanks.csv'])
 
-        self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  a BOOLEAN, 
-  b BOOLEAN, 
-  c BOOLEAN, 
-  d BOOLEAN, 
-  e BOOLEAN, 
-  f BOOLEAN
-);
-''')  # noqa
+        self.assertEqual(sql.replace('\t', '  '), dedent('''\
+            CREATE TABLE foo (
+              a BOOLEAN, 
+              b BOOLEAN, 
+              c BOOLEAN, 
+              d BOOLEAN, 
+              e BOOLEAN, 
+              f BOOLEAN
+            );
+        '''))  # noqa: W291
 
     def test_blanks(self):
         sql = self.get_output(['--tables', 'foo', '--blanks', 'examples/blanks.csv'])
 
-        self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  a VARCHAR NOT NULL, 
-  b VARCHAR NOT NULL, 
-  c VARCHAR NOT NULL, 
-  d VARCHAR NOT NULL, 
-  e VARCHAR NOT NULL, 
-  f VARCHAR NOT NULL
-);
-''')  # noqa
+        self.assertEqual(sql.replace('\t', '  '), dedent('''\
+            CREATE TABLE foo (
+              a VARCHAR NOT NULL, 
+              b VARCHAR NOT NULL, 
+              c VARCHAR NOT NULL, 
+              d VARCHAR NOT NULL, 
+              e VARCHAR NOT NULL, 
+              f VARCHAR NOT NULL
+            );
+        '''))  # noqa: W291
 
     def test_no_inference(self):
         sql = self.get_output(['--tables', 'foo', '--no-inference', 'examples/testfixed_converted.csv'])
 
-        self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  text VARCHAR NOT NULL, 
-  date VARCHAR, 
-  integer VARCHAR, 
-  boolean VARCHAR, 
-  float VARCHAR, 
-  time VARCHAR, 
-  datetime VARCHAR, 
-  empty_column VARCHAR
-);
-''')  # noqa
+        self.assertEqual(sql.replace('\t', '  '), dedent('''\
+            CREATE TABLE foo (
+              text VARCHAR NOT NULL, 
+              date VARCHAR, 
+              integer VARCHAR, 
+              boolean VARCHAR, 
+              float VARCHAR, 
+              time VARCHAR, 
+              datetime VARCHAR, 
+              empty_column VARCHAR
+            );
+        '''))  # noqa: W291
 
     def test_no_header_row(self):
         sql = self.get_output(['--tables', 'foo', '--no-header-row', 'examples/no_header_row.csv'])
 
-        self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  a BOOLEAN NOT NULL, 
-  b DECIMAL NOT NULL, 
-  c DECIMAL NOT NULL
-);
-''')  # noqa
+        self.assertEqual(sql.replace('\t', '  '), dedent('''\
+            CREATE TABLE foo (
+              a BOOLEAN NOT NULL, 
+              b DECIMAL NOT NULL, 
+              c DECIMAL NOT NULL
+            );
+        '''))  # noqa: W291
 
     def test_linenumbers(self):
         sql = self.get_output(['--tables', 'foo', '--linenumbers', 'examples/dummy.csv'])
 
-        self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  a BOOLEAN NOT NULL, 
-  b DECIMAL NOT NULL, 
-  c DECIMAL NOT NULL
-);
-''')  # noqa
+        self.assertEqual(sql.replace('\t', '  '), dedent('''\
+            CREATE TABLE foo (
+              a BOOLEAN NOT NULL, 
+              b DECIMAL NOT NULL, 
+              c DECIMAL NOT NULL
+            );
+        '''))  # noqa: W291
 
     def test_stdin(self):
         input_file = six.StringIO('a,b,c\n4,2,3\n')
@@ -115,12 +122,13 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         with stdin_as_string(input_file):
             sql = self.get_output(['--tables', 'foo'])
 
-            self.assertEqual(sql.replace('\t', '  '), '''CREATE TABLE foo (
-  a DECIMAL NOT NULL, 
-  b DECIMAL NOT NULL, 
-  c DECIMAL NOT NULL
-);
-''')  # noqa
+            self.assertEqual(sql.replace('\t', '  '), dedent('''\
+                CREATE TABLE foo (
+                  a DECIMAL NOT NULL, 
+                  b DECIMAL NOT NULL, 
+                  c DECIMAL NOT NULL
+                );
+            '''))  # noqa: W291
 
         input_file.close()
 
@@ -164,17 +172,17 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
                                'examples/testfixed_converted.csv'])
 
         self.assertEqual(sql,
-            "text\n"
-            "Chicago Reader\n"
-            "Chicago Sun-Times\n"
-            "Chicago Tribune\n")
+                         "text\n"
+                         "Chicago Reader\n"
+                         "Chicago Sun-Times\n"
+                         "Chicago Tribune\n")
 
     def test_query_file(self):
         sql = self.get_output(['--query', 'examples/test_query.sql', 'examples/testfixed_converted.csv'])
 
         self.assertEqual(sql,
-            "question,text\n"
-            "36,©\n")
+                         "question,text\n"
+                         "36,©\n")
 
     def test_query_update(self):
         sql = self.get_output(['--query', 'UPDATE dummy SET a=10 WHERE a=1', '--no-inference', 'examples/dummy.csv'])
@@ -183,7 +191,8 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
 
     def test_before_after_insert(self):
         self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', 'examples/dummy.csv', '--before-insert',
-                         'SELECT 1; CREATE TABLE foobar (date DATE)', '--after-insert', 'INSERT INTO dummy VALUES (0, 5, 6)'])
+                         'SELECT 1; CREATE TABLE foobar (date DATE)', '--after-insert',
+                         'INSERT INTO dummy VALUES (0, 5, 6)'])
 
         output_file = six.StringIO()
         utility = SQL2CSV(['--db', 'sqlite:///' + self.db_file, '--query', 'SELECT * FROM foobar'], output_file)
@@ -200,13 +209,16 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         self.assertEqual(output, 'a,b,c\n1,2.0,3.0\n0,5.0,6.0\n')
 
     def test_no_prefix_unique_constraint(self):
-        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', 'examples/dummy.csv', '--unique-constraint', 'a'])
+        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert',
+                        'examples/dummy.csv', '--unique-constraint', 'a'])
         with self.assertRaises(IntegrityError):
             self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', 'examples/dummy.csv', '--no-create'])
 
     def test_prefix_unique_constraint(self):
-        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', 'examples/dummy.csv', '--unique-constraint', 'a'])
-        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', 'examples/dummy.csv', '--no-create', '--prefix', 'OR IGNORE'])
+        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert',
+                        'examples/dummy.csv', '--unique-constraint', 'a'])
+        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert',
+                        'examples/dummy.csv', '--no-create', '--prefix', 'OR IGNORE'])
 
     def test_no_create_if_not_exists(self):
         self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', '--tables', 'foo', 'examples/foo1.csv'])
@@ -215,4 +227,5 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
 
     def test_create_if_not_exists(self):
         self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', '--tables', 'foo', 'examples/foo1.csv'])
-        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', '--tables', 'foo', 'examples/foo2.csv', '--create-if-not-exists'])
+        self.get_output(['--db', 'sqlite:///' + self.db_file, '--insert', '--tables',
+                        'foo', 'examples/foo2.csv', '--create-if-not-exists'])
