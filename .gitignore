@@ -8,5 +8,4 @@ dist
 *.swo
 docs/_build
 .coverage
-.tox
 cover

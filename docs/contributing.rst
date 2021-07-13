@@ -20,7 +20,6 @@ Set up your environment for development::
     pip install -e .[test]
 
     python setup.py develop
-    tox
 
 Principles of development
 =========================
@@ -49,7 +48,7 @@ How to contribute
 #. Fork the project on `GitHub <https://github.com/wireservice/csvkit>`_.
 #. Look through the `open issues <https://github.com/wireservice/csvkit/issues>`_ for a task that you can realistically expect to complete in a few days. Don't worry about the issue's priority; instead, choose something you'll enjoy. You're more likely to finish something if you enjoy hacking on it.
 #. Comment on the issue to let people know you're going to work on it so that no one duplicates your effort. It's good practice to provide a general idea of how you plan to resolve the issue so that others can make suggestions.
-#. Write tests for any changes to the code's behavior. Follow the format of the tests in the ``tests/`` directory to see how this works. You can run all the tests with the command ``tox``, or just your Python version's with ``nosetests`` (faster).
+#. Write tests for any changes to the code's behavior. Follow the format of the tests in the ``tests/`` directory to see how this works. You can run tests with the command ``nosetests``.
 #. Write the code. Try to be consistent with the style and organization of the existing code. A good contribution won't be refused for stylistic reasons, but large parts of it may be rewritten and nobody wants that.
 #. As you're working, periodically merge in changes from the upstream master branch to avoid having to resolve large merge conflicts. Check that you haven't broken anything by running the tests.
 #. Write documentation for any user-facing features.
