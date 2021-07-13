@@ -62,6 +62,10 @@ On macOS, if you see ``OSError: [Errno 1] Operation not permitted``, try::
 
     sudo pip install --ignore-installed csvkit
 
+Or if you see ``/usr/local/bin/pip: bad interpreter`` and have Python 3 installed, try::
+
+    python3 -m pip install csvkit
+
 If you use Python 2 and have a recent version of pip, you may need to run pip with :code:`--allow-external argparse`.
 
 If you use Python 2 on FreeBSD, you may need to install `py-sqlite3 <https://www.freshports.org/databases/py-sqlite3/>`_.
