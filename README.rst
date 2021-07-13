@@ -1,10 +1,14 @@
-.. image:: https://secure.travis-ci.org/wireservice/csvkit.svg
-    :target: https://travis-ci.org/wireservice/csvkit
-    :alt: Build Status
+.. image:: https://github.com/wireservice/csvkit/workflows/CI/badge.svg
+    :target: https://github.com/wireservice/csvkit/actions
+    :alt: Build status
 
 .. image:: https://coveralls.io/repos/wireservice/csvkit/badge.svg?branch=master
     :target: https://coveralls.io/r/wireservice/csvkit
     :alt: Coverage Status
+
+.. image:: https://img.shields.io/pypi/dm/csvkit.svg
+    :target: https://pypi.python.org/pypi/csvkit
+    :alt: PyPI downloads
 
 .. image:: https://img.shields.io/pypi/v/csvkit.svg
     :target: https://pypi.python.org/pypi/csvkit
@@ -17,10 +21,6 @@
 .. image:: https://img.shields.io/pypi/pyversions/csvkit.svg
     :target: https://pypi.python.org/pypi/csvkit
     :alt: Support Python versions
-
-.. image:: https://img.shields.io/pypi/dm/csvkit.svg
-    :target: https://pypi.python.org/pypi/csvkit
-    :alt: Downloads per month on PyPI
 
 csvkit is a suite of command-line tools for converting to and working with CSV, the king of tabular file formats.
 
