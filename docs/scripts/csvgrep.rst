@@ -24,22 +24,19 @@ Filter tabular data to only those rows where certain columns contain a given val
       -n, --names           Display column names and indices from the input CSV
                             and exit.
       -c COLUMNS, --columns COLUMNS
-                            A comma separated list of column indices, names or
+                            A comma-separated list of column indices, names or
                             ranges to be searched, e.g. "1,id,3-5".
       -m PATTERN, --match PATTERN
-                            The string to search for.
+                            A string to search for.
       -r REGEX, --regex REGEX
-                            If specified, must be followed by a regular expression
-                            which will be tested against the specified columns.
+                            A regular expression to match.
       -f MATCHFILE, --file MATCHFILE
-                            If specified, must be the path to a file. For each
-                            tested row, if any line in the file (stripped of line
-                            separators) is an exact match for the cell value, the
-                            row will pass.
-      -i, --invert-match    If specified, select non-matching instead of matching
-                            rows.
-      -a  --any-match       If specified, select rows where any column matches
-                            instead of all columns.
+                            A path to a file. For each row, if any line in the
+                            file (stripped of line separators) is an exact match
+                            of the cell value, the row matches.
+      -i, --invert-match    Select non-matching rows, instead of matching rows.
+      -a  --any-match       Select rows in which any column matches, instead of
+                            all columns.
 
 See also: :doc:`../common_arguments`.
 

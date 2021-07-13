@@ -14,16 +14,15 @@ Executes arbitrary commands against a SQL database and outputs the results as a 
     Execute an SQL query on a database and output the result to a CSV file.
 
     positional arguments:
-      FILE                  The file to use as SQL query. If both FILE and QUERY
-                            are omitted, query will be read from STDIN.
+      FILE                  The file to use as the SQL query. If FILE and --query
+                            are omitted, the query is piped data via STDIN.
 
     optional arguments:
       -h, --help            show this help message and exit
       --db CONNECTION_STRING
                             An sqlalchemy connection string to connect to a
                             database.
-      --query QUERY         The SQL query to execute. If specified, it overrides
-                            FILE and STDIN.
+      --query QUERY         The SQL query to execute. Overrides FILE and STDIN.
       -e ENCODING, --encoding ENCODING
                             Specify the encoding of the input query file.
       -H, --no-header-row   Do not output column names.

@@ -139,69 +139,94 @@ class CSVKitUtility(object):
 
         # Input
         if 'f' not in self.override_flags:
-            self.argparser.add_argument(metavar='FILE', nargs='?', dest='input_path',
-                                        help='The CSV file to operate on. If omitted, will accept input as piped data via STDIN.')
+            self.argparser.add_argument(
+                metavar='FILE', nargs='?', dest='input_path',
+                help='The CSV file to operate on. If omitted, will accept input as piped data via STDIN.')
         if 'd' not in self.override_flags:
-            self.argparser.add_argument('-d', '--delimiter', dest='delimiter',
-                                        help='Delimiting character of the input CSV file.')
+            self.argparser.add_argument(
+                '-d', '--delimiter', dest='delimiter',
+                help='Delimiting character of the input CSV file.')
         if 't' not in self.override_flags:
-            self.argparser.add_argument('-t', '--tabs', dest='tabs', action='store_true',
-                                        help='Specify that the input CSV file is delimited with tabs. Overrides "-d".')
+            self.argparser.add_argument(
+                '-t', '--tabs', dest='tabs', action='store_true',
+                help='Specify that the input CSV file is delimited with tabs. Overrides "-d".')
         if 'q' not in self.override_flags:
-            self.argparser.add_argument('-q', '--quotechar', dest='quotechar',
-                                        help='Character used to quote strings in the input CSV file.')
+            self.argparser.add_argument(
+                '-q', '--quotechar', dest='quotechar',
+                help='Character used to quote strings in the input CSV file.')
         if 'u' not in self.override_flags:
-            self.argparser.add_argument('-u', '--quoting', dest='quoting', type=int, choices=[0, 1, 2, 3],
-                                        help='Quoting style used in the input CSV file. 0 = Quote Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 = Quote None.')
+            self.argparser.add_argument(
+                '-u', '--quoting', dest='quoting', type=int, choices=[0, 1, 2, 3],
+                help='Quoting style used in the input CSV file. 0 = Quote Minimal, 1 = Quote All, '
+                     '2 = Quote Non-numeric, 3 = Quote None.')
         if 'b' not in self.override_flags:
-            self.argparser.add_argument('-b', '--no-doublequote', dest='doublequote', action='store_false',
-                                        help='Whether or not double quotes are doubled in the input CSV file.')
+            self.argparser.add_argument(
+                '-b', '--no-doublequote', dest='doublequote', action='store_false',
+                help='Whether or not double quotes are doubled in the input CSV file.')
         if 'p' not in self.override_flags:
-            self.argparser.add_argument('-p', '--escapechar', dest='escapechar',
-                                        help='Character used to escape the delimiter if --quoting 3 ("Quote None") is specified and to escape the QUOTECHAR if --no-doublequote is specified.')
+            self.argparser.add_argument(
+                '-p', '--escapechar', dest='escapechar',
+                help='Character used to escape the delimiter if --quoting 3 ("Quote None") is specified and to escape '
+                     'the QUOTECHAR if --no-doublequote is specified.')
         if 'z' not in self.override_flags:
-            self.argparser.add_argument('-z', '--maxfieldsize', dest='field_size_limit', type=int,
-                                        help='Maximum length of a single field in the input CSV file.')
+            self.argparser.add_argument(
+                '-z', '--maxfieldsize', dest='field_size_limit', type=int,
+                help='Maximum length of a single field in the input CSV file.')
         if 'e' not in self.override_flags:
-            self.argparser.add_argument('-e', '--encoding', dest='encoding', default='utf-8-sig',
-                                        help='Specify the encoding of the input CSV file.')
+            self.argparser.add_argument(
+                '-e', '--encoding', dest='encoding', default='utf-8-sig',
+                help='Specify the encoding of the input CSV file.')
         if 'L' not in self.override_flags:
-            self.argparser.add_argument('-L', '--locale', dest='locale', default='en_US',
-                                        help='Specify the locale (en_US) of any formatted numbers.')
+            self.argparser.add_argument(
+                '-L', '--locale', dest='locale', default='en_US',
+                help='Specify the locale (en_US) of any formatted numbers.')
         if 'S' not in self.override_flags:
-            self.argparser.add_argument('-S', '--skipinitialspace', dest='skipinitialspace', action='store_true',
-                                        help='Ignore whitespace immediately following the delimiter.')
+            self.argparser.add_argument(
+                '-S', '--skipinitialspace', dest='skipinitialspace', action='store_true',
+                help='Ignore whitespace immediately following the delimiter.')
         if 'blanks' not in self.override_flags:
-            self.argparser.add_argument('--blanks', dest='blanks', action='store_true',
-                                        help='Do not convert "", "na", "n/a", "none", "null", "." to NULL.')
+            self.argparser.add_argument(
+                '--blanks', dest='blanks', action='store_true',
+                help='Do not convert "", "na", "n/a", "none", "null", "." to NULL.')
         if 'date-format' not in self.override_flags:
-            self.argparser.add_argument('--date-format', dest='date_format',
-                                        help='Specify a strptime date format string like "%%m/%%d/%%Y".')
+            self.argparser.add_argument(
+                '--date-format', dest='date_format',
+                help='Specify a strptime date format string like "%%m/%%d/%%Y".')
         if 'datetime-format' not in self.override_flags:
-            self.argparser.add_argument('--datetime-format', dest='datetime_format',
-                                        help='Specify a strptime datetime format string like "%%m/%%d/%%Y %%I:%%M %%p".')
+            self.argparser.add_argument(
+                '--datetime-format', dest='datetime_format',
+                help='Specify a strptime datetime format string like "%%m/%%d/%%Y %%I:%%M %%p".')
         if 'H' not in self.override_flags:
-            self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',
-                                        help='Specify that the input CSV file has no header row. Will create default headers (a,b,c,...).')
+            self.argparser.add_argument(
+                '-H', '--no-header-row', dest='no_header_row', action='store_true',
+                help='Specify that the input CSV file has no header row. Will create default headers (a,b,c,...).')
         if 'K' not in self.override_flags:
-            self.argparser.add_argument('-K', '--skip-lines', dest='skip_lines', type=int, default=0,
-                                        help='Specify the number of initial lines to skip before the header row (e.g. comments, copyright notices, empty rows).')
+            self.argparser.add_argument(
+                '-K', '--skip-lines', dest='skip_lines', type=int, default=0,
+                help='Specify the number of initial lines to skip before the header row (e.g. comments, copyright '
+                     'notices, empty rows).')
         if 'v' not in self.override_flags:
-            self.argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
-                                        help='Print detailed tracebacks when errors occur.')
+            self.argparser.add_argument(
+                '-v', '--verbose', dest='verbose', action='store_true',
+                help='Print detailed tracebacks when errors occur.')
 
         # Output
         if 'l' not in self.override_flags:
-            self.argparser.add_argument('-l', '--linenumbers', dest='line_numbers', action='store_true',
-                                        help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a simple primary key.')
+            self.argparser.add_argument(
+                '-l', '--linenumbers', dest='line_numbers', action='store_true',
+                help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a '
+                     'simple primary key.')
 
         # Input/Output
         if 'zero' not in self.override_flags:
-            self.argparser.add_argument('--zero', dest='zero_based', action='store_true',
-                                        help='When interpreting or displaying column numbers, use zero-based numbering instead of the default 1-based numbering.')
+            self.argparser.add_argument(
+                '--zero', dest='zero_based', action='store_true',
+                help='When interpreting or displaying column numbers, use zero-based numbering instead of the default '
+                     '1-based numbering.')
 
-        self.argparser.add_argument('-V', '--version', action='version', version='%(prog)s 1.0.6',
-                                    help='Display version information and exit.')
+        self.argparser.add_argument(
+            '-V', '--version', action='version', version='%(prog)s 1.0.6',
+            help='Display version information and exit.')
 
     def _open_input_file(self, path):
         """
@@ -404,8 +429,9 @@ def match_column_identifier(column_names, c, column_offset=1):
         try:
             c = int(c) - column_offset
         # Fail out if neither a column name nor an integer
-        except:
-            raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name. Column names are: %s" % (c, repr(column_names)[1:-1]))
+        except ValueError:
+            raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name. "
+                                        "Column names are: %s" % (c, repr(column_names)[1:-1]))
 
         # Fail out if index is 0-based
         if c < 0:
@@ -413,7 +439,8 @@ def match_column_identifier(column_names, c, column_offset=1):
 
         # Fail out if index is out of range
         if c >= len(column_names):
-            raise ColumnIdentifierError("Column %i is invalid. The last column is '%s' at index %i." % (c + column_offset, column_names[-1], len(column_names) - 1 + column_offset))
+            raise ColumnIdentifierError("Column %i is invalid. The last column is '%s' at index %i." % (
+                c + column_offset, column_names[-1], len(column_names) - 1 + column_offset))
 
     return c
 
@@ -456,7 +483,8 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                         b = len(column_names) + 1
 
                 except ValueError:
-                    raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
+                    raise ColumnIdentifierError(
+                        "Invalid range %s. Ranges must be two integers separated by a - or : character.")
 
                 for x in range(a, b):
                     columns.append(match_column_identifier(column_names, x, column_offset))
@@ -488,7 +516,8 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                         b = len(column_names)
 
                 except ValueError:
-                    raise ColumnIdentifierError("Invalid range %s. Ranges must be two integers separated by a - or : character.")
+                    raise ColumnIdentifierError(
+                        "Invalid range %s. Ranges must be two integers separated by a - or : character.")
 
                 for x in range(a, b):
                     excludes.append(match_column_identifier(column_names, x, column_offset))

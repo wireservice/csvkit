@@ -9,19 +9,25 @@ from csvkit.cli import CSVKitUtility, make_default_headers
 
 
 class CSVStack(CSVKitUtility):
-    description = 'Stack up the rows from multiple CSV files, optionally adding a grouping value. Files are assumed to have the same columns in the same order.'
+    description = 'Stack up the rows from multiple CSV files, optionally adding a grouping value. Files are assumed ' \
+                  'to have the same columns in the same order.'
     # Override 'f' because the utility accepts multiple files.
     override_flags = ['f', 'L', 'blanks', 'date-format', 'datetime-format']
 
     def add_arguments(self):
-        self.argparser.add_argument(metavar='FILE', nargs='*', dest='input_paths', default=['-'],
-                                    help='The CSV file(s) to operate on. If omitted, will accept input as piped data via STDIN.')
-        self.argparser.add_argument('-g', '--groups', dest='groups',
-                                    help='A comma-separated list of values to add as "grouping factors", one for each CSV being stacked. These will be added to the stacked CSV as a new column. You may specify a name for the grouping column using the -n flag.')
-        self.argparser.add_argument('-n', '--group-name', dest='group_name',
-                                    help='A name for the grouping column, e.g. "year". Only used when also specifying -g.')
-        self.argparser.add_argument('--filenames', dest='group_by_filenames', action='store_true',
-                                    help='Use the filename of each input file as its grouping value. When specified, -g will be ignored.')
+        self.argparser.add_argument(
+            metavar='FILE', nargs='*', dest='input_paths', default=['-'],
+            help='The CSV file(s) to operate on. If omitted, will accept input as piped data via STDIN.')
+        self.argparser.add_argument(
+            '-g', '--groups', dest='groups',
+            help='A comma-separated list of values to add as "grouping factors", one per CSV being stacked. These are '
+                 'added to the output as a new column. You may specify a name for the new column using the -n flag.')
+        self.argparser.add_argument(
+            '-n', '--group-name', dest='group_name',
+            help='A name for the grouping column, e.g. "year". Only used when also specifying -g.')
+        self.argparser.add_argument(
+            '--filenames', dest='group_by_filenames', action='store_true',
+            help='Use the filename of each input file as its grouping value. When specified, -g will be ignored.')
 
     def main(self):
         if sys.stdin.isatty() and not self.args.input_paths:
@@ -33,7 +39,8 @@ class CSVStack(CSVKitUtility):
             groups = self.args.groups.split(',')
 
             if len(groups) != len(self.args.input_paths):
-                self.argparser.error('The number of grouping values must be equal to the number of CSV files being stacked.')
+                self.argparser.error(
+                    'The number of grouping values must be equal to the number of CSV files being stacked.')
         else:
             groups = None
 

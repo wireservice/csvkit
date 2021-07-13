@@ -27,7 +27,7 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
       -n, --names           Display column names and indices from the input CSV
                             and exit.
       -c COLUMNS, --columns COLUMNS
-                            A comma separated list of column indices, names or
+                            A comma-separated list of column indices, names or
                             ranges to be examined, e.g. "1,id,3-5". Defaults to
                             all columns.
       --type                Only output data type.
@@ -46,7 +46,7 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
       --count               Only output total row count.
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                             Limit CSV dialect sniffing to the specified number of
-                            bytes. Specify "0" to disable sniffing entirely.
+                            bytes. Specify "0" to disable sniffing.
 
 See also: :doc:`../common_arguments`.
 

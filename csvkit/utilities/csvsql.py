@@ -2,10 +2,10 @@
 
 import os.path
 import sys
-from pkg_resources import iter_entry_points
 
 import agate
-import agatesql  # noqa
+import agatesql  # noqa: F401
+from pkg_resources import iter_entry_points
 from sqlalchemy import create_engine, dialects
 
 from csvkit.cli import CSVKitUtility
@@ -14,47 +14,68 @@ DIALECTS = dialects.__all__ + tuple(e.name for e in iter_entry_points('sqlalchem
 
 
 class CSVSQL(CSVKitUtility):
-    description = 'Generate SQL statements for one or more CSV files, or execute those statements directly on a database, and execute one or more SQL queries.'
+    description = 'Generate SQL statements for one or more CSV files, or execute those statements directly on a ' \
+                  'database, and execute one or more SQL queries.'
     # Override 'f' because the utility accepts multiple files.
     override_flags = ['f']
 
     def add_arguments(self):
-        self.argparser.add_argument(metavar='FILE', nargs='*', dest='input_paths', default=['-'],
-                                    help='The CSV file(s) to operate on. If omitted, will accept input as piped data via STDIN.')
-        self.argparser.add_argument('-i', '--dialect', dest='dialect', choices=DIALECTS,
-                                    help='Dialect of SQL to generate. Only valid when --db is not specified.')
-        self.argparser.add_argument('--db', dest='connection_string',
-                                    help='If present, a SQLAlchemy connection string to use to directly execute generated SQL on a database.')
-        self.argparser.add_argument('--query',
-                                    help='Execute one or more SQL queries delimited by ";" and output the result of the last query as CSV. QUERY may be a filename.')
-        self.argparser.add_argument('--insert', dest='insert', action='store_true',
-                                    help='In addition to creating the table, also insert the data into the table. Only valid when --db is specified.')
-        self.argparser.add_argument('--prefix', action='append', default=[],
-                                    help='Add an expression following the INSERT keyword, like OR IGNORE or OR REPLACE.')
-        self.argparser.add_argument('--before-insert', dest='before_insert',
-                                    help='Execute SQL before the INSERT command.')
-        self.argparser.add_argument('--after-insert', dest='after_insert',
-                                    help='Execute SQL after the INSERT command.')
-        self.argparser.add_argument('--tables', dest='table_names',
-                                    help='A comma-separated list of names of tables to be created. By default, the tables will be named after the filenames without extensions or "stdin".')
-        self.argparser.add_argument('--no-constraints', dest='no_constraints', action='store_true',
-                                    help='Generate a schema without length limits or null checks. Useful when sampling big tables.')
-        self.argparser.add_argument('--unique-constraint', dest='unique_constraint',
-                                    help='A column-separated list of names of columns to include in a UNIQUE constraint.')
-        self.argparser.add_argument('--no-create', dest='no_create', action='store_true',
-                                    help='Skip creating a table. Only valid when --insert is specified.')
-        self.argparser.add_argument('--create-if-not-exists', dest='create_if_not_exists', action='store_true',
-                                    help='Create table if it does not exist, otherwise keep going. Only valid when --insert is specified.')
-        self.argparser.add_argument('--overwrite', dest='overwrite', action='store_true',
-                                    help='Drop the table before creating. Only valid when --insert is specified and --no-create is not specified.')
-        self.argparser.add_argument('--db-schema', dest='db_schema',
-                                    help='Optional name of database schema to create table(s) in.')
-        self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
-                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
-        self.argparser.add_argument('-I', '--no-inference', dest='no_inference', action='store_true',
-                                    help='Disable type inference when parsing the input.')
-        self.argparser.add_argument('--chunk-size', dest='chunk_size', type=int,
-                                    help='Chunk size for batch insert into the table. Only valid when --insert is specified.')
+        self.argparser.add_argument(
+            metavar='FILE', nargs='*', dest='input_paths', default=['-'],
+            help='The CSV file(s) to operate on. If omitted, will accept input as piped data via STDIN.')
+        self.argparser.add_argument(
+            '-i', '--dialect', dest='dialect', choices=DIALECTS,
+            help='Dialect of SQL to generate. Cannot be used with --db.')
+        self.argparser.add_argument(
+            '--db', dest='connection_string',
+            help='If present, a SQLAlchemy connection string to use to directly execute generated SQL on a database.')
+        self.argparser.add_argument(
+            '--query',
+            help='Execute one or more SQL queries delimited by ";" and output the result of the last query as CSV. '
+                 'QUERY may be a filename.')
+        self.argparser.add_argument(
+            '--insert', dest='insert', action='store_true',
+            help='Insert the data into the table. Requires --db.')
+        self.argparser.add_argument(
+            '--prefix', action='append', default=[],
+            help='Add an expression following the INSERT keyword, like OR IGNORE or OR REPLACE.')
+        self.argparser.add_argument(
+            '--before-insert', dest='before_insert',
+            help='Execute SQL before the INSERT command. Requires --insert.')
+        self.argparser.add_argument(
+            '--after-insert', dest='after_insert',
+            help='Execute SQL after the INSERT command. Requires --insert.')
+        self.argparser.add_argument(
+            '--tables', dest='table_names',
+            help='A comma-separated list of names of tables to be created. By default, the tables will be named after '
+                 'the filenames without extensions or "stdin".')
+        self.argparser.add_argument(
+            '--no-constraints', dest='no_constraints', action='store_true',
+            help='Generate a schema without length limits or null checks. Useful when sampling big tables.')
+        self.argparser.add_argument(
+            '--unique-constraint', dest='unique_constraint',
+            help='A column-separated list of names of columns to include in a UNIQUE constraint.')
+        self.argparser.add_argument(
+            '--no-create', dest='no_create', action='store_true',
+            help='Skip creating the table. Requires --insert.')
+        self.argparser.add_argument(
+            '--create-if-not-exists', dest='create_if_not_exists', action='store_true',
+            help='Create the table if it does not exist, otherwise keep going. Requires --insert.')
+        self.argparser.add_argument(
+            '--overwrite', dest='overwrite', action='store_true',
+            help='Drop the table if it already exists. Requires --insert. Cannot be used with --no-create.')
+        self.argparser.add_argument(
+            '--db-schema', dest='db_schema',
+            help='Optional name of database schema to create table(s) in.')
+        self.argparser.add_argument(
+            '-y', '--snifflimit', dest='sniff_limit', type=int,
+            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing.')
+        self.argparser.add_argument(
+            '-I', '--no-inference', dest='no_inference', action='store_true',
+            help='Disable type inference when parsing the input.')
+        self.argparser.add_argument(
+            '--chunk-size', dest='chunk_size', type=int,
+            help='Chunk size for batch insert into the table. Requires --insert.')
 
     def main(self):
         if sys.stdin.isatty() and not self.args.input_paths:
@@ -107,11 +128,13 @@ class CSVSQL(CSVKitUtility):
             try:
                 engine = create_engine(self.args.connection_string)
             except ImportError as e:
-                raise ImportError("You don't appear to have the necessary database backend installed for connection "
-                                  "string you're trying to use. Available backends include:\n\nPostgreSQL:\tpip install "
-                                  "psycopg2\nMySQL:\t\tpip install mysql-connector-python OR pip install mysqlclient\n\n"
-                                  "For details on connection strings and other backends, please see the SQLAlchemy "
-                                  "documentation on dialects at:\n\nhttp://www.sqlalchemy.org/docs/dialects/\n\n") from e
+                raise ImportError(
+                    "You don't appear to have the necessary database backend installed for connection string you're "
+                    "trying to use. Available backends include:\n\nPostgreSQL:\tpip install psycopg2\nMySQL:\t\tpip "
+                    "install mysql-connector-python OR pip install mysqlclient\n\nFor details on connection strings "
+                    "and other backends, please see the SQLAlchemy documentation on dialects at:\n\n"
+                    "http://www.sqlalchemy.org/docs/dialects/\n\n"
+                ) from e
 
             self.connection = engine.connect()
 

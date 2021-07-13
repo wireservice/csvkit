@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 import codecs
+import warnings
 from collections import OrderedDict
 from decimal import Decimal
-import warnings
 
 import agate
-from babel.numbers import format_decimal
 import six
+from babel.numbers import format_decimal
 
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
@@ -66,40 +66,58 @@ class CSVStat(CSVKitUtility):
     override_flags = ['L', 'blanks', 'date-format', 'datetime-format']
 
     def add_arguments(self):
-        self.argparser.add_argument('--csv', dest='csv_output', action='store_true',
-                                    help='Output results as a CSV, rather than text.')
-        self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
-                                    help='Display column names and indices from the input CSV and exit.')
-        self.argparser.add_argument('-c', '--columns', dest='columns',
-                                    help='A comma separated list of column indices, names or ranges to be examined, e.g. "1,id,3-5". Defaults to all columns.')
-        self.argparser.add_argument('--type', dest='type_only', action='store_true',
-                                    help='Only output data type.')
-        self.argparser.add_argument('--nulls', dest='nulls_only', action='store_true',
-                                    help='Only output whether columns contains nulls.')
-        self.argparser.add_argument('--unique', dest='unique_only', action='store_true',
-                                    help='Only output counts of unique values.')
-        self.argparser.add_argument('--min', dest='min_only', action='store_true',
-                                    help='Only output smallest values.')
-        self.argparser.add_argument('--max', dest='max_only', action='store_true',
-                                    help='Only output largest values.')
-        self.argparser.add_argument('--sum', dest='sum_only', action='store_true',
-                                    help='Only output sums.')
-        self.argparser.add_argument('--mean', dest='mean_only', action='store_true',
-                                    help='Only output means.')
-        self.argparser.add_argument('--median', dest='median_only', action='store_true',
-                                    help='Only output medians.')
-        self.argparser.add_argument('--stdev', dest='stdev_only', action='store_true',
-                                    help='Only output standard deviations.')
-        self.argparser.add_argument('--len', dest='len_only', action='store_true',
-                                    help='Only output the length of the longest values.')
-        self.argparser.add_argument('--freq', dest='freq_only', action='store_true',
-                                    help='Only output lists of frequent values.')
-        self.argparser.add_argument('--freq-count', dest='freq_count', type=int,
-                                    help='The maximum number of frequent values to display.')
-        self.argparser.add_argument('--count', dest='count_only', action='store_true',
-                                    help='Only output total row count.')
-        self.argparser.add_argument('-y', '--snifflimit', dest='sniff_limit', type=int,
-                                    help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
+        self.argparser.add_argument(
+            '--csv', dest='csv_output', action='store_true',
+            help='Output results as a CSV, rather than text.')
+        self.argparser.add_argument(
+            '-n', '--names', dest='names_only', action='store_true',
+            help='Display column names and indices from the input CSV and exit.')
+        self.argparser.add_argument(
+            '-c', '--columns', dest='columns',
+            help='A comma-separated list of column indices, names or ranges to be examined, e.g. "1,id,3-5". '
+                 'Defaults to all columns.')
+        self.argparser.add_argument(
+            '--type', dest='type_only', action='store_true',
+            help='Only output data type.')
+        self.argparser.add_argument(
+            '--nulls', dest='nulls_only', action='store_true',
+            help='Only output whether columns contains nulls.')
+        self.argparser.add_argument(
+            '--unique', dest='unique_only', action='store_true',
+            help='Only output counts of unique values.')
+        self.argparser.add_argument(
+            '--min', dest='min_only', action='store_true',
+            help='Only output smallest values.')
+        self.argparser.add_argument(
+            '--max', dest='max_only', action='store_true',
+            help='Only output largest values.')
+        self.argparser.add_argument(
+            '--sum', dest='sum_only', action='store_true',
+            help='Only output sums.')
+        self.argparser.add_argument(
+            '--mean', dest='mean_only', action='store_true',
+            help='Only output means.')
+        self.argparser.add_argument(
+            '--median', dest='median_only', action='store_true',
+            help='Only output medians.')
+        self.argparser.add_argument(
+            '--stdev', dest='stdev_only', action='store_true',
+            help='Only output standard deviations.')
+        self.argparser.add_argument(
+            '--len', dest='len_only', action='store_true',
+            help='Only output the length of the longest values.')
+        self.argparser.add_argument(
+            '--freq', dest='freq_only', action='store_true',
+            help='Only output lists of frequent values.')
+        self.argparser.add_argument(
+            '--freq-count', dest='freq_count', type=int,
+            help='The maximum number of frequent values to display.')
+        self.argparser.add_argument(
+            '--count', dest='count_only', action='store_true',
+            help='Only output total row count.')
+        self.argparser.add_argument(
+            '-y', '--snifflimit', dest='sniff_limit', type=int,
+            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing.')
 
     def main(self):
         if self.args.names_only:
@@ -115,10 +133,12 @@ class CSVStat(CSVKitUtility):
             self.argparser.error('Only one operation argument may be specified (--mean, --median, etc).')
 
         if operations and self.args.csv_output:
-            self.argparser.error('You may not specify --csv and an operation (--mean, --median, etc) at the same time.')
+            self.argparser.error(
+                'You may not specify --csv and an operation (--mean, --median, etc) at the same time.')
 
         if operations and self.args.count_only:
-            self.argparser.error('You may not specify --count and an operation (--mean, --median, etc) at the same time.')
+            self.argparser.error(
+                'You may not specify --count and an operation (--mean, --median, etc) at the same time.')
 
         if six.PY2:
             self.output_file = codecs.getwriter('utf-8')(self.output_file)
@@ -195,7 +215,7 @@ class CSVStat(CSVKitUtility):
 
                     if self.is_finite_decimal(stat):
                         stat = format_decimal(stat, locale=agate.config.get_option('default_locale'))
-            except:
+            except Exception:
                 stat = None
 
         # Formatting
@@ -231,7 +251,7 @@ class CSVStat(CSVKitUtility):
                             v = format_decimal(v, locale=agate.config.get_option('default_locale'))
 
                         stats[op_name] = v
-                except:
+                except Exception:
                     stats[op_name] = None
 
         return stats

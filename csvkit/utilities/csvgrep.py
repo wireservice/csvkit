@@ -23,20 +23,28 @@ class CSVGrep(CSVKitUtility):
             else:
                 return bytestring
 
-        self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
-                                    help='Display column names and indices from the input CSV and exit.')
-        self.argparser.add_argument('-c', '--columns', dest='columns',
-                                    help='A comma separated list of column indices, names or ranges to be searched, e.g. "1,id,3-5".')
-        self.argparser.add_argument('-m', '--match', dest="pattern", action='store', type=option_parser,
-                                    help='The string to search for.')
-        self.argparser.add_argument('-r', '--regex', dest='regex', action='store', type=option_parser,
-                                    help='If specified, must be followed by a regular expression which will be tested against the specified columns.')
-        self.argparser.add_argument('-f', '--file', dest='matchfile', type=FileType('r'), action='store',
-                                    help='If specified, must be the path to a file. For each tested row, if any line in the file (stripped of line separators) is an exact match for the cell value, the row will pass.')
-        self.argparser.add_argument('-i', '--invert-match', dest='inverse', action='store_true',
-                                    help='If specified, select non-matching instead of matching rows.')
-        self.argparser.add_argument('-a', '--any-match', dest='any_match', action='store_true',
-                                    help='If specified, select rows where any column matches instead of all columns.')
+        self.argparser.add_argument(
+            '-n', '--names', dest='names_only', action='store_true',
+            help='Display column names and indices from the input CSV and exit.')
+        self.argparser.add_argument(
+            '-c', '--columns', dest='columns',
+            help='A comma-separated list of column indices, names or ranges to be searched, e.g. "1,id,3-5".')
+        self.argparser.add_argument(
+            '-m', '--match', dest="pattern", action='store', type=option_parser,
+            help='A string to search for.')
+        self.argparser.add_argument(
+            '-r', '--regex', dest='regex', action='store', type=option_parser,
+            help='A regular expression to match.')
+        self.argparser.add_argument(
+            '-f', '--file', dest='matchfile', type=FileType('r'), action='store',
+            help='A path to a file. For each row, if any line in the file (stripped of line separators) is an exact '
+                 'match of the cell value, the row matches.')
+        self.argparser.add_argument(
+            '-i', '--invert-match', dest='inverse', action='store_true',
+            help='Select non-matching rows, instead of matching rows.')
+        self.argparser.add_argument(
+            '-a', '--any-match', dest='any_match', action='store_true',
+            help='Select rows in which any column matches, instead of all columns.')
 
     def main(self):
         if self.args.names_only:
@@ -72,7 +80,8 @@ class CSVGrep(CSVKitUtility):
             pattern = self.args.pattern
 
         patterns = dict((column_id, pattern) for column_id in column_ids)
-        filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns, inverse=self.args.inverse, any_match=self.args.any_match)
+        filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns,
+                                           inverse=self.args.inverse, any_match=self.args.any_match)
 
         output = agate.csv.writer(self.output_file, **writer_kwargs)
         output.writerow(column_names)

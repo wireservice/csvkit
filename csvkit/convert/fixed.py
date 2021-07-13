@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from collections import namedtuple
 from codecs import iterdecode
+from collections import namedtuple
 
 import agate
 import six

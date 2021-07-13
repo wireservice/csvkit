@@ -26,10 +26,9 @@ Merges two or more CSV tables together using a method analogous to SQL JOIN oper
       -c COLUMNS, --columns COLUMNS
                             The column name(s) on which to join. Should be either
                             one name (or index) or a comma-separated list with one
-                            name (or index) for each file, in the same order that
-                            the files were specified. May also be left
-                            unspecified, in which case the two files will be
-                            joined sequentially without performing any matching.
+                            name (or index) per file, in the same order in which
+                            the files were specified. If not specified, the two
+                            files will be joined sequentially without matching.
       --outer               Perform a full outer join, rather than the default
                             inner join.
       --left                Perform a left outer join, rather than the default
@@ -42,7 +41,7 @@ Merges two or more CSV tables together using a method analogous to SQL JOIN oper
                             starting at the right.
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                             Limit CSV dialect sniffing to the specified number of
-                            bytes. Specify "0" to disable sniffing entirely.
+                            bytes. Specify "0" to disable sniffing.
       -I, --no-inference    Disable type inference when parsing CSV input.
 
     Note that the join operation requires reading all files into memory. Don't try

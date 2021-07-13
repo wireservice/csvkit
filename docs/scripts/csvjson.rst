@@ -26,32 +26,28 @@ Converts a CSV file into JSON or GeoJSON (depending on flags)::
       -i INDENT, --indent INDENT
                             Indent the output JSON this many spaces. Disabled by
                             default.
-      -k KEY, --key KEY     Output JSON as an array of objects keyed by a given
-                            column, KEY, rather than as a list. All values in the
-                            column must be unique. If --lat and --lon are also
-                            specified, this column will be used as GeoJSON Feature
-                            ID.
+      -k KEY, --key KEY     Output JSON as an object keyed by a given column, KEY,
+                            rather than as an array. All column values must be
+                            unique. If --lat and --lon are specified, this column
+                            is used as the GeoJSON Feature ID.
       --lat LAT             A column index or name containing a latitude. Output
-                            will be GeoJSON instead of JSON. Only valid if --lon
-                            is also specified.
+                            will be GeoJSON instead of JSON. Requires --lon.
       --lon LON             A column index or name containing a longitude. Output
-                            will be GeoJSON instead of JSON. Only valid if --lat
-                            is also specified.
+                            will be GeoJSON instead of JSON. Requires --lat.
       --type TYPE           A column index or name containing a GeoJSON type.
-                            Output will be GeoJSON instead of JSON. Only valid if
-                            --lat and --lon are also specified.
+                            Output will be GeoJSON instead of JSON. Requires --lat
+                            and --lon.
       --geometry GEOMETRY   A column index or name containing a GeoJSON geometry.
-                            Output will be GeoJSON instead of JSON. Only valid if
-                            --lat and --lon are also specified.
+                            Output will be GeoJSON instead of JSON. Requires --lat
+                            and --lon.
       --crs CRS             A coordinate reference system string to be included
-                            with GeoJSON output. Only valid if --lat and --lon are
-                            also specified.
+                            with GeoJSON output. Requires --lat and --lon.
       --no-bbox             Disable the calculation of a bounding box.
       --stream              Output JSON as a stream of newline-separated objects,
                             rather than an as an array.
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                             Limit CSV dialect sniffing to the specified number of
-                            bytes. Specify "0" to disable sniffing entirely.
+                            bytes. Specify "0" to disable sniffing.
       -I, --no-inference    Disable type inference (and --locale, --date-format,
                             --datetime-format) when parsing CSV input.
 

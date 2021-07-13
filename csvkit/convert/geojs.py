@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 try:
-    from collections import OrderedDict
     import json
+    from collections import OrderedDict
 except ImportError:
     from ordereddict import OrderedDict
     import simplejson as json
@@ -51,7 +51,8 @@ def geojson2csv(f, key=None, **kwargs):
         else:
             longitude, latitude = (None, None)
 
-        features_parsed.append((feature.get('id'), properties, json.dumps(geometry), geometry_type, longitude, latitude))
+        features_parsed.append((feature.get('id'), properties, json.dumps(
+            geometry), geometry_type, longitude, latitude))
 
     header = ['id']
     header.extend(property_fields)

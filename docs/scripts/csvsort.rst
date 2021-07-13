@@ -25,13 +25,13 @@ Sort CSV files. Like the Unix "sort" command, but for tabular data::
       -n, --names           Display column names and indices from the input CSV
                             and exit.
       -c COLUMNS, --columns COLUMNS
-                            A comma separated list of column indices, names or
+                            A comma-separated list of column indices, names or
                             ranges to sort by, e.g. "1,id,3-5". Defaults to all
                             columns.
       -r, --reverse         Sort in descending order.
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                             Limit CSV dialect sniffing to the specified number of
-                            bytes. Specify "0" to disable sniffing entirely.
+                            bytes. Specify "0" to disable sniffing.
       -I, --no-inference    Disable type inference when parsing the input.
 
 See also: :doc:`../common_arguments`.

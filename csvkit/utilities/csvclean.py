@@ -5,8 +5,8 @@ from os.path import splitext
 
 import agate
 
-from csvkit.cli import CSVKitUtility
 from csvkit.cleanup import RowChecker
+from csvkit.cli import CSVKitUtility
 
 
 class CSVClean(CSVKitUtility):
@@ -14,8 +14,9 @@ class CSVClean(CSVKitUtility):
     override_flags = ['L', 'blanks', 'date-format', 'datetime-format']
 
     def add_arguments(self):
-        self.argparser.add_argument('-n', '--dry-run', dest='dryrun', action='store_true',
-                                    help='Do not create output files. Information about what would have been done will be printed to STDERR.')
+        self.argparser.add_argument(
+            '-n', '--dry-run', dest='dryrun', action='store_true',
+            help='Do not create output files. Information about what would have been done will be printed to STDERR.')
 
     def main(self):
         if self.additional_input_expected():
@@ -36,7 +37,8 @@ class CSVClean(CSVKitUtility):
                 self.output_file.write('No errors.\n')
 
             if checker.joins:
-                self.output_file.write('%i rows would have been joined/reduced to %i rows after eliminating expected internal line breaks.\n' % (checker.rows_joined, checker.joins))
+                self.output_file.write('%i rows would have been joined/reduced to %i rows after eliminating expected '
+                                       'internal line breaks.\n' % (checker.rows_joined, checker.joins))
         else:
             if self.input_file == sys.stdin:
                 base = 'stdin'  # "<stdin>_out.csv" is invalid on Windows
@@ -67,12 +69,14 @@ class CSVClean(CSVKitUtility):
                     for e in checker.errors:
                         error_writer.writerow(self._format_error_row(e))
 
-                self.output_file.write('%i error%s logged to %s\n' % (error_count, '' if error_count == 1 else 's', error_filename))
+                self.output_file.write('%i error%s logged to %s\n' % (
+                    error_count, '' if error_count == 1 else 's', error_filename))
             else:
                 self.output_file.write('No errors.\n')
 
             if checker.joins:
-                self.output_file.write('%i rows were joined/reduced to %i rows after eliminating expected internal line breaks.\n' % (checker.rows_joined, checker.joins))
+                self.output_file.write('%i rows were joined/reduced to %i rows after eliminating expected internal '
+                                       'line breaks.\n' % (checker.rows_joined, checker.joins))
 
     def _format_error_row(self, error):
         row = [error.line_number, error.msg]

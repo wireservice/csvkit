@@ -21,14 +21,20 @@ class CSVCut(CSVKitUtility):
     override_flags = ['L', 'blanks', 'date-format', 'datetime-format']
 
     def add_arguments(self):
-        self.argparser.add_argument('-n', '--names', dest='names_only', action='store_true',
-                                    help='Display column names and indices from the input CSV and exit.')
-        self.argparser.add_argument('-c', '--columns', dest='columns',
-                                    help='A comma separated list of column indices, names or ranges to be extracted, e.g. "1,id,3-5". Defaults to all columns.')
-        self.argparser.add_argument('-C', '--not-columns', dest='not_columns',
-                                    help='A comma separated list of column indices, names or ranges to be excluded, e.g. "1,id,3-5". Defaults to no columns.')
-        self.argparser.add_argument('-x', '--delete-empty-rows', dest='delete_empty', action='store_true',
-                                    help='After cutting, delete rows which are completely empty.')
+        self.argparser.add_argument(
+            '-n', '--names', dest='names_only', action='store_true',
+            help='Display column names and indices from the input CSV and exit.')
+        self.argparser.add_argument(
+            '-c', '--columns', dest='columns',
+            help='A comma-separated list of column indices, names or ranges to be extracted, e.g. "1,id,3-5". '
+                 'Defaults to all columns.')
+        self.argparser.add_argument(
+            '-C', '--not-columns', dest='not_columns',
+            help='A comma-separated list of column indices, names or ranges to be excluded, e.g. "1,id,3-5". '
+                 'Defaults to no columns.')
+        self.argparser.add_argument(
+            '-x', '--delete-empty-rows', dest='delete_empty', action='store_true',
+            help='After cutting, delete rows which are completely empty.')
 
     def main(self):
         if self.args.names_only:

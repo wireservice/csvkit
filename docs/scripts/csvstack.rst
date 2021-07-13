@@ -24,10 +24,9 @@ Stack up the rows from multiple CSV files, optionally adding a grouping value to
       -h, --help            show this help message and exit
       -g GROUPS, --groups GROUPS
                             A comma-separated list of values to add as "grouping
-                            factors", one for each CSV being stacked. These will
-                            be added to the stacked CSV as a new column. You may
-                            specify a name for the grouping column using the -n
-                            flag.
+                            factors", one for each CSV being stacked. These are
+                            added to the output as a new column. You may specify a
+                            name for the new column using the -n flag.
       -n GROUP_NAME, --group-name GROUP_NAME
                             A name for the grouping column, e.g. "year". Only used
                             when also specifying -g.

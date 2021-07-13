@@ -30,19 +30,22 @@ Generate SQL statements for a CSV file or execute those statements directly on a
     optional arguments:
       -h, --help            show this help message and exit
       -i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}, --dialect {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}
-                            Dialect of SQL to generate. Only valid when --db is
-                            not specified.
+                            Dialect of SQL to generate. Cannot be used with --db.
       --db CONNECTION_STRING
-                            If present, a sqlalchemy connection string to use to
+                            If present, a SQLAlchemy connection string to use to
                             directly execute generated SQL on a database.
       --query QUERY         Execute one or more SQL queries delimited by ";" and
                             output the result of the last query as CSV. QUERY may
                             be a filename.
-      --insert              In addition to creating the table, also insert the
-                            data into the table. Only valid when --db is
-                            specified.
+      --insert              Insert the data into the table. Requires --db.
       --prefix PREFIX       Add an expression following the INSERT keyword, like
                             OR IGNORE or OR REPLACE.
+      --before-insert BEFORE_INSERT
+                            Execute SQL before the INSERT command. Requires
+                            --insert.
+      --after-insert AFTER_INSERT
+                            Execute SQL after the INSERT command. Requires
+                            --insert.
       --tables TABLE_NAMES  A comma-separated list of names of tables to be
                             created. By default, the tables will be named after
                             the filenames without extensions or "stdin".
@@ -51,24 +54,22 @@ Generate SQL statements for a CSV file or execute those statements directly on a
       --unique-constraint UNIQUE_CONSTRAINT
                             A column-separated list of names of columns to include
                             in a UNIQUE constraint.
-      --no-create           Skip creating a table. Only valid when --insert is
-                            specified.
+      --no-create           Skip creating the table. Requires --insert.
       --create-if-not-exists
-                            Create table if it does not exist, otherwise keep
-                            going. Only valid when --insert is specified.
-      --overwrite           Drop the table before creating. Only valid when
-                            --insert is specified and --no-create is not
-                            specified.
+                            Create the table if it does not exist, otherwise keep
+                            going. Requires --insert.
+      --overwrite           Drop the table if it already exists. Requires
+                            --insert. Cannot be used with --no-create.
       --db-schema DB_SCHEMA
                             Optional name of database schema to create table(s)
                             in.
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                             Limit CSV dialect sniffing to the specified number of
-                            bytes. Specify "0" to disable sniffing entirely.
+                            bytes. Specify "0" to disable sniffing.
       -I, --no-inference    Disable type inference when parsing the input.
-      --chunk-size NUM
-                            Chunk size for batch insert into the table.
-                            Only valid when --insert is specified.
+      --chunk-size CHUNK_SIZE
+                            Chunk size for batch insert into the table. Requires
+                            --insert.
 
 See also: :doc:`../common_arguments`.
 

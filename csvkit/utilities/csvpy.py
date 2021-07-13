@@ -38,7 +38,8 @@ class CSVPy(CSVKitUtility):
 
         variable = klass(self.input_file, **self.reader_kwargs)
 
-        welcome_message = 'Welcome! "%s" has been loaded in an %s object named "%s".' % (filename, class_name, variable_name)
+        welcome_message = 'Welcome! "%s" has been loaded in an %s object named "%s".' % (
+            filename, class_name, variable_name)
 
         try:
             from IPython.frontend.terminal.embed import InteractiveShellEmbed

@@ -33,23 +33,24 @@ The header line is required though the columns may be in any order::
 
     optional arguments:
       -h, --help            show this help message and exit
-      -f FILETYPE, --format FILETYPE
+      -f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}, --format {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}
                             The format of the input file. If not specified will be
-                            inferred from the file type. Supported formats: csv,
-                            dbf, fixed, geojson, json, ndjson, xls, xlsx.
+                            inferred from the file type.
       -s SCHEMA, --schema SCHEMA
                             Specify a CSV-formatted schema file for converting
-                            fixed-width files. See documentation for details.
-      -k KEY, --key KEY     Specify a top-level key to use look within for a list
-                            of objects to be converted when processing JSON.
+                            fixed-width files. See web documentation.
+      -k KEY, --key KEY     Specify a top-level key to look within for a list of
+                            objects to be converted when processing JSON.
       -n, --names           Display sheet names from the input Excel file.
       --sheet SHEET         The name of the Excel sheet to operate on.
       --write-sheets WRITE_SHEETS
                             The names of the Excel sheets to write to files, or
                             "-" to write all sheets.
+      --encoding-xls ENCODING_XLS
+                            Specify the encoding of the input XLS file.
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                             Limit CSV dialect sniffing to the specified number of
-                            bytes. Specify "0" to disable sniffing entirely.
+                            bytes. Specify "0" to disable sniffing.
       -I, --no-inference    Disable type inference (and --locale, --date-format,
                             --datetime-format) when parsing CSV input.
 
