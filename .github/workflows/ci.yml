@@ -6,19 +6,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9]
-    services:
-      postgres:
-        image: postgres:11
-        env:
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432/tcp
+        python-version: [3.6, 3.7, 3.8, 3.9, pypy-3.6, pypy-3.7]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
@@ -33,8 +21,6 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      # test_wildcard_on_postgresql is commented out.
-      # - run: psql -U postgres -c 'CREATE DATABASE dummy_test'
       - run: pip install .[test] coveralls
       - run: nosetests --with-coverage --cover-package=csvkit
       - env:
