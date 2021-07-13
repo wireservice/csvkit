@@ -97,3 +97,5 @@ The following individuals have contributed code to csvkit:
 * Christopher Bottoms
 * Tomáš Hrnčiar
 * 谭九鼎
+* panolens
+* Gabe Walker
