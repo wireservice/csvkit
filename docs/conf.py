@@ -43,7 +43,7 @@ copyright = u'2016, Christopher Groskopf'
 # The short X.Y version.
 version = '1.0.6'
 # The full version, including alpha/beta/rc tags.
-release = '1.0.6'
+release = version
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
