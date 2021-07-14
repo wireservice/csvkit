@@ -61,10 +61,6 @@ setup(
         'agate-dbf>=0.2.0',
         'agate-sql>=0.5.3',
         'six>=1.6.1',
-        'setuptools',
-        'argparse>=1.2.1;python_version<"2.7"',
-        'ordereddict>=1.1;python_version<"2.7"',
-        'simplejson>=3.6.3;python_version<"2.7"',
     ],
     extras_require={
         'test': [
