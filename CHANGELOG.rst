@@ -1,3 +1,8 @@
+1.0.7 - Unreleased
+------------------
+
+* Dropped Python 3.5 support (end-of-life was September 30, 2020).
+
 1.0.6 - July 13, 2021
 ---------------------
 
