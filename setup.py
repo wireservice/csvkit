@@ -70,6 +70,7 @@ setup(
         'test': [
             'coverage>=4.4.2',
             'nose>=1.1.2',
+            'mock>=1.3.0;python_version<"3"',
         ],
         'docs': [
             'sphinx>=1.0.7',

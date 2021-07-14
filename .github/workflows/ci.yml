@@ -16,6 +16,7 @@ jobs:
             python-version: 2.7
           - os: windows-latest
             python-version: pypy-2.7
+          # UnicodeDecodeError on test_removes_bom
           - os: windows-latest
             python-version: 3.6
           - os: windows-latest
