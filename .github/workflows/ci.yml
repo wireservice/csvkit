@@ -5,8 +5,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest, windows-latest, ubuntu-latest]
         python-version: [3.6, 3.7, 3.8, 3.9, pypy-3.6, pypy-3.7]
+        exclude:
+          - os: windows-latest
+            python-version: 3.6
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
