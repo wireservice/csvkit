@@ -10,6 +10,8 @@ jobs:
         exclude:
           - os: windows-latest
             python-version: 3.6
+          - os: windows-latest
+            python-version: 3.7
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
