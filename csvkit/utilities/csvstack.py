@@ -5,7 +5,7 @@ import sys
 
 import agate
 
-from csvkit.cli import CSVKitUtility, make_default_headers
+from csvkit.cli import CSVKitUtility, isatty, make_default_headers
 
 
 class CSVStack(CSVKitUtility):
@@ -30,7 +30,7 @@ class CSVStack(CSVKitUtility):
             help='Use the filename of each input file as its grouping value. When specified, -g will be ignored.')
 
     def main(self):
-        if sys.stdin.isatty() and not self.args.input_paths:
+        if isatty(sys.stdin) and not self.args.input_paths:
             sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
 
         has_groups = self.args.groups is not None or self.args.group_by_filenames

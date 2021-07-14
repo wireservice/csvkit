@@ -9,7 +9,7 @@ import six
 from pkg_resources import iter_entry_points
 from sqlalchemy import create_engine, dialects
 
-from csvkit.cli import CSVKitUtility
+from csvkit.cli import CSVKitUtility, isatty
 
 DIALECTS = dialects.__all__ + tuple(e.name for e in iter_entry_points('sqlalchemy.dialects'))
 
@@ -79,7 +79,7 @@ class CSVSQL(CSVKitUtility):
             help='Chunk size for batch insert into the table. Requires --insert.')
 
     def main(self):
-        if sys.stdin.isatty() and not self.args.input_paths:
+        if isatty(sys.stdin) and not self.args.input_paths:
             self.argparser.error('You must provide an input file or piped data.')
 
         self.input_files = []

@@ -407,7 +407,14 @@ class CSVKitUtility(object):
             self.output_file.write('%3i: %s\n' % (i, c))
 
     def additional_input_expected(self):
-        return sys.stdin.isatty() and not self.args.input_path
+        return isatty(sys.stdin) and not self.args.input_path
+
+
+def isatty(f):
+    try:
+        return f.isatty()
+    except ValueError:  # I/O operation on closed file
+        return False
 
 
 def make_default_headers(n):
