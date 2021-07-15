@@ -37,6 +37,8 @@ jobs:
       - run: isort . --check-only
       - run: pip install .[test] coveralls
       - run: nosetests --with-coverage --cover-package=csvkit
-      - env:
+      # CoverallsException: Not on TravisCI. You have to provide either repo_token in .coveralls.yml or set the COVERALLS_REPO_TOKEN env var.
+      - if: matrix.python-version != '2.7' && matrix.python-version != 'pypy-2.7'
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: coveralls --service=github
