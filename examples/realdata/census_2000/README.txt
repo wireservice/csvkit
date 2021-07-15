@@ -22,8 +22,6 @@ This will print the NAME column to STDOUT.
 The documentation for that dataset notes, "The geographic header record is standard across all 
 electronic data products from Census 2000."  Therefore, the same schema can also be used to convert 
 the geographic header files for the more in-depth files accompanying the SF1 and other data sets.
-<<<<<<< HEAD
-=======
 
 VOTING RIGHTS DETERMINATION
 ---------------------------

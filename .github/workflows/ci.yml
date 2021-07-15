@@ -8,15 +8,6 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
         python-version: [2.7, 3.6, 3.7, 3.8, 3.9, pypy-2.7, pypy-3.6, pypy-3.7]
         exclude:
-          # PyICU issues
-          - os: macos-latest
-            python-version: 2.7
-          - os: macos-latest
-            python-version: pypy-2.7
-          - os: windows-latest
-            python-version: 2.7
-          - os: windows-latest
-            python-version: pypy-2.7
           # UnicodeDecodeError on test_removes_bom
           - os: windows-latest
             python-version: 3.6
