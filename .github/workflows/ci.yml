@@ -10,8 +10,6 @@ jobs:
         exclude:
           # CI needs to be configured to install openssl for the cryptography package.
           - os: macos-latest
-            python-version: 2.7
-          - os: macos-latest
             python-version: pypy-2.7
           # UnicodeDecodeError on test_match_utf8 in Python 2, test_removes_bom in Python 3, etc.
           - os: windows-latest
