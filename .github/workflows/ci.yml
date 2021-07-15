@@ -17,6 +17,8 @@ jobs:
             python-version: 3.7
           - os: windows-latest
             python-version: pypy-3.7
+    env:
+      PYTHONIOENCODING: UTF-8
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
