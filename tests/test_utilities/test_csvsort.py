@@ -22,7 +22,7 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             launch_new_instance()
 
     def test_runs(self):
-        if sys.version_info < (3,):
+        if six.PY2:
             self.get_output(['examples/test_utf8.csv'])
         else:
             self.assertRows(['examples/test_utf8.csv'], [
@@ -32,7 +32,7 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             ])
 
     def test_encoding(self):
-        if sys.version_info < (3,):
+        if six.PY2:
             self.get_output(['-e', 'latin1', 'examples/test_latin1.csv'])
         else:
             self.assertRows(['-e', 'latin1', 'examples/test_latin1.csv'], [
