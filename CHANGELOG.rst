@@ -1,7 +1,8 @@
 1.0.7 - Unreleased
 ------------------
 
-* Dropped Python 3.5 support (end-of-life was September 30, 2020).
+* fix: Restore Python 2.7 support in edge cases.
+* Drop Python 3.5 support (end-of-life was September 30, 2020).
 
 1.0.6 - July 13, 2021
 ---------------------
@@ -21,7 +22,7 @@ Fixes:
 
 Changes:
 
-* Dropped Python 3.4 support (end-of-life was March 18, 2019).
+* Drop Python 3.4 support (end-of-life was March 18, 2019).
 
 Improvements:
 
@@ -37,7 +38,7 @@ Fixes:
 
 Changes:
 
-* Dropped Python 3.3 support (end-of-life was September 29, 2017).
+* Drop Python 3.3 support (end-of-life was September 29, 2017).
 
 Improvements:
 
@@ -159,8 +160,8 @@ Backwards-incompatible changes:
 * When using the ``--columns`` or ``--not-columns`` options, you must not have spaces around the comma-separated values, unless the column names contain spaces.
 * When sorting, null values are now greater than other values instead of less than.
 * ``CSVKitReader``, ``CSVKitWriter``, ``CSVKitDictReader``, and ``CSVKitDictWriter`` have been removed. Use ``agate.csv.reader``, ``agate.csv.writer``, ``agate.csv.DictReader`` and ``agate.csv.DictWriter``.
-* Dropped support for older versions of PyPy.
-* Dropped Python 2.6 support.
+* Drop Python 2.6 support (end-of-life was October 29, 2013).
+* Drop support for older versions of PyPy.
 * If ``--no-header-row`` is set, the output will have column names ``a``, ``b``, ``c``, etc. instead of ``column1``, ``column2``, ``column3``, etc.
 * csvlook renders a simpler, markdown-compatible table.
 
