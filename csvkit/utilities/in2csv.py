@@ -57,8 +57,9 @@ class In2CSV(CSVKitUtility):
             '--encoding-xls', dest='encoding_xls',
             help='Specify the encoding of the input XLS file.')
         self.argparser.add_argument(
-            '-y', '--snifflimit', dest='sniff_limit', type=int,
-            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing.')
+            '-y', '--snifflimit', dest='sniff_limit', type=int, default=1024,
+            help='Limit CSV dialect sniffing to the specified number of bytes. '
+                 'Specify "0" to disable sniffing entirely, or "-1" to sniff the entire file.')
         self.argparser.add_argument(
             '-I', '--no-inference', dest='no_inference', action='store_true',
             help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
@@ -116,6 +117,7 @@ class In2CSV(CSVKitUtility):
 
         # Set the reader's arguments.
         kwargs = {}
+        sniff_limit = self.args.sniff_limit if self.args.sniff_limit != -1 else None
 
         if self.args.schema:
             schema = self._open_input_file(self.args.schema)
@@ -124,7 +126,7 @@ class In2CSV(CSVKitUtility):
 
         if filetype == 'csv':
             kwargs.update(self.reader_kwargs)
-            kwargs['sniff_limit'] = self.args.sniff_limit
+            kwargs['sniff_limit'] = sniff_limit
 
         if filetype in ('xls', 'xlsx'):
             kwargs['header'] = not self.args.no_header_row
@@ -141,7 +143,7 @@ class In2CSV(CSVKitUtility):
             and self.args.no_inference
             and not self.args.no_header_row
             and not self.args.skip_lines
-            and self.args.sniff_limit == 0
+            and sniff_limit == 0
         ):
             reader = agate.csv.reader(self.input_file, **self.reader_kwargs)
             writer = agate.csv.writer(self.output_file, **self.writer_kwargs)

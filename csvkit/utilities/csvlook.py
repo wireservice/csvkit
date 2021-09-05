@@ -19,8 +19,9 @@ class CSVLook(CSVKitUtility):
             '--max-column-width', dest='max_column_width', type=int,
             help='Truncate all columns to at most this width. The remainder will be replaced with ellipsis.')
         self.argparser.add_argument(
-            '-y', '--snifflimit', dest='sniff_limit', type=int,
-            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing.')
+            '-y', '--snifflimit', dest='sniff_limit', type=int, default=1024,
+            help='Limit CSV dialect sniffing to the specified number of bytes. '
+                 'Specify "0" to disable sniffing entirely, or "-1" to sniff the entire file.')
         self.argparser.add_argument(
             '-I', '--no-inference', dest='no_inference', action='store_true',
             help='Disable type inference when parsing the input.')
@@ -29,10 +30,11 @@ class CSVLook(CSVKitUtility):
         if self.additional_input_expected():
             self.argparser.error('You must provide an input file or piped data.')
 
+        sniff_limit = self.args.sniff_limit if self.args.sniff_limit != -1 else None
         table = agate.Table.from_csv(
             self.input_file,
             skip_lines=self.args.skip_lines,
-            sniff_limit=self.args.sniff_limit,
+            sniff_limit=sniff_limit,
             column_types=self.get_column_types(),
             line_numbers=self.args.line_numbers,
             **self.reader_kwargs

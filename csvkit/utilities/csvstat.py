@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 
 import codecs
+import locale
 import warnings
-from collections import OrderedDict
+from collections import Counter, OrderedDict
 from decimal import Decimal
 
 import agate
 import six
-from babel.numbers import format_decimal
 
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
-NoneType = type(None)
-
+locale.setlocale(locale.LC_ALL, '')
 OPERATIONS = OrderedDict([
     ('type', {
         'aggregation': None,
@@ -116,8 +115,9 @@ class CSVStat(CSVKitUtility):
             '--count', dest='count_only', action='store_true',
             help='Only output total row count.')
         self.argparser.add_argument(
-            '-y', '--snifflimit', dest='sniff_limit', type=int,
-            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing.')
+            '-y', '--snifflimit', dest='sniff_limit', type=int, default=1024,
+            help='Limit CSV dialect sniffing to the specified number of bytes. '
+                 'Specify "0" to disable sniffing entirely, or "-1" to sniff the entire file.')
 
     def main(self):
         if self.args.names_only:
@@ -153,10 +153,11 @@ class CSVStat(CSVKitUtility):
 
             return
 
+        sniff_limit = self.args.sniff_limit if self.args.sniff_limit != -1 else None
         table = agate.Table.from_csv(
             self.input_file,
             skip_lines=self.args.skip_lines,
-            sniff_limit=self.args.sniff_limit,
+            sniff_limit=sniff_limit,
             **self.reader_kwargs
         )
 
@@ -214,13 +215,13 @@ class CSVStat(CSVKitUtility):
                     stat = table.aggregate(op(column_id))
 
                     if self.is_finite_decimal(stat):
-                        stat = format_decimal(stat, locale=agate.config.get_option('default_locale'))
+                        stat = format_decimal(stat)
             except Exception:
                 stat = None
 
         # Formatting
         if op_name == 'freq':
-            stat = ', '.join([(u'"%s": %s' % (six.text_type(row[column_name]), row['Count'])) for row in stat])
+            stat = ', '.join([(u'"%s": %s' % (six.text_type(row['value']), row['count'])) for row in stat])
             stat = u'{ %s }' % stat
 
         if label:
@@ -248,7 +249,7 @@ class CSVStat(CSVKitUtility):
                         v = table.aggregate(op(column_id))
 
                         if self.is_finite_decimal(v):
-                            v = format_decimal(v, locale=agate.config.get_option('default_locale'))
+                            v = format_decimal(v)
 
                         stats[op_name] = v
                 except Exception:
@@ -289,14 +290,14 @@ class CSVStat(CSVKitUtility):
                             }))
 
                         if isinstance(column.data_type, agate.Number):
-                            v = row[column_name]
+                            v = row['value']
 
                             if self.is_finite_decimal(v):
-                                v = format_decimal(v, locale=agate.config.get_option('default_locale'))
+                                v = format_decimal(v)
                         else:
-                            v = six.text_type(row[column_name])
+                            v = six.text_type(row['value'])
 
-                        self.output_file.write(u'{} ({}x)\n'.format(v, row['Count']))
+                        self.output_file.write(u'{} ({}x)\n'.format(v, row['count']))
 
                     continue
 
@@ -335,13 +336,17 @@ class CSVStat(CSVKitUtility):
                     continue
 
                 if op_name == 'freq':
-                    value = ', '.join([six.text_type(row[column_name]) for row in column_stats['freq']])
+                    value = ', '.join([six.text_type(row['value']) for row in column_stats['freq']])
                 else:
                     value = column_stats[op_name]
 
                 output_row.append(value)
 
             writer.writerow(output_row)
+
+
+def format_decimal(d):
+    return locale.format_string('%.3f', d, grouping=True).rstrip('0').rstrip('.')
 
 
 def get_type(table, column_id, **kwargs):
@@ -353,7 +358,11 @@ def get_unique(table, column_id, **kwargs):
 
 
 def get_freq(table, column_id, freq_count=5, **kwargs):
-    return table.pivot(column_id).order_by('Count', reverse=True).limit(freq_count)
+    values = table.columns[column_id].values()
+    return [
+        {'value': r[0], 'count': r[1]}
+        for r in Counter(values).most_common(freq_count)
+    ]
 
 
 def launch_new_instance():

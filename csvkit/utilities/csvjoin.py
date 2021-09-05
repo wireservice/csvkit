@@ -32,8 +32,9 @@ class CSVJoin(CSVKitUtility):
             help='Perform a right outer join, rather than the default inner join. If more than two files are provided '
                  'this will be executed as a sequence of right outer joins, starting at the right.')
         self.argparser.add_argument(
-            '-y', '--snifflimit', dest='sniff_limit', type=int,
-            help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing.')
+            '-y', '--snifflimit', dest='sniff_limit', type=int, default=1024,
+            help='Limit CSV dialect sniffing to the specified number of bytes. '
+                 'Specify "0" to disable sniffing entirely, or "-1" to sniff the entire file.')
         self.argparser.add_argument(
             '-I', '--no-inference', dest='no_inference', action='store_true',
             help='Disable type inference when parsing CSV input.')
@@ -64,7 +65,7 @@ class CSVJoin(CSVKitUtility):
             self.argparser.error('It is not valid to specify both a left and a right join.')
 
         tables = []
-        sniff_limit = self.args.sniff_limit
+        sniff_limit = self.args.sniff_limit if self.args.sniff_limit != -1 else None
         column_types = self.get_column_types()
 
         for f in self.input_files:
