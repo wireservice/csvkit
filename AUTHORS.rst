@@ -100,3 +100,4 @@ The following individuals have contributed code to csvkit:
 * panolens
 * Gabe Walker
 * Gui13
+* Danny Sepler
