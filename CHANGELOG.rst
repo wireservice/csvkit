@@ -3,6 +3,7 @@
 
 * fix: Restore Python 2.7 support in edge cases.
 * Drop Python 3.5 support (end-of-life was September 30, 2020).
+* improvement: use 1024 byte sniff-limit by default across csvkit. Improve csvstat performance up to 10x.
 
 1.0.6 - July 13, 2021
 ---------------------
