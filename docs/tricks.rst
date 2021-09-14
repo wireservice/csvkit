@@ -31,6 +31,18 @@ Most tools use ``STDIN`` as input if no filename is given, but tools that accept
 Alternately, you can pipe in multiple inputs like so::
 
     csvjoin -c id <(csvcut -c 2,5,6 a.csv) <(csvcut -c 1,7 b.csv)
+    
+Using csvkit in a crontab
+-------------------------
+
+Processes running in a crontab `will not have a tty allocated <https://github.com/wireservice/csvkit/issues/342>`_, so reading files for csvkit will require passing the file as stdin rather than using the file argument::
+
+    # bad   
+    0 0 * * * /usr/bin/csvsql --query 'select max(time) from temp' -d ';' --tables temp /my/csv/file.csv
+    
+    # works fine 
+    0 0 * * * /usr/bin/csvsql --query 'select max(time) from temp' -d ';' --tables temp < /my/csv/file.csv
+
 
 Troubleshooting
 ===============
