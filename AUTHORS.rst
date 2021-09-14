@@ -99,3 +99,4 @@ The following individuals have contributed code to csvkit:
 * Christopher Bottoms
 * panolens
 * Gabe Walker
+* Gui13
