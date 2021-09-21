@@ -46,7 +46,7 @@ Joining a set of homogoenous files for different years::
 
     csvstack -g 2009,2010 examples/realdata/FY09_EDU_Recipients_by_State.csv examples/realdata/Datagov_FY10_EDU_recp_by_State.csv
 
-Joining files with the same columns but in different orders, in Bash::
+Joining files with the same columns but in different orders, in Bash, assuming the header row does not contain newlines::
 
     csvstack file1.csv <(csvcut -c `head -1 file1.csv` file2.csv)
 
