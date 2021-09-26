@@ -46,9 +46,14 @@ class CSVStack(CSVKitUtility):
 
         group_name = self.args.group_name if self.args.group_name else 'group'
 
-        output = agate.csv.writer(self.output_file, **self.writer_kwargs)
+        if not self.args.no_header_row:
+            Reader = agate.csv.DictReader
+        else:
+            Reader = agate.csv.reader
 
-        for i, path in enumerate(self.args.input_paths):
+        headers = []
+
+        for path in self.args.input_paths:
             f = self._open_input_file(path)
 
             if isinstance(self.args.skip_lines, int):
@@ -59,7 +64,49 @@ class CSVStack(CSVKitUtility):
             else:
                 raise ValueError('skip_lines argument must be an int')
 
-            rows = agate.csv.reader(f, **self.reader_kwargs)
+            if not self.args.no_header_row:
+                rows = Reader(f, **self.reader_kwargs)
+
+                for field in (rows.fieldnames or []):
+                    if field not in headers:
+                        headers.append(field)
+
+            else:
+                rows = Reader(f, **self.reader_kwargs)
+
+                row = next(rows, [])
+                headers = list(make_default_headers(len(row)))
+
+                # we only need to look at the first file if we
+                # aren't using header rows
+                f.close()
+                break
+
+            f.close()
+
+        if has_groups:
+            headers.insert(0, group_name)
+
+        if not self.args.no_header_row:
+            output = agate.csv.DictWriter(self.output_file,
+                                          fieldnames=headers,
+                                          **self.writer_kwargs)
+            output.writeheader()
+        else:
+            output = agate.csv.writer(self.output_file, **self.writer_kwargs)
+            output.writerow(headers)
+
+        for i, path in enumerate(self.args.input_paths):
+            print(path)
+            f = self._open_input_file(path)
+
+            if isinstance(self.args.skip_lines, int):
+                skip_lines = self.args.skip_lines
+                while skip_lines > 0:
+                    f.readline()
+                    skip_lines -= 1
+            else:
+                raise ValueError('skip_lines argument must be an int')
 
             if has_groups:
                 if groups:
@@ -67,35 +114,15 @@ class CSVStack(CSVKitUtility):
                 else:
                     group = os.path.basename(f.name)
 
-            # If we have header rows, use them
-            if not self.args.no_header_row:
-                headers = next(rows, [])
-
-                if i == 0:
-                    if has_groups:
-                        headers.insert(0, group_name)
-
-                    output.writerow(headers)
-            # If we don't generate simple column names based on first row
-            else:
-                row = next(rows, [])
-
-                headers = list(make_default_headers(len(row)))
-
-                if i == 0:
-                    if has_groups:
-                        headers.insert(0, group_name)
-
-                    output.writerow(headers)
-
-                if has_groups:
-                    row.insert(0, group)
-
-                output.writerow(row)
+            rows = Reader(f, **self.reader_kwargs)
 
             for row in rows:
+
                 if has_groups:
-                    row.insert(0, group)
+                    if not self.args.no_header_row:
+                        row[group_name] = group
+                    else:
+                        row.insert(0, group)
 
                 output.writerow(row)
 
