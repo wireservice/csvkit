@@ -376,6 +376,8 @@ class CSVKitUtility(object):
             column_names = next_row
 
         column_offset = self.get_column_offset()
+        if kwargs.get('line_numbers'):
+            column_offset -= 1
 
         column_ids = parse_column_identifiers(
             self.args.columns,
