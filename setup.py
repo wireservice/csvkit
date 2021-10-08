@@ -66,7 +66,8 @@ setup(
     extras_require={
         'test': [
             'coverage>=4.4.2',
-            'nose>=1.1.2',
+            'pytest',
+            'pytest-cov',
             'mock>=1.3.0;python_version<"3"',
         ],
         'docs': [
