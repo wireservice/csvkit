@@ -1,9 +1,11 @@
 1.0.7 - Unreleased
 ------------------
 
+* fix: :doc:`/scripts/csvcut` extracts the correct columns when :code:`--line-numbers` is set.
 * fix: Restore Python 2.7 support in edge cases.
-* Drop Python 3.5 support (end-of-life was September 30, 2020).
 * improvement: use 1024 byte sniff-limit by default across csvkit. Improve csvstat performance up to 10x.
+* Add Python 3.10 support.
+* Drop Python 3.5 support (end-of-life was September 30, 2020).
 
 1.0.6 - July 13, 2021
 ---------------------
