@@ -12,6 +12,9 @@ from os.path import splitext
 import agate
 import six
 
+if six.PY3:
+    import lzma
+
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
 
@@ -251,6 +254,11 @@ class CSVKitUtility(object):
                     f = LazyFile(bz2.BZ2File, path, mode, **kwargs)
                 else:
                     f = LazyFile(bz2.open, path, mode, **kwargs)
+            elif extension == ".xz":
+                if six.PY2:
+                    raise RuntimeError("Cannot read .xz files with Python 2")
+                else:
+                    f = LazyFile(lzma.open, path, mode, **kwargs)
             else:
                 f = LazyFile(open, path, mode, **kwargs)
 
