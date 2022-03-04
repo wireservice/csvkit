@@ -14,6 +14,12 @@ import six
 
 if six.PY3:
     import lzma
+elif six.PY2:
+    # Try import backports.lzma if available
+    try:
+        from backports import lzma
+    except ImportError:
+        lzma = None
 
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
@@ -255,10 +261,10 @@ class CSVKitUtility(object):
                 else:
                     f = LazyFile(bz2.open, path, mode, **kwargs)
             elif extension == ".xz":
-                if six.PY2:
-                    raise RuntimeError("Cannot read .xz files with Python 2")
-                else:
+                if lzma is not None:
                     f = LazyFile(lzma.open, path, mode, **kwargs)
+                else:
+                    raise RuntimeError("backports.lzma is needed for .xz support with Python 2")
             else:
                 f = LazyFile(open, path, mode, **kwargs)
 
