@@ -234,7 +234,7 @@ class CSVKitUtility(object):
                      '1-based numbering.')
 
         self.argparser.add_argument(
-            '-V', '--version', action='version', version='%(prog)s 1.0.6',
+            '-V', '--version', action='version', version='%(prog)s 1.0.7',
             help='Display version information and exit.')
 
     def _open_input_file(self, path):

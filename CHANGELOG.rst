@@ -1,5 +1,5 @@
-1.0.7 - Unreleased
-------------------
+1.0.7 - March 6, 2022
+---------------------
 
 * fix: :doc:`/scripts/csvcut` extracts the correct columns when :code:`--line-numbers` is set.
 * fix: Restore Python 2.7 support in edge cases.
