@@ -83,6 +83,14 @@ If you prefer not to enter your password in the connection string, store the pas
 
 .. note::
 
+   If the CSV file was created from a JSON file using :doc:`in2csv`, remember to quote SQL columns properly. For example:
+
+   .. code-block:: bash
+
+      echo '{"a":{"b":"c"},"d":"e"}' | in2csv -f ndjson | csvsql --query 'SELECT "a/b" FROM stdin'
+
+.. note::
+
     Alternatives to :doc:`csvsql` are `q <https://github.com/harelba/q>`_ and `textql <https://github.com/dinedal/textql>`_.
 
 Examples
