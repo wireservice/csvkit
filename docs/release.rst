@@ -2,6 +2,12 @@
 Release process
 ===============
 
+.. admonition:: One-time setup
+
+   .. code-block:: bash
+
+      pip install twine wheel
+
 #. All tests pass on continuous integration
 #. The changelog is up-to-date and dated
 #. The version number is correct in:
