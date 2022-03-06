@@ -6,16 +6,13 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-        # sqlalchemy seems to have a bug in pypy-2.7.
-        python-version: [2.7, 3.6, 3.7, 3.8, 3.9, '3.10', pypy-3.6, pypy-3.7]
+        python-version: [2.7, 3.6, 3.7, 3.8, 3.9, '3.10', pypy-3.7]
         exclude:
           # UnicodeDecodeError on test_match_utf8 in Python 2, test_removes_bom in Python 3, etc.
           - os: windows-latest
             python-version: 2.7
           - os: windows-latest
             python-version: 3.6
-          - os: windows-latest
-            python-version: pypy-3.6
           - os: windows-latest
             python-version: 3.7
           - os: windows-latest
@@ -44,7 +41,7 @@ jobs:
           PYTHONIOENCODING: utf-8
           PYTHONUTF8: 1
       # CoverallsException: Not on TravisCI. You have to provide either repo_token in .coveralls.yml or set the COVERALLS_REPO_TOKEN env var.
-      - if: matrix.python-version != '2.7' && matrix.python-version != 'pypy-2.7'
+      - if: matrix.python-version != '2.7'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: coveralls --service=github
