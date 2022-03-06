@@ -102,3 +102,4 @@ The following individuals have contributed code to csvkit:
 * Gui13
 * Danny Sepler
 * Christian Clauss
+* Bonifacio de Oliveira
