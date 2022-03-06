@@ -12,6 +12,15 @@ from os.path import splitext
 import agate
 import six
 
+if six.PY3:
+    import lzma
+elif six.PY2:
+    # Try import backports.lzma if available
+    try:
+        from backports import lzma
+    except ImportError:
+        lzma = None
+
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
 
@@ -251,6 +260,11 @@ class CSVKitUtility(object):
                     f = LazyFile(bz2.BZ2File, path, mode, **kwargs)
                 else:
                     f = LazyFile(bz2.open, path, mode, **kwargs)
+            elif extension == ".xz":
+                if lzma is not None:
+                    f = LazyFile(lzma.open, path, mode, **kwargs)
+                else:
+                    raise RuntimeError("backports.lzma is needed for .xz support with Python 2")
             else:
                 f = LazyFile(open, path, mode, **kwargs)
 
