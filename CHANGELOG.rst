@@ -3,7 +3,8 @@
 
 * fix: :doc:`/scripts/csvcut` extracts the correct columns when :code:`--line-numbers` is set.
 * fix: Restore Python 2.7 support in edge cases.
-* improvement: use 1024 byte sniff-limit by default across csvkit. Improve csvstat performance up to 10x.
+* improvement: Use 1024 byte sniff-limit by default across csvkit. Improve csvstat performance up to 10x.
+* improvement: Add support for ``.xz`` (LZMA) compressed input files.
 * Add Python 3.10 support.
 * Drop Python 3.5 support (end-of-life was September 30, 2020).
 

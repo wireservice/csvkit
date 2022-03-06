@@ -8,10 +8,11 @@ Tips
 Reading compressed CSVs
 -----------------------
 
-csvkit has builtin support for reading ``gzip`` or ``bz2`` compressed input files. This is automatically detected based on the file extension. For example::
+csvkit has builtin support for reading ``gzip``, ``bz2`` and ``xz`` (LZMA) compressed input files. This is automatically detected based on the file extension. For example::
 
     csvstat examples/dummy.csv.gz
     csvstat examples/dummy.csv.bz2
+    csvstat examples/dummy.csv.xz
 
 Please note, the files are decompressed in memory, so this is a convenience, not an optimization.
 
