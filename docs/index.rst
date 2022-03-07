@@ -19,7 +19,7 @@ First time? See :doc:`tutorial`.
 
 .. note::
 
-    If you need to do more complex data analysis than csvkit can handle, use `agate <https://github.com/wireservice/agate>`_. If you need csvkit to be faster or to handle larger files, you may be reaching the limits of csvkit. Consider loading the data into SQL, or using `xsv <https://github.com/BurntSushi/xsv>`_.
+    If you need to do more complex data analysis than csvkit can handle, use `agate <https://github.com/wireservice/agate>`_. If you need csvkit to be faster or to handle larger files, you may be reaching the limits of csvkit. Consider loading the data into SQL, or using `qsv <https://github.com/jqnatividad/qsv>`_ or `xsv <https://github.com/BurntSushi/xsv>`_.
 
 Why csvkit?
 ===========
