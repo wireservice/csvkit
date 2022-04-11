@@ -134,7 +134,14 @@ Are you seeing this error message, even after running :code:`pip install psycopg
 
     https://www.sqlalchemy.org/docs/dialects/
 
-First, make sure that you can open a ``python`` interpreter and run :code:`import psycopg2`. If you see an error containing ``mach-o, but wrong architecture``, you may need to reinstall ``psycopg2`` with :code:`export ARCHFLAGS="-arch i386" pip install --upgrade psycopg2` (`source <https://www.destructuring.net/2013/07/31/trouble-installing-psycopg2-on-osx/>`_). If you see another error, you may be able to find a solution on StackOverflow.
+
+If you installed csvkit with Homebrew (``brew install csvkit``), then you need to install those packages with the same version of ``pip`` as the ``csvkit`` formula. For example::
+
+    $(brew --prefix csvkit)/libexec/bin/pip install psycopg2
+
+Otherwise, make sure that you can open a ``python`` interpreter and run :code:`import psycopg2`. If you see an error containing ``mach-o, but wrong architecture``, you may need to reinstall ``psycopg2`` with :code:`export ARCHFLAGS="-arch i386" pip install --upgrade psycopg2` (`source <https://www.destructuring.net/2013/07/31/trouble-installing-psycopg2-on-osx/>`_).
+
+If you see another error, you may be able to find a solution on StackOverflow.
 
 Python standard output encoding errors
 --------------------------------------
