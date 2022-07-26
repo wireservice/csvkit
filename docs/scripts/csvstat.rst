@@ -12,7 +12,8 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
                    [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [--csv] [-n]
                    [-c COLUMNS] [--type] [--nulls] [--unique] [--min] [--max]
                    [--sum] [--mean] [--median] [--stdev] [--len] [--freq]
-                   [--freq-count FREQ_COUNT] [--count] [-y SNIFF_LIMIT]
+                   [--freq-count FREQ_COUNT] [--count]  [--decimal-format DECIMAL_FORMAT]
+                   [-G] [-y SNIFF_LIMIT]
                    [FILE]
 
     Print descriptive statistics for each column in a CSV file.
@@ -44,6 +45,11 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
       --freq-count FREQ_COUNT
                             The maximum number of frequent values to display.
       --count               Only output total row count.
+      --decimal-format DECIMAL_FORMAT
+                            %-format specification for printing decimal numbers.
+                            Defaults to locale-specific formatting with '%.3f'.
+      -G, --no-grouping-separator
+                            Do not add group separators when printing large decimal numbers. 
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                             Limit CSV dialect sniffing to the specified number of
                             bytes. Specify "0" to disable sniffing.

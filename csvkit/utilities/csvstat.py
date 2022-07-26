@@ -115,6 +115,13 @@ class CSVStat(CSVKitUtility):
             '--count', dest='count_only', action='store_true',
             help='Only output total row count.')
         self.argparser.add_argument(
+            '--decimal-format', dest='decimal_format', type=str, default='%.3f',
+            help='%%-format specification for printing decimal numbers. '
+                 'Defaults to locale-specific formatting with \'%%.3f\'.')
+        self.argparser.add_argument(
+            '-G', '--no-grouping-separator', dest='no_grouping_separator',
+            action='store_true', help='Do not add group separators when printing large decimal numbers. ')
+        self.argparser.add_argument(
             '-y', '--snifflimit', dest='sniff_limit', type=int, default=1024,
             help='Limit CSV dialect sniffing to the specified number of bytes. '
                  'Specify "0" to disable sniffing entirely, or "-1" to sniff the entire file.')
@@ -215,7 +222,7 @@ class CSVStat(CSVKitUtility):
                     stat = table.aggregate(op(column_id))
 
                     if self.is_finite_decimal(stat):
-                        stat = format_decimal(stat)
+                        stat = format_decimal(stat, self.args.decimal_format, self.args.no_grouping_separator)
             except Exception:
                 stat = None
 
@@ -249,7 +256,7 @@ class CSVStat(CSVKitUtility):
                         v = table.aggregate(op(column_id))
 
                         if self.is_finite_decimal(v):
-                            v = format_decimal(v)
+                            v = format_decimal(v, self.args.decimal_format, self.args.no_grouping_separator)
 
                         stats[op_name] = v
                 except Exception:
@@ -293,7 +300,7 @@ class CSVStat(CSVKitUtility):
                             v = row['value']
 
                             if self.is_finite_decimal(v):
-                                v = format_decimal(v)
+                                v = format_decimal(v, self.args.decimal_format, self.args.no_grouping_separator)
                         else:
                             v = six.text_type(row['value'])
 
@@ -345,8 +352,8 @@ class CSVStat(CSVKitUtility):
             writer.writerow(output_row)
 
 
-def format_decimal(d):
-    return locale.format_string('%.3f', d, grouping=True).rstrip('0').rstrip('.')
+def format_decimal(d, f='%.3f', no_grouping_separator=False):
+    return locale.format_string(f, d, grouping=not no_grouping_separator).rstrip('0').rstrip('.')
 
 
 def get_type(table, column_id, **kwargs):
