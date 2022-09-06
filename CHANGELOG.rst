@@ -1,10 +1,15 @@
+Unreleased
+----------
+
+* feat: :doc:`/scripts/csvsql` accepts multiple :code:`--query` command-line arguments.
+
 1.0.7 - March 6, 2022
 ---------------------
 
 * fix: :doc:`/scripts/csvcut` extracts the correct columns when :code:`--line-numbers` is set.
 * fix: Restore Python 2.7 support in edge cases.
-* improvement: Use 1024 byte sniff-limit by default across csvkit. Improve csvstat performance up to 10x.
-* improvement: Add support for ``.xz`` (LZMA) compressed input files.
+* feat: Use 1024 byte sniff-limit by default across csvkit. Improve csvstat performance up to 10x.
+* feat: Add support for ``.xz`` (LZMA) compressed input files.
 * Add Python 3.10 support.
 * Drop Python 3.5 support (end-of-life was September 30, 2020).
 
