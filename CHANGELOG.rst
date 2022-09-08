@@ -2,6 +2,7 @@ Unreleased
 ----------
 
 * feat: :doc:`/scripts/csvsql` accepts multiple :code:`--query` command-line arguments.
+* feat: :doc:`/scripts/csvstat` adds :code:`--no-grouping-separator` and :code:`--decimal-format` options.
 
 1.0.7 - March 6, 2022
 ---------------------

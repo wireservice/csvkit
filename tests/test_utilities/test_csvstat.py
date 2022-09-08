@@ -108,3 +108,20 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         self.assertEqual(row[2], 'Text')
         self.assertEqual(row[5], '')
         self.assertEqual(row[11], '16')
+
+    def test_decimal_format(self):
+        output = self.get_output(['-c', 'TOTAL', '--mean', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'])
+
+        self.assertEqual(output, '9,748.346\n')
+
+        output = self.get_output([
+            '-c', 'TOTAL', '--mean', '--no-grouping-separator', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'
+        ])
+
+        self.assertEqual(output, '9748.346\n')
+
+        output = self.get_output([
+            '-c', 'TOTAL', '--mean', '--decimal-format', '%.2f', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'
+        ])
+
+        self.assertEqual(output, '9,748.35\n')

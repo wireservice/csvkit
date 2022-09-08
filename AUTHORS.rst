@@ -105,3 +105,4 @@ The following individuals have contributed code to csvkit:
 * Bonifacio de Oliveira
 * Ryan Grout
 * badbunnyyy
+* Werner Robitza
