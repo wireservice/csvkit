@@ -36,10 +36,11 @@ jobs:
       - run: flake8 .
       - run: isort . --check-only
       - run: pip install .[test] coveralls
-      - run: pytest --cov csvkit
-        env:
+      - env:
+          LANG: en_US.UTF-8
           PYTHONIOENCODING: utf-8
           PYTHONUTF8: 1
+        run: pytest --cov csvkit
       # CoverallsException: Not on TravisCI. You have to provide either repo_token in .coveralls.yml or set the COVERALLS_REPO_TOKEN env var.
       - if: matrix.python-version != '2.7'
         env:
