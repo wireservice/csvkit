@@ -117,10 +117,10 @@ class CSVStat(CSVKitUtility):
         self.argparser.add_argument(
             '--decimal-format', dest='decimal_format', type=str, default='%.3f',
             help='%%-format specification for printing decimal numbers. '
-                 'Defaults to locale-specific formatting with \'%%.3f\'.')
+                 'Defaults to locale-specific formatting with "%%.3f".')
         self.argparser.add_argument(
-            '-G', '--no-grouping-separator', dest='no_grouping_separator',
-            action='store_true', help='Do not add group separators when printing large decimal numbers. ')
+            '-G', '--no-grouping-separator', dest='no_grouping_separator', action='store_true',
+            help='Do not use grouping separators in decimal numbers.')
         self.argparser.add_argument(
             '-y', '--snifflimit', dest='sniff_limit', type=int, default=1024,
             help='Limit CSV dialect sniffing to the specified number of bytes. '

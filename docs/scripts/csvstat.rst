@@ -47,9 +47,9 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
       --count               Only output total row count.
       --decimal-format DECIMAL_FORMAT
                             %-format specification for printing decimal numbers.
-                            Defaults to locale-specific formatting with '%.3f'.
+                            Defaults to locale-specific formatting with "%.3f".
       -G, --no-grouping-separator
-                            Do not add group separators when printing large decimal numbers. 
+                            Do not use grouping separators in decimal numbers.
       -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                             Limit CSV dialect sniffing to the specified number of
                             bytes. Specify "0" to disable sniffing.
