@@ -114,10 +114,14 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
         self.assertIn('9,748.346', output)
 
-        output = self.get_output(['-c', 'TOTAL', '--mean', '--no-grouping-separator', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'])
+        output = self.get_output([
+            '-c', 'TOTAL', '--mean', '--no-grouping-separator', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'
+        ])
 
         self.assertIn('9748.346', output)
 
-        output = self.get_output(['-c', 'TOTAL', '--mean', '--decimal-format', '%.2f', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'])
+        output = self.get_output([
+            '-c', 'TOTAL', '--mean', '--decimal-format', '%.2f', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'
+        ])
 
         self.assertIn('9,748.35', output)
