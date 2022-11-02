@@ -27,7 +27,7 @@ def fixed2csv(f, schema, output=None, skip_lines=0, **kwargs):
     :param skip_lines:
         The number of lines to skip from the top of the file.
     """
-    streaming = True if output else False
+    streaming = bool(output)
 
     if not streaming:
         output = six.StringIO()
@@ -95,7 +95,7 @@ class FixedWidthReader(six.Iterator):
 FixedWidthField = namedtuple('FixedWidthField', ['name', 'start', 'length'])
 
 
-class FixedWidthRowParser(object):
+class FixedWidthRowParser():
     """
     Instantiated with a schema, able to return a sequence of trimmed strings
     representing fields given a fixed-length line. Flexible about where the
@@ -135,7 +135,7 @@ class FixedWidthRowParser(object):
         return [field.name for field in self.fields]
 
 
-class SchemaDecoder(object):
+class SchemaDecoder():
     """
     Extracts column, start, and length columns from schema rows. Once
     instantiated, each time the instance is called with a row, a

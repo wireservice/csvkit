@@ -89,15 +89,15 @@ class CSVKitTestCase(unittest.TestCase):
         self.assertEqual(len(lines), len(rows))
 
 
-class EmptyFileTests(object):
+class EmptyFileTests():
     def test_empty(self):
-        with open('examples/empty.csv') as f:
+        with open('examples/empty.csv', encoding='utf-8') as f:
             with stdin_as_string(f):
                 utility = self.Utility(getattr(self, 'default_args', []))
                 utility.run()
 
 
-class NamesTests(object):
+class NamesTests():
     def test_names(self):
         output = self.get_output_as_io(['-n', 'examples/dummy.csv'])
 
@@ -117,7 +117,7 @@ class NamesTests(object):
         output_file.close()
 
 
-class ColumnsTests(object):
+class ColumnsTests():
     def test_invalid_column(self):
         args = getattr(self, 'columns_args', []) + ['-c', '0', 'examples/dummy.csv']
 

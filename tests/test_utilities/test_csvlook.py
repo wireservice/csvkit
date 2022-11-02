@@ -78,7 +78,7 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             '| foo | bar | baz |',
             '| --- | --- | --- |',
             '|   1 |   2 | 3   |',
-            u'|   4 |   5 | ʤ   |',
+            '|   4 |   5 | ʤ   |',
         ])
 
     def test_unicode_bom(self):
@@ -86,7 +86,7 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             '| foo | bar | baz |',
             '| --- | --- | --- |',
             '|   1 |   2 | 3   |',
-            u'|   4 |   5 | ʤ   |',
+            '|   4 |   5 | ʤ   |',
         ])
 
     def test_linenumbers(self):

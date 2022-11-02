@@ -8,9 +8,10 @@ import itertools
 import sys
 import warnings
 from os.path import splitext
-
 import agate
 import six
+from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
+
 
 if six.PY3:
     import lzma
@@ -21,7 +22,6 @@ elif six.PY2:
     except ImportError:
         lzma = None
 
-from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
 
 class LazyFile(six.Iterator):
@@ -65,7 +65,7 @@ class LazyFile(six.Iterator):
         return next(self.f)
 
 
-class CSVKitUtility(object):
+class CSVKitUtility():
     description = ''
     epilog = ''
     override_flags = ''
@@ -360,8 +360,7 @@ class CSVKitUtility(object):
     def get_column_offset(self):
         if self.args.zero_based:
             return 0
-        else:
-            return 1
+        return 1
 
     def skip_lines(self):
         if isinstance(self.args.skip_lines, int):
@@ -446,22 +445,21 @@ def match_column_identifier(column_names, c, column_offset=1):
     """
     if isinstance(c, six.string_types) and not c.isdigit() and c in column_names:
         return column_names.index(c)
-    else:
-        try:
-            c = int(c) - column_offset
-        # Fail out if neither a column name nor an integer
-        except ValueError:
-            raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name. "
-                                        "Column names are: %s" % (c, repr(column_names)[1:-1]))
+    try:
+        c = int(c) - column_offset
+    # Fail out if neither a column name nor an integer
+    except ValueError:
+        raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name. "
+                                    "Column names are: %s" % (c, repr(column_names)[1:-1]))
 
-        # Fail out if index is 0-based
-        if c < 0:
-            raise ColumnIdentifierError("Column %i is invalid. Columns are 1-based." % (c + column_offset))
+    # Fail out if index is 0-based
+    if c < 0:
+        raise ColumnIdentifierError("Column %i is invalid. Columns are 1-based." % (c + column_offset))
 
-        # Fail out if index is out of range
-        if c >= len(column_names):
-            raise ColumnIdentifierError("Column %i is invalid. The last column is '%s' at index %i." % (
-                c + column_offset, column_names[-1], len(column_names) - 1 + column_offset))
+    # Fail out if index is out of range
+    if c >= len(column_names):
+        raise ColumnIdentifierError("Column %i is invalid. The last column is '%s' at index %i." % (
+            c + column_offset, column_names[-1], len(column_names) - 1 + column_offset))
 
     return c
 

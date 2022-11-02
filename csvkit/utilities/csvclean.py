@@ -45,7 +45,7 @@ class CSVClean(CSVKitUtility):
             else:
                 base = splitext(self.input_file.name)[0]
 
-            with open('%s_out.csv' % base, 'w') as f:
+            with open('%s_out.csv' % base, 'w', encoding='utf-8') as f:
                 clean_writer = agate.csv.writer(f, **self.writer_kwargs)
 
                 checker = RowChecker(reader)
@@ -57,7 +57,7 @@ class CSVClean(CSVKitUtility):
             if checker.errors:
                 error_filename = '%s_err.csv' % base
 
-                with open(error_filename, 'w') as f:
+                with open(error_filename, 'w', encoding='utf-8') as f:
                     error_writer = agate.csv.writer(f, **self.writer_kwargs)
 
                     error_header = ['line_number', 'msg']

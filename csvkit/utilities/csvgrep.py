@@ -20,8 +20,7 @@ class CSVGrep(CSVKitUtility):
         def option_parser(bytestring):
             if six.PY2:
                 return bytestring.decode(sys.getfilesystemencoding())
-            else:
-                return bytestring
+            return bytestring
 
         self.argparser.add_argument(
             '-n', '--names', dest='names_only', action='store_true',

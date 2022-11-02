@@ -34,7 +34,7 @@ class FilteringCSVReader(six.Iterator):
     column_names = None
 
     def __init__(self, reader, patterns, header=True, any_match=False, inverse=False):
-        super(FilteringCSVReader, self).__init__()
+        super().__init__()
 
         self.reader = reader
         self.header = header
@@ -78,8 +78,7 @@ class FilteringCSVReader(six.Iterator):
 
         if self.any_match:
             return self.inverse  # False
-        else:
-            return not self.inverse  # True
+        return not self.inverse  # True
 
 
 def standardize_patterns(column_names, patterns):
@@ -122,7 +121,7 @@ def pattern_as_function(obj):
     return lambda x: obj in x
 
 
-class regex_callable(object):
+class regex_callable():
 
     def __init__(self, pattern):
         self.pattern = pattern

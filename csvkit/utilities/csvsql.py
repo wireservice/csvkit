@@ -225,7 +225,7 @@ class CSVSQL(CSVKitUtility):
                 queries = []
                 for query in self.args.queries:
                     if os.path.exists(query):
-                        with open(query, 'r') as f:
+                        with open(query, 'r', encoding='utf-8') as f:
                             query = f.read()
                     queries += query.split(';')
 

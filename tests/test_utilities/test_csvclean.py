@@ -40,12 +40,12 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
 
         try:
             if output_lines:
-                with open(output_file) as f:
+                with open(output_file, encoding='utf-8') as f:
                     for line in output_lines:
                         self.assertEqual(next(f), line)
                     self.assertRaises(StopIteration, next, f)
             if error_lines:
-                with open(error_file) as f:
+                with open(error_file, encoding='utf-8') as f:
                     for line in error_lines:
                         self.assertEqual(next(f), line)
                     self.assertRaises(StopIteration, next, f)

@@ -29,8 +29,7 @@ class In2CSV(CSVKitUtility):
         def option_parser(bytestring):
             if six.PY2:
                 return bytestring.decode(sys.getfilesystemencoding())
-            else:
-                return bytestring
+            return bytestring
 
         self.argparser.add_argument(
             metavar='FILE', nargs='?', dest='input_path',
@@ -68,10 +67,8 @@ class In2CSV(CSVKitUtility):
         if not path or path == '-':
             if six.PY2:
                 return six.BytesIO(sys.stdin.read())
-            else:
-                return six.BytesIO(sys.stdin.buffer.read())
-        else:
-            return open(path, 'rb')
+            return six.BytesIO(sys.stdin.buffer.read())
+        return open(path, 'rb')
 
     def sheet_names(self, path, filetype):
         input_file = self.open_excel_input_file(path)
@@ -189,7 +186,7 @@ class In2CSV(CSVKitUtility):
 
             base = splitext(self.input_file.name)[0]
             for i, table in enumerate(tables.values()):
-                with open('%s_%d.csv' % (base, i), 'w') as f:
+                with open('%s_%d.csv' % (base, i), 'w', encoding='utf-8') as f:
                     table.to_csv(f, **self.writer_kwargs)
 
         self.input_file.close()

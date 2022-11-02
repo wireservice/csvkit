@@ -41,7 +41,7 @@ class TestCSVJoin(CSVKitTestCase, EmptyFileTests):
 
     def test_left_short_columns(self):
         output = self.get_output_as_io(['-c', 'a', 'examples/join_a_short.csv', 'examples/join_b.csv'])
-        with open('examples/join_short.csv') as f:
+        with open('examples/join_short.csv', encoding='utf-8') as f:
             self.assertEqual(output.readlines(), f.readlines())
 
     def test_single(self):
