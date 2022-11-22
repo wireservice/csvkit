@@ -97,7 +97,6 @@ class CSVStack(CSVKitUtility):
             output.writerow(headers)
 
         for i, path in enumerate(self.args.input_paths):
-            print(path)
             f = self._open_input_file(path)
 
             if isinstance(self.args.skip_lines, int):
