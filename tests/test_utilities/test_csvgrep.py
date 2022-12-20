@@ -38,13 +38,13 @@ class TestCSVGrep(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
     def test_match_utf8(self):
         self.assertRows(['-c', '3', '-m', 'ʤ', 'examples/test_utf8.csv'], [
             ['foo', 'bar', 'baz'],
-            ['4', '5', u'ʤ'],
+            ['4', '5', 'ʤ'],
         ])
 
     def test_match_utf8_bom(self):
         self.assertRows(['-c', '3', '-m', 'ʤ', 'examples/test_utf8_bom.csv'], [
             ['foo', 'bar', 'baz'],
-            ['4', '5', u'ʤ'],
+            ['4', '5', 'ʤ'],
         ])
 
     def test_no_match(self):
@@ -67,7 +67,7 @@ class TestCSVGrep(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
     def test_re_match_utf8(self):
         self.assertRows(['-c', '3', '-r', 'ʤ', 'examples/test_utf8.csv'], [
             ['foo', 'bar', 'baz'],
-            ['4', '5', u'ʤ'],
+            ['4', '5', 'ʤ'],
         ])
 
     def test_string_match(self):

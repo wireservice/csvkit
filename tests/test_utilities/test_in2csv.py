@@ -122,7 +122,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         self.assertLines(['--names', 'examples/sheets.xlsx'], [
             'not this one',
             'data',
-            u'ʤ',
+            'ʤ',
         ])
 
     def test_csv_no_headers(self):

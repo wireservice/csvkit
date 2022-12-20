@@ -140,7 +140,7 @@ Python standard output encoding errors
 
 If, when running a command like :code:`csvlook dummy.csv | less` you get an error like::
 
-    'ascii' codec can't encode character u'\u0105' in position 2: ordinal not in range(128)
+    'ascii' codec can't encode character '\u0105' in position 2: ordinal not in range(128)
 
 The simplest option is to set the encoding that Python uses for standard streams, using the :code:`PYTHONIOENCODING` environment variable::
 

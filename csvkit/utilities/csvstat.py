@@ -223,13 +223,13 @@ class CSVStat(CSVKitUtility):
 
         # Formatting
         if op_name == 'freq':
-            stat = ', '.join([(u'"%s": %s' % (str(row['value']), row['count'])) for row in stat])
-            stat = u'{ %s }' % stat
+            stat = ', '.join([('"%s": %s' % (str(row['value']), row['count'])) for row in stat])
+            stat = '{ %s }' % stat
 
         if label:
-            self.output_file.write(u'%3i. %s: %s\n' % (column_id + 1, column_name, stat))
+            self.output_file.write('%3i. %s: %s\n' % (column_id + 1, column_name, stat))
         else:
-            self.output_file.write(u'%s\n' % stat)
+            self.output_file.write('%s\n' % stat)
 
     def calculate_stats(self, table, column_id, **kwargs):
         """
@@ -276,7 +276,7 @@ class CSVStat(CSVKitUtility):
                 if column_stats[op_name] is None:
                     continue
 
-                label = u'{label:{label_column_width}}'.format(**{
+                label = '{label:{label_column_width}}'.format(**{
                     'label_column_width': label_column_width,
                     'label': op_data['label']
                 })
@@ -286,7 +286,7 @@ class CSVStat(CSVKitUtility):
                         if i == 0:
                             self.output_file.write('\t{} '.format(label))
                         else:
-                            self.output_file.write(u'\t{label:{label_column_width}} '.format(**{
+                            self.output_file.write('\t{label:{label_column_width}} '.format(**{
                                 'label_column_width': label_column_width,
                                 'label': ''
                             }))
@@ -299,7 +299,7 @@ class CSVStat(CSVKitUtility):
                         else:
                             v = str(row['value'])
 
-                        self.output_file.write(u'{} ({}x)\n'.format(v, row['count']))
+                        self.output_file.write('{} ({}x)\n'.format(v, row['count']))
 
                     continue
 
@@ -310,7 +310,7 @@ class CSVStat(CSVKitUtility):
                 elif op_name == 'len':
                     v = '%s characters' % v
 
-                self.output_file.write(u'\t{} {}\n'.format(label, v))
+                self.output_file.write('\t{} {}\n'.format(label, v))
 
             self.output_file.write('\n')
 

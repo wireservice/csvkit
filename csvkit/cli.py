@@ -333,8 +333,7 @@ class CSVKitUtility:
     def get_column_offset(self):
         if self.args.zero_based:
             return 0
-        else:
-            return 1
+        return 1
 
     def skip_lines(self):
         if isinstance(self.args.skip_lines, int):

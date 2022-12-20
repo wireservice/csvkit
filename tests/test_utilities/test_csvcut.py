@@ -37,7 +37,7 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         self.assertRows(['-c', '1,3', 'examples/test_utf8.csv'], [
             ['foo', 'baz'],
             ['1', '3'],
-            ['4', u'ʤ'],
+            ['4', 'ʤ'],
         ])
 
     def test_with_gzip(self):

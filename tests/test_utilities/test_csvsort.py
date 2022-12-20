@@ -32,15 +32,15 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_sort_string_reverse(self):
         reader = self.get_output_as_reader(['-c', '1', '-r', 'examples/testxls_converted.csv'])
-        test_order = [u'text', u'Unicode! Σ', u'This row has blanks',
-                      u'Chicago Tribune', u'Chicago Sun-Times', u'Chicago Reader']
+        test_order = ['text', 'Unicode! Σ', 'This row has blanks',
+                      'Chicago Tribune', 'Chicago Sun-Times', 'Chicago Reader']
         new_order = [str(r[0]) for r in reader]
         self.assertEqual(test_order, new_order)
 
     def test_sort_date(self):
         reader = self.get_output_as_reader(['-c', '2', 'examples/testxls_converted.csv'])
-        test_order = [u'text', u'Chicago Tribune', u'Chicago Sun-Times',
-                      u'Chicago Reader', u'This row has blanks', u'Unicode! Σ']
+        test_order = ['text', 'Chicago Tribune', 'Chicago Sun-Times',
+                      'Chicago Reader', 'This row has blanks', 'Unicode! Σ']
         new_order = [str(r[0]) for r in reader]
         self.assertEqual(test_order, new_order)
 
@@ -70,7 +70,7 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_no_inference(self):
         reader = self.get_output_as_reader(['--no-inference', '-c', '1', 'examples/test_literal_order.csv'])
-        test_order = [u'a', u'192', u'27', u'3']
+        test_order = ['a', '192', '27', '3']
         new_order = [str(r[0]) for r in reader]
         self.assertEqual(test_order, new_order)
 
