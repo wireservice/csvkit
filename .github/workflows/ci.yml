@@ -6,7 +6,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-        python-version: [2.7, 3.6, 3.7, 3.8, 3.9, '3.10', '3.11', pypy-3.7]
+        python-version: [3.7, 3.8, 3.9, '3.10', '3.11', pypy-3.7]
         exclude:
           # UnicodeDecodeError on test_match_utf8 in Python 2, test_removes_bom in Python 3, etc.
           - os: windows-latest
