@@ -72,7 +72,7 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
         input_file = StringIO('a,b,c\n1"2,3,4\n')
 
         with stdin_as_string(input_file):
-            self.assertLines(['-P', '#', '-', '3'], [
+            self.assertLines(['-P', '#', '-U', '3'], [
                 'a,b,c',
                 '1#"2,3,4',
             ])
