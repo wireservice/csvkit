@@ -8,41 +8,23 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
         python-version: [3.7, 3.8, 3.9, '3.10', '3.11', pypy-3.7]
         exclude:
-          # UnicodeDecodeError on test_match_utf8 in Python 2, test_removes_bom in Python 3, etc.
-          - os: windows-latest
-            python-version: 2.7
-          - os: windows-latest
-            python-version: 3.6
           - os: windows-latest
             python-version: 3.7
           - os: windows-latest
             python-version: pypy-3.7
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      # https://github.com/actions/cache/blob/main/examples.md#using-a-script-to-get-cache-location
-      - id: pip-cache
-        run: python -c "from pip._internal.locations import USER_CACHE_DIR; print('::set-output name=dir::' + USER_CACHE_DIR)"
-      - uses: actions/cache@v1
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - run: pip install --upgrade check-manifest flake8 isort setuptools
-      - run: check-manifest
-      - run: flake8 .
-      - run: isort . --check-only
+          cache: pip
+          cache-dependency-path: setup.py
       - run: pip install .[test] coveralls
       - env:
           LANG: en_US.UTF-8
           PYTHONIOENCODING: utf-8
           PYTHONUTF8: 1
         run: pytest --cov csvkit
-      # CoverallsException: Not on TravisCI. You have to provide either repo_token in .coveralls.yml or set the COVERALLS_REPO_TOKEN env var.
-      - if: matrix.python-version != '2.7'
-        env:
+      - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: coveralls --service=github
