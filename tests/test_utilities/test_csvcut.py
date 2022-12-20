@@ -2,11 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-
-try:
-    from mock import patch
-except ImportError:
-    from unittest.mock import patch
+from unittest.mock import patch
 
 from csvkit.utilities.csvcut import CSVCut, launch_new_instance
 from tests.utils import ColumnsTests, CSVKitTestCase, EmptyFileTests, NamesTests
@@ -41,7 +37,7 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         self.assertRows(['-c', '1,3', 'examples/test_utf8.csv'], [
             ['foo', 'baz'],
             ['1', '3'],
-            ['4', u'ʤ'],
+            ['4', 'ʤ'],
         ])
 
     def test_with_gzip(self):

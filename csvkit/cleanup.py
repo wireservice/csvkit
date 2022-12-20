@@ -21,7 +21,7 @@ def join_rows(rows, joiner=' '):
     return fixed_row
 
 
-class RowChecker(object):
+class RowChecker:
     """
     Iterate over rows of a CSV producing cleaned rows and storing error rows.
     """

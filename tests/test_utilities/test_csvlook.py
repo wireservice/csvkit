@@ -2,13 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-
-import six
-
-try:
-    from mock import patch
-except ImportError:
-    from unittest.mock import patch
+from io import StringIO
+from unittest.mock import patch
 
 from csvkit.utilities.csvlook import CSVLook, launch_new_instance
 from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
@@ -22,26 +17,20 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             launch_new_instance()
 
     def test_runs(self):
-        if six.PY2:
-            self.get_output(['examples/test_utf8.csv'])
-        else:
-            self.assertLines(['examples/test_utf8.csv'], [
-                '| foo | bar | baz |',
-                '| --- | --- | --- |',
-                '|   1 |   2 | 3   |',
-                '|   4 |   5 | ʤ   |',
-            ])
+        self.assertLines(['examples/test_utf8.csv'], [
+            '| foo | bar | baz |',
+            '| --- | --- | --- |',
+            '|   1 |   2 | 3   |',
+            '|   4 |   5 | ʤ   |',
+        ])
 
     def test_encoding(self):
-        if six.PY2:
-            self.get_output(['-e', 'latin1', 'examples/test_latin1.csv'])
-        else:
-            self.assertLines(['-e', 'latin1', 'examples/test_latin1.csv'], [
-                '| a | b | c |',
-                '| - | - | - |',
-                '| 1 | 2 | 3 |',
-                '| 4 | 5 | © |',
-            ])
+        self.assertLines(['-e', 'latin1', 'examples/test_latin1.csv'], [
+            '| a | b | c |',
+            '| - | - | - |',
+            '| 1 | 2 | 3 |',
+            '| 4 | 5 | © |',
+        ])
 
     def test_simple(self):
         self.assertLines(['examples/dummy3.csv'], [
@@ -78,7 +67,7 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             '| foo | bar | baz |',
             '| --- | --- | --- |',
             '|   1 |   2 | 3   |',
-            u'|   4 |   5 | ʤ   |',
+            '|   4 |   5 | ʤ   |',
         ])
 
     def test_unicode_bom(self):
@@ -86,7 +75,7 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             '| foo | bar | baz |',
             '| --- | --- | --- |',
             '|   1 |   2 | 3   |',
-            u'|   4 |   5 | ʤ   |',
+            '|   4 |   5 | ʤ   |',
         ])
 
     def test_linenumbers(self):
@@ -141,7 +130,7 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_stdin(self):
-        input_file = six.StringIO('a,b,c\n1,2,3\n4,5,6\n')
+        input_file = StringIO('a,b,c\n1,2,3\n4,5,6\n')
 
         with stdin_as_string(input_file):
             self.assertLines([], [

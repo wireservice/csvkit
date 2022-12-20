@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 
-import codecs
 import locale
 import warnings
 from collections import Counter, OrderedDict
 from decimal import Decimal
 
 import agate
-import six
 
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
@@ -147,9 +145,6 @@ class CSVStat(CSVKitUtility):
             self.argparser.error(
                 'You may not specify --count and an operation (--mean, --median, etc) at the same time.')
 
-        if six.PY2:
-            self.output_file = codecs.getwriter('utf-8')(self.output_file)
-
         if self.args.count_only:
             count = len(list(agate.csv.reader(self.skip_lines(), **self.reader_kwargs)))
 
@@ -228,13 +223,13 @@ class CSVStat(CSVKitUtility):
 
         # Formatting
         if op_name == 'freq':
-            stat = ', '.join([(u'"%s": %s' % (six.text_type(row['value']), row['count'])) for row in stat])
-            stat = u'{ %s }' % stat
+            stat = ', '.join([('"%s": %s' % (str(row['value']), row['count'])) for row in stat])
+            stat = '{ %s }' % stat
 
         if label:
-            self.output_file.write(u'%3i. %s: %s\n' % (column_id + 1, column_name, stat))
+            self.output_file.write('%3i. %s: %s\n' % (column_id + 1, column_name, stat))
         else:
-            self.output_file.write(u'%s\n' % stat)
+            self.output_file.write('%s\n' % stat)
 
     def calculate_stats(self, table, column_id, **kwargs):
         """
@@ -281,7 +276,7 @@ class CSVStat(CSVKitUtility):
                 if column_stats[op_name] is None:
                     continue
 
-                label = u'{label:{label_column_width}}'.format(**{
+                label = '{label:{label_column_width}}'.format(**{
                     'label_column_width': label_column_width,
                     'label': op_data['label']
                 })
@@ -291,7 +286,7 @@ class CSVStat(CSVKitUtility):
                         if i == 0:
                             self.output_file.write('\t{} '.format(label))
                         else:
-                            self.output_file.write(u'\t{label:{label_column_width}} '.format(**{
+                            self.output_file.write('\t{label:{label_column_width}} '.format(**{
                                 'label_column_width': label_column_width,
                                 'label': ''
                             }))
@@ -302,9 +297,9 @@ class CSVStat(CSVKitUtility):
                             if self.is_finite_decimal(v):
                                 v = format_decimal(v, self.args.decimal_format, self.args.no_grouping_separator)
                         else:
-                            v = six.text_type(row['value'])
+                            v = str(row['value'])
 
-                        self.output_file.write(u'{} ({}x)\n'.format(v, row['count']))
+                        self.output_file.write('{} ({}x)\n'.format(v, row['count']))
 
                     continue
 
@@ -315,7 +310,7 @@ class CSVStat(CSVKitUtility):
                 elif op_name == 'len':
                     v = '%s characters' % v
 
-                self.output_file.write(u'\t{} {}\n'.format(label, v))
+                self.output_file.write('\t{} {}\n'.format(label, v))
 
             self.output_file.write('\n')
 
@@ -343,7 +338,7 @@ class CSVStat(CSVKitUtility):
                     continue
 
                 if op_name == 'freq':
-                    value = ', '.join([six.text_type(row['value']) for row in column_stats['freq']])
+                    value = ', '.join([str(row['value']) for row in column_stats['freq']])
                 else:
                     value = column_stats[op_name]
 
