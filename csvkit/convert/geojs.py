@@ -1,14 +1,10 @@
 #!/usr/bin/env python
 
-try:
-    import json
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict
-    import simplejson as json
+import json
+from collections import OrderedDict
+from io import StringIO
 
 import agate
-import six
 
 
 def geojson2csv(f, key=None, **kwargs):
@@ -58,7 +54,7 @@ def geojson2csv(f, key=None, **kwargs):
     header.extend(property_fields)
     header.extend(('geojson', 'type', 'longitude', 'latitude'))
 
-    o = six.StringIO()
+    o = StringIO()
     writer = agate.csv.writer(o)
 
     writer.writerow(header)

@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-import six
 
 from csvkit.exceptions import ColumnIdentifierError
 
 
-class FilteringCSVReader(six.Iterator):
+class FilteringCSVReader:
     r"""
     Given any row iterator, only return rows which pass the filter.
     If 'header' is False, then all rows must pass the filter; by default, the first row will be passed
@@ -122,7 +121,7 @@ def pattern_as_function(obj):
     return lambda x: obj in x
 
 
-class regex_callable(object):
+class regex_callable:
 
     def __init__(self, pattern):
         self.pattern = pattern

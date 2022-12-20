@@ -3,15 +3,11 @@
 
 import os
 import sys
+from io import StringIO
 from textwrap import dedent
+from unittest.mock import patch
 
-import six
 from sqlalchemy.exc import IntegrityError, OperationalError
-
-try:
-    from mock import patch
-except ImportError:
-    from unittest.mock import patch
 
 from csvkit.utilities.csvsql import CSVSQL, launch_new_instance
 from csvkit.utilities.sql2csv import SQL2CSV
@@ -117,7 +113,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         '''))  # noqa: W291
 
     def test_stdin(self):
-        input_file = six.StringIO('a,b,c\n4,2,3\n')
+        input_file = StringIO('a,b,c\n4,2,3\n')
 
         with stdin_as_string(input_file):
             sql = self.get_output(['--tables', 'foo'])
@@ -133,7 +129,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_stdin_and_filename(self):
-        input_file = six.StringIO("a,b,c\n1,2,3\n")
+        input_file = StringIO("a,b,c\n1,2,3\n")
 
         with stdin_as_string(input_file):
             sql = self.get_output(['-', 'examples/dummy.csv'])
@@ -144,7 +140,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_query(self):
-        input_file = six.StringIO("a,b,c\n1,2,3\n")
+        input_file = StringIO("a,b,c\n1,2,3\n")
 
         with stdin_as_string(input_file):
             sql = self.get_output(['--query', 'SELECT m.usda_id, avg(i.sepal_length) AS mean_sepal_length FROM iris '
@@ -159,7 +155,7 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_query_empty(self):
-        input_file = six.StringIO()
+        input_file = StringIO()
 
         with stdin_as_string(input_file):
             output = self.get_output(['--query', 'SELECT 1'])
@@ -194,14 +190,14 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
                          'SELECT 1; CREATE TABLE foobar (date DATE)', '--after-insert',
                          'INSERT INTO dummy VALUES (0, 5, 6)'])
 
-        output_file = six.StringIO()
+        output_file = StringIO()
         utility = SQL2CSV(['--db', 'sqlite:///' + self.db_file, '--query', 'SELECT * FROM foobar'], output_file)
         utility.run()
         output = output_file.getvalue()
         output_file.close()
         self.assertEqual(output, 'date\n')
 
-        output_file = six.StringIO()
+        output_file = StringIO()
         utility = SQL2CSV(['--db', 'sqlite:///' + self.db_file, '--query', 'SELECT * FROM dummy'], output_file)
         utility.run()
         output = output_file.getvalue()

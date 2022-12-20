@@ -1,11 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-
-try:
-    from mock import patch
-except ImportError:
-    from unittest.mock import patch
+from unittest.mock import patch
 
 from csvkit.utilities.csvstack import CSVStack, launch_new_instance
 from tests.utils import CSVKitTestCase, EmptyFileTests

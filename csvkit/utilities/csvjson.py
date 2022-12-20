@@ -1,19 +1,12 @@
 #!/usr/bin/env python
 
-import codecs
 import datetime
 import decimal
+import json
 import sys
-
-try:
-    import json
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict
-    import simplejson as json
+from collections import OrderedDict
 
 import agate
-import six
 
 from csvkit.cli import CSVKitUtility, match_column_identifier
 
@@ -73,11 +66,7 @@ class CSVJSON(CSVKitUtility):
         }
 
         # We need to do this stream dance here, because we aren't writing through agate.
-        if six.PY2:
-            self.stream = codecs.getwriter('utf-8')(self.output_file)
-            self.json_kwargs['encoding'] = 'utf-8'
-        else:
-            self.stream = self.output_file
+        self.stream = self.output_file
 
     def main(self):
         """

@@ -79,14 +79,6 @@ Or if you see ``/usr/local/bin/pip: bad interpreter`` and have Python 3 installe
 
     python3 -m pip install csvkit
 
-If you use Python 2 and have a recent version of pip, you may need to run pip with :code:`--allow-external argparse`.
-
-If you use Python 2 on FreeBSD, you may need to install `py-sqlite3 <https://www.freshports.org/databases/py-sqlite3/>`_.
-
-.. note ::
-
-    Need more speed? If you use Python 2, :code:`pip install cdecimal` for a boost.
-
 CSV formatting and parsing
 --------------------------
 

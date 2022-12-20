@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import agate
-import six
 from sqlalchemy import create_engine
 
 from csvkit.cli import CSVKitUtility
@@ -48,13 +47,13 @@ class SQL2CSV(CSVKitUtility):
         try:
             engine = create_engine(self.args.connection_string)
         except ImportError as e:
-            six.raise_from(ImportError(
+            raise ImportError(
                 "You don't appear to have the necessary database backend installed for connection string you're "
                 "trying to use. Available backends include:\n\nPostgreSQL:\tpip install psycopg2\nMySQL:\t\tpip "
                 "install mysql-connector-python OR pip install mysqlclient\n\nFor details on connection strings "
                 "and other backends, please see the SQLAlchemy documentation on dialects at:\n\n"
                 "http://www.sqlalchemy.org/docs/dialects/\n\n"
-            ), e)
+            ) from e
 
         connection = engine.connect()
 

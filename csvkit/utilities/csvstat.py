@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 
-import codecs
 import locale
 import warnings
 from collections import Counter, OrderedDict
 from decimal import Decimal
 
 import agate
-import six
 
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
@@ -147,9 +145,6 @@ class CSVStat(CSVKitUtility):
             self.argparser.error(
                 'You may not specify --count and an operation (--mean, --median, etc) at the same time.')
 
-        if six.PY2:
-            self.output_file = codecs.getwriter('utf-8')(self.output_file)
-
         if self.args.count_only:
             count = len(list(agate.csv.reader(self.skip_lines(), **self.reader_kwargs)))
 
@@ -228,7 +223,7 @@ class CSVStat(CSVKitUtility):
 
         # Formatting
         if op_name == 'freq':
-            stat = ', '.join([(u'"%s": %s' % (six.text_type(row['value']), row['count'])) for row in stat])
+            stat = ', '.join([(u'"%s": %s' % (str(row['value']), row['count'])) for row in stat])
             stat = u'{ %s }' % stat
 
         if label:
@@ -302,7 +297,7 @@ class CSVStat(CSVKitUtility):
                             if self.is_finite_decimal(v):
                                 v = format_decimal(v, self.args.decimal_format, self.args.no_grouping_separator)
                         else:
-                            v = six.text_type(row['value'])
+                            v = str(row['value'])
 
                         self.output_file.write(u'{} ({}x)\n'.format(v, row['count']))
 
@@ -343,7 +338,7 @@ class CSVStat(CSVKitUtility):
                     continue
 
                 if op_name == 'freq':
-                    value = ', '.join([six.text_type(row['value']) for row in column_stats['freq']])
+                    value = ', '.join([str(row['value']) for row in column_stats['freq']])
                 else:
                     value = column_stats[op_name]
 

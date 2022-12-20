@@ -62,14 +62,12 @@ setup(
         'agate-excel>=0.2.2',
         'agate-dbf>=0.2.2',
         'agate-sql>=0.5.3',
-        'six>=1.6.1',
     ],
     extras_require={
         'test': [
             'coverage>=4.4.2',
             'pytest',
             'pytest-cov',
-            'mock>=1.3.0;python_version<"3"',
         ],
         'docs': [
             'sphinx>=1.0.7',

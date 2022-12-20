@@ -2,11 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-
-try:
-    from mock import patch
-except ImportError:
-    from unittest.mock import patch
+from unittest.mock import patch
 
 from csvkit.utilities.csvgrep import CSVGrep, launch_new_instance
 from tests.utils import ColumnsTests, CSVKitTestCase, EmptyFileTests, NamesTests

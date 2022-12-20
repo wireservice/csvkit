@@ -5,7 +5,6 @@ import sys
 from argparse import FileType
 
 import agate
-import six
 
 from csvkit.cli import CSVKitUtility
 from csvkit.grep import FilteringCSVReader
@@ -16,13 +15,6 @@ class CSVGrep(CSVKitUtility):
     override_flags = ['L', 'blanks', 'date-format', 'datetime-format']
 
     def add_arguments(self):
-        # I feel that there ought to be a better way to do this across Python 2 and 3.
-        def option_parser(bytestring):
-            if six.PY2:
-                return bytestring.decode(sys.getfilesystemencoding())
-            else:
-                return bytestring
-
         self.argparser.add_argument(
             '-n', '--names', dest='names_only', action='store_true',
             help='Display column names and indices from the input CSV and exit.')
@@ -30,10 +22,10 @@ class CSVGrep(CSVKitUtility):
             '-c', '--columns', dest='columns',
             help='A comma-separated list of column indices, names or ranges to be searched, e.g. "1,id,3-5".')
         self.argparser.add_argument(
-            '-m', '--match', dest="pattern", action='store', type=option_parser,
+            '-m', '--match', dest="pattern", action='store',
             help='A string to search for.')
         self.argparser.add_argument(
-            '-r', '--regex', dest='regex', action='store', type=option_parser,
+            '-r', '--regex', dest='regex', action='store',
             help='A regular expression to match.')
         self.argparser.add_argument(
             '-f', '--file', dest='matchfile', type=FileType('r'), action='store',

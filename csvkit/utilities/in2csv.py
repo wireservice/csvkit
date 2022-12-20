@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 import sys
+from io import BytesIO
 from os.path import splitext
 
 import agate
 import agatedbf  # noqa: F401
 import agateexcel  # noqa: F401
 import openpyxl
-import six
 import xlrd
 
 from csvkit import convert
@@ -25,13 +25,6 @@ class In2CSV(CSVKitUtility):
     override_flags = ['f']
 
     def add_arguments(self):
-        # I feel that there ought to be a better way to do this across Python 2 and 3.
-        def option_parser(bytestring):
-            if six.PY2:
-                return bytestring.decode(sys.getfilesystemencoding())
-            else:
-                return bytestring
-
         self.argparser.add_argument(
             metavar='FILE', nargs='?', dest='input_path',
             help='The CSV file to operate on. If omitted, will accept input as piped data via STDIN.')
@@ -48,10 +41,10 @@ class In2CSV(CSVKitUtility):
             '-n', '--names', dest='names_only', action='store_true',
             help='Display sheet names from the input Excel file.')
         self.argparser.add_argument(
-            '--sheet', dest='sheet', type=option_parser,
+            '--sheet', dest='sheet',
             help='The name of the Excel sheet to operate on.')
         self.argparser.add_argument(
-            '--write-sheets', dest='write_sheets', type=option_parser,
+            '--write-sheets', dest='write_sheets',
             help='The names of the Excel sheets to write to files, or "-" to write all sheets.')
         self.argparser.add_argument(
             '--encoding-xls', dest='encoding_xls',
@@ -66,12 +59,8 @@ class In2CSV(CSVKitUtility):
 
     def open_excel_input_file(self, path):
         if not path or path == '-':
-            if six.PY2:
-                return six.BytesIO(sys.stdin.read())
-            else:
-                return six.BytesIO(sys.stdin.buffer.read())
-        else:
-            return open(path, 'rb')
+            return BytesIO(sys.stdin.buffer.read())
+        return open(path, 'rb')
 
     def sheet_names(self, path, filetype):
         input_file = self.open_excel_input_file(path)
