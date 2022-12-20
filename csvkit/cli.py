@@ -418,22 +418,22 @@ def match_column_identifier(column_names, c, column_offset=1):
     """
     if isinstance(c, str) and not c.isdigit() and c in column_names:
         return column_names.index(c)
-    else:
-        try:
-            c = int(c) - column_offset
-        # Fail out if neither a column name nor an integer
-        except ValueError:
-            raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name. "
-                                        "Column names are: %s" % (c, repr(column_names)[1:-1]))
 
-        # Fail out if index is 0-based
-        if c < 0:
-            raise ColumnIdentifierError("Column %i is invalid. Columns are 1-based." % (c + column_offset))
+    try:
+        c = int(c) - column_offset
+    # Fail out if neither a column name nor an integer
+    except ValueError:
+        raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name. "
+                                    "Column names are: %s" % (c, repr(column_names)[1:-1]))
 
-        # Fail out if index is out of range
-        if c >= len(column_names):
-            raise ColumnIdentifierError("Column %i is invalid. The last column is '%s' at index %i." % (
-                c + column_offset, column_names[-1], len(column_names) - 1 + column_offset))
+    # Fail out if index is 0-based
+    if c < 0:
+        raise ColumnIdentifierError("Column %i is invalid. Columns are 1-based." % (c + column_offset))
+
+    # Fail out if index is out of range
+    if c >= len(column_names):
+        raise ColumnIdentifierError("Column %i is invalid. The last column is '%s' at index %i." % (
+            c + column_offset, column_names[-1], len(column_names) - 1 + column_offset))
 
     return c
 

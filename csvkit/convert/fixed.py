@@ -27,7 +27,7 @@ def fixed2csv(f, schema, output=None, skip_lines=0, **kwargs):
     :param skip_lines:
         The number of lines to skip from the top of the file.
     """
-    streaming = True if output else False
+    streaming = bool(output)
 
     if not streaming:
         output = StringIO()

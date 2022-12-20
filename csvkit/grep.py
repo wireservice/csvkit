@@ -33,7 +33,7 @@ class FilteringCSVReader:
     column_names = None
 
     def __init__(self, reader, patterns, header=True, any_match=False, inverse=False):
-        super(FilteringCSVReader, self).__init__()
+        super().__init__()
 
         self.reader = reader
         self.header = header
@@ -77,8 +77,7 @@ class FilteringCSVReader:
 
         if self.any_match:
             return self.inverse  # False
-        else:
-            return not self.inverse  # True
+        return not self.inverse  # True
 
 
 def standardize_patterns(column_names, patterns):

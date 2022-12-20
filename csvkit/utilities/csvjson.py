@@ -56,7 +56,7 @@ class CSVJSON(CSVKitUtility):
             help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
     def __init__(self, args=None, output_file=None):
-        super(CSVJSON, self).__init__(args, output_file)
+        super().__init__(args, output_file)
 
         self.validate_args()
 
@@ -95,7 +95,7 @@ class CSVJSON(CSVKitUtility):
         def default(obj):
             if isinstance(obj, (datetime.date, datetime.datetime)):
                 return obj.isoformat()
-            elif isinstance(obj, decimal.Decimal):
+            if isinstance(obj, decimal.Decimal):
                 return str(obj)
             raise TypeError('%s is not JSON serializable' % repr(obj))
 
