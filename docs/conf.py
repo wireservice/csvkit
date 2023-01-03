@@ -41,7 +41,7 @@ copyright = '2016, Christopher Groskopf'
 # built documents.
 #
 # The short X.Y version.
-version = '1.0.7'
+version = '1.1.0'
 # The full version, including alpha/beta/rc tags.
 release = version
 

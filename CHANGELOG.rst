@@ -1,8 +1,11 @@
-Unreleased
-----------
+1.1.0 - January 3, 2023
+-----------------------
 
 * feat: :doc:`/scripts/csvsql` accepts multiple :code:`--query` command-line arguments.
 * feat: :doc:`/scripts/csvstat` adds :code:`--no-grouping-separator` and :code:`--decimal-format` options.
+* Add Python 3.11 support.
+* Drop Python 3.6 support (end-of-life was December 23, 2021).
+* Drop Python 2.7 support (end-of-life was January 1, 2020).
 
 1.0.7 - March 6, 2022
 ---------------------

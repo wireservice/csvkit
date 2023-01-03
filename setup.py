@@ -5,7 +5,7 @@ with open('README.rst') as f:
 
 setup(
     name='csvkit',
-    version='1.0.7',
+    version='1.1.0',
     description='A suite of command-line tools for working with CSV, the king of tabular file formats.',
     long_description=long_description,
     long_description_content_type='text/x-rst',
@@ -23,12 +23,11 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Scientific/Engineering :: Information Analysis',
