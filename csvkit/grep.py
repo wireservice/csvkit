@@ -89,7 +89,7 @@ def standardize_patterns(column_names, patterns):
     """
     try:
         # Dictionary of patterns
-        patterns = dict((k, pattern_as_function(v)) for k, v in patterns.items() if v)
+        patterns = {k: pattern_as_function(v) for k, v in patterns.items() if v}
         if not column_names:
             return patterns
         p2 = {}
@@ -104,7 +104,7 @@ def standardize_patterns(column_names, patterns):
         return p2
     except AttributeError:
         # Sequence of patterns
-        return dict((i, pattern_as_function(x)) for i, x in enumerate(patterns))
+        return {i: pattern_as_function(x) for i, x in enumerate(patterns)}
 
 
 def pattern_as_function(obj):

@@ -11,19 +11,19 @@ class TestFixed(CSVKitTestCase):
     Utility = In2CSV
 
     def test_fixed(self):
-        with open('examples/testfixed', 'r') as f:
-            with open('examples/testfixed_schema.csv', 'r') as schema:
+        with open('examples/testfixed') as f:
+            with open('examples/testfixed_schema.csv') as schema:
                 output = fixed.fixed2csv(f, schema)
 
-        with open('examples/testfixed_converted.csv', 'r') as f:
+        with open('examples/testfixed_converted.csv') as f:
             self.assertEqual(f.read(), output)
 
     def test_fixed_skip_lines(self):
-        with open('examples/testfixed_skip_lines', 'r') as f:
-            with open('examples/testfixed_schema.csv', 'r') as schema:
+        with open('examples/testfixed_skip_lines') as f:
+            with open('examples/testfixed_schema.csv') as schema:
                 output = fixed.fixed2csv(f, schema, skip_lines=3)
 
-        with open('examples/testfixed_converted.csv', 'r') as f:
+        with open('examples/testfixed_converted.csv') as f:
             self.assertEqual(f.read(), output)
 
     def test_fixed_no_inference(self):
@@ -39,14 +39,14 @@ class TestFixed(CSVKitTestCase):
         input_file.close()
 
     def test_fixed_streaming(self):
-        with open('examples/testfixed', 'r') as f:
-            with open('examples/testfixed_schema.csv', 'r') as schema:
+        with open('examples/testfixed') as f:
+            with open('examples/testfixed_schema.csv') as schema:
                 output_file = StringIO()
                 fixed.fixed2csv(f, schema, output=output_file)
                 output = output_file.getvalue()
                 output_file.close()
 
-        with open('examples/testfixed_converted.csv', 'r') as f:
+        with open('examples/testfixed_converted.csv') as f:
             self.assertEqual(f.read(), output)
 
     def test_schema_decoder_init(self):

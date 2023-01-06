@@ -45,7 +45,7 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
         utility = CSVSQL(args)
         utility.run()
 
-        with open(csv_file, 'r') as f:
+        with open(csv_file) as f:
             text = f.read()
 
         return text.strip()

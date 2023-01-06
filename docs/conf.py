@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # csvkit documentation build configuration file, created by
 # sphinx-quickstart on Fri Apr 15 21:52:09 2011.

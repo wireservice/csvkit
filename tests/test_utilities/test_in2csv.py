@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import os
 import sys
@@ -17,7 +16,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     def assertConverted(self, input_format, input_filename, output_filename, additional_args=[]):
         output = self.get_output(['-f', input_format, input_filename] + additional_args)
 
-        with open(output_filename, 'r') as f:
+        with open(output_filename) as f:
             self.assertEqual(output, f.read())
 
     def test_launch_new_instance(self):
@@ -213,11 +212,11 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         try:
             self.assertConverted('xls', 'examples/sheets.xls', 'examples/testxls_converted.csv',
                                  ['--sheet', 'data', '--write-sheets', "ʤ,1"])
-            with open('examples/sheets_0.csv', 'r') as f:
-                with open('examples/testxls_unicode_converted.csv', 'r') as g:
+            with open('examples/sheets_0.csv') as f:
+                with open('examples/testxls_unicode_converted.csv') as g:
                     self.assertEqual(f.read(), g.read())
-            with open('examples/sheets_1.csv', 'r') as f:
-                with open('examples/testxls_converted.csv', 'r') as g:
+            with open('examples/sheets_1.csv') as f:
+                with open('examples/testxls_converted.csv') as g:
                     self.assertEqual(f.read(), g.read())
             self.assertFalse(os.path.exists('examples/sheets_2.csv'))
         finally:
@@ -230,11 +229,11 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         try:
             self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_noinference_converted.csv',
                                  ['--no-inference', '--sheet', 'data', '--write-sheets', "ʤ,1"])
-            with open('examples/sheets_0.csv', 'r') as f:
-                with open('examples/testxlsx_unicode_converted.csv', 'r') as g:
+            with open('examples/sheets_0.csv') as f:
+                with open('examples/testxlsx_unicode_converted.csv') as g:
                     self.assertEqual(f.read(), g.read())
-            with open('examples/sheets_1.csv', 'r') as f:
-                with open('examples/testxlsx_noinference_converted.csv', 'r') as g:
+            with open('examples/sheets_1.csv') as f:
+                with open('examples/testxlsx_noinference_converted.csv') as g:
                     self.assertEqual(f.read(), g.read())
             self.assertFalse(os.path.exists('examples/sheets_2.csv'))
         finally:

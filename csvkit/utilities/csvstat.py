@@ -223,7 +223,7 @@ class CSVStat(CSVKitUtility):
 
         # Formatting
         if op_name == 'freq':
-            stat = ', '.join([('"%s": %s' % (str(row['value']), row['count'])) for row in stat])
+            stat = ', '.join([('"{}": {}'.format(str(row['value']), row['count'])) for row in stat])
             stat = '{ %s }' % stat
 
         if label:
@@ -270,7 +270,7 @@ class CSVStat(CSVKitUtility):
             column = table.columns[column_id]
             column_stats = stats[column_id]
 
-            self.output_file.write(('%3i. "%s"\n\n' % (column_id + 1, column_name)))
+            self.output_file.write('%3i. "%s"\n\n' % (column_id + 1, column_name))
 
             for op_name, op_data in OPERATIONS.items():
                 if column_stats[op_name] is None:
@@ -284,7 +284,7 @@ class CSVStat(CSVKitUtility):
                 if op_name == 'freq':
                     for i, row in enumerate(column_stats['freq']):
                         if i == 0:
-                            self.output_file.write('\t{} '.format(label))
+                            self.output_file.write(f'\t{label} ')
                         else:
                             self.output_file.write('\t{label:{label_column_width}} '.format(**{
                                 'label_column_width': label_column_width,
@@ -310,7 +310,7 @@ class CSVStat(CSVKitUtility):
                 elif op_name == 'len':
                     v = '%s characters' % v
 
-                self.output_file.write('\t{} {}\n'.format(label, v))
+                self.output_file.write(f'\t{label} {v}\n')
 
             self.output_file.write('\n')
 

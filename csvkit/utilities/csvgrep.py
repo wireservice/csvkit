@@ -63,7 +63,7 @@ class CSVGrep(CSVKitUtility):
         if self.args.regex:
             pattern = re.compile(self.args.regex)
         elif self.args.matchfile:
-            lines = set(line.rstrip() for line in self.args.matchfile)
+            lines = {line.rstrip() for line in self.args.matchfile}
             self.args.matchfile.close()
 
             def pattern(x):
@@ -71,7 +71,7 @@ class CSVGrep(CSVKitUtility):
         else:
             pattern = self.args.pattern
 
-        patterns = dict((column_id, pattern) for column_id in column_ids)
+        patterns = {column_id: pattern for column_id in column_ids}
         filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns,
                                            inverse=self.args.inverse, any_match=self.args.any_match)
 
