@@ -52,9 +52,16 @@ class CSVStack(CSVKitUtility):
             Reader = agate.csv.reader
 
         headers = []
+        stdin_headers = []
 
         for path in self.args.input_paths:
+
             f = self._open_input_file(path)
+
+            if path == '-':
+                file_is_stdin = True
+            else:
+                file_is_stdin = False
 
             if isinstance(self.args.skip_lines, int):
                 skip_lines = self.args.skip_lines
@@ -67,6 +74,8 @@ class CSVStack(CSVKitUtility):
             if not self.args.no_header_row:
                 rows = Reader(f, **self.reader_kwargs)
 
+                if file_is_stdin:
+                    stdin_headers = rows.fieldnames
                 for field in (rows.fieldnames or []):
                     if field not in headers:
                         headers.append(field)
@@ -79,10 +88,12 @@ class CSVStack(CSVKitUtility):
 
                 # we only need to look at the first file if we
                 # aren't using header rows
-                f.close()
+                if not file_is_stdin:
+                    f.close()
                 break
 
-            f.close()
+            if not file_is_stdin:
+                f.close()
 
         if has_groups:
             headers.insert(0, group_name)
@@ -99,13 +110,19 @@ class CSVStack(CSVKitUtility):
         for i, path in enumerate(self.args.input_paths):
             f = self._open_input_file(path)
 
-            if isinstance(self.args.skip_lines, int):
-                skip_lines = self.args.skip_lines
-                while skip_lines > 0:
-                    f.readline()
-                    skip_lines -= 1
+            if path == '-':
+                file_is_stdin = True
             else:
-                raise ValueError('skip_lines argument must be an int')
+                file_is_stdin = False
+
+            if not file_is_stdin:
+                if isinstance(self.args.skip_lines, int):
+                    skip_lines = self.args.skip_lines
+                    while skip_lines > 0:
+                        f.readline()
+                        skip_lines -= 1
+                else:
+                    raise ValueError('skip_lines argument must be an int')
 
             if has_groups:
                 if groups:
@@ -113,7 +130,10 @@ class CSVStack(CSVKitUtility):
                 else:
                     group = os.path.basename(f.name)
 
-            rows = Reader(f, **self.reader_kwargs)
+            if file_is_stdin:
+                rows = Reader(f, fieldnames=stdin_headers, **self.reader_kwargs)
+            else:
+                rows = Reader(f, **self.reader_kwargs)
 
             for row in rows:
 
