@@ -43,6 +43,10 @@ If the table is too long, try filtering it down with grep or piping the output t
 
 See also: :doc:`../common_arguments`.
 
+.. note::
+
+   The fractional part of a decimal numberal is always truncated. To control this truncation, use ``--no-inference`` along with ``--max-column-width``.
+
 Examples
 ========
 

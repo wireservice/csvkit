@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # csvkit documentation build configuration file, created by
 # sphinx-quickstart on Fri Apr 15 21:52:09 2011.
@@ -33,15 +32,15 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'csvkit'
-copyright = u'2016, Christopher Groskopf'
+project = 'csvkit'
+copyright = '2016, Christopher Groskopf'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '1.0.6'
+version = '1.1.0'
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -78,8 +77,8 @@ htmlhelp_basename = 'csvkitdoc'
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    #    ('scripts/csvcut', 'csvcut', u'csvcut Documentation',
-    #     [u'Christopher Groskopf'], 1),
+    #    ('scripts/csvcut', 'csvcut', 'csvcut Documentation',
+    #     ['Christopher Groskopf'], 1),
 ]
 
 for filename in os.listdir('scripts'):
@@ -88,6 +87,6 @@ for filename in os.listdir('scripts'):
         os.path.join('scripts', name),
         name,
         '%s Documentation' % name,
-        [u'Christopher Groskopf'],
+        ['Christopher Groskopf'],
         1
     ))

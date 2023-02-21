@@ -2,20 +2,19 @@
 
 import argparse
 import bz2
-import codecs
 import gzip
 import itertools
+import lzma
 import sys
 import warnings
 from os.path import splitext
 
 import agate
-import six
 
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
 
-class LazyFile(six.Iterator):
+class LazyFile:
     """
     A proxy for a File object that delays opening it until
     a read method is called.
@@ -56,7 +55,7 @@ class LazyFile(six.Iterator):
         return next(self.f)
 
 
-class CSVKitUtility(object):
+class CSVKitUtility:
     description = ''
     epilog = ''
     override_flags = ''
@@ -225,34 +224,28 @@ class CSVKitUtility(object):
                      '1-based numbering.')
 
         self.argparser.add_argument(
-            '-V', '--version', action='version', version='%(prog)s 1.0.6',
+            '-V', '--version', action='version', version='%(prog)s 1.1.0',
             help='Display version information and exit.')
 
     def _open_input_file(self, path):
         """
         Open the input file specified on the command line.
         """
-        if six.PY2:
-            mode = 'Urb'
-            kwargs = {}
-        else:
-            mode = 'rt'  # default
-            kwargs = {'encoding': self.args.encoding}
-
         if not path or path == '-':
             f = sys.stdin
         else:
             extension = splitext(path)[1]
 
             if extension == '.gz':
-                f = LazyFile(gzip.open, path, mode, **kwargs)
+                func = gzip.open
             elif extension == '.bz2':
-                if six.PY2:
-                    f = LazyFile(bz2.BZ2File, path, mode, **kwargs)
-                else:
-                    f = LazyFile(bz2.open, path, mode, **kwargs)
+                func = bz2.open
+            elif extension == ".xz":
+                func = lzma.open
             else:
-                f = LazyFile(open, path, mode, **kwargs)
+                func = open
+
+            f = LazyFile(func, path, mode='rt', encoding=self.args.encoding)
 
         return f
 
@@ -271,9 +264,6 @@ class CSVKitUtility(object):
             value = getattr(self.args, arg)
             if value is not None:
                 kwargs[arg] = value
-
-        if six.PY2 and self.args.encoding:
-            kwargs['encoding'] = self.args.encoding
 
         if getattr(self.args, 'no_header_row', None):
             kwargs['header'] = not self.args.no_header_row
@@ -295,9 +285,6 @@ class CSVKitUtility(object):
         """
         Installs a replacement for sys.excepthook, which handles pretty-printing uncaught exceptions.
         """
-        if six.PY2:
-            sys.stderr = codecs.getwriter('utf-8')(sys.stderr)
-
         def handler(t, value, traceback):
             if self.args.verbose:
                 sys.__excepthook__(t, value, traceback)
@@ -309,7 +296,7 @@ class CSVKitUtility(object):
                                      'flag or with the PYTHONIOENCODING environment variable. Use the -v flag to see '
                                      'the complete error.\n' % self.args.encoding)
                 else:
-                    sys.stderr.write('%s: %s\n' % (t.__name__, six.text_type(value)))
+                    sys.stderr.write('{}: {}\n'.format(t.__name__, str(value)))
 
         sys.excepthook = handler
 
@@ -346,8 +333,7 @@ class CSVKitUtility(object):
     def get_column_offset(self):
         if self.args.zero_based:
             return 0
-        else:
-            return 1
+        return 1
 
     def skip_lines(self):
         if isinstance(self.args.skip_lines, int):
@@ -376,7 +362,7 @@ class CSVKitUtility(object):
             column_names = next_row
 
         column_offset = self.get_column_offset()
-        if self.args.line_numbers:
+        if kwargs.get('line_numbers'):
             column_offset -= 1
 
         column_ids = parse_column_identifiers(
@@ -430,24 +416,24 @@ def match_column_identifier(column_names, c, column_offset=1):
     Note that integer values are *always* treated as positional identifiers. If you happen to have
     column names which are also integers, you must specify them using a positional index.
     """
-    if isinstance(c, six.string_types) and not c.isdigit() and c in column_names:
+    if isinstance(c, str) and not c.isdigit() and c in column_names:
         return column_names.index(c)
-    else:
-        try:
-            c = int(c) - column_offset
-        # Fail out if neither a column name nor an integer
-        except ValueError:
-            raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name. "
-                                        "Column names are: %s" % (c, repr(column_names)[1:-1]))
 
-        # Fail out if index is 0-based
-        if c < 0:
-            raise ColumnIdentifierError("Column %i is invalid. Columns are 1-based." % (c + column_offset))
+    try:
+        c = int(c) - column_offset
+    # Fail out if neither a column name nor an integer
+    except ValueError:
+        raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name. "
+                                    "Column names are: %s" % (c, repr(column_names)[1:-1]))
 
-        # Fail out if index is out of range
-        if c >= len(column_names):
-            raise ColumnIdentifierError("Column %i is invalid. The last column is '%s' at index %i." % (
-                c + column_offset, column_names[-1], len(column_names) - 1 + column_offset))
+    # Fail out if index is 0-based
+    if c < 0:
+        raise ColumnIdentifierError("Column %i is invalid. Columns are 1-based." % (c + column_offset))
+
+    # Fail out if index is out of range
+    if c >= len(column_names):
+        raise ColumnIdentifierError("Column %i is invalid. The last column is '%s' at index %i." % (
+            c + column_offset, column_names[-1], len(column_names) - 1 + column_offset))
 
     return c
 

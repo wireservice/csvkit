@@ -1,15 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import os
 import sys
-
-import six
-
-try:
-    from mock import patch
-except ImportError:
-    from unittest.mock import patch
+from io import StringIO
+from unittest.mock import patch
 
 from csvkit.utilities.csvclean import CSVClean, launch_new_instance
 from tests.utils import CSVKitTestCase, EmptyFileTests
@@ -25,7 +19,7 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
 
     def assertCleaned(self, basename, output_lines, error_lines, additional_args=[]):
         args = ['examples/%s.csv' % basename] + additional_args
-        output_file = six.StringIO()
+        output_file = StringIO()
 
         utility = CSVClean(args, output_file)
         utility.run()

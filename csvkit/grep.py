@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-import six
 
 from csvkit.exceptions import ColumnIdentifierError
 
 
-class FilteringCSVReader(six.Iterator):
+class FilteringCSVReader:
     r"""
     Given any row iterator, only return rows which pass the filter.
     If 'header' is False, then all rows must pass the filter; by default, the first row will be passed
@@ -34,7 +33,7 @@ class FilteringCSVReader(six.Iterator):
     column_names = None
 
     def __init__(self, reader, patterns, header=True, any_match=False, inverse=False):
-        super(FilteringCSVReader, self).__init__()
+        super().__init__()
 
         self.reader = reader
         self.header = header
@@ -78,8 +77,7 @@ class FilteringCSVReader(six.Iterator):
 
         if self.any_match:
             return self.inverse  # False
-        else:
-            return not self.inverse  # True
+        return not self.inverse  # True
 
 
 def standardize_patterns(column_names, patterns):
@@ -91,7 +89,7 @@ def standardize_patterns(column_names, patterns):
     """
     try:
         # Dictionary of patterns
-        patterns = dict((k, pattern_as_function(v)) for k, v in patterns.items() if v)
+        patterns = {k: pattern_as_function(v) for k, v in patterns.items() if v}
         if not column_names:
             return patterns
         p2 = {}
@@ -106,7 +104,7 @@ def standardize_patterns(column_names, patterns):
         return p2
     except AttributeError:
         # Sequence of patterns
-        return dict((i, pattern_as_function(x)) for i, x in enumerate(patterns))
+        return {i: pattern_as_function(x) for i, x in enumerate(patterns)}
 
 
 def pattern_as_function(obj):
@@ -122,7 +120,7 @@ def pattern_as_function(obj):
     return lambda x: obj in x
 
 
-class regex_callable(object):
+class regex_callable:
 
     def __init__(self, pattern):
         self.pattern = pattern

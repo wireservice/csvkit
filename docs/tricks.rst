@@ -8,10 +8,11 @@ Tips
 Reading compressed CSVs
 -----------------------
 
-csvkit has builtin support for reading ``gzip`` or ``bz2`` compressed input files. This is automatically detected based on the file extension. For example::
+csvkit has builtin support for reading ``gzip``, ``bz2`` and ``xz`` (LZMA) compressed input files. This is automatically detected based on the file extension. For example::
 
     csvstat examples/dummy.csv.gz
     csvstat examples/dummy.csv.bz2
+    csvstat examples/dummy.csv.xz
 
 Please note, the files are decompressed in memory, so this is a convenience, not an optimization.
 
@@ -78,14 +79,6 @@ Or if you see ``/usr/local/bin/pip: bad interpreter`` and have Python 3 installe
 
     python3 -m pip install csvkit
 
-If you use Python 2 and have a recent version of pip, you may need to run pip with :code:`--allow-external argparse`.
-
-If you use Python 2 on FreeBSD, you may need to install `py-sqlite3 <https://www.freshports.org/databases/py-sqlite3/>`_.
-
-.. note ::
-
-    Need more speed? If you use Python 2, :code:`pip install cdecimal` for a boost.
-
 CSV formatting and parsing
 --------------------------
 
@@ -133,14 +126,21 @@ Are you seeing this error message, even after running :code:`pip install psycopg
 
     https://www.sqlalchemy.org/docs/dialects/
 
-First, make sure that you can open a ``python`` interpreter and run :code:`import psycopg2`. If you see an error containing ``mach-o, but wrong architecture``, you may need to reinstall ``psycopg2`` with :code:`export ARCHFLAGS="-arch i386" pip install --upgrade psycopg2` (`source <https://www.destructuring.net/2013/07/31/trouble-installing-psycopg2-on-osx/>`_). If you see another error, you may be able to find a solution on StackOverflow.
+
+If you installed csvkit with Homebrew (``brew install csvkit``), then you need to install those packages with the same version of ``pip`` as the ``csvkit`` formula. For example::
+
+    $(brew --prefix csvkit)/libexec/bin/pip install psycopg2
+
+Otherwise, make sure that you can open a ``python`` interpreter and run :code:`import psycopg2`. If you see an error containing ``mach-o, but wrong architecture``, you may need to reinstall ``psycopg2`` with :code:`export ARCHFLAGS="-arch i386" pip install --upgrade psycopg2` (`source <https://www.destructuring.net/2013/07/31/trouble-installing-psycopg2-on-osx/>`_).
+
+If you see another error, you may be able to find a solution on StackOverflow.
 
 Python standard output encoding errors
 --------------------------------------
 
 If, when running a command like :code:`csvlook dummy.csv | less` you get an error like::
 
-    'ascii' codec can't encode character u'\u0105' in position 2: ordinal not in range(128)
+    'ascii' codec can't encode character '\u0105' in position 2: ordinal not in range(128)
 
 The simplest option is to set the encoding that Python uses for standard streams, using the :code:`PYTHONIOENCODING` environment variable::
 

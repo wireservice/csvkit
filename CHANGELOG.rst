@@ -1,9 +1,21 @@
-1.0.7 - Unreleased
-------------------
+1.1.0 - January 3, 2023
+-----------------------
 
+* feat: :doc:`/scripts/csvsql` accepts multiple :code:`--query` command-line arguments.
+* feat: :doc:`/scripts/csvstat` adds :code:`--no-grouping-separator` and :code:`--decimal-format` options.
+* Add Python 3.11 support.
+* Drop Python 3.6 support (end-of-life was December 23, 2021).
+* Drop Python 2.7 support (end-of-life was January 1, 2020).
+
+1.0.7 - March 6, 2022
+---------------------
+
+* fix: :doc:`/scripts/csvcut` extracts the correct columns when :code:`--line-numbers` is set.
 * fix: Restore Python 2.7 support in edge cases.
+* feat: Use 1024 byte sniff-limit by default across csvkit. Improve csvstat performance up to 10x.
+* feat: Add support for ``.xz`` (LZMA) compressed input files.
+* Add Python 3.10 support.
 * Drop Python 3.5 support (end-of-life was September 30, 2020).
-* improvement: use 1024 byte sniff-limit by default across csvkit. Improve csvstat performance up to 10x.
 
 1.0.6 - July 13, 2021
 ---------------------

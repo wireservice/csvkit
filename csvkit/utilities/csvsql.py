@@ -5,7 +5,6 @@ import sys
 
 import agate
 import agatesql  # noqa: F401
-import six
 from pkg_resources import iter_entry_points
 from sqlalchemy import create_engine, dialects
 
@@ -31,9 +30,9 @@ class CSVSQL(CSVKitUtility):
             '--db', dest='connection_string',
             help='If present, a SQLAlchemy connection string to use to directly execute generated SQL on a database.')
         self.argparser.add_argument(
-            '--query',
+            '--query', dest='queries', action='append',
             help='Execute one or more SQL queries delimited by ";" and output the result of the last query as CSV. '
-                 'QUERY may be a filename.')
+                 'QUERY may be a filename. --query may be specified multiple times.')
         self.argparser.add_argument(
             '--insert', dest='insert', action='store_true',
             help='Insert the data into the table. Requires --db.')
@@ -94,7 +93,7 @@ class CSVSQL(CSVKitUtility):
             self.unique_constraint = self.args.unique_constraint.split(',')
 
         # Create an SQLite database in memory if no connection string is specified
-        if self.args.query and not self.args.connection_string:
+        if self.args.queries and not self.args.connection_string:
             self.args.connection_string = "sqlite:///:memory:"
             self.args.insert = True
 
@@ -130,13 +129,13 @@ class CSVSQL(CSVKitUtility):
             try:
                 engine = create_engine(self.args.connection_string)
             except ImportError as e:
-                six.raise_from(ImportError(
+                raise ImportError(
                     "You don't appear to have the necessary database backend installed for connection string you're "
                     "trying to use. Available backends include:\n\nPostgreSQL:\tpip install psycopg2\nMySQL:\t\tpip "
                     "install mysql-connector-python OR pip install mysqlclient\n\nFor details on connection strings "
                     "and other backends, please see the SQLAlchemy documentation on dialects at:\n\n"
                     "http://www.sqlalchemy.org/docs/dialects/\n\n"
-                ), e)
+                ) from e
 
             self.connection = engine.connect()
 
@@ -221,20 +220,20 @@ class CSVSQL(CSVKitUtility):
                     self.output_file.write('%s\n' % statement)
 
         if self.connection:
-            if self.args.query:
-                if os.path.exists(self.args.query):
-                    with open(self.args.query, 'r') as f:
-                        query = f.read()
-                else:
-                    query = self.args.query
+            if self.args.queries:
+                queries = []
+                for query in self.args.queries:
+                    if os.path.exists(query):
+                        with open(query) as f:
+                            query = f.read()
+                    queries += query.split(';')
 
                 # Execute the specified SQL queries.
-                queries = query.split(';')
                 rows = None
 
-                for q in queries:
-                    if q.strip():
-                        rows = self.connection.execute(q)
+                for query in queries:
+                    if query.strip():
+                        rows = self.connection.execute(query)
 
                 # Output the result of the last query as CSV
                 if rows.returns_rows:

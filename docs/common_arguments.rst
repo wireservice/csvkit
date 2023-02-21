@@ -58,3 +58,7 @@ For example, to disable CSV sniffing, set :code:`--snifflimit 0` and then, if ne
 The output of csvkit's tools is always formatted with "default" formatting options. This means that when executing multiple csvkit commands (either with a pipe or through intermediary files) it is only ever necessary to specify these arguments the first time (and doing so for subsequent commands will likely cause them to fail).
 
 See the documentation of :doc:`/scripts/csvclean` for a description of the default formatting options.
+
+.. note::
+
+   The ``--encoding`` option has no effect if reading from standard input. Set the ``PYTHONIOENCODING`` environment variable instead.

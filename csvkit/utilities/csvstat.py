@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 
-import codecs
 import locale
 import warnings
 from collections import Counter, OrderedDict
 from decimal import Decimal
 
 import agate
-import six
 
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
@@ -115,6 +113,13 @@ class CSVStat(CSVKitUtility):
             '--count', dest='count_only', action='store_true',
             help='Only output total row count.')
         self.argparser.add_argument(
+            '--decimal-format', dest='decimal_format', type=str, default='%.3f',
+            help='%%-format specification for printing decimal numbers. '
+                 'Defaults to locale-specific formatting with "%%.3f".')
+        self.argparser.add_argument(
+            '-G', '--no-grouping-separator', dest='no_grouping_separator', action='store_true',
+            help='Do not use grouping separators in decimal numbers.')
+        self.argparser.add_argument(
             '-y', '--snifflimit', dest='sniff_limit', type=int, default=1024,
             help='Limit CSV dialect sniffing to the specified number of bytes. '
                  'Specify "0" to disable sniffing entirely, or "-1" to sniff the entire file.')
@@ -139,9 +144,6 @@ class CSVStat(CSVKitUtility):
         if operations and self.args.count_only:
             self.argparser.error(
                 'You may not specify --count and an operation (--mean, --median, etc) at the same time.')
-
-        if six.PY2:
-            self.output_file = codecs.getwriter('utf-8')(self.output_file)
 
         if self.args.count_only:
             count = len(list(agate.csv.reader(self.skip_lines(), **self.reader_kwargs)))
@@ -215,19 +217,19 @@ class CSVStat(CSVKitUtility):
                     stat = table.aggregate(op(column_id))
 
                     if self.is_finite_decimal(stat):
-                        stat = format_decimal(stat)
+                        stat = format_decimal(stat, self.args.decimal_format, self.args.no_grouping_separator)
             except Exception:
                 stat = None
 
         # Formatting
         if op_name == 'freq':
-            stat = ', '.join([(u'"%s": %s' % (six.text_type(row['value']), row['count'])) for row in stat])
-            stat = u'{ %s }' % stat
+            stat = ', '.join([('"{}": {}'.format(str(row['value']), row['count'])) for row in stat])
+            stat = '{ %s }' % stat
 
         if label:
-            self.output_file.write(u'%3i. %s: %s\n' % (column_id + 1, column_name, stat))
+            self.output_file.write('%3i. %s: %s\n' % (column_id + 1, column_name, stat))
         else:
-            self.output_file.write(u'%s\n' % stat)
+            self.output_file.write('%s\n' % stat)
 
     def calculate_stats(self, table, column_id, **kwargs):
         """
@@ -249,7 +251,7 @@ class CSVStat(CSVKitUtility):
                         v = table.aggregate(op(column_id))
 
                         if self.is_finite_decimal(v):
-                            v = format_decimal(v)
+                            v = format_decimal(v, self.args.decimal_format, self.args.no_grouping_separator)
 
                         stats[op_name] = v
                 except Exception:
@@ -268,13 +270,13 @@ class CSVStat(CSVKitUtility):
             column = table.columns[column_id]
             column_stats = stats[column_id]
 
-            self.output_file.write(('%3i. "%s"\n\n' % (column_id + 1, column_name)))
+            self.output_file.write('%3i. "%s"\n\n' % (column_id + 1, column_name))
 
             for op_name, op_data in OPERATIONS.items():
                 if column_stats[op_name] is None:
                     continue
 
-                label = u'{label:{label_column_width}}'.format(**{
+                label = '{label:{label_column_width}}'.format(**{
                     'label_column_width': label_column_width,
                     'label': op_data['label']
                 })
@@ -282,9 +284,9 @@ class CSVStat(CSVKitUtility):
                 if op_name == 'freq':
                     for i, row in enumerate(column_stats['freq']):
                         if i == 0:
-                            self.output_file.write('\t{} '.format(label))
+                            self.output_file.write(f'\t{label} ')
                         else:
-                            self.output_file.write(u'\t{label:{label_column_width}} '.format(**{
+                            self.output_file.write('\t{label:{label_column_width}} '.format(**{
                                 'label_column_width': label_column_width,
                                 'label': ''
                             }))
@@ -293,11 +295,11 @@ class CSVStat(CSVKitUtility):
                             v = row['value']
 
                             if self.is_finite_decimal(v):
-                                v = format_decimal(v)
+                                v = format_decimal(v, self.args.decimal_format, self.args.no_grouping_separator)
                         else:
-                            v = six.text_type(row['value'])
+                            v = str(row['value'])
 
-                        self.output_file.write(u'{} ({}x)\n'.format(v, row['count']))
+                        self.output_file.write('{} ({}x)\n'.format(v, row['count']))
 
                     continue
 
@@ -308,7 +310,7 @@ class CSVStat(CSVKitUtility):
                 elif op_name == 'len':
                     v = '%s characters' % v
 
-                self.output_file.write(u'\t{} {}\n'.format(label, v))
+                self.output_file.write(f'\t{label} {v}\n')
 
             self.output_file.write('\n')
 
@@ -336,7 +338,7 @@ class CSVStat(CSVKitUtility):
                     continue
 
                 if op_name == 'freq':
-                    value = ', '.join([six.text_type(row['value']) for row in column_stats['freq']])
+                    value = ', '.join([str(row['value']) for row in column_stats['freq']])
                 else:
                     value = column_stats[op_name]
 
@@ -345,8 +347,8 @@ class CSVStat(CSVKitUtility):
             writer.writerow(output_row)
 
 
-def format_decimal(d):
-    return locale.format_string('%.3f', d, grouping=True).rstrip('0').rstrip('.')
+def format_decimal(d, f='%.3f', no_grouping_separator=False):
+    return locale.format_string(f, d, grouping=not no_grouping_separator).rstrip('0').rstrip('.')
 
 
 def get_type(table, column_id, **kwargs):

@@ -30,7 +30,7 @@ class CSVTestException(CustomException):
     """
 
     def __init__(self, line_number, row, msg):
-        super(CSVTestException, self).__init__(msg)
+        super().__init__(msg)
         self.line_number = line_number
         self.row = row
 
@@ -42,7 +42,7 @@ class LengthMismatchError(CSVTestException):
 
     def __init__(self, line_number, row, expected_length):
         msg = 'Expected %i columns, found %i columns' % (expected_length, len(row))
-        super(LengthMismatchError, self).__init__(line_number, row, msg)
+        super().__init__(line_number, row, msg)
 
     @property
     def length(self):
@@ -59,7 +59,7 @@ class InvalidValueForTypeException(CustomException):
         self.value = value
         self.normal_type = normal_type
         msg = 'Unable to convert "%s" to type %s (at index %i)' % (value, normal_type, index)
-        super(InvalidValueForTypeException, self).__init__(msg)
+        super().__init__(msg)
 
 
 class RequiredHeaderError(CustomException):

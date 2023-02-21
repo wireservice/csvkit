@@ -38,7 +38,7 @@ class CSVPy(CSVKitUtility):
 
         variable = klass(self.input_file, **self.reader_kwargs)
 
-        welcome_message = 'Welcome! "%s" has been loaded in an %s object named "%s".' % (
+        welcome_message = 'Welcome! "{}" has been loaded in an {} object named "{}".'.format(
             filename, class_name, variable_name)
 
         try:

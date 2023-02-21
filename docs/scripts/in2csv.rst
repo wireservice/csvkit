@@ -102,3 +102,14 @@ Convert a DBase DBF file to an equivalent CSV::
 This tool names unnamed headers. To avoid that behavior, run::
 
     in2csv --no-header-row examples/test.xlsx | tail -n +2
+
+Troubleshooting
+===============
+
+If an error like the following occurs when providing an input file in CSV or Excel format::
+
+    ValueError: Row 0 has 11 values, but Table only has 1 columns.
+
+Then the input file might have initial rows before the header and data rows. You can skip such rows with :code:`--skip-lines` (:code:`-K`)::
+
+    in2csv --skip-lines 3 examples/test_skip_lines.csv

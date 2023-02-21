@@ -1,14 +1,9 @@
 #!/usr/bin/env python
 
 import sys
+from unittest.mock import patch
 
 import agate
-import six
-
-try:
-    from mock import patch
-except ImportError:
-    from unittest.mock import patch
 
 from csvkit.utilities.csvstat import CSVStat, launch_new_instance
 from tests.utils import ColumnsTests, CSVKitTestCase, EmptyFileTests, NamesTests
@@ -50,11 +45,11 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
 
     def test_unique(self):
         output = self.get_output(['-c', 'county', 'examples/realdata/ks_1033_data.csv'])
-        six.assertRegex(self, output, r'Unique values:\s+73')
+        self.assertRegex(output, r'Unique values:\s+73')
 
     def test_max_length(self):
         output = self.get_output(['-c', 'county', 'examples/realdata/ks_1033_data.csv'])
-        six.assertRegex(self, output, r'Longest value:\s+12')
+        self.assertRegex(output, r'Longest value:\s+12')
 
     def test_freq_list(self):
         output = self.get_output(['examples/realdata/ks_1033_data.csv'])
@@ -108,3 +103,20 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         self.assertEqual(row[2], 'Text')
         self.assertEqual(row[5], '')
         self.assertEqual(row[11], '16')
+
+    def test_decimal_format(self):
+        output = self.get_output(['-c', 'TOTAL', '--mean', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'])
+
+        self.assertEqual(output, '9,748.346\n')
+
+        output = self.get_output([
+            '-c', 'TOTAL', '--mean', '--no-grouping-separator', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'
+        ])
+
+        self.assertEqual(output, '9748.346\n')
+
+        output = self.get_output([
+            '-c', 'TOTAL', '--mean', '--decimal-format', '%.2f', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'
+        ])
+
+        self.assertEqual(output, '9,748.35\n')

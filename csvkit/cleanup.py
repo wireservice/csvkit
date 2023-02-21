@@ -15,13 +15,13 @@ def join_rows(rows, joiner=' '):
         if len(row) == 0:
             row = ['']
 
-        fixed_row[-1] += "%s%s" % (joiner, row[0])
+        fixed_row[-1] += "{}{}".format(joiner, row[0])
         fixed_row.extend(row[1:])
 
     return fixed_row
 
 
-class RowChecker(object):
+class RowChecker:
     """
     Iterate over rows of a CSV producing cleaned rows and storing error rows.
     """

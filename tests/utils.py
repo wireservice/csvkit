@@ -23,9 +23,9 @@ import sys
 import unittest
 import warnings
 from contextlib import contextmanager
+from io import StringIO
 
 import agate
-import six
 
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
@@ -50,7 +50,7 @@ class CSVKitTestCase(unittest.TestCase):
     warnings.filterwarnings(action='ignore', module='agate')
 
     def get_output(self, args):
-        output_file = six.StringIO()
+        output_file = StringIO()
 
         utility = self.Utility(args, output_file)
         utility.run()
@@ -61,7 +61,7 @@ class CSVKitTestCase(unittest.TestCase):
         return output
 
     def get_output_as_io(self, args):
-        return six.StringIO(self.get_output(args))
+        return StringIO(self.get_output(args))
 
     def get_output_as_list(self, args):
         return self.get_output(args).split('\n')
@@ -89,7 +89,7 @@ class CSVKitTestCase(unittest.TestCase):
         self.assertEqual(len(lines), len(rows))
 
 
-class EmptyFileTests(object):
+class EmptyFileTests:
     def test_empty(self):
         with open('examples/empty.csv') as f:
             with stdin_as_string(f):
@@ -97,7 +97,7 @@ class EmptyFileTests(object):
                 utility.run()
 
 
-class NamesTests(object):
+class NamesTests:
     def test_names(self):
         output = self.get_output_as_io(['-n', 'examples/dummy.csv'])
 
@@ -108,7 +108,7 @@ class NamesTests(object):
     def test_invalid_options(self):
         args = ['-n', '--no-header-row', 'examples/dummy.csv']
 
-        output_file = six.StringIO()
+        output_file = StringIO()
         utility = self.Utility(args, output_file)
 
         with self.assertRaises(RequiredHeaderError):
@@ -117,11 +117,11 @@ class NamesTests(object):
         output_file.close()
 
 
-class ColumnsTests(object):
+class ColumnsTests:
     def test_invalid_column(self):
         args = getattr(self, 'columns_args', []) + ['-c', '0', 'examples/dummy.csv']
 
-        output_file = six.StringIO()
+        output_file = StringIO()
         utility = self.Utility(args, output_file)
 
         with self.assertRaises(ColumnIdentifierError):

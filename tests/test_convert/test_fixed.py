@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import six
+from io import StringIO
 
 from csvkit.convert import fixed
 from csvkit.utilities.in2csv import In2CSV
@@ -11,23 +11,23 @@ class TestFixed(CSVKitTestCase):
     Utility = In2CSV
 
     def test_fixed(self):
-        with open('examples/testfixed', 'r') as f:
-            with open('examples/testfixed_schema.csv', 'r') as schema:
+        with open('examples/testfixed') as f:
+            with open('examples/testfixed_schema.csv') as schema:
                 output = fixed.fixed2csv(f, schema)
 
-        with open('examples/testfixed_converted.csv', 'r') as f:
+        with open('examples/testfixed_converted.csv') as f:
             self.assertEqual(f.read(), output)
 
     def test_fixed_skip_lines(self):
-        with open('examples/testfixed_skip_lines', 'r') as f:
-            with open('examples/testfixed_schema.csv', 'r') as schema:
+        with open('examples/testfixed_skip_lines') as f:
+            with open('examples/testfixed_schema.csv') as schema:
                 output = fixed.fixed2csv(f, schema, skip_lines=3)
 
-        with open('examples/testfixed_converted.csv', 'r') as f:
+        with open('examples/testfixed_converted.csv') as f:
             self.assertEqual(f.read(), output)
 
     def test_fixed_no_inference(self):
-        input_file = six.StringIO('     1   2 3')
+        input_file = StringIO('     1   2 3')
 
         with stdin_as_string(input_file):
             self.assertLines(['--no-inference', '-f', 'fixed', '--schema',
@@ -39,14 +39,14 @@ class TestFixed(CSVKitTestCase):
         input_file.close()
 
     def test_fixed_streaming(self):
-        with open('examples/testfixed', 'r') as f:
-            with open('examples/testfixed_schema.csv', 'r') as schema:
-                output_file = six.StringIO()
+        with open('examples/testfixed') as f:
+            with open('examples/testfixed_schema.csv') as schema:
+                output_file = StringIO()
                 fixed.fixed2csv(f, schema, output=output_file)
                 output = output_file.getvalue()
                 output_file.close()
 
-        with open('examples/testfixed_converted.csv', 'r') as f:
+        with open('examples/testfixed_converted.csv') as f:
             self.assertEqual(f.read(), output)
 
     def test_schema_decoder_init(self):
@@ -96,7 +96,7 @@ foo,1,5
 bar,6,2
 baz,8,5"""
 
-        f = six.StringIO(schema)
+        f = StringIO(schema)
         parser = fixed.FixedWidthRowParser(f)
         f.close()
 

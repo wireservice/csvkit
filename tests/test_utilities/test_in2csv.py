@@ -1,15 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import os
 import sys
-
-import six
-
-try:
-    from mock import patch
-except ImportError:
-    from unittest.mock import patch
+from io import StringIO
+from unittest.mock import patch
 
 from csvkit.utilities.in2csv import In2CSV, launch_new_instance
 from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
@@ -22,7 +16,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     def assertConverted(self, input_format, input_filename, output_filename, additional_args=[]):
         output = self.get_output(['-f', input_format, input_filename] + additional_args)
 
-        with open(output_filename, 'r') as f:
+        with open(output_filename) as f:
             self.assertEqual(output, f.read())
 
     def test_launch_new_instance(self):
@@ -127,7 +121,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         self.assertLines(['--names', 'examples/sheets.xlsx'], [
             'not this one',
             'data',
-            u'ʤ',
+            'ʤ',
         ])
 
     def test_csv_no_headers(self):
@@ -139,7 +133,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
                              ['--no-header-row', '--no-inference', '--snifflimit', '0'])
 
     def test_csv_datetime_inference(self):
-        input_file = six.StringIO('a\n2015-01-01T00:00:00Z')
+        input_file = StringIO('a\n2015-01-01T00:00:00Z')
 
         with stdin_as_string(input_file):
             self.assertLines(['-f', 'csv'], [
@@ -168,7 +162,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_geojson_no_inference(self):
-        input_file = six.StringIO(
+        input_file = StringIO(
             '{"a": 1, "b": 2, "type": "FeatureCollection", "features": [{"geometry": {}, "properties": '
             '{"a": 1, "b": 2, "c": 3}}]}')
 
@@ -181,7 +175,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_json_no_inference(self):
-        input_file = six.StringIO('[{"a": 1, "b": 2, "c": 3}]')
+        input_file = StringIO('[{"a": 1, "b": 2, "c": 3}]')
 
         with stdin_as_string(input_file):
             self.assertLines(['--no-inference', '-f', 'json'], [
@@ -192,7 +186,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_ndjson_no_inference(self):
-        input_file = six.StringIO('{"a": 1, "b": 2, "c": 3}')
+        input_file = StringIO('{"a": 1, "b": 2, "c": 3}')
 
         with stdin_as_string(input_file):
             self.assertLines(['--no-inference', '-f', 'ndjson'], [
@@ -218,11 +212,11 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         try:
             self.assertConverted('xls', 'examples/sheets.xls', 'examples/testxls_converted.csv',
                                  ['--sheet', 'data', '--write-sheets', "ʤ,1"])
-            with open('examples/sheets_0.csv', 'r') as f:
-                with open('examples/testxls_unicode_converted.csv', 'r') as g:
+            with open('examples/sheets_0.csv') as f:
+                with open('examples/testxls_unicode_converted.csv') as g:
                     self.assertEqual(f.read(), g.read())
-            with open('examples/sheets_1.csv', 'r') as f:
-                with open('examples/testxls_converted.csv', 'r') as g:
+            with open('examples/sheets_1.csv') as f:
+                with open('examples/testxls_converted.csv') as g:
                     self.assertEqual(f.read(), g.read())
             self.assertFalse(os.path.exists('examples/sheets_2.csv'))
         finally:
@@ -235,11 +229,11 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         try:
             self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_noinference_converted.csv',
                                  ['--no-inference', '--sheet', 'data', '--write-sheets', "ʤ,1"])
-            with open('examples/sheets_0.csv', 'r') as f:
-                with open('examples/testxlsx_unicode_converted.csv', 'r') as g:
+            with open('examples/sheets_0.csv') as f:
+                with open('examples/testxlsx_unicode_converted.csv') as g:
                     self.assertEqual(f.read(), g.read())
-            with open('examples/sheets_1.csv', 'r') as f:
-                with open('examples/testxlsx_noinference_converted.csv', 'r') as g:
+            with open('examples/sheets_1.csv') as f:
+                with open('examples/testxlsx_noinference_converted.csv') as g:
                     self.assertEqual(f.read(), g.read())
             self.assertFalse(os.path.exists('examples/sheets_2.csv'))
         finally:
