@@ -35,6 +35,26 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
             ['1', '2', '3'],
         ])
 
+    def test_multiple_file_stack_col(self):
+        self.assertRows(['examples/dummy.csv', 'examples/dummy_col_shuffled.csv'], [
+            ['a', 'b', 'c'],
+            ['1', '2', '3'],
+            ['1', '2', '3'],
+        ])
+
+        self.assertRows(['examples/dummy_col_shuffled.csv', 'examples/dummy.csv'], [
+            ['b', 'c', 'a'],
+            ['2', '3', '1'],
+            ['2', '3', '1'],
+        ])
+
+    def test_multiple_file_stack_col_ragged(self):
+        self.assertRows(['examples/dummy.csv', 'examples/dummy_col_shuffled_ragged.csv'], [
+            ['a', 'b', 'c', 'd'],
+            ['1', '2', '3', ''],
+            ['1', '2', '3', '4'],
+        ])
+
     def test_explicit_grouping(self):
         self.assertRows(['--groups', 'asd,sdf', '-n', 'foo', 'examples/dummy.csv', 'examples/dummy2.csv'], [
             ['foo', 'a', 'b', 'c'],
