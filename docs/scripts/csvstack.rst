@@ -14,7 +14,6 @@ Stack up the rows from multiple CSV files, optionally adding a grouping value to
                     FILE [FILE ...]
 
     Stack up the rows from multiple CSV files, optionally adding a grouping value.
-    Files are assumed to have the same columns in the same order.
 
     positional arguments:
       FILE                  The CSV file(s) to operate on. If omitted, will accept
@@ -42,13 +41,9 @@ See also: :doc:`../common_arguments`.
 Examples
 ========
 
-Joining a set of homogeneous files for different years::
+Joining a set of files for different years::
 
     csvstack -g 2009,2010 examples/realdata/FY09_EDU_Recipients_by_State.csv examples/realdata/Datagov_FY10_EDU_recp_by_State.csv
-
-Joining files with the same columns but in different orders, in Bash, assuming the header row does not contain newlines::
-
-    csvstack file1.csv <(csvcut -c `head -1 file1.csv` file2.csv)
 
 Add a single column to the left of a CSV::
 

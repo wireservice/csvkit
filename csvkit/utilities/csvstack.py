@@ -9,8 +9,7 @@ from csvkit.cli import CSVKitUtility, isatty, make_default_headers
 
 
 class CSVStack(CSVKitUtility):
-    description = 'Stack up the rows from multiple CSV files, optionally adding a grouping value. Files are assumed ' \
-                  'to have the same columns in the same order.'
+    description = 'Stack up the rows from multiple CSV files, optionally adding a grouping value.'
     # Override 'f' because the utility accepts multiple files.
     override_flags = ['f', 'L', 'blanks', 'date-format', 'datetime-format']
 
