@@ -5,7 +5,7 @@ with open('README.rst') as f:
 
 setup(
     name='csvkit',
-    version='1.1.0',
+    version='1.1.1',
     description='A suite of command-line tools for working with CSV, the king of tabular file formats.',
     long_description=long_description,
     long_description_content_type='text/x-rst',

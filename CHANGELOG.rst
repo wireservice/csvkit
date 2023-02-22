@@ -1,3 +1,8 @@
+1.1.1 - February 22, 2023
+-------------------------
+
+* feat: :doc:`/scripts/csvstack` handles files with columns in different orders or with different names.
+
 1.1.0 - January 3, 2023
 -----------------------
 
