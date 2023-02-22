@@ -5,71 +5,73 @@ csvsql
 Description
 ===========
 
-Generate SQL statements for a CSV file or execute those statements directly on a database. In the latter case supports both creating tables and inserting data::
+Generate SQL statements for a CSV file or execute those statements directly on a database. In the latter case supports both creating tables and inserting data:
 
-    usage: csvsql [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
-                  [-S] [--blanks] [--date-format DATE_FORMAT]
-                  [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
-                  [-l] [--zero] [-V]
-                  [-i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}]
-                  [--db CONNECTION_STRING] [--query QUERY] [--insert]
-                  [--prefix PREFIX] [--tables TABLE_NAMES] [--no-constraints]
-                  [--unique-constraint UNIQUE_CONSTRAINT] [--no-create]
-                  [--create-if-not-exists] [--overwrite] [--db-schema DB_SCHEMA]
-                  [-y SNIFF_LIMIT] [-I] [--chunk-size NUM]
-                  [FILE [FILE ...]]
+.. code-block:: none
 
-    Generate SQL statements for one or more CSV files, or execute those statements
-    directly on a database, and execute one or more SQL queries.
+   usage: csvsql [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
+                 [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
+                 [-S] [--blanks] [--date-format DATE_FORMAT]
+                 [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
+                 [-l] [--zero] [-V]
+                 [-i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}]
+                 [--db CONNECTION_STRING] [--query QUERY] [--insert]
+                 [--prefix PREFIX] [--tables TABLE_NAMES] [--no-constraints]
+                 [--unique-constraint UNIQUE_CONSTRAINT] [--no-create]
+                 [--create-if-not-exists] [--overwrite] [--db-schema DB_SCHEMA]
+                 [-y SNIFF_LIMIT] [-I] [--chunk-size NUM]
+                 [FILE [FILE ...]]
 
-    positional arguments:
-      FILE                  The CSV file(s) to operate on. If omitted, will accept
-                            input as piped data via STDIN.
+   Generate SQL statements for one or more CSV files, or execute those statements
+   directly on a database, and execute one or more SQL queries.
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      -i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}, --dialect {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}
-                            Dialect of SQL to generate. Cannot be used with --db.
-      --db CONNECTION_STRING
-                            If present, a SQLAlchemy connection string to use to
-                            directly execute generated SQL on a database.
-      --query QUERY         Execute one or more SQL queries delimited by ";" and
-                            output the result of the last query as CSV. QUERY may
-                            be a filename.
-      --insert              Insert the data into the table. Requires --db.
-      --prefix PREFIX       Add an expression following the INSERT keyword, like
-                            OR IGNORE or OR REPLACE.
-      --before-insert BEFORE_INSERT
-                            Execute SQL before the INSERT command. Requires
-                            --insert.
-      --after-insert AFTER_INSERT
-                            Execute SQL after the INSERT command. Requires
-                            --insert.
-      --tables TABLE_NAMES  A comma-separated list of names of tables to be
-                            created. By default, the tables will be named after
-                            the filenames without extensions or "stdin".
-      --no-constraints      Generate a schema without length limits or null
-                            checks. Useful when sampling big tables.
-      --unique-constraint UNIQUE_CONSTRAINT
-                            A column-separated list of names of columns to include
-                            in a UNIQUE constraint.
-      --no-create           Skip creating the table. Requires --insert.
-      --create-if-not-exists
-                            Create the table if it does not exist, otherwise keep
-                            going. Requires --insert.
-      --overwrite           Drop the table if it already exists. Requires
-                            --insert. Cannot be used with --no-create.
-      --db-schema DB_SCHEMA
-                            Optional name of database schema to create table(s)
-                            in.
-      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
-                            Limit CSV dialect sniffing to the specified number of
-                            bytes. Specify "0" to disable sniffing.
-      -I, --no-inference    Disable type inference when parsing the input.
-      --chunk-size CHUNK_SIZE
-                            Chunk size for batch insert into the table. Requires
-                            --insert.
+   positional arguments:
+     FILE                  The CSV file(s) to operate on. If omitted, will accept
+                           input as piped data via STDIN.
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     -i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}, --dialect {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}
+                           Dialect of SQL to generate. Cannot be used with --db.
+     --db CONNECTION_STRING
+                           If present, a SQLAlchemy connection string to use to
+                           directly execute generated SQL on a database.
+     --query QUERY         Execute one or more SQL queries delimited by ";" and
+                           output the result of the last query as CSV. QUERY may
+                           be a filename.
+     --insert              Insert the data into the table. Requires --db.
+     --prefix PREFIX       Add an expression following the INSERT keyword, like
+                           OR IGNORE or OR REPLACE.
+     --before-insert BEFORE_INSERT
+                           Execute SQL before the INSERT command. Requires
+                           --insert.
+     --after-insert AFTER_INSERT
+                           Execute SQL after the INSERT command. Requires
+                           --insert.
+     --tables TABLE_NAMES  A comma-separated list of names of tables to be
+                           created. By default, the tables will be named after
+                           the filenames without extensions or "stdin".
+     --no-constraints      Generate a schema without length limits or null
+                           checks. Useful when sampling big tables.
+     --unique-constraint UNIQUE_CONSTRAINT
+                           A column-separated list of names of columns to include
+                           in a UNIQUE constraint.
+     --no-create           Skip creating the table. Requires --insert.
+     --create-if-not-exists
+                           Create the table if it does not exist, otherwise keep
+                           going. Requires --insert.
+     --overwrite           Drop the table if it already exists. Requires
+                           --insert. Cannot be used with --no-create.
+     --db-schema DB_SCHEMA
+                           Optional name of database schema to create table(s)
+                           in.
+     -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
+                           Limit CSV dialect sniffing to the specified number of
+                           bytes. Specify "0" to disable sniffing.
+     -I, --no-inference    Disable type inference when parsing the input.
+     --chunk-size CHUNK_SIZE
+                           Chunk size for batch insert into the table. Requires
+                           --insert.
 
 See also: :doc:`../common_arguments`.
 
@@ -96,41 +98,59 @@ If you prefer not to enter your password in the connection string, store the pas
 Examples
 ========
 
-Generate a statement in the PostgreSQL dialect::
+Generate a statement in the PostgreSQL dialect:
 
-    csvsql -i postgresql examples/realdata/FY09_EDU_Recipients_by_State.csv
+.. code-block:: bash
 
-Create a table and import data from the CSV directly into PostgreSQL::
+   csvsql -i postgresql examples/realdata/FY09_EDU_Recipients_by_State.csv
 
-    createdb test
-    csvsql --db postgresql:///test --tables fy09 --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
+Create a table and import data from the CSV directly into PostgreSQL:
 
-For large tables it may not be practical to process the entire table. One solution to this is to analyze a sample of the table. In this case it can be useful to turn off length limits and null checks with the :code:`--no-constraints` option::
+.. code-block:: bash
 
-    head -n 20 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsql --no-constraints --tables fy09
+   createdb test
+   csvsql --db postgresql:///test --tables fy09 --insert examples/realdata/FY09_EDU_Recipients_by_State.csv
 
-Create tables for an entire folder of CSVs and import data from those files directly into PostgreSQL::
+For large tables it may not be practical to process the entire table. One solution to this is to analyze a sample of the table. In this case it can be useful to turn off length limits and null checks with the :code:`--no-constraints` option:
 
-    createdb test
-    csvsql --db postgresql:///test --insert examples/*_converted.csv
+.. code-block:: bash
 
-If those CSVs have identical headers, you can import them into the same table by using :doc:`csvstack` first::
+   head -n 20 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsql --no-constraints --tables fy09
 
-    createdb test
-    csvstack examples/dummy?.csv | csvsql --db postgresql:///test --insert
+Create tables for an entire folder of CSVs and import data from those files directly into PostgreSQL:
 
-Group rows by one column::
+.. code-block:: bash
 
-    csvsql --query "select * from 'dummy3' group by a" examples/dummy3.csv
+   createdb test
+   csvsql --db postgresql:///test --insert examples/*_converted.csv
 
-You can also use CSVSQL to "directly" query one or more CSV files. Please note that this will create an in-memory SQL database, so it won't be very fast::
+If those CSVs have identical headers, you can import them into the same table by using :doc:`csvstack` first:
 
-    csvsql --query  "select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species" examples/iris.csv examples/irismeta.csv
+.. code-block:: bash
 
-Concatenate two columns::
+   createdb test
+   csvstack examples/dummy?.csv | csvsql --db postgresql:///test --insert
 
-    csvsql --query "select a || b from 'dummy3'" examples/dummy3.csv
+Group rows by one column:
 
-If a column contains null values, you must ``COALESCE`` the column::
+.. code-block:: bash
 
-    csvsql --query "select a || COALESCE(b, '') from 'sort_ints_nulls'" --no-inference examples/sort_ints_nulls.csv
+   csvsql --query "select * from 'dummy3' group by a" examples/dummy3.csv
+
+You can also use CSVSQL to "directly" query one or more CSV files. Please note that this will create an in-memory SQL database, so it won't be very fast:
+
+.. code-block:: bash
+
+   csvsql --query  "select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species" examples/iris.csv examples/irismeta.csv
+
+Concatenate two columns:
+
+.. code-block:: bash
+
+   csvsql --query "select a || b from 'dummy3'" examples/dummy3.csv
+
+If a column contains null values, you must ``COALESCE`` the column:
+
+.. code-block:: bash
+
+   csvsql --query "select a || COALESCE(b, '') from 'sort_ints_nulls'" --no-inference examples/sort_ints_nulls.csv

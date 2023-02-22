@@ -5,9 +5,11 @@ csvjson
 Description
 ===========
 
-Converts a CSV file into JSON or GeoJSON (depending on flags)::
+Converts a CSV file into JSON or GeoJSON (depending on flags):
 
-    usage: csvjson [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
+.. code-block:: none
+
+   usage: csvjson [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                    [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
                    [-S] [--blanks] [--date-format DATE_FORMAT]
                    [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
@@ -56,79 +58,86 @@ See also: :doc:`../common_arguments`.
 Examples
 ========
 
-Convert veteran's education dataset to JSON keyed by state abbreviation::
+Convert veteran's education dataset to JSON keyed by state abbreviation:
 
-    csvjson -k "State Abbreviate" -i 4 examples/realdata/FY09_EDU_Recipients_by_State.csv
+.. code-block:: bash
 
-Results in a JSON document like::
+   csvjson -k "State Abbreviate" -i 4 examples/realdata/FY09_EDU_Recipients_by_State.csv
 
-    {
-        [...]
-        "WA": {
-            "State Name": "WASHINGTON", 
-            "State Abbreviate": "WA", 
-            "Code": 53.0, 
-            "Montgomery GI Bill-Active Duty": 7969.0, 
-            "Montgomery GI Bill- Selective Reserve": 769.0, 
-            "Dependents' Educational Assistance": 2192.0, 
-            "Reserve Educational Assistance Program": 549.0, 
-            "Post-Vietnam Era Veteran's Educational Assistance Program": 13.0, 
-            "TOTAL": 11492.0, 
-            "": null
-        }, 
-        [...]
-    }
+Results in a JSON document like:
 
-Converting locations of public art into GeoJSON::
+.. code-block:: none
 
-    csvjson --lat latitude --lon longitude --k slug --crs EPSG:4269 -i 4 examples/test_geo.csv
+   {
+       [...]
+       "WA": {
+           "State Name": "WASHINGTON", 
+           "State Abbreviate": "WA", 
+           "Code": 53.0, 
+           "Montgomery GI Bill-Active Duty": 7969.0, 
+           "Montgomery GI Bill- Selective Reserve": 769.0, 
+           "Dependents' Educational Assistance": 2192.0, 
+           "Reserve Educational Assistance Program": 549.0, 
+           "Post-Vietnam Era Veteran's Educational Assistance Program": 13.0, 
+           "TOTAL": 11492.0, 
+           "": null
+       }, 
+       [...]
+   }
 
-Results in a GeoJSON document like::
+Converting locations of public art into GeoJSON:
 
-    {
-        "type": "FeatureCollection", 
-        "bbox": [
-            -95.334619, 
-            32.299076986939205, 
-            -95.250699, 
-            32.351434
-        ], 
-        "crs": {
-            "type": "name", 
-            "properties": {
-                "name": "EPSG:4269"
-            }
-        }, 
-        "features": [
-            {
-                "type": "Feature", 
-                "id": "dcl", 
-                "geometry": {
-                    "type": "Point", 
-                    "coordinates": [
-                        -95.30181, 
-                        32.35066
-                    ]
-                }, 
-                "properties": {
-                    "title": "Downtown Coffee Lounge", 
-                    "artist": null, 
-                    "description": "In addition to being the only coffee shop in downtown Tyler, DCL also features regular exhibitions of work by local artists.", 
-                    "install_date": null, 
-                    "address": "200 West Erwin Street", 
-                    "type": "Gallery", 
-                    "photo_url": null, 
-                    "photo_credit": null, 
-                    "last_seen_date": "2012-03-30"
-                }
-            }, 
-            [...]
-        ], 
-        "crs": {
-            "type": "name", 
-            "properties": {
-                "name": "EPSG:4269"
-            }
-        }
-    }
+.. code-block:: bash
 
+   csvjson --lat latitude --lon longitude --k slug --crs EPSG:4269 -i 4 examples/test_geo.csv
+
+Results in a GeoJSON document like:
+
+.. code-block:: none
+
+   {
+       "type": "FeatureCollection", 
+       "bbox": [
+           -95.334619, 
+           32.299076986939205, 
+           -95.250699, 
+           32.351434
+       ], 
+       "crs": {
+           "type": "name", 
+           "properties": {
+               "name": "EPSG:4269"
+           }
+       }, 
+       "features": [
+           {
+               "type": "Feature", 
+               "id": "dcl", 
+               "geometry": {
+                   "type": "Point", 
+                   "coordinates": [
+                       -95.30181, 
+                       32.35066
+                   ]
+               }, 
+               "properties": {
+                   "title": "Downtown Coffee Lounge", 
+                   "artist": null, 
+                   "description": "In addition to being the only coffee shop in downtown Tyler, DCL also features regular exhibitions of work by local artists.", 
+                   "install_date": null, 
+                   "address": "200 West Erwin Street", 
+                   "type": "Gallery", 
+                   "photo_url": null, 
+                   "photo_credit": null, 
+                   "last_seen_date": "2012-03-30"
+               }
+           }, 
+           [...]
+       ], 
+       "crs": {
+           "type": "name", 
+           "properties": {
+               "name": "EPSG:4269"
+           }
+       }
+   }

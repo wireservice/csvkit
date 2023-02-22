@@ -8,42 +8,51 @@ Tips
 Reading compressed CSVs
 -----------------------
 
-csvkit has builtin support for reading ``gzip``, ``bz2`` and ``xz`` (LZMA) compressed input files. This is automatically detected based on the file extension. For example::
+csvkit has builtin support for reading ``gzip``, ``bz2`` and ``xz`` (LZMA) compressed input files. This is automatically detected based on the file extension. For example:
 
-    csvstat examples/dummy.csv.gz
-    csvstat examples/dummy.csv.bz2
-    csvstat examples/dummy.csv.xz
+.. code-block:: bash
+
+   csvstat examples/dummy.csv.gz
+   csvstat examples/dummy.csv.bz2
+   csvstat examples/dummy.csv.xz
 
 Please note, the files are decompressed in memory, so this is a convenience, not an optimization.
 
 Specifying STDIN as a file
 --------------------------
 
-Most tools use ``STDIN`` as input if no filename is given, but tools that accept multiple inputs like :doc:`/scripts/csvjoin` and :doc:`/scripts/csvstack` don't. To use ``STDIN`` as an input to these tools, use ``-`` as the filename. For example, these three commands produce the same output::
+Most tools use ``STDIN`` as input if no filename is given, but tools that accept multiple inputs like :doc:`/scripts/csvjoin` and :doc:`/scripts/csvstack` don't. To use ``STDIN`` as an input to these tools, use ``-`` as the filename. For example, these three commands produce the same output:
 
-    csvstat examples/dummy.csv
-    cat examples/dummy.csv | csvstat
-    cat examples/dummy.csv | csvstat -
+.. code-block:: bash
 
-:doc:`/scripts/csvstack` can take a filename and ``STDIN`` as input, for example::
+   csvstat examples/dummy.csv
+   cat examples/dummy.csv | csvstat
+   cat examples/dummy.csv | csvstat -
 
-    cat examples/dummy.csv | csvstack examples/dummy3.csv -
+:doc:`/scripts/csvstack` can take a filename and ``STDIN`` as input, for example:
 
-Alternately, you can pipe in multiple inputs like so::
+.. code-block:: bash
 
-    csvjoin -c id <(csvcut -c 2,5,6 a.csv) <(csvcut -c 1,7 b.csv)
+   cat examples/dummy.csv | csvstack examples/dummy3.csv -
+
+Alternately, you can pipe in multiple inputs like so:
+
+.. code-block:: bash
+
+   csvjoin -c id <(csvcut -c 2,5,6 a.csv) <(csvcut -c 1,7 b.csv)
     
 Using csvkit in a crontab
 -------------------------
 
-Processes running in a crontab `will not have a tty allocated <https://github.com/wireservice/csvkit/issues/342>`_, so reading files for csvkit will require passing the file as stdin rather than using the file argument::
+Processes running in a crontab `will not have a tty allocated <https://github.com/wireservice/csvkit/issues/342>`_, so reading files for csvkit will require passing the file as stdin rather than using the file argument:
 
-    # bad   
-    0 0 * * * /usr/bin/csvsql --query 'select max(time) from temp' -d ';' --tables temp /my/csv/file.csv
+.. code-block:: none
+
+   # bad   
+   0 0 * * * /usr/bin/csvsql --query 'select max(time) from temp' -d ';' --tables temp /my/csv/file.csv
     
-    # works fine 
-    0 0 * * * /usr/bin/csvsql --query 'select max(time) from temp' -d ';' --tables temp < /my/csv/file.csv
-
+   # works fine 
+   0 0 * * * /usr/bin/csvsql --query 'select max(time) from temp' -d ';' --tables temp < /my/csv/file.csv
 
 Troubleshooting
 ===============
@@ -55,29 +64,39 @@ csvkit is supported on non-end-of-life versions of Python.
 
 It is tested on macOS, and has also been used on Linux and Windows.
 
-If installing on macOS, you may need to install Homebrew first::
+If installing on macOS, you may need to install Homebrew first:
 
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    brew install python
-    pip install csvkit
+.. code-block:: bash
 
-If installing on Ubuntu, you may need to install Python's development headers first::
+   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+   brew install python
+   pip install csvkit
 
-    sudo apt-get install python-dev python-pip python-setuptools build-essential
-    pip install csvkit
+If installing on Ubuntu, you may need to install Python's development headers first:
 
-If the installation is successful but csvkit's tools fail, you may need to update Python's setuptools package first::
+.. code-block:: bash
 
-    pip install --upgrade setuptools
-    pip install --upgrade csvkit
+   sudo apt-get install python-dev python-pip python-setuptools build-essential
+   pip install csvkit
 
-On macOS, if you see ``OSError: [Errno 1] Operation not permitted``, try::
+If the installation is successful but csvkit's tools fail, you may need to update Python's setuptools package first:
 
-    sudo pip install --ignore-installed csvkit
+.. code-block:: bash
 
-Or if you see ``/usr/local/bin/pip: bad interpreter`` and have Python 3 installed, try::
+   pip install --upgrade setuptools
+   pip install --upgrade csvkit
 
-    python3 -m pip install csvkit
+On macOS, if you see ``OSError: [Errno 1] Operation not permitted``, try:
+
+.. code-block:: bash
+
+   sudo pip install --ignore-installed csvkit
+
+Or if you see ``/usr/local/bin/pip: bad interpreter`` and have Python 3 installed, try:
+
+.. code-block:: bash
+
+   python3 -m pip install csvkit
 
 CSV formatting and parsing
 --------------------------
@@ -115,7 +134,7 @@ Database errors
 
 Are you seeing this error message, even after running :code:`pip install psycopg2`, :code:`pip install mysql-connector-python` or :code:`pip install mysqlclient`?
 
-::
+.. code-block:: none
 
     You don't appear to have the necessary database backend installed for connection string you're trying to use. Available backends include:
 
@@ -127,9 +146,11 @@ Are you seeing this error message, even after running :code:`pip install psycopg
     https://www.sqlalchemy.org/docs/dialects/
 
 
-If you installed csvkit with Homebrew (``brew install csvkit``), then you need to install those packages with the same version of ``pip`` as the ``csvkit`` formula. For example::
+If you installed csvkit with Homebrew (``brew install csvkit``), then you need to install those packages with the same version of ``pip`` as the ``csvkit`` formula. For example:
 
-    $(brew --prefix csvkit)/libexec/bin/pip install psycopg2
+.. code-block:: bash
+
+   $(brew --prefix csvkit)/libexec/bin/pip install psycopg2
 
 Otherwise, make sure that you can open a ``python`` interpreter and run :code:`import psycopg2`. If you see an error containing ``mach-o, but wrong architecture``, you may need to reinstall ``psycopg2`` with :code:`export ARCHFLAGS="-arch i386" pip install --upgrade psycopg2` (`source <https://www.destructuring.net/2013/07/31/trouble-installing-psycopg2-on-osx/>`_).
 
@@ -138,10 +159,14 @@ If you see another error, you may be able to find a solution on StackOverflow.
 Python standard output encoding errors
 --------------------------------------
 
-If, when running a command like :code:`csvlook dummy.csv | less` you get an error like::
+If, when running a command like :code:`csvlook dummy.csv | less` you get an error like:
 
-    'ascii' codec can't encode character '\u0105' in position 2: ordinal not in range(128)
+.. code-block:: none
 
-The simplest option is to set the encoding that Python uses for standard streams, using the :code:`PYTHONIOENCODING` environment variable::
+   'ascii' codec can't encode character '\u0105' in position 2: ordinal not in range(128)
 
-    PYTHONIOENCODING=utf8 csvlook dummy.csv | less
+The simplest option is to set the encoding that Python uses for standard streams, using the :code:`PYTHONIOENCODING` environment variable:
+
+.. code-block:: bash
+
+   env PYTHONIOENCODING=utf8 csvlook dummy.csv | less

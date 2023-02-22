@@ -7,52 +7,56 @@ Description
 
 Converts various tabular data formats into CSV.
 
-Converting fixed width requires that you provide a schema file with the "-s" option. The schema file should have the following format::
+Converting fixed width requires that you provide a schema file with the "-s" option. The schema file should have the following format:
 
-    column,start,length
-    name,0,30
-    birthday,30,10
-    age,40,3
+.. code-block:: none
 
-The header line is required though the columns may be in any order::
+   column,start,length
+   name,0,30
+   birthday,30,10
+   age,40,3
 
-    usage: in2csv [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
-                  [-S] [--blanks] [--date-format DATE_FORMAT]
-                  [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
-                  [-l] [--zero] [-V] [-f FILETYPE] [-s SCHEMA] [-k KEY] [-n]
-                  [--sheet SHEET] [--write-sheets WRITE_SHEETS]
-                  [--encoding-xls ENCODING_XLS] [-y SNIFF_LIMIT] [-I]
-                  [FILE]
+The header line is required though the columns may be in any order:
 
-    Convert common, but less awesome, tabular data formats to CSV.
+.. code-block:: none
 
-    positional arguments:
-      FILE                  The CSV file to operate on. If omitted, will accept
-                            input as piped data via STDIN.
+   usage: in2csv [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
+                 [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
+                 [-S] [--blanks] [--date-format DATE_FORMAT]
+                 [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
+                 [-l] [--zero] [-V] [-f FILETYPE] [-s SCHEMA] [-k KEY] [-n]
+                 [--sheet SHEET] [--write-sheets WRITE_SHEETS]
+                 [--encoding-xls ENCODING_XLS] [-y SNIFF_LIMIT] [-I]
+                 [FILE]
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      -f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}, --format {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}
-                            The format of the input file. If not specified will be
-                            inferred from the file type.
-      -s SCHEMA, --schema SCHEMA
-                            Specify a CSV-formatted schema file for converting
-                            fixed-width files. See web documentation.
-      -k KEY, --key KEY     Specify a top-level key to look within for a list of
-                            objects to be converted when processing JSON.
-      -n, --names           Display sheet names from the input Excel file.
-      --sheet SHEET         The name of the Excel sheet to operate on.
-      --write-sheets WRITE_SHEETS
-                            The names of the Excel sheets to write to files, or
-                            "-" to write all sheets.
-      --encoding-xls ENCODING_XLS
-                            Specify the encoding of the input XLS file.
-      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
-                            Limit CSV dialect sniffing to the specified number of
-                            bytes. Specify "0" to disable sniffing.
-      -I, --no-inference    Disable type inference (and --locale, --date-format,
-                            --datetime-format) when parsing CSV input.
+   Convert common, but less awesome, tabular data formats to CSV.
+
+   positional arguments:
+     FILE                  The CSV file to operate on. If omitted, will accept
+                           input as piped data via STDIN.
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     -f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}, --format {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}
+                           The format of the input file. If not specified will be
+                           inferred from the file type.
+     -s SCHEMA, --schema SCHEMA
+                           Specify a CSV-formatted schema file for converting
+                           fixed-width files. See web documentation.
+     -k KEY, --key KEY     Specify a top-level key to look within for a list of
+                           objects to be converted when processing JSON.
+     -n, --names           Display sheet names from the input Excel file.
+     --sheet SHEET         The name of the Excel sheet to operate on.
+     --write-sheets WRITE_SHEETS
+                           The names of the Excel sheets to write to files, or
+                           "-" to write all sheets.
+     --encoding-xls ENCODING_XLS
+                           Specify the encoding of the input XLS file.
+     -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
+                           Limit CSV dialect sniffing to the specified number of
+                           bytes. Specify "0" to disable sniffing.
+     -I, --no-inference    Disable type inference (and --locale, --date-format,
+                           --datetime-format) when parsing CSV input.
 
     Some command-line flags only pertain to specific input formats.
 
@@ -73,9 +77,11 @@ See also: :doc:`../common_arguments`.
 Examples
 ========
 
-Convert the 2000 census geo headers file from fixed-width to CSV and from latin-1 encoding to utf8::
+Convert the 2000 census geo headers file from fixed-width to CSV and from latin-1 encoding to utf8:
 
-    in2csv -e iso-8859-1 -f fixed -s examples/realdata/census_2000/census2000_geo_schema.csv examples/realdata/census_2000/usgeo_excerpt.upl
+.. code-block:: bash
+
+   in2csv -e iso-8859-1 -f fixed -s examples/realdata/census_2000/census2000_geo_schema.csv examples/realdata/census_2000/usgeo_excerpt.upl
 
 .. note::
 
@@ -83,33 +89,47 @@ Convert the 2000 census geo headers file from fixed-width to CSV and from latin-
 
     https://github.com/wireservice/ffs
 
-Convert an Excel .xls file::
+Convert an Excel .xls file:
 
-    in2csv examples/test.xls
+.. code-block:: bash
 
-Standardize the formatting of a CSV file (quoting, line endings, etc.)::
+   in2csv examples/test.xls
 
-    in2csv examples/realdata/FY09_EDU_Recipients_by_State.csv
+Standardize the formatting of a CSV file (quoting, line endings, etc.):
 
-Fetch csvkit's open issues from the GitHub API, convert the JSON response into a CSV and write it to a file::
+.. code-block:: bash
 
-    curl https://api.github.com/repos/wireservice/csvkit/issues?state=open | in2csv -f json -v
+   in2csv examples/realdata/FY09_EDU_Recipients_by_State.csv
 
-Convert a DBase DBF file to an equivalent CSV::
+Fetch csvkit's open issues from the GitHub API, convert the JSON response into a CSV and write it to a file:
 
-    in2csv examples/testdbf.dbf
+.. code-block:: bash
 
-This tool names unnamed headers. To avoid that behavior, run::
+   curl https://api.github.com/repos/wireservice/csvkit/issues?state=open | in2csv -f json -v
 
-    in2csv --no-header-row examples/test.xlsx | tail -n +2
+Convert a DBase DBF file to an equivalent CSV:
+
+.. code-block:: bash
+
+   in2csv examples/testdbf.dbf
+
+This tool names unnamed headers. To avoid that behavior, run:
+
+.. code-block:: bash
+
+   in2csv --no-header-row examples/test.xlsx | tail -n +2
 
 Troubleshooting
 ===============
 
-If an error like the following occurs when providing an input file in CSV or Excel format::
+If an error like the following occurs when providing an input file in CSV or Excel format:
 
-    ValueError: Row 0 has 11 values, but Table only has 1 columns.
+.. code-block:: none
 
-Then the input file might have initial rows before the header and data rows. You can skip such rows with :code:`--skip-lines` (:code:`-K`)::
+   ValueError: Row 0 has 11 values, but Table only has 1 columns.
 
-    in2csv --skip-lines 3 examples/test_skip_lines.csv
+Then the input file might have initial rows before the header and data rows. You can skip such rows with :code:`--skip-lines` (:code:`-K`):
+
+.. code-block:: bash
+
+   in2csv --skip-lines 3 examples/test_skip_lines.csv

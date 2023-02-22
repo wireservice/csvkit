@@ -18,36 +18,41 @@ Note that every csvkit tool does the following:
 * changes the quote character to a double-quotation mark, if the character is set with the `--quotechar` (`-q`) option
 * changes the character encoding to UTF-8, if the input encoding is set with the `--encoding` (`-e`) option
 
-Outputs [basename]_out.csv and [basename]_err.csv, the former containing all valid rows and the latter containing all error rows along with line numbers and descriptions::
+Outputs [basename]_out.csv and [basename]_err.csv, the former containing all valid rows and the latter containing all error rows along with line numbers and descriptions:
 
-    usage: csvclean [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                    [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                    [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-n]
-                    [FILE]
+.. code-block:: none
 
-    Fix common errors in a CSV file.
+   usage: csvclean [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
+                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
+                   [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-n]
+                   [FILE]
 
-    positional arguments:
-      FILE                  The CSV file to operate on. If omitted, will accept
-                            input as piped data via STDIN.
+   Fix common errors in a CSV file.
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      -n, --dry-run         Do not create output files. Information about what
-                            would have been done will be printed to STDERR.
+   positional arguments:
+     FILE                  The CSV file to operate on. If omitted, will accept
+                           input as piped data via STDIN.
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     -n, --dry-run         Do not create output files. Information about what
+                           would have been done will be printed to STDERR.
 
 See also: :doc:`../common_arguments`.
 
 Examples
 ========
 
-Test a file with known bad rows::
+Test a file with known bad rows:
 
-    csvclean -n examples/bad.csv
+.. code-block:: console
 
-    Line 1: Expected 3 columns, found 4 columns
-    Line 2: Expected 3 columns, found 2 columns
+   $ csvclean -n examples/bad.csv
+   Line 1: Expected 3 columns, found 4 columns
+   Line 2: Expected 3 columns, found 2 columns
 
-To change the line ending from line feed (LF or ``\n``) to carriage return and line feed (CRLF or ``\r\n``) use::
+To change the line ending from line feed (LF or ``\n``) to carriage return and line feed (CRLF or ``\r\n``) use:
 
-    csvformat -M $'\r\n' examples/dummy.csv
+.. code-block:: bash
+
+   csvformat -M $'\r\n' examples/dummy.csv

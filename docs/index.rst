@@ -26,49 +26,71 @@ Why csvkit?
 
 Because it makes your life easier.
 
-Convert Excel to CSV::
+Convert Excel to CSV:
 
-    in2csv data.xls > data.csv
+.. code-block:: bash
 
-Convert JSON to CSV::
+   in2csv data.xls > data.csv
 
-    in2csv data.json > data.csv
+Convert JSON to CSV:
 
-Print column names::
+.. code-block:: bash
 
-    csvcut -n data.csv
+   in2csv data.json > data.csv
 
-Select a subset of columns::
+Print column names:
 
-    csvcut -c column_a,column_c data.csv > new.csv
+.. code-block:: bash
 
-Reorder columns::
+   csvcut -n data.csv
 
-    csvcut -c column_c,column_a data.csv > new.csv
+Select a subset of columns:
 
-Find rows with matching cells::
+.. code-block:: bash
 
-    csvgrep -c phone_number -r "555-555-\d{4}" data.csv > new.csv
+   csvcut -c column_a,column_c data.csv > new.csv
 
-Convert to JSON::
+Reorder columns:
 
-    csvjson data.csv > data.json
+.. code-block:: bash
 
-Generate summary statistics::
+   csvcut -c column_c,column_a data.csv > new.csv
 
-    csvstat data.csv
+Find rows with matching cells:
 
-Query with SQL::
+.. code-block:: bash
 
-    csvsql --query "select name from data where age > 30" data.csv > new.csv
+   csvgrep -c phone_number -r "555-555-\d{4}" data.csv > new.csv
 
-Import into PostgreSQL::
+Convert to JSON:
 
-    csvsql --db postgresql:///database --insert data.csv
+.. code-block:: bash
 
-Extract data from PostgreSQL::
+   csvjson data.csv > data.json
 
-    sql2csv --db postgresql:///database --query "select * from data" > new.csv
+Generate summary statistics:
+
+.. code-block:: bash
+
+   csvstat data.csv
+
+Query with SQL:
+
+.. code-block:: bash
+
+   csvsql --query "select name from data where age > 30" data.csv > new.csv
+
+Import into PostgreSQL:
+
+.. code-block:: bash
+
+   csvsql --db postgresql:///database --insert data.csv
+
+Extract data from PostgreSQL:
+
+.. code-block:: bash
+
+   sql2csv --db postgresql:///database --query "select * from data" > new.csv
 
 And much more...
 
@@ -89,14 +111,16 @@ Table of contents
 Citation
 ========
 
-When citing csvkit in publications, you may use this BibTeX entry::
+When citing csvkit in publications, you may use this BibTeX entry:
 
-    @Manual{,
-      title = {csvkit},
-      author = {Christopher Groskopf and contributors},
-      year = 2016,
-      url = {https://csvkit.readthedocs.org/}
-    }
+.. code-block:: bibtex
+
+   @Manual{csvkit,
+     title = "csvkit",
+     author = "Christopher Groskopf and contributors",
+     year = "2016",
+     url = "https://csvkit.readthedocs.org/"
+   }
 
 Authors
 =======

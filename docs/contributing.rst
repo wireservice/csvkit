@@ -11,15 +11,17 @@ Before making any changes or additions to csvkit, please be sure to read the res
 Getting Started
 ===============
 
-Set up your environment for development::
+Set up your environment for development:
 
-    git clone git://github.com/wireservice/csvkit.git
-    cd csvkit
-    mkvirtualenv csvkit
+.. code-block:: bash
 
-    pip install -e .[test]
+   git clone git://github.com/wireservice/csvkit.git
+   cd csvkit
+   mkvirtualenv csvkit
 
-    python setup.py develop
+   pip install -e .[test]
+
+   python setup.py develop
 
 Principles of development
 =========================
