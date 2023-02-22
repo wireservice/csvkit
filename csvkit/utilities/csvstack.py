@@ -52,6 +52,7 @@ class CSVStack(CSVKitUtility):
 
         headers = []
         stdin_headers = []
+        stdin_firstrow = []
 
         for path in self.args.input_paths:
 
@@ -89,6 +90,9 @@ class CSVStack(CSVKitUtility):
                 # aren't using header rows
                 if not file_is_stdin:
                     f.close()
+                else:
+                    stdin_firstrow = row
+
                 break
 
             if not file_is_stdin:
@@ -129,10 +133,13 @@ class CSVStack(CSVKitUtility):
                 else:
                     group = os.path.basename(f.name)
 
-            if file_is_stdin:
+            if file_is_stdin and not self.args.no_header_row:
                 rows = Reader(f, fieldnames=stdin_headers, **self.reader_kwargs)
             else:
                 rows = Reader(f, **self.reader_kwargs)
+
+            if file_is_stdin and self.args.no_header_row and stdin_firstrow:
+                output.writerow(stdin_firstrow)
 
             for row in rows:
 
