@@ -5,7 +5,7 @@ Examining the data
 csvstat: statistics without code
 ================================
 
-In the previous section we saw how we could use :doc:`csvlook` and :doc:`csvcut` to view slices of our data. This is a good tool for exploring a dataset, but in practice we usually need to get the broadest possible view before we can start diving into specifics.
+In the previous section we saw how we could use :doc:`/scripts/csvlook` and :doc:`/scripts/csvcut` to view slices of our data. This is a good tool for exploring a dataset, but in practice we usually need to get the broadest possible view before we can start diving into specifics.
 
 :doc:`/scripts/csvstat` is designed to give us just such a broad understanding of our data. Inspired by the ``summary()`` function from the computational statistics programming language `"R" <https://www.r-project.org/>`_, :doc:`/scripts/csvstat` will generate summary statistics for all the data in a CSV file.
 
@@ -59,7 +59,7 @@ Let's examine summary statistics for a few columns from our dataset. As we learn
 
     Row count: 1036
 
-:doc:`csvstat` infers the type of data in each column and then performs basic statistics on it. The particular statistics computed depend on the type of the column (numbers, text, dates, etc).
+:doc:`/scripts/csvstat` infers the type of data in each column and then performs basic statistics on it. The particular statistics computed depend on the type of the column (numbers, text, dates, etc).
 
 In this example the first column, ``county`` was identified as type ``Text``. We see that there are ``35`` counties represented in the dataset and that ``DOUGLAS`` is far and away the most frequently occurring. A quick Google search shows that there are ``93`` counties in Nebraska, so we know that either not every county received equipment or that the data is incomplete. We can also find out that Douglas county contains Omaha, the state's largest city by far.
 

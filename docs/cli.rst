@@ -54,7 +54,7 @@ Output and Analysis
 * To diff CSVs, consider `daff <https://github.com/paulfitz/daff>`_.
 * To explore CSVs interactively, consider `VisiData <https://visidata.org>`_.
 
-Alternatives to :doc:`csvsql` are `q <https://github.com/harelba/q>`_ and `textql <https://github.com/dinedal/textql>`_.
+Alternatives to :doc:`/scripts/csvsql` are `q <https://github.com/harelba/q>`_ and `textql <https://github.com/dinedal/textql>`_.
 
 Common arguments
 ================

@@ -34,7 +34,7 @@ Stack up the rows from multiple CSV files, optionally adding a grouping value to
 
 See also: :doc:`../common_arguments`.
 
-.. warn::
+.. warning::
 
     If you redirect output to an input file like :code:`csvstack file.csv > file.csv`, the file will grow indefinitely.
 
