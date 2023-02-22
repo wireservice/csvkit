@@ -66,23 +66,24 @@ Convert veteran's education dataset to JSON keyed by state abbreviation:
 
 Results in a JSON document like:
 
-.. code-block:: none
+.. code-block:: json
 
    {
-       [...]
-       "WA": {
-           "State Name": "WASHINGTON", 
-           "State Abbreviate": "WA", 
-           "Code": 53.0, 
-           "Montgomery GI Bill-Active Duty": 7969.0, 
-           "Montgomery GI Bill- Selective Reserve": 769.0, 
-           "Dependents' Educational Assistance": 2192.0, 
-           "Reserve Educational Assistance Program": 549.0, 
-           "Post-Vietnam Era Veteran's Educational Assistance Program": 13.0, 
-           "TOTAL": 11492.0, 
-           "": null
-       }, 
-       [...]
+       "AL": {
+           "State Name": "ALABAMA",
+           "State Abbreviate": "AL",
+           "Code": 1.0,
+           "Montgomery GI Bill-Active Duty": 6718.0,
+           "Montgomery GI Bill- Selective Reserve": 1728.0,
+           "Dependents' Educational Assistance": 2703.0,
+           "Reserve Educational Assistance Program": 1269.0,
+           "Post-Vietnam Era Veteran's Educational Assistance Program": 8.0,
+           "TOTAL": 12426.0,
+           "j": null
+       },
+       "...": {
+           "...": "..."
+       }
    }
 
 Converting locations of public art into GeoJSON:
@@ -93,7 +94,7 @@ Converting locations of public art into GeoJSON:
 
 Results in a GeoJSON document like:
 
-.. code-block:: none
+.. code-block:: json
 
    {
        "type": "FeatureCollection", 
@@ -132,7 +133,9 @@ Results in a GeoJSON document like:
                    "last_seen_date": "2012-03-30"
                }
            }, 
-           [...]
+           {
+               "...": "..."
+           }
        ], 
        "crs": {
            "type": "name", 

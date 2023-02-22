@@ -9,46 +9,46 @@ Very frequently one of the last steps in any data analysis is to get the data on
 
 .. code-block:: bash
 
-    csvcut -c county,item_name data.csv | csvgrep -c county -m "GREELEY" | csvjson --indent 4
+   csvcut -c county,item_name data.csv | csvgrep -c county -m "GREELEY" | csvjson --indent 4
 
 .. code-block:: json
 
-    [
-        {
-            "county": "GREELEY",
-            "item_name": "RIFLE,7.62 MILLIMETER"
-        },
-        {
-            "county": "GREELEY",
-            "item_name": "RIFLE,7.62 MILLIMETER"
-        },
-        {
-            "county": "GREELEY",
-            "item_name": "RIFLE,7.62 MILLIMETER"
-        }
-    ]
+   [
+       {
+           "county": "GREELEY",
+           "item_name": "RIFLE,7.62 MILLIMETER"
+       },
+       {
+           "county": "GREELEY",
+           "item_name": "RIFLE,7.62 MILLIMETER"
+       },
+       {
+           "county": "GREELEY",
+           "item_name": "RIFLE,7.62 MILLIMETER"
+       }
+   ]
 
 A common usage of turning a CSV into a JSON file is for usage as a lookup table in the browser. This can be illustrated with the ACS data we looked at earlier, which contains a unique ``fips`` code for each county:
 
 .. code-block:: bash
 
-    csvjson --indent 4 --key fips acs2012_5yr_population.csv | head
+   csvjson --indent 4 --key fips acs2012_5yr_population.csv | head
 
 .. code-block:: json
 
-    {
-        "31001": {
-            "fips": "31001",
-            "name": "Adams County, NE",
-            "total_population": "31299",
-            "margin_of_error": "0"
-        },
-        "31003": {
-            "fips": "31003",
-            "name": "Antelope County, NE",
-            "...": "..."
-        }
-    }
+   {
+       "31001": {
+           "fips": "31001",
+           "name": "Adams County, NE",
+           "total_population": "31299",
+           "margin_of_error": "0"
+       },
+       "31003": {
+           "fips": "31003",
+           "name": "Antelope County, NE",
+           "...": "..."
+       }
+   }
 
 For making maps, :doc:`/scripts/csvjson` can also output GeoJSON, see its :doc:`/scripts/csvjson` for more details.
 
@@ -57,16 +57,13 @@ csvpy: going into code
 
 For the programmers out there, the command line is rarely as functional as just writing a little bit of code. :doc:`/scripts/csvpy` exists just to make a programmer's life easier. Invoking it simply launches a Python interactive terminal, with the data preloaded into a CSV reader:
 
-.. code-block:: bash
+.. code-block:: console
 
-    csvpy data.csv
-
-.. code-block:: none
-
-    Welcome! "data.csv" has been loaded in a reader object named "reader".
-    >>> print(len(list(reader)))
-    1037
-    >>> quit()
+   $ csvpy data.csv
+   Welcome! "data.csv" has been loaded in a reader object named "reader".
+   >>> print(len(list(reader)))
+   1037
+   >>> quit()
 
 In addition to being a time-saver, because this uses agate, the reader is Unicode aware.
 
@@ -79,25 +76,25 @@ Pipe-delimited:
 
 .. code-block:: bash
 
-    csvformat -D \| data.csv
+   csvformat -D \| data.csv
 
 Tab-delimited:
 
 .. code-block:: bash
 
-    csvformat -T data.csv
+   csvformat -T data.csv
 
 Quote every cell:
 
 .. code-block:: bash
 
-    csvformat -U 1 data.csv
+   csvformat -U 1 data.csv
 
 Ampersand-delimited, dollar-signs for quotes, quote all strings, and asterisk for line endings:
 
 .. code-block:: bash
 
-    csvformat -D \& -Q \$ -U 2 -M \* data.csv
+   csvformat -D \& -Q \$ -U 2 -M \* data.csv
 
 You get the picture.
 

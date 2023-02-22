@@ -18,13 +18,13 @@ Installing csvkit is easy:
 
 .. code-block:: bash
 
-    sudo pip install csvkit
+   sudo pip install csvkit
 
 If you have problems installing, look for help  in the :doc:`../tricks` section of the documentation.
 
 .. note::
 
-    If you're familiar with `virtualenv <https://virtualenv.readthedocs.org/en/latest/>`_, it is better to install csvkit in its own environment. If you are doing this, then you should leave off the ``sudo`` in the previous command.
+   If you're familiar with `virtualenv <https://virtualenv.readthedocs.org/en/latest/>`_, it is better to install csvkit in its own environment. If you are doing this, then you should leave off the ``sudo`` in the previous command.
 
 Getting the data
 ================
@@ -33,14 +33,14 @@ Let's start by creating a clean workspace:
 
 .. code-block:: bash
 
-    mkdir csvkit_tutorial
-    cd csvkit_tutorial
+   mkdir csvkit_tutorial
+   cd csvkit_tutorial
 
 Now let's fetch the data:
 
 .. code-block:: bash
 
-    curl -L -O https://raw.githubusercontent.com/wireservice/csvkit/master/examples/realdata/ne_1033_data.xlsx
+   curl -L -O https://raw.githubusercontent.com/wireservice/csvkit/master/examples/realdata/ne_1033_data.xlsx
 
 in2csv: the Excel killer
 ========================
@@ -49,13 +49,13 @@ For purposes of this tutorial, I've converted this data to Excel format. (NPR pu
 
 .. code-block:: bash
 
-    in2csv ne_1033_data.xlsx
+   in2csv ne_1033_data.xlsx
 
 You should see a CSV version of the data dumped into your terminal. All csvkit tools write to the terminal output, called "standard out", by default. This isn't very useful, so let's write it to a file instead:
 
 .. code-block:: bash
 
-    in2csv ne_1033_data.xlsx > data.csv
+   in2csv ne_1033_data.xlsx > data.csv
 
 ``data.csv`` will now contain a CSV version of our original file. If you aren't familiar with the ``>`` syntax, it means "redirect standard out to a file". If that's hard to remember it may be more convenient to think of it as "save to".
 
@@ -63,7 +63,7 @@ We can verify that the data is saved to the new file by using the ``cat`` comman
 
 .. code-block:: bash
 
-    cat data.csv
+   cat data.csv
 
 :doc:`/scripts/in2csv` can convert a variety of common file formats to CSV, including both ``.xls`` and ``.xlsx`` Excel files, JSON files, and fixed-width formatted files.
 
@@ -74,7 +74,7 @@ Now that we have some data, we probably want to get some idea of what's in it. W
 
 .. code-block:: bash
 
-    csvlook data.csv
+   csvlook data.csv
 
 At first the output of :doc:`/scripts/csvlook` isn't going to appear very promising. You'll see a mess of data, pipe character and dashes. That's because this dataset has many columns and they won't all fit in the terminal at once. You have two options:
 
@@ -82,7 +82,7 @@ At first the output of :doc:`/scripts/csvlook` isn't going to appear very promis
 
 .. code-block:: bash
 
-    csvlook data.csv | less -S
+   csvlook data.csv | less -S
 
 2. Reduce which columns of our dataset are displayed before we look at it. This is what will do in the next section.
 
@@ -91,32 +91,29 @@ csvcut: data scalpel
 
 :doc:`/scripts/csvcut` is the original csvkit tool. It inspired the rest. With it, we can select, delete and reorder the columns in our CSV. First, let's just see what columns are in our data:
 
-.. code-block:: bash
+.. code-block:: console
 
-    csvcut -n data.csv
-
-.. code-block:: bash
-
-      1: state
-      2: county
-      3: fips
-      4: nsn
-      5: item_name
-      6: quantity
-      7: ui
-      8: acquisition_cost
-      9: total_cost
-     10: ship_date
-     11: federal_supply_category
-     12: federal_supply_category_name
-     13: federal_supply_class
-     14: federal_supply_class_name
+   $ csvcut -n data.csv
+     1: state
+     2: county
+     3: fips
+     4: nsn
+     5: item_name
+     6: quantity
+     7: ui
+     8: acquisition_cost
+     9: total_cost
+    10: ship_date
+    11: federal_supply_category
+    12: federal_supply_category_name
+    13: federal_supply_class
+    14: federal_supply_class_name
 
 As you can see, our dataset has fourteen columns. Let's take a look at just columns ``2``, ``5`` and ``6``:
 
 .. code-block:: bash
 
-    csvcut -c 2,5,6 data.csv
+   csvcut -c 2,5,6 data.csv
 
 Now we've reduced our output CSV to only three columns.
 
@@ -124,7 +121,7 @@ We can also refer to columns by their names to make our lives easier:
 
 .. code-block:: bash
 
-    csvcut -c county,item_name,quantity data.csv
+   csvcut -c county,item_name,quantity data.csv
 
 Putting it together with pipes
 ==============================
@@ -133,7 +130,7 @@ Now that we understand :doc:`/scripts/in2csv`, :doc:`/scripts/csvlook` and :doc:
 
 .. code-block:: bash
 
-    csvcut -c county,item_name,quantity data.csv | csvlook | head
+   csvcut -c county,item_name,quantity data.csv | csvlook | head
 
 In addition to specifying filenames, all csvkit tools accept an input file via "standard in". This means that, using the ``|`` ("pipe") character we can use the output of one csvkit tool as the input of the next.
 
@@ -145,7 +142,7 @@ We can also pipe :doc:`/scripts/in2csv`, allowing us to combine all our previous
 
 .. code-block:: bash
 
-    in2csv ne_1033_data.xlsx | csvcut -c county,item_name,quantity | csvlook | head
+   in2csv ne_1033_data.xlsx | csvcut -c county,item_name,quantity | csvlook | head
 
 Summing up
 ==========

@@ -9,102 +9,99 @@ One of the most common operations that we need to perform on data is "joining" i
 
 .. code-block:: bash
 
-    curl -L -O https://raw.githubusercontent.com/wireservice/csvkit/master/examples/realdata/acs2012_5yr_population.csv
+   curl -L -O https://raw.githubusercontent.com/wireservice/csvkit/master/examples/realdata/acs2012_5yr_population.csv
 
 Now let's see what's in there:
 
-.. code-block:: bash
+.. code-block:: console
 
-    csvstat acs2012_5yr_population.csv
+   $ csvstat acs2012_5yr_population.csv
+     1. "fips"
 
-.. code-block:: none
+    Type of data:          Number
+    Contains null values:  False
+    Unique values:         93
+    Smallest value:        31,001
+    Largest value:         31,185
+    Sum:                   2,891,649
+    Mean:                  31,093
+    Median:                31,093
+    StDev:                 53.981
+    Most common values:    31,001 (1x)
+                           31,003 (1x)
+                           31,005 (1x)
+                           31,007 (1x)
+                           31,009 (1x)
 
-    1. fips
-      Number
-      Nulls: False
-      Min: 31001
-      Max: 31185
-      Sum: 2891649
-      Mean: 31093
-      Median: 31093
-      Standard Deviation: 53.98147830506311726900562525
-      Unique values: 93
-      5 most frequent values:
-          31001:	1
-          31003:	1
-          31005:	1
-          31007:	1
-          31009:	1
-    2. name
-      Text
-      Nulls: False
-      Unique values: 93
-      Max length: 23
-      5 most frequent values:
-          Adams County, NE:	1
-          Antelope County, NE:	1
-          Arthur County, NE:	1
-          Banner County, NE:	1
-          Blaine County, NE:	1
-    3. total_population
-      Number
-      Nulls: False
-      Min: 348
-      Max: 518271
-      Sum: 1827306
-      Mean: 19648.45161290322580645161290
-      Median: 6294
-      Standard Deviation: 62501.00530730896711321285542
-      Unique values: 93
-      5 most frequent values:
-          31299:	1
-          6655:	1
-          490:	1
-          778:	1
-          584:	1
-    4. margin_of_error
-      Number
-      Nulls: False
-      Min: 0
-      Max: 115
-      Sum: 1800
-      Mean: 19.35483870967741935483870968
-      Median: 0
-      Standard Deviation: 37.89707031274211909117708454
-      Unique values: 15
-      5 most frequent values:
-          0:	73
-          73:	2
-          114:	2
-          97:	2
-          99:	2
+     2. "name"
 
-    Row count: 93
+    Type of data:          Text
+    Contains null values:  False
+    Unique values:         93
+    Longest value:         23 characters
+    Most common values:    Adams County, NE (1x)
+                           Antelope County, NE (1x)
+                           Arthur County, NE (1x)
+                           Banner County, NE (1x)
+                           Blaine County, NE (1x)
+
+     3. "total_population"
+
+    Type of data:          Number
+    Contains null values:  False
+    Unique values:         93
+    Smallest value:        348
+    Largest value:         518,271
+    Sum:                   1,827,306
+    Mean:                  19,648.452
+    Median:                6,294
+    StDev:                 62,501.005
+    Most common values:    31,299 (1x)
+                           6,655 (1x)
+                           490 (1x)
+                           778 (1x)
+                           584 (1x)
+
+     4. "margin_of_error"
+
+    Type of data:          Number
+    Contains null values:  False
+    Unique values:         15
+    Smallest value:        0
+    Largest value:         115
+    Sum:                   1,800
+    Mean:                  19.355
+    Median:                0
+    StDev:                 37.897
+    Most common values:    0 (73x)
+                           73 (2x)
+                           114 (2x)
+                           97 (2x)
+                           99 (2x)
+
+   Row count: 93
 
 As you can see, this data file contains population estimates for each county in Nebraska from the 2012 5-year ACS estimates. This data was retrieved from `Census Reporter <https://censusreporter.org/>`_ and reformatted slightly for this example. Let's join it to our equipment data:
 
 .. code-block:: bash
 
-    csvjoin -c fips data.csv acs2012_5yr_population.csv > joined.csv
+   csvjoin -c fips data.csv acs2012_5yr_population.csv > joined.csv
 
 Since both files contain a fips column, we can use that to join the two. In our output you should see the population data appended at the end of each row of data. Let's combine this with what we've learned before to answer the question "What was the lowest population county to receive equipment?":
 
-.. code-block:: bash
+.. code-block:: console
 
-    csvcut -c county,item_name,total_population joined.csv | csvsort -c total_population | csvlook | head
-
-.. code-block:: bash
-
-    | county     | item_name                                                      | total_population |
-    | ---------- | -------------------------------------------------------------- | ---------------- |
-    | MCPHERSON  | RIFLE,5.56 MILLIMETER                                          |              348 |
-    | WHEELER    | RIFLE,5.56 MILLIMETER                                          |              725 |
-    | GREELEY    | RIFLE,7.62 MILLIMETER                                          |            2,515 |
-    | GREELEY    | RIFLE,7.62 MILLIMETER                                          |            2,515 |
-    | GREELEY    | RIFLE,7.62 MILLIMETER                                          |            2,515 |
-    | NANCE      | RIFLE,5.56 MILLIMETER                                          |            3,730 |
-    | NANCE      | RIFLE,7.62 MILLIMETER                                          |            3,730 |
-    | NANCE      | RIFLE,7.62 MILLIMETER                                          |            3,730 |
+   $ csvcut -c county,item_name,total_population joined.csv | csvsort -c total_population | csvlook | head
+   | county     | item_name                                                      | total_population |
+   | ---------- | -------------------------------------------------------------- | ---------------- |
+   | MCPHERSON  | RIFLE,5.56 MILLIMETER                                          |              348 |
+   | WHEELER    | RIFLE,5.56 MILLIMETER                                          |              725 |
+   | GREELEY    | RIFLE,7.62 MILLIMETER                                          |            2,515 |
+   | GREELEY    | RIFLE,7.62 MILLIMETER                                          |            2,515 |
+   | GREELEY    | RIFLE,7.62 MILLIMETER                                          |            2,515 |
+   | NANCE      | RIFLE,5.56 MILLIMETER                                          |            3,730 |
+   | NANCE      | RIFLE,7.62 MILLIMETER                                          |            3,730 |
+   | NANCE      | RIFLE,7.62 MILLIMETER                                          |            3,730 |
 
 Two counties with fewer than one-thousand residents were the recipients of 5.56 millimeter assault rifles. This simple example demonstrates the power of joining datasets. Although SQL will always be a more flexible option, :doc:`/scripts/csvjoin` will often get you where you need to go faster.
 
@@ -115,54 +112,52 @@ Frequently large datasets are distributed in many small files. At some point you
 
 .. code-block:: bash
 
-    curl -L -O https://raw.githubusercontent.com/wireservice/csvkit/master/examples/realdata/ks_1033_data.csv
+   curl -L -O https://raw.githubusercontent.com/wireservice/csvkit/master/examples/realdata/ks_1033_data.csv
 
 Back in :doc:`1_getting_started`, we had used in2csv to convert our Nebraska data from XLSX to CSV. However, we named our output `data.csv` for simplicity at the time. Now that we are going to be stacking multiple states, we should re-convert our Nebraska data using a file naming convention matching our Kansas data:
 
 .. code-block:: bash
 
-    in2csv ne_1033_data.xlsx > ne_1033_data.csv
+   in2csv ne_1033_data.xlsx > ne_1033_data.csv
 
 Now let's stack these two data files:
 
 .. code-block:: bash
 
-    csvstack ne_1033_data.csv ks_1033_data.csv > region.csv
+   csvstack ne_1033_data.csv ks_1033_data.csv > region.csv
 
 Using csvstat we can see that our ``region.csv`` contains both datasets:
 
-.. code-block:: bash
+.. code-block:: console
 
-    csvstat -c state,acquisition_cost region.csv
+   $ csvstat -c state,acquisition_cost region.csv
+     1. "state"
 
-.. code-block:: bash
+    Type of data:          Text
+    Contains null values:  False
+    Unique values:         2
+    Longest value:         2 characters
+    Most common values:    KS (1575x)
+                           NE (1036x)
 
-    1. state
-      Text
-      Nulls: False
-      Values: NE, KS
-      Max length: 2
-      5 most frequent values:
-          KS:	1575
-          NE:	1036
-    8. acquisition_cost
-      Number
-      Nulls: False
-      Min: 0.0
-      Max: 658000
-      Sum: 9440445.91
-      Mean: 3615.643780160857908847184987
-      Median: 138
-      Standard Deviation: 23730.63142202547205726466358
-      Unique values: 127
-      5 most frequent values:
-          120.0:	649
-          499.0:	449
-          138.0:	311
-          6800.0:	304
-          58.71:	218
+     8. "acquisition_cost"
 
-    Row count: 2611
+    Type of data:          Number
+    Contains null values:  False
+    Unique values:         127
+    Smallest value:        0
+    Largest value:         658,000
+    Sum:                   9,440,445.91
+    Mean:                  3,615.644
+    Median:                138
+    StDev:                 23,730.631
+    Most common values:    120 (649x)
+                           499 (449x)
+                           138 (311x)
+                           6,800 (304x)
+                           58.71 (218x)
+
+   Row count: 2611
 
 If you supply the :code:`-g` flag then :doc:`/scripts/csvstack` can also add a "grouping column" to each row, so that you can tell which file each row came from. In this case we don't need this, but you can imagine a situation in which instead of having a ``county`` column each of this datasets had simply been named ``nebraska.csv`` and ``kansas.csv``. In that case, using a grouping column would prevent us from losing information when we stacked them.
 
@@ -175,29 +170,29 @@ By default, :doc:`/scripts/csvsql` will generate a create table statement for yo
 
 .. code-block:: bash
 
-    csvsql -i sqlite joined.csv
+   csvsql -i sqlite joined.csv
 
 .. code-block:: sql
 
-    CREATE TABLE joined (
-            state VARCHAR(2) NOT NULL,
-            county VARCHAR(10) NOT NULL,
-            fips DECIMAL NOT NULL,
-            nsn VARCHAR(16) NOT NULL,
-            item_name VARCHAR(62),
-            quantity DECIMAL NOT NULL,
-            ui VARCHAR(7) NOT NULL,
-            acquisition_cost DECIMAL NOT NULL,
-            total_cost DECIMAL NOT NULL,
-            ship_date DATE NOT NULL,
-            federal_supply_category DECIMAL NOT NULL,
-            federal_supply_category_name VARCHAR(35) NOT NULL,
-            federal_supply_class DECIMAL NOT NULL,
-            federal_supply_class_name VARCHAR(63) NOT NULL,
-            name VARCHAR(21) NOT NULL,
-            total_population DECIMAL NOT NULL,
-            margin_of_error DECIMAL NOT NULL
-    );
+   CREATE TABLE joined (
+       state VARCHAR NOT NULL, 
+       county VARCHAR NOT NULL, 
+       fips FLOAT NOT NULL, 
+       nsn VARCHAR NOT NULL, 
+       item_name VARCHAR, 
+       quantity FLOAT NOT NULL, 
+       ui VARCHAR NOT NULL, 
+       acquisition_cost FLOAT NOT NULL, 
+       total_cost FLOAT NOT NULL, 
+       ship_date DATE NOT NULL, 
+       federal_supply_category FLOAT NOT NULL, 
+       federal_supply_category_name VARCHAR NOT NULL, 
+       federal_supply_class FLOAT NOT NULL, 
+       federal_supply_class_name VARCHAR NOT NULL, 
+       name VARCHAR NOT NULL, 
+       total_population FLOAT NOT NULL, 
+       margin_of_error FLOAT NOT NULL
+   );
 
 Here we have the sqlite "create table" statement for our joined data. You'll see that, like :doc:`/scripts/csvstat`, :doc:`/scripts/csvsql` has done its best to infer the column types.
 
@@ -205,25 +200,25 @@ Often you won't care about storing the SQL statements locally. You can also use 
 
 .. code-block:: bash
 
-    csvsql --db sqlite:///leso.db --insert joined.csv
+   csvsql --db sqlite:///leso.db --insert joined.csv
 
 How can we check that our data was imported successfully? We could use the sqlite command-line interface, but rather than worry about the specifics of another tool, we can also use :doc:`/scripts/sql2csv`:
 
 .. code-block:: bash
 
-    sql2csv --db sqlite:///leso.db --query "select * from joined"
+   sql2csv --db sqlite:///leso.db --query "select * from joined"
 
 Note that the :code:`--query` parameter to :doc:`/scripts/sql2csv` accepts any SQL query. For example, to export Douglas county from the ``joined`` table from our sqlite database, we would run:
 
 .. code-block:: bash
 
-    sql2csv --db sqlite:///leso.db --query "select * from joined where county='DOUGLAS';" > douglas.csv
+   sql2csv --db sqlite:///leso.db --query "select * from joined where county='DOUGLAS';" > douglas.csv
 
 Sometimes, if you will only be running a single query, even constructing the database is a waste of time. For that case, you can actually skip the database entirely and :doc:`/scripts/csvsql` will create one in memory for you:
 
 .. code-block:: bash
 
-    csvsql --query "select county,item_name from joined where quantity > 5;" joined.csv | csvlook
+   csvsql --query "select county,item_name from joined where quantity > 5;" joined.csv | csvlook
 
 SQL queries directly on CSVs! Keep in mind when using this that you are loading the entire dataset into an in-memory database, so it is likely to be very slow for large datasets.
 
