@@ -138,7 +138,7 @@ class CSVStack(CSVKitUtility):
             else:
                 rows = Reader(f, **self.reader_kwargs)
 
-            if file_is_stdin and self.args.no_header_row and stdin_firstrow:
+            if file_is_stdin and stdin_firstrow:
                 output.writerow(stdin_firstrow)
 
             for row in rows:
