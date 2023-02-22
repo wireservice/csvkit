@@ -8,6 +8,18 @@ import agate
 from csvkit.cli import CSVKitUtility, isatty, make_default_headers
 
 
+def _skip_lines(f, args):
+    if isinstance(args.skip_lines, int):
+        skip_lines = args.skip_lines
+        while skip_lines > 0:
+            f.readline()
+            skip_lines -= 1
+    else:
+        raise ValueError('skip_lines argument must be an int')
+
+    return skip_lines
+
+
 class CSVStack(CSVKitUtility):
     description = 'Stack up the rows from multiple CSV files, optionally adding a grouping value.'
     # Override 'f' because the utility accepts multiple files.
@@ -44,67 +56,52 @@ class CSVStack(CSVKitUtility):
             groups = None
 
         group_name = self.args.group_name if self.args.group_name else 'group'
+        use_fieldnames = not self.args.no_header_row
 
-        if not self.args.no_header_row:
+        if use_fieldnames:
             Reader = agate.csv.DictReader
         else:
             Reader = agate.csv.reader
 
         headers = []
-        stdin_headers = []
-        stdin_firstrow = []
+        stdin_fieldnames = []
+        stdin_first_row = []
 
         for path in self.args.input_paths:
-
             f = self._open_input_file(path)
+            file_is_stdin = path == '-'
 
-            if path == '-':
-                file_is_stdin = True
-            else:
-                file_is_stdin = False
+            _skip_lines(f, self.args)
+            rows = Reader(f, **self.reader_kwargs)
 
-            if isinstance(self.args.skip_lines, int):
-                skip_lines = self.args.skip_lines
-                while skip_lines > 0:
-                    f.readline()
-                    skip_lines -= 1
-            else:
-                raise ValueError('skip_lines argument must be an int')
-
-            if not self.args.no_header_row:
-                rows = Reader(f, **self.reader_kwargs)
-
-                if file_is_stdin:
-                    stdin_headers = rows.fieldnames
-                for field in (rows.fieldnames or []):
+            if use_fieldnames:
+                for field in rows.fieldnames:
                     if field not in headers:
                         headers.append(field)
 
+                # If the file is standard input, store the fieldnames so that the rows can be read correctly later.
+                if file_is_stdin:
+                    stdin_fieldnames = rows.fieldnames
+                else:
+                    f.close()
             else:
-                rows = Reader(f, **self.reader_kwargs)
-
                 row = next(rows, [])
                 headers = list(make_default_headers(len(row)))
 
-                # we only need to look at the first file if we
-                # aren't using header rows
-                if not file_is_stdin:
-                    f.close()
+                # If the file is standard input, store the row that was used to calculate the number of columns.
+                if file_is_stdin:
+                    stdin_first_row = row
                 else:
-                    stdin_firstrow = row
+                    f.close()
 
+                # If we aren't using header rows, we only look at the first file and stack columns in the same order.
                 break
-
-            if not file_is_stdin:
-                f.close()
 
         if has_groups:
             headers.insert(0, group_name)
 
-        if not self.args.no_header_row:
-            output = agate.csv.DictWriter(self.output_file,
-                                          fieldnames=headers,
-                                          **self.writer_kwargs)
+        if use_fieldnames:
+            output = agate.csv.DictWriter(self.output_file, fieldnames=headers, **self.writer_kwargs)
             output.writeheader()
         else:
             output = agate.csv.writer(self.output_file, **self.writer_kwargs)
@@ -112,20 +109,7 @@ class CSVStack(CSVKitUtility):
 
         for i, path in enumerate(self.args.input_paths):
             f = self._open_input_file(path)
-
-            if path == '-':
-                file_is_stdin = True
-            else:
-                file_is_stdin = False
-
-            if not file_is_stdin:
-                if isinstance(self.args.skip_lines, int):
-                    skip_lines = self.args.skip_lines
-                    while skip_lines > 0:
-                        f.readline()
-                        skip_lines -= 1
-                else:
-                    raise ValueError('skip_lines argument must be an int')
+            file_is_stdin = path == '-'
 
             if has_groups:
                 if groups:
@@ -133,18 +117,24 @@ class CSVStack(CSVKitUtility):
                 else:
                     group = os.path.basename(f.name)
 
-            if file_is_stdin and not self.args.no_header_row:
-                rows = Reader(f, fieldnames=stdin_headers, **self.reader_kwargs)
-            else:
-                rows = Reader(f, **self.reader_kwargs)
+            # If the file is standard input, we've already skipped any lines above, to find its header row.
+            if not file_is_stdin:
+                _skip_lines(f, self.args)
 
-            if file_is_stdin and stdin_firstrow:
-                output.writerow(stdin_firstrow)
+            # If the file is standard input, we've already read the header row, so we need to provide it here.
+            kwargs = {}
+            if file_is_stdin and use_fieldnames:
+                kwargs['fieldnames'] = stdin_fieldnames
+
+            rows = Reader(f, **self.reader_kwargs, **kwargs)
+
+            # If the file is standard input, we need to add back the row we used to calculate the number of columns.
+            if file_is_stdin and stdin_first_row:
+                output.writerow(stdin_first_row)
 
             for row in rows:
-
                 if has_groups:
-                    if not self.args.no_header_row:
+                    if use_fieldnames:
                         row[group_name] = group
                     else:
                         row.insert(0, group)
