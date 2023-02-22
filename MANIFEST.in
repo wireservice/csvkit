@@ -2,6 +2,8 @@ include *.rst
 include COPYING
 recursive-include docs *.py
 recursive-include docs *.rst
+recursive-include docs *.txt
 recursive-include docs Makefile
 recursive-include examples *
 recursive-include tests *.py
+exclude .readthedocs.yaml
