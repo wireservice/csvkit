@@ -64,7 +64,7 @@ Convert to carriage return line-endings:
 
    csvformat -M $'\r' examples/dummy.csv
 
-Convert to a tab-delimited file (TSV) with no double quotes:
+Convert to a tab-delimited file (TSV) with no doubling of double quotes:
 
 .. code-block:: bash
 
