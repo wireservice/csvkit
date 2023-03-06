@@ -31,7 +31,7 @@ class CSVFormat(CSVKitUtility):
         self.argparser.add_argument(
             '-P', '--out-escapechar', dest='out_escapechar',
             help='Character used to escape the delimiter in the output CSV file if --quoting 3 ("Quote None") is '
-                 'specified and to escape the QUOTECHAR if --no-doublequote is specified.')
+                 'specified and to escape the QUOTECHAR if --out-no-doublequote is specified.')
         self.argparser.add_argument(
             '-M', '--out-lineterminator', dest='out_lineterminator',
             help='Character used to terminate lines in the output CSV file.')
