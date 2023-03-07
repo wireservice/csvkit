@@ -74,4 +74,4 @@ To avoid escaping quote characters when using :code:`--quoting 3`, add :code:`--
 
 .. code-block:: bash
 
-   csvformat -u 3 -U 3 -Q "" examples/optional_quote_characters.csv
+   csvformat -u3 -U3 -Q🐍 examples/optional_quote_characters.csv
