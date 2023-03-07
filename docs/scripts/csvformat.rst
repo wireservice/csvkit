@@ -68,8 +68,7 @@ Convert to a tab-delimited file (TSV) with no doubling of double quotes:
 
 .. code-block:: bash
 
-   echo 'key,value
-   1,"a ""quoted"" string"' | csvformat -T -Q🐍
+   printf 'key,value\n1,"a ""quoted"" string"' | csvformat -T -Q🐍
 
 To avoid escaping quote characters when using :code:`--quoting 3`, add :code:`--out-quotechar ""`:
 
