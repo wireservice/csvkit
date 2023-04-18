@@ -93,7 +93,7 @@ class In2CSV(CSVKitUtility):
             if filetype in ('xls', 'xlsx'):
                 sheets = self.sheet_names(path, filetype)
                 for sheet in sheets:
-                    self.output_file.write('%s\n' % sheet)
+                    self.output_file.write(f'{sheet}\n')
             else:
                 self.argparser.error('You cannot use the -n or --names options with non-Excel files.')
             return

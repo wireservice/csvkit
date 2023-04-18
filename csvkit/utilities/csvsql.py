@@ -217,7 +217,7 @@ class CSVSQL(CSVKitUtility):
                         unique_constraint=self.unique_constraint
                     )
 
-                    self.output_file.write('%s\n' % statement)
+                    self.output_file.write(f'{statement}\n')
 
         if self.connection:
             if self.args.queries:

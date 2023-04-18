@@ -79,7 +79,7 @@ for filename in os.listdir('scripts'):
     man_pages.append((
         os.path.join('scripts', name),
         name,
-        '%s Documentation' % name,
+        f'{name} Documentation',
         ['Christopher Groskopf'],
         1
     ))

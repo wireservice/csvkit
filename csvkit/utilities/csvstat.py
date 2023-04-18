@@ -204,7 +204,7 @@ class CSVStat(CSVKitUtility):
         column_name = table.column_names[column_id]
 
         op_name = operation
-        getter = globals().get('get_%s' % op_name, None)
+        getter = globals().get(f'get_{op_name}', None)
 
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', agate.NullCalculationWarning)
@@ -223,13 +223,13 @@ class CSVStat(CSVKitUtility):
 
         # Formatting
         if op_name == 'freq':
-            stat = ', '.join([('"{}": {}'.format(str(row['value']), row['count'])) for row in stat])
+            stat = ', '.join([f"\"{str(row['value'])}\": {row['count']}" for row in stat])
             stat = '{ %s }' % stat
 
         if label:
             self.output_file.write('%3i. %s: %s\n' % (column_id + 1, column_name, stat))
         else:
-            self.output_file.write('%s\n' % stat)
+            self.output_file.write(f'{stat}\n')
 
     def calculate_stats(self, table, column_id, **kwargs):
         """
@@ -238,7 +238,7 @@ class CSVStat(CSVKitUtility):
         stats = {}
 
         for op_name, op_data in OPERATIONS.items():
-            getter = globals().get('get_%s' % op_name, None)
+            getter = globals().get(f'get_{op_name}', None)
 
             with warnings.catch_warnings():
                 warnings.simplefilter('ignore', agate.NullCalculationWarning)
@@ -263,7 +263,7 @@ class CSVStat(CSVKitUtility):
         """
         Print data for all statistics.
         """
-        label_column_width = max([len(op_data['label']) for op_data in OPERATIONS.values()])
+        label_column_width = max(len(op_data['label']) for op_data in OPERATIONS.values())
 
         for column_id in column_ids:
             column_name = table.column_names[column_id]
@@ -299,22 +299,22 @@ class CSVStat(CSVKitUtility):
                         else:
                             v = str(row['value'])
 
-                        self.output_file.write('{} ({}x)\n'.format(v, row['count']))
+                        self.output_file.write(f"{v} ({row['count']}x)\n")
 
                     continue
 
                 v = column_stats[op_name]
 
                 if op_name == 'nulls' and v:
-                    v = '%s (excluded from calculations)' % v
+                    v = f'{v} (excluded from calculations)'
                 elif op_name == 'len':
-                    v = '%s characters' % v
+                    v = f'{v} characters'
 
                 self.output_file.write(f'\t{label} {v}\n')
 
             self.output_file.write('\n')
 
-        self.output_file.write('Row count: %s\n' % len(table.rows))
+        self.output_file.write(f'Row count: {len(table.rows)}\n')
 
     def print_csv(self, table, column_ids, stats):
         """
@@ -332,7 +332,7 @@ class CSVStat(CSVKitUtility):
 
             output_row = [column_id + 1, column_name]
 
-            for op_name, op_data in OPERATIONS.items():
+            for op_name, _op_data in OPERATIONS.items():
                 if column_stats[op_name] is None:
                     output_row.append(None)
                     continue
@@ -352,7 +352,7 @@ def format_decimal(d, f='%.3f', no_grouping_separator=False):
 
 
 def get_type(table, column_id, **kwargs):
-    return '%s' % table.columns[column_id].data_type.__class__.__name__
+    return f'{table.columns[column_id].data_type.__class__.__name__}'
 
 
 def get_unique(table, column_id, **kwargs):
