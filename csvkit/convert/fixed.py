@@ -160,7 +160,7 @@ class SchemaDecoder:
                 else:
                     setattr(self, p, header.index(p))
             except ValueError:
-                raise ValueError('A column named "%s" must exist in the schema file.' % (p))
+                raise ValueError(f'A column named "{p}" must exist in the schema file.')
 
     def __call__(self, row):
         """
@@ -172,7 +172,7 @@ class SchemaDecoder:
         integers.
         """
         if self.one_based is None:
-            self.one_based = (int(row[self.start]) == 1)
+            self.one_based = int(row[self.start]) == 1
 
         if self.one_based:
             adjusted_start = int(row[self.start]) - 1

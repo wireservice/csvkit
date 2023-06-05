@@ -20,7 +20,7 @@ def geojson2csv(f, key=None, **kwargs):
         raise TypeError('JSON document is not valid GeoJSON: No top-level "type" key.')
 
     if js['type'] != 'FeatureCollection':
-        raise TypeError('Only GeoJSON with root FeatureCollection type is supported. Not %s' % js['type'])
+        raise TypeError(f"Only GeoJSON with root FeatureCollection type is supported. Not {js['type']}")
 
     if 'features' not in js:
         raise TypeError('JSON document is not a valid FeatureCollection: No top-level "features" key.')

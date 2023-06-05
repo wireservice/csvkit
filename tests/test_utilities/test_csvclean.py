@@ -18,7 +18,7 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             os.remove(output_file)
 
     def assertCleaned(self, basename, output_lines, error_lines, additional_args=[]):
-        args = ['examples/%s.csv' % basename] + additional_args
+        args = [f'examples/{basename}.csv'] + additional_args
         output_file = StringIO()
 
         utility = CSVClean(args, output_file)
@@ -26,8 +26,8 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
 
         output_file.close()
 
-        output_file = 'examples/%s_out.csv' % basename
-        error_file = 'examples/%s_err.csv' % basename
+        output_file = f'examples/{basename}_out.csv'
+        error_file = f'examples/{basename}_err.csv'
 
         self.assertEqual(os.path.exists(output_file), bool(output_lines))
         self.assertEqual(os.path.exists(error_file), bool(error_lines))

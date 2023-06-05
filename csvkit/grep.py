@@ -109,7 +109,7 @@ def standardize_patterns(column_names, patterns):
 
 def pattern_as_function(obj):
     # obj is function
-    if hasattr(obj, '__call__'):
+    if callable(obj):
         return obj
 
     # obj is regex object

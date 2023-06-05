@@ -48,7 +48,7 @@ class CSVFormat(CSVKitUtility):
             kwargs['delimiter'] = self.args.out_delimiter
 
         for arg in ('quotechar', 'quoting', 'doublequote', 'escapechar', 'lineterminator'):
-            value = getattr(self.args, 'out_%s' % arg)
+            value = getattr(self.args, f'out_{arg}')
             if value is not None:
                 kwargs[arg] = value
 

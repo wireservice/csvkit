@@ -97,7 +97,7 @@ class CSVJSON(CSVKitUtility):
                 return obj.isoformat()
             if isinstance(obj, decimal.Decimal):
                 return str(obj)
-            raise TypeError('%s is not JSON serializable' % repr(obj))
+            raise TypeError(f'{repr(obj)} is not JSON serializable')
 
         json.dump(data, self.stream, default=default, **self.json_kwargs)
         if newline:
@@ -243,7 +243,7 @@ class CSVJSON(CSVKitUtility):
                 # Prevent "type" or geo fields from being added to properties.
                 if c is None or i in (self.type_column, self.lat_column, self.lon_column, self.geometry_column):
                     continue
-                elif i == self.id_column:
+                if i == self.id_column:
                     feature['id'] = c
                 elif c:
                     feature['properties'][self.column_names[i]] = c

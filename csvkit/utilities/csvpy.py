@@ -43,7 +43,7 @@ class CSVPy(CSVKitUtility):
 
         try:
             from IPython.frontend.terminal.embed import InteractiveShellEmbed
-            exec('%s = variable' % variable_name)
+            exec(f'{variable_name} = variable')
             ipy = InteractiveShellEmbed(banner1=welcome_message)
             ipy()
         except ImportError:
