@@ -55,7 +55,9 @@ csvkit's tools share a set of common command-line arguments. Not every argument 
 
 These arguments can be used to override csvkit's default "smart" parsing of CSV files. This may be necessary, for example, if the input file uses a particularly unusual quoting style or has an encoding that is incompatible with UTF-8.
 
-For example, to disable CSV sniffing, set :code:`--snifflimit 0` and then, if necessary, set the :code:`--delimiter` and :code:`--quotechar` options yourself. To disable type inference, add the :code:`--no-inference` flag.
+For example, to disable CSV sniffing, set :code:`--snifflimit 0` and then, if necessary, set the :code:`--delimiter` and :code:`--quotechar` options yourself. Or, set :code:`--snifflimit -1` to use the entire file as the sample, instead of the first 1024 bytes.
+
+To disable type inference, add the :code:`--no-inference` flag.
 
 The output of csvkit's tools is always formatted with "default" formatting options. This means that when executing multiple csvkit commands (either with a pipe or through intermediary files) it is only ever necessary to specify these arguments the first time (and doing so for subsequent commands will likely cause them to fail).
 
