@@ -106,3 +106,4 @@ The following individuals have contributed code to csvkit:
 * Ryan Grout
 * badbunnyyy
 * Werner Robitza
+* Mark Mayo
