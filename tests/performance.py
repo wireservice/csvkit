@@ -1,6 +1,5 @@
 import timeit
 import subprocess
-import pytest
 
 num_repeats = 100  # number of repeats for timeit
 
