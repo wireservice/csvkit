@@ -322,7 +322,7 @@ class CSVStat(CSVKitUtility):
         """
         writer = agate.csv.writer(self.output_file)
 
-        header = ['column_id', 'column_name'] + [op_name for op_name in OPERATIONS.keys()]
+        header = ['column_id', 'column_name'] + list(OPERATIONS.keys())
 
         writer.writerow(header)
 
