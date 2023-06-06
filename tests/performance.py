@@ -1,5 +1,5 @@
-import timeit
 import subprocess
+import timeit
 
 num_repeats = 100  # number of repeats for timeit
 
