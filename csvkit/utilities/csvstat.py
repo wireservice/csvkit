@@ -204,7 +204,7 @@ class CSVStat(CSVKitUtility):
         column_name = table.column_names[column_id]
 
         op_name = operation
-        getter = globals().get(f'get_{op_name}', None)
+        getter = globals().get(f'get_{op_name}')
 
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', agate.NullCalculationWarning)
@@ -238,7 +238,7 @@ class CSVStat(CSVKitUtility):
         stats = {}
 
         for op_name, op_data in OPERATIONS.items():
-            getter = globals().get(f'get_{op_name}', None)
+            getter = globals().get(f'get_{op_name}')
 
             with warnings.catch_warnings():
                 warnings.simplefilter('ignore', agate.NullCalculationWarning)
