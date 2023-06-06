@@ -369,7 +369,7 @@ class CSVKitUtility:
             self.args.columns,
             column_names,
             column_offset,
-            getattr(self.args, 'not_columns', None)
+            getattr(self.args, 'not_columns', None),
         )
 
         return rows, column_names, column_ids

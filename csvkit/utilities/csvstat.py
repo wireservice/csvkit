@@ -13,48 +13,48 @@ locale.setlocale(locale.LC_ALL, '')
 OPERATIONS = OrderedDict([
     ('type', {
         'aggregation': None,
-        'label': 'Type of data: '
+        'label': 'Type of data: ',
     }),
     ('nulls', {
         'aggregation': agate.HasNulls,
-        'label': 'Contains null values: '
+        'label': 'Contains null values: ',
     }),
     ('unique', {
         'aggregation': None,
-        'label': 'Unique values: '
+        'label': 'Unique values: ',
     }),
     ('min', {
         'aggregation': agate.Min,
-        'label': 'Smallest value: '
+        'label': 'Smallest value: ',
     }),
     ('max', {
         'aggregation': agate.Max,
-        'label': 'Largest value: '
+        'label': 'Largest value: ',
     }),
     ('sum', {
         'aggregation': agate.Sum,
-        'label': 'Sum: '
+        'label': 'Sum: ',
     }),
     ('mean', {
         'aggregation': agate.Mean,
-        'label': 'Mean: '
+        'label': 'Mean: ',
     }),
     ('median', {
         'aggregation': agate.Median,
-        'label': 'Median: '
+        'label': 'Median: ',
     }),
     ('stdev', {
         'aggregation': agate.StDev,
-        'label': 'StDev: '
+        'label': 'StDev: ',
     }),
     ('len', {
         'aggregation': agate.MaxLength,
-        'label': 'Longest value: '
+        'label': 'Longest value: ',
     }),
     ('freq', {
         'aggregation': None,
-        'label': 'Most common values: '
-    })
+        'label': 'Most common values: ',
+    }),
 ])
 
 
@@ -160,13 +160,13 @@ class CSVStat(CSVKitUtility):
             self.input_file,
             skip_lines=self.args.skip_lines,
             sniff_limit=sniff_limit,
-            **self.reader_kwargs
+            **self.reader_kwargs,
         )
 
         column_ids = parse_column_identifiers(
             self.args.columns,
             table.column_names,
-            self.get_column_offset()
+            self.get_column_offset(),
         )
 
         kwargs = {}
@@ -278,7 +278,7 @@ class CSVStat(CSVKitUtility):
 
                 label = '{label:{label_column_width}}'.format(**{
                     'label_column_width': label_column_width,
-                    'label': op_data['label']
+                    'label': op_data['label'],
                 })
 
                 if op_name == 'freq':
@@ -288,7 +288,7 @@ class CSVStat(CSVKitUtility):
                         else:
                             self.output_file.write('\t{label:{label_column_width}} '.format(**{
                                 'label_column_width': label_column_width,
-                                'label': ''
+                                'label': '',
                             }))
 
                         if isinstance(column.data_type, agate.Number):

@@ -53,8 +53,8 @@ setup(
             'csvstack = csvkit.utilities.csvstack:launch_new_instance',
             'csvstat = csvkit.utilities.csvstat:launch_new_instance',
             'in2csv = csvkit.utilities.in2csv:launch_new_instance',
-            'sql2csv = csvkit.utilities.sql2csv:launch_new_instance'
-        ]
+            'sql2csv = csvkit.utilities.sql2csv:launch_new_instance',
+        ],
     },
     install_requires=[
         'agate>=1.6.1',
@@ -72,5 +72,5 @@ setup(
             'sphinx>=1.0.7',
             'sphinx_rtd_theme',
         ],
-    }
+    },
 )

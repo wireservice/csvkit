@@ -14,7 +14,7 @@ class SQL2CSV(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument(
             '--db', dest='connection_string', default='sqlite://',
-            help='An sqlalchemy connection string to connect to a database.',)
+            help='An sqlalchemy connection string to connect to a database.')
         self.argparser.add_argument(
             metavar='FILE', nargs='?', dest='input_path',
             help='The file to use as SQL query. If FILE and --query are omitted, the query is piped data via STDIN.')
@@ -52,7 +52,7 @@ class SQL2CSV(CSVKitUtility):
                 "trying to use. Available backends include:\n\nPostgreSQL:\tpip install psycopg2\nMySQL:\t\tpip "
                 "install mysql-connector-python OR pip install mysqlclient\n\nFor details on connection strings "
                 "and other backends, please see the SQLAlchemy documentation on dialects at:\n\n"
-                "http://www.sqlalchemy.org/docs/dialects/\n\n"
+                "http://www.sqlalchemy.org/docs/dialects/\n\n",
             ) from e
 
         connection = engine.connect()

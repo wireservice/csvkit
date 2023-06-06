@@ -133,7 +133,7 @@ class TestGrep(unittest.TestCase):
     def test_multiline(self):
         table = [
             ['a', 'b'],
-            ['1', 'foo\nbar']
+            ['1', 'foo\nbar'],
         ]
         fcr = FilteringCSVReader(iter(table), patterns={'b': re.compile('bar')})
         self.assertEqual(table[0], next(fcr))

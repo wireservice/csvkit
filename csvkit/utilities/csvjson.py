@@ -137,7 +137,7 @@ class CSVJSON(CSVKitUtility):
             skip_lines=self.args.skip_lines,
             sniff_limit=sniff_limit,
             column_types=self.get_column_types(),
-            **self.reader_kwargs
+            **self.reader_kwargs,
         )
 
     def output_json(self):

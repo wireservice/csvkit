@@ -8,11 +8,11 @@ from csvkit.cleanup import join_rows
 class TestCleanup(unittest.TestCase):
 
     def test_fix_rows(self):
-        """Test to ensure that row merging yields correct results"""
-        start = [['1', '2', '3', ],
+        """Test to ensure that row merging yields correct results."""
+        start = [['1', '2', '3'],
                  [''],
                  ['abc'],
-                 ['4', '5']
+                 ['4', '5'],
                  ]
         fixed = join_rows(start)
         self.assertEqual(4, len(fixed))

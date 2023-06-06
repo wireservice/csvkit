@@ -19,7 +19,7 @@ extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx']
 autodoc_member_order = 'bysource'
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3.5/', None)
+    'python': ('https://docs.python.org/3.5/', None),
 }
 
 # Add any paths that contain templates here, relative to this directory.
@@ -81,5 +81,5 @@ for filename in os.listdir('scripts'):
         name,
         f'{name} Documentation',
         ['Christopher Groskopf'],
-        1
+        1,
     ))
