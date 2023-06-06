@@ -466,15 +466,8 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                     raise
 
                 try:
-                    if a:
-                        a = int(a)
-                    else:
-                        a = 1
-                    if b:
-                        b = int(b) + 1
-                    else:
-                        b = len(column_names) + 1
-
+                    a = int(a) if a else 1
+                    b = int(b) + 1 if b else len(column_names) + 1
                 except ValueError:
                     raise ColumnIdentifierError(
                         "Invalid range %s. Ranges must be two integers separated by a - or : character.")
@@ -499,15 +492,8 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                     raise
 
                 try:
-                    if a:
-                        a = int(a)
-                    else:
-                        a = 1
-                    if b:
-                        b = int(b) + 1
-                    else:
-                        b = len(column_names)
-
+                    a = int(a) if a else 1
+                    b = int(b) + 1 if b else len(column_names)
                 except ValueError:
                     raise ColumnIdentifierError(
                         "Invalid range %s. Ranges must be two integers separated by a - or : character.")
