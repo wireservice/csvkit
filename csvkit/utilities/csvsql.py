@@ -5,12 +5,16 @@ import sys
 
 import agate
 import agatesql  # noqa: F401
-from pkg_resources import iter_entry_points
 from sqlalchemy import create_engine, dialects
 
 from csvkit.cli import CSVKitUtility, isatty
 
-DIALECTS = dialects.__all__ + tuple(e.name for e in iter_entry_points('sqlalchemy.dialects'))
+if sys.version_info < (3, 10):
+    from pkg_resources import iter_entry_points
+    DIALECTS = dialects.__all__ + tuple(e.name for e in iter_entry_points('sqlalchemy.dialects'))
+else:
+    from importlib.metadata import entry_points
+    DIALECTS = dialects.__all__ + tuple(e.name for e in entry_points(group='sqlalchemy.dialects'))
 
 
 class CSVSQL(CSVKitUtility):
