@@ -93,7 +93,7 @@ Improvements:
 * :doc:`/scripts/in2csv` supports :code:`--no-header-row` on XLS and XLSX files.
 * Suppress agate warning about column names not specified when using :code:`--no-header-row`.
 * Prompt the user if additional input is expected (i.e. if no input file or piped data is provided).
-* Update to `agate-excel 0.2.2 <http://agate-excel.readthedocs.io/en/latest/#changelog>`_, `agate-sql 0.5.3 <http://agate-sql.readthedocs.io/en/latest/#changelog>`_.
+* Update to `agate-excel 0.2.2 <https://agate-excel.readthedocs.io/en/latest/#changelog>`_, `agate-sql 0.5.3 <https://agate-sql.readthedocs.io/en/latest/#changelog>`_.
 
 Fixes:
 
@@ -162,7 +162,7 @@ This is a minor release which fixes several bugs reported in the :code:`1.0.0` r
 1.0.0 - December 27, 2016
 -------------------------
 
-This is the first major release of csvkit in a very long time. The entire backend has been rewritten to leverage the `agate <http://agate.rtfd.io>`_ data analysis library, which was itself inspired by csvkit. The new backend provides better type detection accuracy, as well as some new features.
+This is the first major release of csvkit in a very long time. The entire backend has been rewritten to leverage the `agate <https://agate.rtfd.io>`_ data analysis library, which was itself inspired by csvkit. The new backend provides better type detection accuracy, as well as some new features.
 
 Because of the long and complex cycle behind this release, the list of changes should not be considered exhaustive. In particular, the output format of some tools may have changed in small ways. Any existing data pipelines using csvkit should be tested as part of the upgrade.
 
@@ -194,7 +194,7 @@ Improvements:
 * :doc:`/scripts/csvlook` adds ``--max-rows``, ``--max-columns`` and ``--max-column-width`` options.
 * :doc:`/scripts/csvlook` supports ``--snifflimit`` and ``--no-inference``.
 * :doc:`/scripts/csvpy` supports ``--agate`` to read a CSV file into an agate table.
-* ``csvsql`` supports custom `SQLAlchemy dialects <http://docs.sqlalchemy.org/en/latest/dialects/>`_.
+* ``csvsql`` supports custom `SQLAlchemy dialects <https://docs.sqlalchemy.org/en/latest/dialects/>`_.
 * :doc:`/scripts/csvstat` supports ``--names``.
 * :doc:`/scripts/in2csv` CSV-to-CSV conversion streams input and output if the ``--no-inference`` flag is set.
 * :doc:`/scripts/in2csv` CSV-to-CSV conversion uses ``agate.Table``.
