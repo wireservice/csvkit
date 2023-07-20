@@ -23,7 +23,6 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
@@ -61,6 +60,9 @@ setup(
         'agate-excel>=0.2.2',
         'agate-dbf>=0.2.2',
         'agate-sql>=0.5.3',
+        # “selectable” entry points were introduced in Python 3.10.
+        # https://docs.python.org/3/library/importlib.metadata.html
+        'importlib_metadata; python_version < "3.10"',
     ],
     extras_require={
         'test': [
