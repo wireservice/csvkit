@@ -60,6 +60,9 @@ setup(
         'agate-excel>=0.2.2',
         'agate-dbf>=0.2.2',
         'agate-sql>=0.5.3',
+        # “selectable” entry points were introduced in Python 3.10.
+        # https://docs.python.org/3/library/importlib.metadata.html
+        'importlib_metadata; python_version < "3.10"',
     ],
     extras_require={
         'test': [

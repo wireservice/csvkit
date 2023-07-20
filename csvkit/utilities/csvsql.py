@@ -2,7 +2,6 @@
 
 import os.path
 import sys
-from importlib.metadata import entry_points
 
 import agate
 import agatesql  # noqa: F401
@@ -10,7 +9,12 @@ from sqlalchemy import create_engine, dialects
 
 from csvkit.cli import CSVKitUtility, isatty
 
-DIALECTS = dialects.__all__ + tuple(e.name for e in entry_points(group='sqlalchemy.dialects'))
+try:
+    import importlib_metadata
+except ImportError:
+    import importlib.metadata as importlib_metadata
+
+DIALECTS = dialects.__all__ + tuple(e.name for e in importlib_metadata.entry_points(group='sqlalchemy.dialects'))
 
 
 class CSVSQL(CSVKitUtility):
