@@ -176,7 +176,7 @@ class CSVSQL(CSVKitUtility):
                     skip_lines=self.args.skip_lines,
                     sniff_limit=sniff_limit,
                     column_types=self.get_column_types(),
-                    **self.reader_kwargs
+                    **self.reader_kwargs,
                 )
             except StopIteration:
                 # Catch cases where no table data was provided and fall through
@@ -200,7 +200,7 @@ class CSVSQL(CSVKitUtility):
                         db_schema=self.args.db_schema,
                         constraints=not self.args.no_constraints,
                         unique_constraint=self.unique_constraint,
-                        chunk_size=self.args.chunk_size
+                        chunk_size=self.args.chunk_size,
                     )
 
                     if self.args.after_insert:
@@ -214,7 +214,7 @@ class CSVSQL(CSVKitUtility):
                         dialect=self.args.dialect,
                         db_schema=self.args.db_schema,
                         constraints=not self.args.no_constraints,
-                        unique_constraint=self.unique_constraint
+                        unique_constraint=self.unique_constraint,
                     )
 
                     self.output_file.write(f'{statement}\n')

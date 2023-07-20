@@ -41,13 +41,13 @@ class CSVSort(CSVKitUtility):
             skip_lines=self.args.skip_lines,
             sniff_limit=sniff_limit,
             column_types=self.get_column_types(),
-            **self.reader_kwargs
+            **self.reader_kwargs,
         )
 
         column_ids = parse_column_identifiers(
             self.args.columns,
             table.column_names,
-            self.get_column_offset()
+            self.get_column_offset(),
         )
 
         table = table.order_by(column_ids, reverse=self.args.reverse)

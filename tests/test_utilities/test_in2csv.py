@@ -212,12 +212,10 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         try:
             self.assertConverted('xls', 'examples/sheets.xls', 'examples/testxls_converted.csv',
                                  ['--sheet', 'data', '--write-sheets', "ʤ,1"])
-            with open('examples/sheets_0.csv') as f:
-                with open('examples/testxls_unicode_converted.csv') as g:
-                    self.assertEqual(f.read(), g.read())
-            with open('examples/sheets_1.csv') as f:
-                with open('examples/testxls_converted.csv') as g:
-                    self.assertEqual(f.read(), g.read())
+            with open('examples/sheets_0.csv') as f, open('examples/testxls_unicode_converted.csv') as g:
+                self.assertEqual(f.read(), g.read())
+            with open('examples/sheets_1.csv') as f, open('examples/testxls_converted.csv') as g:
+                self.assertEqual(f.read(), g.read())
             self.assertFalse(os.path.exists('examples/sheets_2.csv'))
         finally:
             for suffix in (0, 1):
@@ -229,12 +227,10 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         try:
             self.assertConverted('xlsx', 'examples/sheets.xlsx', 'examples/testxlsx_noinference_converted.csv',
                                  ['--no-inference', '--sheet', 'data', '--write-sheets', "ʤ,1"])
-            with open('examples/sheets_0.csv') as f:
-                with open('examples/testxlsx_unicode_converted.csv') as g:
-                    self.assertEqual(f.read(), g.read())
-            with open('examples/sheets_1.csv') as f:
-                with open('examples/testxlsx_noinference_converted.csv') as g:
-                    self.assertEqual(f.read(), g.read())
+            with open('examples/sheets_0.csv') as f, open('examples/testxlsx_unicode_converted.csv') as g:
+                self.assertEqual(f.read(), g.read())
+            with open('examples/sheets_1.csv') as f, open('examples/testxlsx_noinference_converted.csv') as g:
+                self.assertEqual(f.read(), g.read())
             self.assertFalse(os.path.exists('examples/sheets_2.csv'))
         finally:
             for suffix in (0, 1):

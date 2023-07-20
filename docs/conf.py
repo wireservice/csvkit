@@ -36,7 +36,7 @@ htmlhelp_basename = 'csvkitdoc'
 autodoc_member_order = 'bysource'
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None)
+    'python': ('https://docs.python.org/3', None),
 }
 
 man_pages = []
@@ -47,5 +47,5 @@ for filename in os.listdir('scripts'):
         name,
         f'{name} Documentation',
         ['Christopher Groskopf'],
-        1
+        1,
     ))

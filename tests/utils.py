@@ -91,10 +91,9 @@ class CSVKitTestCase(unittest.TestCase):
 
 class EmptyFileTests:
     def test_empty(self):
-        with open('examples/empty.csv') as f:
-            with stdin_as_string(f):
-                utility = self.Utility(getattr(self, 'default_args', []))
-                utility.run()
+        with open('examples/empty.csv') as f, stdin_as_string(f):
+            utility = self.Utility(getattr(self, 'default_args', []))
+            utility.run()
 
 
 class NamesTests:

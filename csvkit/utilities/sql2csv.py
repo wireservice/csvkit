@@ -14,7 +14,7 @@ class SQL2CSV(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument(
             '--db', dest='connection_string', default='sqlite://',
-            help='An sqlalchemy connection string to connect to a database.',)
+            help='An sqlalchemy connection string to connect to a database.')
         self.argparser.add_argument(
             metavar='FILE', nargs='?', dest='input_path',
             help='The file to use as SQL query. If FILE and --query are omitted, the query is piped data via STDIN.')

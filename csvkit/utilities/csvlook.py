@@ -37,14 +37,14 @@ class CSVLook(CSVKitUtility):
             sniff_limit=sniff_limit,
             column_types=self.get_column_types(),
             line_numbers=self.args.line_numbers,
-            **self.reader_kwargs
+            **self.reader_kwargs,
         )
 
         table.print_table(
             output=self.output_file,
             max_rows=self.args.max_rows,
             max_columns=self.args.max_columns,
-            max_column_width=self.args.max_column_width
+            max_column_width=self.args.max_column_width,
         )
 
 
