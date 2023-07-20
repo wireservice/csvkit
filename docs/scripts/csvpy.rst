@@ -44,7 +44,7 @@ Basic use:
 
 $ csvpy examples/dummy.csv
    Welcome! "examples/dummy.csv" has been loaded in a reader object named "reader".
-   >>> reader.next()
+   >>> next(reader)
    ['a', 'b', 'c']
 
 As a dictionary:
@@ -53,7 +53,7 @@ As a dictionary:
 
    $ csvpy --dict examples/dummy.csv
    Welcome! "examples/dummy.csv" has been loaded in a DictReader object named "reader".
-   >>> reader.next()
+   >>> next(reader)
    {'a': '1', 'c': '3', 'b': '2'}
 
 As an agate table:

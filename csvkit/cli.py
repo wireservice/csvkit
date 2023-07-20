@@ -85,7 +85,7 @@ class CSVKitUtility:
         # Without this fix you will see at the end:
         #  [Errno 32] Broken pipe
         # With this fix, there should be no error
-        # For details on Python and SIGPIPE, see http://bugs.python.org/issue1652
+        # For details on Python and SIGPIPE, see https://bugs.python.org/issue1652
         try:
             import signal
             signal.signal(signal.SIGPIPE, signal.SIG_DFL)

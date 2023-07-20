@@ -7,7 +7,7 @@ module.
 
 .. warning::
 
-    Since version 1.0 csvkit relies on `agate <http://agate.rtfd.org>`_'s
+    Since version 1.0 csvkit relies on `agate <https://agate.rtfd.org>`_'s
 CSV reader and writer. This module is supported for legacy purposes only and you
 should migrate to using agate.
 """

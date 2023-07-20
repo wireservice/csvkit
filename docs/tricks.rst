@@ -107,7 +107,7 @@ CSV formatting and parsing
 * Are :code:`csvstat -c 1` and :code:`csvstat --count` reporting inconsistent row counts?
 * Do you see ``Row # has # values, but Table only has # columns.``?
 
-These may be symptoms of CSV sniffing gone wrong. As there is no single, standard CSV format, csvkit uses Python's `csv.Sniffer <https://docs.python.org/3.5/library/csv.html#csv.Sniffer>`_ to deduce the format of a CSV file: that is, the field delimiter and quote character. By default, the first 1024 bytes of the file are sent for sniffing. You can send a different sample size with the :code:`--snifflimit` option. If you're encountering any cases above, you can try setting :code:`--snifflimit 0` to disable sniffing and set the :code:`--delimiter` and :code:`--quotechar` options yourself. Or, you can try setting :code:`--snifflimit -1` to use the entire file as the sample.
+These may be symptoms of CSV sniffing gone wrong. As there is no single, standard CSV format, csvkit uses Python's `csv.Sniffer <https://docs.python.org/3/library/csv.html#csv.Sniffer>`_ to deduce the format of a CSV file: that is, the field delimiter and quote character. By default, the first 1024 bytes of the file are sent for sniffing. You can send a different sample size with the :code:`--snifflimit` option. If you're encountering any cases above, you can try setting :code:`--snifflimit 0` to disable sniffing and set the :code:`--delimiter` and :code:`--quotechar` options yourself. Or, you can try setting :code:`--snifflimit -1` to use the entire file as the sample.
 
 Although these issues are annoying, in most cases, CSV sniffing Just Works™. Disabling sniffing by default would produce a lot more issues than enabling it by default.
 

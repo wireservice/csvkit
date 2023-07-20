@@ -15,7 +15,7 @@ First time? See :doc:`tutorial`.
 
 .. note::
 
-    csvkit, by default, `sniffs <https://docs.python.org/3.5/library/csv.html#csv.Sniffer>`_ CSV formats (it deduces whether commas, tabs or spaces delimit fields, for example) based on the first 1024 bytes, and performs type inference (it converts text to numbers, dates, booleans, etc.). These features are useful and work well in most cases, but occasional errors occur. If you don't need these features, set :code:`--snifflimit 0` (:code:`-y 0`) and :code:`--no-inference` (:code:`-I`).
+    csvkit, by default, `sniffs <https://docs.python.org/3/library/csv.html#csv.Sniffer>`_ CSV formats (it deduces whether commas, tabs or spaces delimit fields, for example) based on the first 1024 bytes, and performs type inference (it converts text to numbers, dates, booleans, etc.). These features are useful and work well in most cases, but occasional errors occur. If you don't need these features, set :code:`--snifflimit 0` (:code:`-y 0`) and :code:`--no-inference` (:code:`-I`).
 
 .. note::
 
