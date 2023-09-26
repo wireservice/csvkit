@@ -50,14 +50,16 @@ class CSVCut(CSVKitUtility):
         rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids(**self.reader_kwargs)
 
         output = agate.csv.writer(self.output_file, **self.writer_kwargs)
+
+        one_or_zero = 0 if self.args.zero_based else 1
         if self.args.number_columns_everywhere:
-            output.writerow([f'{column_id + 1}~{column_names[column_id]}' for column_id in column_ids])
+            output.writerow([f'{column_id + one_or_zero}~{column_names[column_id]}' for column_id in column_ids])
         else:
             output.writerow([column_names[column_id] for column_id in column_ids])
 
         for row in rows:
             if self.args.number_columns_everywhere:
-                out_row = [f'{column_id + 1}~{row[column_id]}' if column_id < len(row) else None for column_id in column_ids]
+                out_row = [f'{column_id + one_or_zero}~{row[column_id]}' if column_id < len(row) else None for column_id in column_ids]
             else:
                 out_row = [row[column_id] if column_id < len(row) else None for column_id in column_ids]
 
