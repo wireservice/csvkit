@@ -35,6 +35,9 @@ class CSVCut(CSVKitUtility):
         self.argparser.add_argument(
             '-x', '--delete-empty-rows', dest='delete_empty', action='store_true',
             help='After cutting, delete rows which are completely empty.')
+        self.argparser.add_argument(
+            '-N', '--column-numbers', dest='number_columns_everywhere', action='store_true',
+            help='Add column numbering everywhere, in header and cells.')
 
     def main(self):
         if self.args.names_only:
@@ -47,10 +50,16 @@ class CSVCut(CSVKitUtility):
         rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids(**self.reader_kwargs)
 
         output = agate.csv.writer(self.output_file, **self.writer_kwargs)
-        output.writerow([column_names[column_id] for column_id in column_ids])
+        if self.args.number_columns_everywhere:
+            output.writerow([f'{column_id + 1}~{column_names[column_id]}' for column_id in column_ids])
+        else:
+            output.writerow([column_names[column_id] for column_id in column_ids])
 
         for row in rows:
-            out_row = [row[column_id] if column_id < len(row) else None for column_id in column_ids]
+            if self.args.number_columns_everywhere:
+                out_row = [f'{column_id + 1}~{row[column_id]}' if column_id < len(row) else None for column_id in column_ids]
+            else:
+                out_row = [row[column_id] if column_id < len(row) else None for column_id in column_ids]
 
             if not self.args.delete_empty or any(out_row):
                 output.writerow(out_row)
