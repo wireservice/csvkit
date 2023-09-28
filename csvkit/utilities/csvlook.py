@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import agate
+import sys
 
 from csvkit.cli import CSVKitUtility
 
@@ -27,25 +28,29 @@ class CSVLook(CSVKitUtility):
             help='Disable type inference when parsing the input.')
 
     def main(self):
-        if self.additional_input_expected():
-            self.argparser.error('You must provide an input file or piped data.')
+        try:
+            if self.additional_input_expected():
+                self.argparser.error('You must provide an input file or piped data.')
 
-        sniff_limit = self.args.sniff_limit if self.args.sniff_limit != -1 else None
-        table = agate.Table.from_csv(
-            self.input_file,
-            skip_lines=self.args.skip_lines,
-            sniff_limit=sniff_limit,
-            column_types=self.get_column_types(),
-            line_numbers=self.args.line_numbers,
-            **self.reader_kwargs,
-        )
+            sniff_limit = self.args.sniff_limit if self.args.sniff_limit != -1 else None
+            table = agate.Table.from_csv(
+                self.input_file,
+                skip_lines=self.args.skip_lines,
+                sniff_limit=sniff_limit,
+                column_types=self.get_column_types(),
+                line_numbers=self.args.line_numbers,
+                **self.reader_kwargs,
+            )
 
-        table.print_table(
-            output=self.output_file,
-            max_rows=self.args.max_rows,
-            max_columns=self.args.max_columns,
-            max_column_width=self.args.max_column_width,
-        )
+            table.print_table(
+                output=self.output_file,
+                max_rows=self.args.max_rows,
+                max_columns=self.args.max_columns,
+                max_column_width=self.args.max_column_width,
+            )
+        except Exception as e:
+            sys.stderr.write(f"Error: {e}")
+            sys.exit(1)
 
 
 def launch_new_instance():
