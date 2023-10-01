@@ -59,7 +59,8 @@ class CSVCut(CSVKitUtility):
 
         for row in rows:
             if self.args.number_columns_everywhere:
-                out_row = [f'{column_id + one_or_zero}~{row[column_id]}' if column_id < len(row) else None for column_id in column_ids]
+                out_row = [f'{column_id + one_or_zero}~{row[column_id]}'
+                           if column_id < len(row) else None for column_id in column_ids]
             else:
                 out_row = [row[column_id] if column_id < len(row) else None for column_id in column_ids]
 
