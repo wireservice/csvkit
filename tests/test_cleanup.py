@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import unittest
 
 from csvkit.cleanup import join_rows

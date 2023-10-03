@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import sys
 from io import StringIO
 from unittest.mock import patch

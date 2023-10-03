@@ -70,9 +70,5 @@ setup(
             'pytest',
             'pytest-cov',
         ],
-        'docs': [
-            'sphinx>=1.0.7',
-            'sphinx_rtd_theme',
-        ],
     },
 )
