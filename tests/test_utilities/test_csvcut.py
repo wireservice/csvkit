@@ -24,7 +24,7 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             ['1', '3'],
         ])
 
-    def test_linenumbers(self):
+    def test_column_numbers(self):
         self.assertRows(['-c', '1,3', '-N', 'examples/dummy.csv'], [
             ['1~a', '3~c'],
             ['1~1', '3~3'],
