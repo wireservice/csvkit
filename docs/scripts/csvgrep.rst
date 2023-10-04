@@ -70,3 +70,9 @@ Perform a case-insensitive search:
 .. code-block:: bash
 
    csvgrep -c 1 -r "(?i)illinois" examples/realdata/FY09_EDU_Recipients_by_State.csv
+
+Get the indices of the columns that contain matching text (``\x1e`` is the `Record Separator (RS) character <https://en.wikipedia.org/wiki/C0_and_C1_control_codes#Field_separators>`_):
+
+.. code-block::
+
+   csvgrep -m 222 -a -c 1- examples/realdata/FY09_EDU_Recipients_by_State.csv | csvformat -M $'\x1e' | xargs -d $'\x1e' -I_ sh -c 'echo _ | csvcut -n' | grep 222
