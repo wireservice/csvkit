@@ -22,10 +22,8 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         self.db_file = 'foo.db'
 
     def tearDown(self):
-        try:
+        if os.path.exists(self.db_file):
             os.remove(self.db_file)
-        except OSError:
-            pass
 
     def test_create_table(self):
         sql = self.get_output(['--tables', 'foo', 'examples/testfixed_converted.csv'])
