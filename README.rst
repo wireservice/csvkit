@@ -4,7 +4,7 @@
 
 .. image:: https://coveralls.io/repos/wireservice/csvkit/badge.svg?branch=master
     :target: https://coveralls.io/r/wireservice/csvkit
-    :alt: Coverage Status
+    :alt: Coverage status
 
 .. image:: https://img.shields.io/pypi/dm/csvkit.svg
     :target: https://pypi.python.org/pypi/csvkit

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import unittest
 
 from csvkit.cli import match_column_identifier, parse_column_identifiers

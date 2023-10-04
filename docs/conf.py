@@ -33,7 +33,11 @@ html_theme = 'furo'
 
 htmlhelp_basename = 'csvkitdoc'
 
-autodoc_member_order = 'bysource'
+autodoc_default_options = {
+    'members': None,
+    'member-order': 'bysource',
+    'show-inheritance': True,
+}
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),

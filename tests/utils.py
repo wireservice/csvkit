@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 To test standard input (without piped data), run each of:
 

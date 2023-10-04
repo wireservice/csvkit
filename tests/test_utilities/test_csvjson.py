@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import json
 import sys
 from io import StringIO
