@@ -151,6 +151,7 @@ class CSVSQL(CSVKitUtility):
 
             if self.connection:
                 self.connection.close()
+                engine.dispose()
 
     def _failsafe_main(self):
         """
@@ -191,7 +192,7 @@ class CSVSQL(CSVKitUtility):
                 if self.connection:
                     if self.args.before_insert:
                         for query in self.args.before_insert.split(';'):
-                            self.connection.execute(query)
+                            self.connection.exec_driver_sql(query)
 
                     table.to_sql(
                         self.connection,
@@ -209,7 +210,7 @@ class CSVSQL(CSVKitUtility):
 
                     if self.args.after_insert:
                         for query in self.args.after_insert.split(';'):
-                            self.connection.execute(query)
+                            self.connection.exec_driver_sql(query)
 
                 # Output SQL statements
                 else:
@@ -237,7 +238,7 @@ class CSVSQL(CSVKitUtility):
 
                 for query in queries:
                     if query.strip():
-                        rows = self.connection.execute(query)
+                        rows = self.connection.exec_driver_sql(query)
 
                 # Output the result of the last query as CSV
                 if rows.returns_rows:

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from io import StringIO
 
 from csvkit.convert import fixed

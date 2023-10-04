@@ -98,7 +98,7 @@ class CSVJoin(CSVKitUtility):
             remaining_tables.reverse()
 
             for i, table in enumerate(remaining_tables):
-                jointab = agate.Table.join(jointab, table, join_column_ids[-(i + 2)], join_column_ids[-1])
+                jointab = agate.Table.join(jointab, table, join_column_ids[-1], join_column_ids[-(i + 2)])
         elif self.args.outer_join:
             # Full outer join
             for i, table in enumerate(tables[1:]):
