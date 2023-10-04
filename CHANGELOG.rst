@@ -1,5 +1,5 @@
-Unreleased
-----------
+1.2.0 - October 4, 2023
+-----------------------
 
 * fix: :doc:`/scripts/csvjoin` uses the correct columns when performing a ``--right`` join.
 * Add SQLAlchemy 2 support.

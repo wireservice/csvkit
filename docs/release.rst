@@ -28,13 +28,3 @@ Release process
 
       git tag -a x.y.z -m 'x.y.z release.'
       git push --follow-tags
-
-#. Upload to PyPI:
-
-   .. code-block:: bash
-
-      rm -rf dist
-      python -m build --sdist --wheel
-      twine upload dist/*
-
-#. Build the documentation on ReadTheDocs manually

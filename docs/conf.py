@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 project = 'csvkit'
 copyright = '2016, Christopher Groskopf'
-version = '1.1.1'
+version = '1.2.0'
 release = version
 
 # -- General configuration -----------------------------------------------------
