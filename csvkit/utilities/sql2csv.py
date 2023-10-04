@@ -69,7 +69,7 @@ class SQL2CSV(CSVKitUtility):
 
             self.input_file.close()
 
-        rows = connection.execution_options(no_parameters=True).execute(query)
+        rows = connection.execution_options(no_parameters=True).exec_driver_sql(query)
         output = agate.csv.writer(self.output_file, **self.writer_kwargs)
 
         if rows.returns_rows:
