@@ -29,6 +29,10 @@ class TestCSVJoin(CSVKitTestCase, EmptyFileTests):
         output = self.get_output_as_io(['-c', 'a', '--right', 'examples/join_a.csv', 'examples/join_b.csv'])
         self.assertEqual(len(output.readlines()), 4)
 
+    def test_right_indices(self):
+        output = self.get_output_as_io(['-c', '1,4', '--right', 'examples/join_a.csv', 'examples/blanks.csv'])
+        self.assertEqual(len(output.readlines()), 2)
+
     def test_outer(self):
         output = self.get_output_as_io(['-c', 'a', '--outer', 'examples/join_a.csv', 'examples/join_b.csv'])
         self.assertEqual(len(output.readlines()), 6)
