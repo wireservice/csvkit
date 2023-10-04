@@ -80,6 +80,7 @@ class SQL2CSV(CSVKitUtility):
                 output.writerow(row)
 
         connection.close()
+        engine.dispose()
 
 
 def launch_new_instance():

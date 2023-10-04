@@ -151,6 +151,7 @@ class CSVSQL(CSVKitUtility):
 
             if self.connection:
                 self.connection.close()
+                engine.dispose()
 
     def _failsafe_main(self):
         """
