@@ -75,4 +75,4 @@ Get the indices of the columns that contain matching text (``\x1e`` is the `Reco
 
 .. code-block::
 
-   csvgrep -m 222 -a -c 1- examples/realdata/FY09_EDU_Recipients_by_State.csv | csvformat -M $'\x1e' | xargs -d $'\x1e' -n1 sh -c 'echo $1 | csvcut -n' sh | grep 222
+   csvgrep -m 22 -a -c 1- examples/realdata/FY09_EDU_Recipients_by_State.csv | csvformat -M $'\x1e' | xargs -d $'\x1e' -n1 sh -c 'echo $0 | csvcut -n' | grep 22
