@@ -1,3 +1,8 @@
+Unreleased
+----------
+
+* Add Python 3.12 support.
+
 1.2.0 - October 4, 2023
 -----------------------
 
