@@ -55,20 +55,29 @@ class CSVJSON(CSVKitUtility):
             '-I', '--no-inference', dest='no_inference', action='store_true',
             help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
-    def __init__(self, args=None, output_file=None):
-        super().__init__(args, output_file)
+    def main(self):
+        """
+        Convert CSV to JSON.
+        """
+        if self.args.lat and not self.args.lon:
+            self.argparser.error('--lon is required whenever --lat is specified.')
+        if self.args.lon and not self.args.lat:
+            self.argparser.error('--lat is required whenever --lon is specified.')
 
-        self.validate_args()
+        if self.args.crs and not self.args.lat:
+            self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
+        if self.args.type and not self.args.lat:
+            self.argparser.error('--type is only allowed when --lat and --lon are also specified.')
+        if self.args.geometry and not self.args.lat:
+            self.argparser.error('--geometry is only allowed when --lat and --lon are also specified.')
+
+        if self.args.key and self.args.streamOutput and not (self.args.lat and self.args.lon):
+            self.argparser.error('--key is only allowed with --stream when --lat and --lon are also specified.')
 
         self.json_kwargs = {
             'ensure_ascii': False,
             'indent': self.args.indent,
         }
-
-    def main(self):
-        """
-        Convert CSV to JSON.
-        """
 
         if self.can_stream():
             if self.additional_input_expected():
@@ -110,22 +119,6 @@ class CSVJSON(CSVKitUtility):
 
     def is_geo(self):
         return self.args.lat and self.args.lon
-
-    def validate_args(self):
-        if self.args.lat and not self.args.lon:
-            self.argparser.error('--lon is required whenever --lat is specified.')
-        if self.args.lon and not self.args.lat:
-            self.argparser.error('--lat is required whenever --lon is specified.')
-
-        if self.args.crs and not self.args.lat:
-            self.argparser.error('--crs is only allowed when --lat and --lon are also specified.')
-        if self.args.type and not self.args.lat:
-            self.argparser.error('--type is only allowed when --lat and --lon are also specified.')
-        if self.args.geometry and not self.args.lat:
-            self.argparser.error('--geometry is only allowed when --lat and --lon are also specified.')
-
-        if self.args.key and self.args.streamOutput and not (self.args.lat and self.args.lon):
-            self.argparser.error('--key is only allowed with --stream when --lat and --lon are also specified.')
 
     def read_csv_to_table(self):
         sniff_limit = self.args.sniff_limit if self.args.sniff_limit != -1 else None
