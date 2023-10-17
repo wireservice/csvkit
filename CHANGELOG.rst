@@ -154,7 +154,7 @@ Fixes:
 * :doc:`/scripts/csvjson` supports Decimal.
 * :doc:`/scripts/csvpy` again supports IPython.
 * :doc:`/scripts/csvsql` restores support for :code:`--no-constraints` and :code:`--db-schema`.
-* :doc:`/scripts/csvstat` will no longer crash when :code:`--freq` is set.
+* :doc:`/scripts/csvstat` no longer crashes when :code:`--freq` is set.
 * :doc:`/scripts/in2csv` restores support for :code:`--no-inference` for Excel files.
 * :doc:`/scripts/in2csv` restores support for converting Excel files from standard input.
 * :doc:`/scripts/in2csv` accepts utf-8 arguments to the :code:`--sheet` option in Python 2.
@@ -164,7 +164,7 @@ Fixes:
 
 This is a minor release which fixes several bugs reported in the :code:`1.0.0` release earlier this week. It also significantly improves the output of :doc:`/scripts/csvstat` and adds a :code:`--csv` output option to that command.
 
-* :doc:`/scripts/csvstat` will no longer crash when a :code:`Number` column has :code:`None` as a frequent value. (#738)
+* :doc:`/scripts/csvstat` no longer crashes when a :code:`Number` column has :code:`None` as a frequent value. (#738)
 * :doc:`/scripts/csvlook` docs now note that output tables are Markdown-compatible. (#734)
 * :doc:`/scripts/csvstat` now supports a :code:`--csv` flag for tabular output. (#584)
 * :doc:`/scripts/csvstat` output is now easier to read. (#714)
@@ -193,13 +193,13 @@ Backwards-incompatible changes:
 * ``CSVKitReader``, ``CSVKitWriter``, ``CSVKitDictReader``, and ``CSVKitDictWriter`` have been removed. Use ``agate.csv.reader``, ``agate.csv.writer``, ``agate.csv.DictReader`` and ``agate.csv.DictWriter``.
 * Drop Python 2.6 support (end-of-life was October 29, 2013).
 * Drop support for older versions of PyPy.
-* If ``--no-header-row`` is set, the output will have column names ``a``, ``b``, ``c``, etc. instead of ``column1``, ``column2``, ``column3``, etc.
+* If ``--no-header-row`` is set, the output has column names ``a``, ``b``, ``c``, etc. instead of ``column1``, ``column2``, ``column3``, etc.
 * csvlook renders a simpler, markdown-compatible table.
 
 Improvements:
 
 * csvkit is now tested against Python 3.6. (#702)
-* ``import csvkit as csv`` will now defer to agate readers/writers.
+* ``import csvkit as csv`` now defers to agate readers/writers.
 * :doc:`/scripts/csvgrep` supports ``--no-header-row``.
 * :doc:`/scripts/csvjoin` supports ``--no-header-row``.
 * :doc:`/scripts/csvjson` streams input and output if the ``--stream`` and ``--no-inference`` flags are set.
@@ -222,7 +222,7 @@ Fixes:
 * :doc:`/scripts/in2csv` correctly guesses format when file has an uppercase extension.
 * :doc:`/scripts/in2csv` correctly interprets ``--no-inference``.
 * :doc:`/scripts/in2csv` again supports nested JSON objects (fixes regression).
-* :doc:`/scripts/in2csv` with ``--format geojson`` will print a JSON object instead of ``OrderedDict([(...)])``.
+* :doc:`/scripts/in2csv` with ``--format geojson`` prints a JSON object instead of ``OrderedDict([(...)])``.
 * :doc:`/scripts/csvclean` with standard input works on Windows.
 * :doc:`/scripts/csvgrep` returns the input file's line numbers if the ``--linenumbers`` flag is set.
 * :doc:`/scripts/csvgrep` can match multiline values.
@@ -359,7 +359,7 @@ Fixes:
 * Support --not-columns for excluding columns. (#137)
 * Add Jan Schulz to AUTHORS file.
 * Add Windows scripts. (#111, #176)
-* csvjoin, csvsql and csvstack will no longer hold open all files. (#178)
+* csvjoin, csvsql and csvstack no longer hold open all files. (#178)
 * Added Noah Hoffman to AUTHORS.
 * Make csvlook output compatible with emacs table markup. (#174)
 
