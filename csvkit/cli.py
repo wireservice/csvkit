@@ -412,12 +412,18 @@ def isatty(f):
         return False
 
 
-def default(obj):
+def default_str_decimal(obj):
     if isinstance(obj, (datetime.date, datetime.datetime)):
         return obj.isoformat()
     if isinstance(obj, decimal.Decimal):
         return str(obj)
     raise TypeError(f'{repr(obj)} is not JSON serializable')
+
+
+def default_float_decimal(obj):
+    if isinstance(obj, decimal.Decimal):
+        return float(obj)
+    return default_str_decimal(obj)
 
 
 def make_default_headers(n):

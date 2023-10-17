@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 import agate
 
-from csvkit.cli import CSVKitUtility, default, match_column_identifier
+from csvkit.cli import CSVKitUtility, default_str_decimal, match_column_identifier
 
 
 class CSVJSON(CSVKitUtility):
@@ -95,7 +95,7 @@ class CSVJSON(CSVKitUtility):
                 self.output_json()
 
     def dump_json(self, data, newline=False):
-        json.dump(data, self.output_file, default=default, ensure_ascii=False, **self.json_kwargs)
+        json.dump(data, self.output_file, default=default_str_decimal, ensure_ascii=False, **self.json_kwargs)
         if newline:
             self.output_file.write("\n")
 

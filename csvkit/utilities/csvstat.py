@@ -8,7 +8,7 @@ from decimal import Decimal
 
 import agate
 
-from csvkit.cli import CSVKitUtility, default, parse_column_identifiers
+from csvkit.cli import CSVKitUtility, default_float_decimal, parse_column_identifiers
 
 locale.setlocale(locale.LC_ALL, '')
 OPERATIONS = OrderedDict([
@@ -266,7 +266,7 @@ class CSVStat(CSVKitUtility):
                         op = op_data['aggregation']
                         v = table.aggregate(op(column_id))
 
-                        if self.is_finite_decimal(v):
+                        if self.is_finite_decimal(v) and not self.args.json_output:
                             v = format_decimal(v, self.args.decimal_format, self.args.no_grouping_separator)
 
                         stats[op_name] = v
@@ -352,7 +352,7 @@ class CSVStat(CSVKitUtility):
         """
         data = list(self._rows(table, column_ids, stats))
 
-        json.dump(data, self.output_file, default=default, ensure_ascii=False, indent=self.args.indent)
+        json.dump(data, self.output_file, default=default_float_decimal, ensure_ascii=False, indent=self.args.indent)
 
     def _rows(self, table, column_ids, stats):
         for column_id in column_ids:
