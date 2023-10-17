@@ -65,9 +65,6 @@ class CSVJSON(CSVKitUtility):
             'indent': self.args.indent,
         }
 
-        # We need to do this stream dance here, because we aren't writing through agate.
-        self.stream = self.output_file
-
     def main(self):
         """
         Convert CSV to JSON.
@@ -99,9 +96,9 @@ class CSVJSON(CSVKitUtility):
                 return str(obj)
             raise TypeError(f'{repr(obj)} is not JSON serializable')
 
-        json.dump(data, self.stream, default=default, **self.json_kwargs)
+        json.dump(data, self.output_file, default=default, **self.json_kwargs)
         if newline:
-            self.stream.write("\n")
+            self.output_file.write("\n")
 
     def can_stream(self):
         return (
