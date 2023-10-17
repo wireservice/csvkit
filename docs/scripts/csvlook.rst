@@ -64,3 +64,19 @@ This tool is especially useful as a final operation when piping through other to
 .. code-block:: bash
 
    csvcut -c 9,1 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvlook
+
+If a data row contains more cells than the header row, csvlook will error. To fix the header row, use :doc:`csvclean`.
+
+To ignore the extra cells, instead:
+
+.. code-block:: bash
+
+   csvcut -C "" examples/bad.csv | csvlook
+
+If these rows are at the top of the file (for example, copyright notices), you can skip the rows:
+
+.. code-block:: bash
+
+   csvlook --skip-lines 1 examples/bad.csv
+
+This error can also occur if csvlook incorrectly deduces ("sniffs") the CSV format. To disable CSV sniffing, set :code:`--snifflimit 0` and then, if necessary, set the :code:`--delimiter` and :code:`--quotechar` options yourself. Or, set :code:`--snifflimit -1` to use the entire file as the sample, instead of the first 1024 bytes.
