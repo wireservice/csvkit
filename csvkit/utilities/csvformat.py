@@ -13,7 +13,7 @@ class CSVFormat(CSVKitUtility):
 
     def add_arguments(self):
         self.argparser.add_argument(
-            '--skip-header', dest='skip_header', action='store_true',
+            '-E', '--skip-header', dest='skip_header', action='store_true',
             help='Do not output a header row.')
         self.argparser.add_argument(
             '-D', '--out-delimiter', dest='out_delimiter',
