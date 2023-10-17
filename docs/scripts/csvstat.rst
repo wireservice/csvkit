@@ -10,12 +10,15 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
 .. code-block:: bash
 
    usage: csvstat [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                  [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [--csv] [--json]
+                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
+                  [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
+                  [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
+                  [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [--csv] [--json]
                   [-i INDENT] [-n] [-c COLUMNS] [--type] [--nulls] [--non-nulls]
-                  [--unique] [--min] [--max] [--sum] [--mean] [--median] [--stdev]
-                  [--len] [--freq] [--freq-count FREQ_COUNT] [--count]
-                  [--decimal-format DECIMAL_FORMAT] [-G] [-y SNIFF_LIMIT]
+                  [--unique] [--min] [--max] [--sum] [--mean] [--median]
+                  [--stdev] [--len] [--max-precision] [--freq]
+                  [--freq-count FREQ_COUNT] [--count]
+                  [--decimal-format DECIMAL_FORMAT] [-G] [-y SNIFF_LIMIT] [-I]
                   [FILE]
 
    Print descriptive statistics for each column in a CSV file.
@@ -48,6 +51,7 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
      --median              Only output medians.
      --stdev               Only output standard deviations.
      --len                 Only output the length of the longest values.
+     --max-precision       Only output the most decimal places.
      --freq                Only output lists of frequent values.
      --freq-count FREQ_COUNT
                            The maximum number of frequent values to display.
@@ -59,7 +63,10 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
                            Do not use grouping separators in decimal numbers.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                            Limit CSV dialect sniffing to the specified number of
-                           bytes. Specify "0" to disable sniffing.
+                           bytes. Specify "0" to disable sniffing entirely, or
+                           "-1" to sniff the entire file.
+     -I, --no-inference    Disable type inference when parsing the input. Disable
+                           reformatting of values.
 
 See also: :doc:`../common_arguments`.
 

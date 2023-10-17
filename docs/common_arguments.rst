@@ -31,8 +31,11 @@ csvkit's tools share a set of common command-line arguments. Not every argument 
                          Specify the locale (en_US) of any formatted numbers.
    -S, --skipinitialspace
                          Ignore whitespace immediately following the delimiter.
-   --blanks              Do not coerce empty, "na", "n/a", "none", "null", "."
-                         strings to NULL values.
+   --blanks              Do not convert "", "na", "n/a", "none", "null", "." to
+                         NULL.
+   --null-value NULL_VALUES [NULL_VALUES ...]
+                         Convert this value to NULL. --null-value can be
+                         specified multiple times.
    --date-format DATE_FORMAT
                          Specify a strptime date format string like "%m/%d/%Y".
    --datetime-format DATETIME_FORMAT

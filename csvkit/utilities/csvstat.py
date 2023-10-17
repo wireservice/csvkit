@@ -69,7 +69,6 @@ OPERATIONS = OrderedDict([
 
 class CSVStat(CSVKitUtility):
     description = 'Print descriptive statistics for each column in a CSV file.'
-    override_flags = ['L', 'blanks', 'date-format', 'datetime-format']
 
     def add_arguments(self):
         self.argparser.add_argument(
@@ -144,6 +143,9 @@ class CSVStat(CSVKitUtility):
             '-y', '--snifflimit', dest='sniff_limit', type=int, default=1024,
             help='Limit CSV dialect sniffing to the specified number of bytes. '
                  'Specify "0" to disable sniffing entirely, or "-1" to sniff the entire file.')
+        self.argparser.add_argument(
+            '-I', '--no-inference', dest='no_inference', action='store_true',
+            help='Disable type inference when parsing the input. Disable reformatting of values.')
 
     def main(self):
         if self.args.names_only:
@@ -183,6 +185,7 @@ class CSVStat(CSVKitUtility):
             self.input_file,
             skip_lines=self.args.skip_lines,
             sniff_limit=sniff_limit,
+            column_types=self.get_column_types(),
             **self.reader_kwargs,
         )
 

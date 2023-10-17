@@ -2,6 +2,7 @@ Unreleased
 ----------
 
 * :doc:`/scripts/csvformat` adds a :code:`--skip-header` (:code:`-E`) option to not output a header row.
+* :doc:`/scripts/csvstat` supports the :code:`--no-inference` (:code:`-I`), :code:`--locale` (:code:`-L`), :code:`--blanks`, :code:`--date-format` and :code:`datetime-format` options.
 * :doc:`/scripts/csvstat` adds a :code:`--json` option to output results as JSON text.
 * :doc:`/scripts/csvstat` adds an :code:`--indent` option to indent the JSON text when :code:`--json` is set.
 * :doc:`/scripts/csvstat` reports a "Non-null values" statistic (or a :code:`nonnulls` column when :code:`--csv` is set).
