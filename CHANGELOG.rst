@@ -74,7 +74,7 @@ Changes:
 Improvements:
 
 * :doc:`/scripts/csvsql` adds a :code:`--chunk-size` option to set the chunk size when batch inserting into a table.
-* csvkit is now tested against Python 3.7.
+* csvkit is tested against Python 3.7.
 
 Fixes:
 
@@ -165,10 +165,10 @@ Fixes:
 This is a minor release which fixes several bugs reported in the :code:`1.0.0` release earlier this week. It also significantly improves the output of :doc:`/scripts/csvstat` and adds a :code:`--csv` output option to that command.
 
 * :doc:`/scripts/csvstat` no longer crashes when a :code:`Number` column has :code:`None` as a frequent value. (#738)
-* :doc:`/scripts/csvlook` docs now note that output tables are Markdown-compatible. (#734)
-* :doc:`/scripts/csvstat` now supports a :code:`--csv` flag for tabular output. (#584)
-* :doc:`/scripts/csvstat` output is now easier to read. (#714)
-* :doc:`/scripts/csvpy` now has a better description when using the :code:`--agate` flag. (#729)
+* :doc:`/scripts/csvlook` documents that output tables are Markdown-compatible. (#734)
+* :doc:`/scripts/csvstat` accepts a :code:`--csv` flag for tabular output. (#584)
+* :doc:`/scripts/csvstat` output is easier to read. (#714)
+* :doc:`/scripts/csvpy` has a better description when using the :code:`--agate` flag. (#729)
 * Fix a Python 2.6 bug preventing :doc:`/scripts/csvjson` from parsing utf-8 files. (#732)
 * Update required version of unittest to latest. (#727)
 
@@ -183,13 +183,13 @@ Much of the credit for this release goes to `James McKinney <https://github.com/
 
 Backwards-incompatible changes:
 
-* :doc:`/scripts/csvjoin` now renames duplicate columns with integer suffixes to prevent collisions in output.
-* :doc:`/scripts/csvsql` now generates ``DateTime`` columns instead of ``Time`` columns.
-* :doc:`/scripts/csvsql` now generates ``Decimal`` columns instead of ``Integer``, ``BigInteger``, and ``Float`` columns.
+* :doc:`/scripts/csvjoin` renames duplicate columns with integer suffixes to prevent collisions in output.
+* :doc:`/scripts/csvsql` generates ``DateTime`` columns instead of ``Time`` columns.
+* :doc:`/scripts/csvsql` generates ``Decimal`` columns instead of ``Integer``, ``BigInteger``, and ``Float`` columns.
 * :doc:`/scripts/csvsql` no longer generates max-length constraints for text columns.
-* The ``--doublequote`` long flag is gone, and the ``-b`` short flag is now an alias for ``--no-doublequote``.
+* The ``--doublequote`` long flag is gone, and the ``-b`` short flag is an alias for ``--no-doublequote``.
 * When using the ``--columns`` or ``--not-columns`` options, you must not have spaces around the comma-separated values, unless the column names contain spaces.
-* When sorting, null values are now greater than other values instead of less than.
+* When sorting, null values are greater than other values instead of less than.
 * ``CSVKitReader``, ``CSVKitWriter``, ``CSVKitDictReader``, and ``CSVKitDictWriter`` have been removed. Use ``agate.csv.reader``, ``agate.csv.writer``, ``agate.csv.DictReader`` and ``agate.csv.DictWriter``.
 * Drop Python 2.6 support (end-of-life was October 29, 2013).
 * Drop support for older versions of PyPy.
@@ -198,8 +198,8 @@ Backwards-incompatible changes:
 
 Improvements:
 
-* csvkit is now tested against Python 3.6. (#702)
-* ``import csvkit as csv`` now defers to agate readers/writers.
+* csvkit is tested against Python 3.6. (#702)
+* ``import csvkit as csv`` defers to agate readers/writers.
 * :doc:`/scripts/csvgrep` supports ``--no-header-row``.
 * :doc:`/scripts/csvjoin` supports ``--no-header-row``.
 * :doc:`/scripts/csvjson` streams input and output if the ``--stream`` and ``--no-inference`` flags are set.
@@ -231,7 +231,7 @@ Fixes:
 * :doc:`/scripts/csvsql` adds standard input only if explicitly requested.
 * :doc:`/scripts/csvstack` supports stacking a single file.
 * :doc:`/scripts/csvstat` always reports frequencies.
-* The ``any_match`` argument of ``FilteringCSVReader`` now works correctly.
+* The ``any_match`` argument of ``FilteringCSVReader`` works correctly.
 * All tools handle empty files without error.
 
 0.9.1 - March 31, 2015
