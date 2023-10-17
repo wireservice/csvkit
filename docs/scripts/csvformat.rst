@@ -24,6 +24,7 @@ Convert a CSV file to a custom output format.:
 
    optional arguments:
      -h, --help            show this help message and exit
+     --skip-header         Do not output a header row.
      -D OUT_DELIMITER, --out-delimiter OUT_DELIMITER
                            Delimiting character of the output CSV file.
      -T, --out-tabs        Specify that the output CSV file is delimited with

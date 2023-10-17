@@ -13,6 +13,9 @@ class CSVFormat(CSVKitUtility):
 
     def add_arguments(self):
         self.argparser.add_argument(
+            '--skip-header', dest='skip_header', action='store_true',
+            help='Do not output a header row.')
+        self.argparser.add_argument(
             '-D', '--out-delimiter', dest='out_delimiter',
             help='Delimiting character of the output CSV file.')
         self.argparser.add_argument(
@@ -63,9 +66,11 @@ class CSVFormat(CSVKitUtility):
         if self.args.no_header_row:
             # Peek at a row to get the number of columns.
             _row = next(reader)
-            reader = itertools.chain([_row], reader)
             headers = make_default_headers(len(_row))
-            writer.writerow(headers)
+            reader = itertools.chain([headers, _row], reader)
+
+        if self.args.skip_header:
+            next(reader)
 
         writer.writerows(reader)
 
