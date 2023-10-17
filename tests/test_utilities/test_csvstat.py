@@ -118,7 +118,7 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         self.assertEqual(row[1], 'state')
         self.assertEqual(row[2], 'Text')
         self.assertNotIn('min', data[0])
-        self.assertEqual(row[-2], '2')
+        self.assertEqual(row[-2], 2.0)
 
     def test_json_columns(self):
         output = self.get_output_as_io(['--json', '-c', '4', 'examples/realdata/ks_1033_data.csv'])
@@ -135,7 +135,7 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         self.assertEqual(row[1], 'nsn')
         self.assertEqual(row[2], 'Text')
         self.assertNotIn('min', data[0])
-        self.assertEqual(row[-2], '16')
+        self.assertEqual(row[-2], 16.0)
 
     def test_decimal_format(self):
         output = self.get_output(['-c', 'TOTAL', '--mean', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'])

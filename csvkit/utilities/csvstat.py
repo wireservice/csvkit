@@ -213,13 +213,7 @@ class CSVStat(CSVKitUtility):
     def is_finite_decimal(self, value):
         return isinstance(value, Decimal) and value.is_finite()
 
-    def print_one(self, table, column_id, operation, label=True, **kwargs):
-        """
-        Print data for a single statistic.
-        """
-        column_name = table.column_names[column_id]
-
-        op_name = operation
+    def _calculate_stat(self, table, column_id, op_name, op_data, **kwargs):
         getter = globals().get(f'get_{op_name}')
 
         with warnings.catch_warnings():
@@ -227,15 +221,25 @@ class CSVStat(CSVKitUtility):
 
             try:
                 if getter:
-                    stat = getter(table, column_id, **kwargs)
-                else:
-                    op = OPERATIONS[op_name]['aggregation']
-                    stat = table.aggregate(op(column_id))
+                    return getter(table, column_id, **kwargs)
 
-                    if self.is_finite_decimal(stat):
-                        stat = format_decimal(stat, self.args.decimal_format, self.args.no_grouping_separator)
+                op = op_data['aggregation']
+                v = table.aggregate(op(column_id))
+
+                if self.is_finite_decimal(v) and not self.args.json_output:
+                    return format_decimal(v, self.args.decimal_format, self.args.no_grouping_separator)
+
+                return v
             except Exception:
-                stat = None
+                pass
+
+    def print_one(self, table, column_id, op_name, label=True, **kwargs):
+        """
+        Print data for a single statistic.
+        """
+        column_name = table.column_names[column_id]
+
+        stat = self._calculate_stat(table, column_id, op_name, OPERATIONS[op_name], **kwargs)
 
         # Formatting
         if op_name == 'freq':
@@ -251,29 +255,10 @@ class CSVStat(CSVKitUtility):
         """
         Calculate stats for all valid operations.
         """
-        stats = {}
-
-        for op_name, op_data in OPERATIONS.items():
-            getter = globals().get(f'get_{op_name}')
-
-            with warnings.catch_warnings():
-                warnings.simplefilter('ignore', agate.NullCalculationWarning)
-
-                try:
-                    if getter:
-                        stats[op_name] = getter(table, column_id, **kwargs)
-                    else:
-                        op = op_data['aggregation']
-                        v = table.aggregate(op(column_id))
-
-                        if self.is_finite_decimal(v) and not self.args.json_output:
-                            v = format_decimal(v, self.args.decimal_format, self.args.no_grouping_separator)
-
-                        stats[op_name] = v
-                except Exception:
-                    stats[op_name] = None
-
-        return stats
+        return {
+            op_name: self._calculate_stat(table, column_id, op_name, op_data, **kwargs)
+            for op_name, op_data in OPERATIONS.items()
+        }
 
     def print_stats(self, table, column_ids, stats):
         """
