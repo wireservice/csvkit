@@ -1,7 +1,7 @@
 Unreleased
 ----------
 
-* :doc:`/scripts/csvformat` adds a :code:`--skip-header` option to not output a header row.
+* :doc:`/scripts/csvformat` adds a :code:`--skip-header` (:code:`-E`) option to not output a header row.
 * :doc:`/scripts/csvstat` adds a :code:`--json` option to output results as JSON text.
 * :doc:`/scripts/csvstat` adds an :code:`--indent` option to indent the JSON text when :code:`--json` is set.
 * :doc:`/scripts/csvstat` reports a "Non-null values" statistic (or a :code:`nonnulls` column when :code:`--csv` is set).
