@@ -90,3 +90,7 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             '  2: b',
             '  3: c',
         ])
+
+    def test_null_byte(self):
+        # Test that csvcut doesn't error on a null byte.
+        self.get_output(['-C', '', 'examples/null_byte.csv'])

@@ -35,10 +35,7 @@ class LazyFile:
         self._lazy_kwargs = kwargs
 
     def __getattr__(self, name):
-        if not self._is_lazy_opened:
-            self.f = self.init(*self._lazy_args, **self._lazy_kwargs)
-            self._is_lazy_opened = True
-
+        self._open()
         return getattr(self.f, name)
 
     def __iter__(self):
@@ -51,11 +48,13 @@ class LazyFile:
             self._is_lazy_opened = False
 
     def __next__(self):
+        self._open()
+        return next(self.f).replace('\0', '')
+
+    def _open(self):
         if not self._is_lazy_opened:
             self.f = self.init(*self._lazy_args, **self._lazy_kwargs)
             self._is_lazy_opened = True
-
-        return next(self.f)
 
 
 class CSVKitUtility:
