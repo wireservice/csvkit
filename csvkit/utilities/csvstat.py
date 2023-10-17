@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import json
 import locale
 import warnings
 from collections import Counter, OrderedDict
@@ -7,7 +8,7 @@ from decimal import Decimal
 
 import agate
 
-from csvkit.cli import CSVKitUtility, parse_column_identifiers
+from csvkit.cli import CSVKitUtility, default, parse_column_identifiers
 
 locale.setlocale(locale.LC_ALL, '')
 OPERATIONS = OrderedDict([
@@ -69,7 +70,13 @@ class CSVStat(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument(
             '--csv', dest='csv_output', action='store_true',
-            help='Output results as a CSV, rather than text.')
+            help='Output results as a CSV table, rather than plain text.')
+        self.argparser.add_argument(
+            '--json', dest='json_output', action='store_true',
+            help='Output results as JSON text, rather than plain text.')
+        self.argparser.add_argument(
+            '-i', '--indent', dest='indent', type=int,
+            help='Indent the output JSON this many spaces. Disabled by default.')
         self.argparser.add_argument(
             '-n', '--names', dest='names_only', action='store_true',
             help='Display column names and indices from the input CSV and exit.')
@@ -147,7 +154,9 @@ class CSVStat(CSVKitUtility):
         if operations and self.args.csv_output:
             self.argparser.error(
                 'You may not specify --csv and an operation (--mean, --median, etc) at the same time.')
-
+        if operations and self.args.json_output:
+            self.argparser.error(
+                'You may not specify --json and an operation (--mean, --median, etc) at the same time.')
         if operations and self.args.count_only:
             self.argparser.error(
                 'You may not specify --count and an operation (--mean, --median, etc) at the same time.')
@@ -194,10 +203,10 @@ class CSVStat(CSVKitUtility):
             for column_id in column_ids:
                 stats[column_id] = self.calculate_stats(table, column_id, **kwargs)
 
-            # Output as CSV
             if self.args.csv_output:
                 self.print_csv(table, column_ids, stats)
-            # Output all stats
+            elif self.args.json_output:
+                self.print_json(table, column_ids, stats)
             else:
                 self.print_stats(table, column_ids, stats)
 
@@ -325,33 +334,37 @@ class CSVStat(CSVKitUtility):
 
     def print_csv(self, table, column_ids, stats):
         """
-        Print data for all statistics as a csv table.
+        Print data for all statistics as a CSV table.
         """
-        writer = agate.csv.writer(self.output_file)
+        header = ['column_id', 'column_name'] + list(OPERATIONS)
 
-        header = ['column_id', 'column_name'] + list(OPERATIONS.keys())
+        writer = agate.csv.DictWriter(self.output_file, fieldnames=header)
+        writer.writeheader()
 
-        writer.writerow(header)
+        for row in self._rows(table, column_ids, stats):
+            if 'freq' in row:
+                row['freq'] = ', '.join([str(row['value']) for row in row['freq']])
+            writer.writerow(row)
 
+    def print_json(self, table, column_ids, stats):
+        """
+        Print data for all statistics as a JSON text.
+        """
+        data = list(self._rows(table, column_ids, stats))
+
+        json.dump(data, self.output_file, default=default, ensure_ascii=False, indent=self.args.indent)
+
+    def _rows(self, table, column_ids, stats):
         for column_id in column_ids:
             column_name = table.column_names[column_id]
             column_stats = stats[column_id]
 
-            output_row = [column_id + 1, column_name]
-
+            output_row = {'column_id': column_id + 1, 'column_name': column_name}
             for op_name, _op_data in OPERATIONS.items():
-                if column_stats[op_name] is None:
-                    output_row.append(None)
-                    continue
+                if column_stats[op_name] is not None:
+                    output_row[op_name] = column_stats[op_name]
 
-                if op_name == 'freq':
-                    value = ', '.join([str(row['value']) for row in column_stats['freq']])
-                else:
-                    value = column_stats[op_name]
-
-                output_row.append(value)
-
-            writer.writerow(output_row)
+            yield output_row
 
 
 def format_decimal(d, f='%.3f', no_grouping_separator=False):

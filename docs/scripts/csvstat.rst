@@ -11,11 +11,11 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
 
    usage: csvstat [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                  [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [--csv] [-n]
-                  [-c COLUMNS] [--type] [--nulls] [--unique] [--min] [--max]
-                  [--sum] [--mean] [--median] [--stdev] [--len] [--freq]
-                  [--freq-count FREQ_COUNT] [--count]  [--decimal-format DECIMAL_FORMAT]
-                  [-G] [-y SNIFF_LIMIT]
+                  [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [--csv] [--json]
+                  [-i INDENT] [-n] [-c COLUMNS] [--type] [--nulls] [--non-nulls]
+                  [--unique] [--min] [--max] [--sum] [--mean] [--median] [--stdev]
+                  [--len] [--freq] [--freq-count FREQ_COUNT] [--count]
+                  [--decimal-format DECIMAL_FORMAT] [-G] [-y SNIFF_LIMIT]
                   [FILE]
 
    Print descriptive statistics for each column in a CSV file.
@@ -26,7 +26,11 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
 
    optional arguments:
      -h, --help            show this help message and exit
-     --csv                 Output results as a CSV, rather than text.
+     --csv                 Output results as a CSV table, rather than plain text.
+     --json                Output results as JSON text, rather than plain text.
+     -i INDENT, --indent INDENT
+                           Indent the output JSON this many spaces. Disabled by
+                           default.
      -n, --names           Display column names and indices from the input CSV
                            and exit.
      -c COLUMNS, --columns COLUMNS
@@ -35,6 +39,7 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
                            all columns.
      --type                Only output data type.
      --nulls               Only output whether columns contains nulls.
+     --non-nulls           Only output counts of non-null values.
      --unique              Only output counts of unique values.
      --min                 Only output smallest values.
      --max                 Only output largest values.

@@ -2,6 +2,8 @@
 
 import argparse
 import bz2
+import datetime
+import decimal
 import gzip
 import itertools
 import lzma
@@ -408,6 +410,14 @@ def isatty(f):
         return f.isatty()
     except ValueError:  # I/O operation on closed file
         return False
+
+
+def default(obj):
+    if isinstance(obj, (datetime.date, datetime.datetime)):
+        return obj.isoformat()
+    if isinstance(obj, decimal.Decimal):
+        return str(obj)
+    raise TypeError(f'{repr(obj)} is not JSON serializable')
 
 
 def make_default_headers(n):

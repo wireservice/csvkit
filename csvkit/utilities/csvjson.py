@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 
-import datetime
-import decimal
 import json
 import sys
 from collections import OrderedDict
 
 import agate
 
-from csvkit.cli import CSVKitUtility, match_column_identifier
+from csvkit.cli import CSVKitUtility, default, match_column_identifier
 
 
 class CSVJSON(CSVKitUtility):
@@ -75,7 +73,6 @@ class CSVJSON(CSVKitUtility):
             self.argparser.error('--key is only allowed with --stream when --lat and --lon are also specified.')
 
         self.json_kwargs = {
-            'ensure_ascii': False,
             'indent': self.args.indent,
         }
 
@@ -98,14 +95,7 @@ class CSVJSON(CSVKitUtility):
                 self.output_json()
 
     def dump_json(self, data, newline=False):
-        def default(obj):
-            if isinstance(obj, (datetime.date, datetime.datetime)):
-                return obj.isoformat()
-            if isinstance(obj, decimal.Decimal):
-                return str(obj)
-            raise TypeError(f'{repr(obj)} is not JSON serializable')
-
-        json.dump(data, self.output_file, default=default, **self.json_kwargs)
+        json.dump(data, self.output_file, default=default, ensure_ascii=False, **self.json_kwargs)
         if newline:
             self.output_file.write("\n")
 
