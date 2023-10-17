@@ -38,6 +38,7 @@ Renders a CSV to the command line in a Markdown-compatible, fixed-width format:
                            Limit CSV dialect sniffing to the specified number of
                            bytes. Specify "0" to disable sniffing.
      -I, --no-inference    Disable type inference when parsing the input.
+                           Disable reformatting of values.
 
 If a table is too wide to display properly try piping the output to ``less -S`` or truncating it using :doc:`csvcut`.
 
