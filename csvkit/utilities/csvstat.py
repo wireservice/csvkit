@@ -19,6 +19,10 @@ OPERATIONS = OrderedDict([
         'aggregation': agate.HasNulls,
         'label': 'Contains null values: ',
     }),
+    ('nonnulls', {
+        'aggregation': agate.Count,
+        'label': 'Non-null values: ',
+    }),
     ('unique', {
         'aggregation': None,
         'label': 'Unique values: ',
@@ -79,6 +83,9 @@ class CSVStat(CSVKitUtility):
         self.argparser.add_argument(
             '--nulls', dest='nulls_only', action='store_true',
             help='Only output whether columns contains nulls.')
+        self.argparser.add_argument(
+            '--non-nulls', dest='nonnulls_only', action='store_true',
+            help='Only output counts of non-null values.')
         self.argparser.add_argument(
             '--unique', dest='unique_only', action='store_true',
             help='Only output counts of unique values.')
@@ -351,6 +358,7 @@ def format_decimal(d, f='%.3f', no_grouping_separator=False):
     return locale.format_string(f, d, grouping=not no_grouping_separator).rstrip('0').rstrip('.')
 
 
+# These are accessed via: globals().get(f'get_{op_name}')
 def get_type(table, column_id, **kwargs):
     return f'{table.columns[column_id].data_type.__class__.__name__}'
 

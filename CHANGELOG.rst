@@ -1,6 +1,8 @@
 Unreleased
 ----------
 
+* :doc:`/scripts/csvstat` reports a "Non-null values" statistic (or a :code:`nonnulls` column when :code:`--csv` is set).
+* :doc:`/scripts/csvstat` adds a :code:`--non-nulls` option to only output counts of non-null values.
 * feat: Add a :code:`--null-value` option to commands with the :code:`--blanks` option, to convert additional values to NULL.
 * Add Python 3.12 support.
 
@@ -166,7 +168,7 @@ This is a minor release which fixes several bugs reported in the :code:`1.0.0` r
 
 * :doc:`/scripts/csvstat` no longer crashes when a :code:`Number` column has :code:`None` as a frequent value. (#738)
 * :doc:`/scripts/csvlook` documents that output tables are Markdown-compatible. (#734)
-* :doc:`/scripts/csvstat` accepts a :code:`--csv` flag for tabular output. (#584)
+* :doc:`/scripts/csvstat` adds a :code:`--csv` flag for tabular output. (#584)
 * :doc:`/scripts/csvstat` output is easier to read. (#714)
 * :doc:`/scripts/csvpy` has a better description when using the :code:`--agate` flag. (#729)
 * Fix a Python 2.6 bug preventing :doc:`/scripts/csvjson` from parsing utf-8 files. (#732)

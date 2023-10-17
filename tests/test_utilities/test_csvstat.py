@@ -76,14 +76,14 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         header = next(reader)
 
         self.assertEqual(header[1], 'column_name')
-        self.assertEqual(header[4], 'unique')
+        self.assertEqual(header[5], 'unique')
 
         row = next(reader)
 
         self.assertEqual(row[1], 'state')
         self.assertEqual(row[2], 'Text')
-        self.assertEqual(row[5], '')
-        self.assertEqual(row[11], '2')
+        self.assertEqual(row[6], '')
+        self.assertEqual(row[12], '2')
 
     def test_csv_columns(self):
         output = self.get_output_as_io(['--csv', '-c', '4', 'examples/realdata/ks_1033_data.csv'])
@@ -93,14 +93,14 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         header = next(reader)
 
         self.assertEqual(header[1], 'column_name')
-        self.assertEqual(header[4], 'unique')
+        self.assertEqual(header[5], 'unique')
 
         row = next(reader)
 
         self.assertEqual(row[1], 'nsn')
         self.assertEqual(row[2], 'Text')
-        self.assertEqual(row[5], '')
-        self.assertEqual(row[11], '16')
+        self.assertEqual(row[6], '')
+        self.assertEqual(row[12], '16')
 
     def test_decimal_format(self):
         output = self.get_output(['-c', 'TOTAL', '--mean', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'])
