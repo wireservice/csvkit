@@ -4,7 +4,9 @@ Unreleased
 * :doc:`/scripts/csvstat` adds a :code:`--json` option to output results as JSON text.
 * :doc:`/scripts/csvstat` adds an :code:`--indent` option to indent the JSON text when :code:`--json` is set.
 * :doc:`/scripts/csvstat` reports a "Non-null values" statistic (or a :code:`nonnulls` column when :code:`--csv` is set).
+* :doc:`/scripts/csvstat` reports a "Most decimal places" statistic (or a :code:`maxprecision` column when :code:`--csv` is set).
 * :doc:`/scripts/csvstat` adds a :code:`--non-nulls` option to only output counts of non-null values.
+* :doc:`/scripts/csvstat` adds a :code:`--max-precision` option to only output the most decimal places.
 * feat: Add a :code:`--null-value` option to commands with the :code:`--blanks` option, to convert additional values to NULL.
 * Add Python 3.12 support.
 

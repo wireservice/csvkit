@@ -56,6 +56,10 @@ OPERATIONS = OrderedDict([
         'aggregation': agate.MaxLength,
         'label': 'Longest value: ',
     }),
+    ('maxprecision', {
+        'aggregation': agate.MaxPrecision,
+        'label': 'Most decimal places: ',
+    }),
     ('freq', {
         'aggregation': None,
         'label': 'Most common values: ',
@@ -117,6 +121,9 @@ class CSVStat(CSVKitUtility):
         self.argparser.add_argument(
             '--len', dest='len_only', action='store_true',
             help='Only output the length of the longest values.')
+        self.argparser.add_argument(
+            '--max-precision', dest='maxprecision_only', action='store_true',
+            help='Only output the most decimal places.')
         self.argparser.add_argument(
             '--freq', dest='freq_only', action='store_true',
             help='Only output lists of frequent values.')
