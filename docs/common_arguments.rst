@@ -57,7 +57,7 @@ These arguments can be used to override csvkit's default "smart" parsing of CSV 
 
 For example, to disable CSV sniffing, set :code:`--snifflimit 0` and then, if necessary, set the :code:`--delimiter` and :code:`--quotechar` options yourself. Or, set :code:`--snifflimit -1` to use the entire file as the sample, instead of the first 1024 bytes.
 
-To disable type inference, add the :code:`--no-inference` flag.
+To disable type inference, add the :code:`--no-inference` flag. To prevent text values from being converted to dates or datetimes, set the :code:`--date-format` and/or :code:`--datetime-format` options to a non-occurring value, like ``-``.
 
 The output of csvkit's tools is always formatted with "default" formatting options. This means that when executing multiple csvkit commands (either with a pipe or through intermediary files) it is only ever necessary to specify these arguments the first time (and doing so for subsequent commands will likely cause them to fail).
 

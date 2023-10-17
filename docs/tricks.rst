@@ -114,13 +114,16 @@ Although these issues are annoying, in most cases, CSV sniffing Just Works™. D
 CSV data interpretation
 -----------------------
 
-* Are the numbers ``1`` and ``0`` being interepted as ``True`` and ``False``?
+* Are the numbers ``1`` and ``0`` being interpreted as ``True`` and ``False``?
 * Are phone numbers changing to integers and losing their leading ``+`` or ``0``?
+* Are text values incorrectly being converted to dates or datetimes?
 * Is the Italian comune of "None" being treated as a null value?
 
 These may be symptoms of csvkit's type inference being too aggressive for your data. CSV is a text format, but it may contain text representing numbers, dates, booleans or other types. csvkit attempts to reverse engineer that text into proper data types—a process called "type inference".
 
-For some data, type inference can be error prone. If necessary you can disable it with the :code:`--no-inference` switch. This will force all columns to be treated as regular text.
+For some data, type inference can be error prone. If necessary you can disable it with the :code:`--no-inference` option. This will force all columns to be treated as regular text.
+
+To prevent values from being converted to dates or datetimes, set the :code:`--date-format` and/or :code:`--datetime-format` options to a non-occurring value, like ``-``.
 
 Slow performance
 ----------------
