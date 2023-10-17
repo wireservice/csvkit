@@ -10,6 +10,7 @@ import warnings
 from os.path import splitext
 
 import agate
+from agate.data_types.base import DEFAULT_NULL_VALUES
 
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
@@ -187,6 +188,10 @@ class CSVKitUtility:
             self.argparser.add_argument(
                 '--blanks', dest='blanks', action='store_true',
                 help='Do not convert "", "na", "n/a", "none", "null", "." to NULL.')
+        if 'blanks' not in self.override_flags:
+            self.argparser.add_argument(
+                '--null-value', dest='null_values', nargs='+', default=[],
+                help='Convert this value to NULL. --null-value can be specified multiple times.')
         if 'date-format' not in self.override_flags:
             self.argparser.add_argument(
                 '--date-format', dest='date_format',
@@ -302,9 +307,11 @@ class CSVKitUtility:
 
     def get_column_types(self):
         if getattr(self.args, 'blanks', None):
-            type_kwargs = {'null_values': ()}
+            type_kwargs = {'null_values': []}
         else:
-            type_kwargs = {}
+            type_kwargs = {'null_values': list(DEFAULT_NULL_VALUES)}
+        for null_value in getattr(self.args, 'null_values', []):
+            type_kwargs['null_values'].append(null_value)
 
         text_type = agate.Text(**type_kwargs)
 

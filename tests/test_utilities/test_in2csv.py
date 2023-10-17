@@ -37,6 +37,28 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
     def test_blanks(self):
         self.assertConverted('csv', 'examples/blanks.csv', 'examples/blanks.csv', ['--blanks'])
 
+    def test_null_value(self):
+        input_file = StringIO('a,b\nn/a,\\N')
+
+        with stdin_as_string(input_file):
+            self.assertLines(['-f', 'csv', '--null-value', '\\N'], [
+                'a,b',
+                ',',
+            ])
+
+        input_file.close()
+
+    def test_null_value_blanks(self):
+        input_file = StringIO('a,b\nn/a,\\N')
+
+        with stdin_as_string(input_file):
+            self.assertLines(['-f', 'csv', '--null-value', '\\N', '--blanks'], [
+                'a,b',
+                'n/a,',
+            ])
+
+        input_file.close()
+
     def test_date_format(self):
         self.assertConverted('csv', 'examples/test_date_format.csv',
                              'examples/test_date_format_converted.csv', ['--date-format', '%d/%m/%Y'])

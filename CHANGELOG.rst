@@ -1,6 +1,7 @@
 Unreleased
 ----------
 
+* feat: Add a :code:`--null-value` option to commands with the :code:`--blanks` option, to add additional null values.
 * Add Python 3.12 support.
 
 1.2.0 - October 4, 2023
