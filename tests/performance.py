@@ -1,3 +1,4 @@
+import os.path
 import subprocess
 import timeit
 
@@ -5,7 +6,7 @@ num_repeats = 100  # number of repeats for timeit
 
 
 def test_csvformat_performance():
-    command = ['csvformat', 'examples\\iris.csv']
+    command = ['csvformat', os.path.join('examples', 'iris.csv')]
     start_time = timeit.default_timer()
     for _ in range(num_repeats):
         subprocess.run(command, stdout=subprocess.DEVNULL)  # redirect output to DEVNULL as we don't want to print it
@@ -14,7 +15,7 @@ def test_csvformat_performance():
 
 
 def test_csvjson_performance():
-    command = ['csvjson', 'examples/iris.csv']
+    command = ['csvjson', os.path.join('examples', 'iris.csv')]
     start_time = timeit.default_timer()
     for _ in range(num_repeats):
         subprocess.run(command, stdout=subprocess.DEVNULL)  # redirect output to DEVNULL as we don't want to print it
@@ -23,7 +24,7 @@ def test_csvjson_performance():
 
 
 def test_csvlook_performance():
-    command = ['csvlook', 'examples/iris.csv']
+    command = ['csvlook', os.path.join('examples', 'iris.csv')]
     start_time = timeit.default_timer()
     for _ in range(num_repeats):
         subprocess.run(command, stdout=subprocess.DEVNULL)  # redirect output to DEVNULL as we don't want to print it
@@ -32,7 +33,7 @@ def test_csvlook_performance():
 
 
 def test_csvpy_performance():
-    command = ['csvpy', 'examples/iris.csv']
+    command = ['csvpy', os.path.join('examples', 'iris.csv')]
     start_time = timeit.default_timer()
     for _ in range(num_repeats):
         subprocess.run(command, stdout=subprocess.DEVNULL)  # redirect output to DEVNULL as we don't want to print it
@@ -41,7 +42,7 @@ def test_csvpy_performance():
 
 
 def test_csvsql_performance():
-    command = ['csvsql', 'examples/iris.csv']
+    command = ['csvsql', os.path.join('examples', 'iris.csv')]
     start_time = timeit.default_timer()
     for _ in range(num_repeats):
         subprocess.run(command, stdout=subprocess.DEVNULL)  # redirect output to DEVNULL as we don't want to print it
@@ -50,7 +51,7 @@ def test_csvsql_performance():
 
 
 def test_csvstat_performance():
-    command = ['csvstat', 'examples/iris.csv']
+    command = ['csvstat', os.path.join('examples', 'iris.csv')]
     start_time = timeit.default_timer()
     for _ in range(num_repeats):
         subprocess.run(command, stdout=subprocess.DEVNULL)  # redirect output to DEVNULL as we don't want to print it
