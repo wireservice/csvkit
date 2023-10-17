@@ -9,6 +9,7 @@ Unreleased
 * :doc:`/scripts/csvstat` adds a :code:`--non-nulls` option to only output counts of non-null values.
 * :doc:`/scripts/csvstat` adds a :code:`--max-precision` option to only output the most decimal places.
 * feat: Add a :code:`--null-value` option to commands with the :code:`--blanks` option, to convert additional values to NULL.
+* fix: Prompt the user if additional input is expected (i.e. if no input file or piped data is provided) in :doc:`/scripts/csvjoin`, :doc:`/scripts/csvsql` and :doc:`/scripts/csvstack`.
 * fix: No longer errors if a NUL byte occurs in an input file.
 * Add Python 3.12 support.
 

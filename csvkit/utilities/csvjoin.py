@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+import sys
+
 import agate
 
-from csvkit.cli import CSVKitUtility, match_column_identifier
+from csvkit.cli import CSVKitUtility, isatty, match_column_identifier
 
 
 class CSVJoin(CSVKitUtility):
@@ -40,13 +42,13 @@ class CSVJoin(CSVKitUtility):
             help='Disable type inference when parsing CSV input.')
 
     def main(self):
+        if isatty(sys.stdin) and self.args.input_paths == ['-']:
+            self.argparser.error('You must provide an input file or piped data.')
+
         self.input_files = []
 
         for path in self.args.input_paths:
             self.input_files.append(self._open_input_file(path))
-
-        if len(self.input_files) < 1:
-            self.argparser.error('You must specify at least one file to join.')
 
         if self.args.columns:
             join_column_names = self._parse_join_column_names(self.args.columns)

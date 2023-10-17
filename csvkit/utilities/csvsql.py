@@ -83,7 +83,7 @@ class CSVSQL(CSVKitUtility):
             help='Chunk size for batch insert into the table. Requires --insert.')
 
     def main(self):
-        if isatty(sys.stdin) and not self.args.input_paths:
+        if isatty(sys.stdin) and self.args.input_paths == ['-']:
             self.argparser.error('You must provide an input file or piped data.')
 
         self.input_files = []
