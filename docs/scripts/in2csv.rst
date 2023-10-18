@@ -22,11 +22,13 @@ The header line is required though the columns may be in any order:
 
    usage: in2csv [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
-                 [-S] [--blanks] [--date-format DATE_FORMAT]
-                 [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
-                 [-l] [--zero] [-V] [-f FILETYPE] [-s SCHEMA] [-k KEY] [-n]
-                 [--sheet SHEET] [--write-sheets WRITE_SHEETS]
-                 [--encoding-xls ENCODING_XLS] [-y SNIFF_LIMIT] [-I]
+                 [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
+                 [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
+                 [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V]
+                 [-f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}] [-s SCHEMA]
+                 [-k KEY] [-n] [--sheet SHEET] [--write-sheets WRITE_SHEETS]
+                 [--use-sheet-names] [--encoding-xls ENCODING_XLS]
+                 [-y SNIFF_LIMIT] [-I]
                  [FILE]
 
    Convert common, but less awesome, tabular data formats to CSV.
@@ -50,6 +52,8 @@ The header line is required though the columns may be in any order:
      --write-sheets WRITE_SHEETS
                            The names of the Excel sheets to write to files, or
                            "-" to write all sheets.
+     --use-sheet-names     Use the sheet names as file names when --write-sheets
+                           is set.
      --encoding-xls ENCODING_XLS
                            Specify the encoding of the input XLS file.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT

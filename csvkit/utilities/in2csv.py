@@ -47,6 +47,9 @@ class In2CSV(CSVKitUtility):
             '--write-sheets', dest='write_sheets',
             help='The names of the Excel sheets to write to files, or "-" to write all sheets.')
         self.argparser.add_argument(
+            '--use-sheet-names', dest='use_sheet_names', action='store_true',
+            help='Use the sheet names as file names when --write-sheets is set.')
+        self.argparser.add_argument(
             '--encoding-xls', dest='encoding_xls',
             help='Specify the encoding of the input XLS file.')
         self.argparser.add_argument(
@@ -177,8 +180,12 @@ class In2CSV(CSVKitUtility):
                 tables = agate.Table.from_xlsx(self.input_file, sheet=sheets, **kwargs)
 
             base = splitext(self.input_file.name)[0]
-            for i, table in enumerate(tables.values()):
-                with open('%s_%d.csv' % (base, i), 'w') as f:
+            for i, (sheet_name, table) in enumerate(tables.items()):
+                if self.args.use_sheet_names:
+                    filename = '%s_%s.csv' % (base, sheet_name)
+                else:
+                    filename = '%s_%d.csv' % (base, i)
+                with open(filename, 'w') as f:
                     table.to_csv(f, **self.writer_kwargs)
 
         self.input_file.close()
