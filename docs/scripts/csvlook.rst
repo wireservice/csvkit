@@ -34,6 +34,10 @@ Renders a CSV to the command line in a Markdown-compatible, fixed-width format:
      --max-column-width MAX_COLUMN_WIDTH
                            Truncate all columns to at most this width. The
                            remainder will be replaced with ellipsis.
+     --max-precision MAX_PRECISION
+                           The maximum number of decimal places to display. The
+                           remainder will be replaced with ellipsis.
+     --no-number-ellipsis  Disable the ellipsis if --max-precision is exceeded.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                            Limit CSV dialect sniffing to the specified number of
                            bytes. Specify "0" to disable sniffing entirely, or

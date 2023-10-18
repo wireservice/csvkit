@@ -2,6 +2,8 @@ Unreleased
 ----------
 
 * :doc:`/scripts/csvformat` adds a :code:`--skip-header` (:code:`-E`) option to not output a header row.
+* :doc:`/scripts/csvlook` adds a :code:`--max-precision` option to set the maximum number of decimal places to display.
+* :doc:`/scripts/csvlook` adds a :code:`--no-number-ellipsis` option to disable the ellipsis (``…``) if :code:`--max-precision` is exceeded. (Requires agate 1.9.0 or greater.)
 * :doc:`/scripts/csvstat` supports the :code:`--no-inference` (:code:`-I`), :code:`--locale` (:code:`-L`), :code:`--blanks`, :code:`--date-format` and :code:`datetime-format` options.
 * :doc:`/scripts/csvstat` adds a :code:`--json` option to output results as JSON text.
 * :doc:`/scripts/csvstat` adds an :code:`--indent` option to indent the JSON text when :code:`--json` is set.

@@ -2,12 +2,17 @@ import io
 import sys
 from unittest.mock import patch
 
+from agate import config
+
 from csvkit.utilities.csvlook import CSVLook, launch_new_instance
 from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 
 
 class TestCSVLook(CSVKitTestCase, EmptyFileTests):
     Utility = CSVLook
+
+    def tearDown(self):
+        config.set_option('truncation_chars', '…')
 
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
@@ -124,6 +129,27 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             '|     a | b | c |',
             '| ----- | - | - |',
             '| Tr... | 2 | 3 |',
+        ])
+
+    def test_max_precision(self):
+        self.assertLines(['--max-precision', '0', 'examples/test_precision.csv'], [
+            '|  a |',
+            '| -- |',
+            '| 1… |',
+        ])
+
+    def test_no_number_ellipsis(self):
+        self.assertLines(['--no-number-ellipsis', 'examples/test_precision.csv'], [
+            '|     a |',
+            '| ----- |',
+            '| 1.235 |',
+        ])
+
+    def test_max_precision_no_number_ellipsis(self):
+        self.assertLines(['--max-precision', '0', '--no-number-ellipsis', 'examples/test_precision.csv'], [
+            '| a |',
+            '| - |',
+            '| 1 |',
         ])
 
     def test_stdin(self):

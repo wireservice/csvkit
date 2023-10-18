@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import agate
+from agate import config
 
 from csvkit.cli import CSVKitUtility
 
@@ -19,6 +20,12 @@ class CSVLook(CSVKitUtility):
             '--max-column-width', dest='max_column_width', type=int,
             help='Truncate all columns to at most this width. The remainder will be replaced with ellipsis.')
         self.argparser.add_argument(
+            '--max-precision', dest='max_precision', type=int,
+            help='The maximum number of decimal places to display. The remainder will be replaced with ellipsis.')
+        self.argparser.add_argument(
+            '--no-number-ellipsis', dest='no_number_ellipsis', action='store_true',
+            help='Disable the ellipsis if --max-precision is exceeded.')
+        self.argparser.add_argument(
             '-y', '--snifflimit', dest='sniff_limit', type=int, default=1024,
             help='Limit CSV dialect sniffing to the specified number of bytes. '
                  'Specify "0" to disable sniffing entirely, or "-1" to sniff the entire file.')
@@ -29,6 +36,14 @@ class CSVLook(CSVKitUtility):
     def main(self):
         if self.additional_input_expected():
             self.argparser.error('You must provide an input file or piped data.')
+
+        kwargs = {}
+        # In agate, max_precision defaults to 3. None means infinity.
+        if self.args.max_precision is not None:
+            kwargs['max_precision'] = self.args.max_precision
+
+        if self.args.no_number_ellipsis:
+            config.set_option('number_truncation_chars', '')
 
         sniff_limit = self.args.sniff_limit if self.args.sniff_limit != -1 else None
         table = agate.Table.from_csv(
@@ -45,6 +60,7 @@ class CSVLook(CSVKitUtility):
             max_rows=self.args.max_rows,
             max_columns=self.args.max_columns,
             max_column_width=self.args.max_column_width,
+            **kwargs,
         )
 
 
