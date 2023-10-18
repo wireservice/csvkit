@@ -36,9 +36,10 @@ Renders a CSV to the command line in a Markdown-compatible, fixed-width format:
                            remainder will be replaced with ellipsis.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                            Limit CSV dialect sniffing to the specified number of
-                           bytes. Specify "0" to disable sniffing.
-     -I, --no-inference    Disable type inference when parsing the input.
-                           Disable reformatting of values.
+                           bytes. Specify "0" to disable sniffing entirely, or
+                           "-1" to sniff the entire file.
+     -I, --no-inference    Disable type inference when parsing the input. This
+                           disables the reformatting of values.
 
 If a table is too wide to display properly try piping the output to ``less -S`` or truncating it using :doc:`csvcut`.
 
