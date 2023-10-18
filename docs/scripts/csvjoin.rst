@@ -11,10 +11,10 @@ Merges two or more CSV tables together using a method analogous to SQL JOIN oper
 
    usage: csvjoin [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
-                  [-S] [--blanks] [--date-format DATE_FORMAT]
-                  [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
-                  [-l] [--zero] [-V] [-c COLUMNS] [--outer] [--left] [--right]
-                  [-y SNIFF_LIMIT] [-I]
+                  [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
+                  [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
+                  [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-c COLUMNS]
+                  [--outer] [--left] [--right] [-y SNIFF_LIMIT] [-I]
                   [FILE [FILE ...]]
 
    Execute a SQL-like join to merge CSV files on a specified column or columns.

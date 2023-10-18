@@ -10,48 +10,50 @@ Converts a CSV file into JSON or GeoJSON (depending on flags):
 .. code-block:: none
 
    usage: csvjson [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
-                   [-S] [--blanks] [--date-format DATE_FORMAT]
-                   [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
-                   [-l] [--zero] [-V] [-i INDENT] [-k KEY] [--lat LAT] [--lon LON]
-                   [--crs CRS] [--stream] [-y SNIFF_LIMIT] [-I]
-                   [FILE]
+                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
+                  [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
+                  [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
+                  [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-i INDENT]
+                  [-k KEY] [--lat LAT] [--lon LON] [--type TYPE]
+                  [--geometry GEOMETRY] [--crs CRS] [--no-bbox] [--stream]
+                  [-y SNIFF_LIMIT] [-I]
+                  [FILE]
 
-    Convert a CSV file into JSON (or GeoJSON).
+   Convert a CSV file into JSON (or GeoJSON).
 
-    positional arguments:
-      FILE                  The CSV file to operate on. If omitted, will accept
-                            input as piped data via STDIN.
+   positional arguments:
+     FILE                  The CSV file to operate on. If omitted, will accept
+                           input as piped data via STDIN.
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      -i INDENT, --indent INDENT
-                            Indent the output JSON this many spaces. Disabled by
-                            default.
-      -k KEY, --key KEY     Output JSON as an object keyed by a given column, KEY,
-                            rather than as an array. All column values must be
-                            unique. If --lat and --lon are specified, this column
-                            is used as the GeoJSON Feature ID.
-      --lat LAT             A column index or name containing a latitude. Output
-                            will be GeoJSON instead of JSON. Requires --lon.
-      --lon LON             A column index or name containing a longitude. Output
-                            will be GeoJSON instead of JSON. Requires --lat.
-      --type TYPE           A column index or name containing a GeoJSON type.
-                            Output will be GeoJSON instead of JSON. Requires --lat
-                            and --lon.
-      --geometry GEOMETRY   A column index or name containing a GeoJSON geometry.
-                            Output will be GeoJSON instead of JSON. Requires --lat
-                            and --lon.
-      --crs CRS             A coordinate reference system string to be included
-                            with GeoJSON output. Requires --lat and --lon.
-      --no-bbox             Disable the calculation of a bounding box.
-      --stream              Output JSON as a stream of newline-separated objects,
-                            rather than an as an array.
-      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
-                            Limit CSV dialect sniffing to the specified number of
-                            bytes. Specify "0" to disable sniffing.
-      -I, --no-inference    Disable type inference (and --locale, --date-format,
-                            --datetime-format) when parsing CSV input.
+   optional arguments:
+     -h, --help            show this help message and exit
+     -i INDENT, --indent INDENT
+                           Indent the output JSON this many spaces. Disabled by
+                           default.
+     -k KEY, --key KEY     Output JSON as an object keyed by a given column, KEY,
+                           rather than as an array. All column values must be
+                           unique. If --lat and --lon are specified, this column
+                           is used as the GeoJSON Feature ID.
+     --lat LAT             A column index or name containing a latitude. Output
+                           will be GeoJSON instead of JSON. Requires --lon.
+     --lon LON             A column index or name containing a longitude. Output
+                           will be GeoJSON instead of JSON. Requires --lat.
+     --type TYPE           A column index or name containing a GeoJSON type.
+                           Output will be GeoJSON instead of JSON. Requires --lat
+                           and --lon.
+     --geometry GEOMETRY   A column index or name containing a GeoJSON geometry.
+                           Output will be GeoJSON instead of JSON. Requires --lat
+                           and --lon.
+     --crs CRS             A coordinate reference system string to be included
+                           with GeoJSON output. Requires --lat and --lon.
+     --no-bbox             Disable the calculation of a bounding box.
+     --stream              Output JSON as a stream of newline-separated objects,
+                           rather than an as an array.
+     -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
+                           Limit CSV dialect sniffing to the specified number of
+                           bytes. Specify "0" to disable sniffing.
+     -I, --no-inference    Disable type inference (and --locale, --date-format,
+                           --datetime-format) when parsing CSV input.
 
 See also: :doc:`../common_arguments`.
 

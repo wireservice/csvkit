@@ -11,9 +11,9 @@ Loads a CSV file into a :class:`agate.csv.Reader` object and then drops into a P
 
    usage: csvpy [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                 [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
-                [-S] [--blanks] [--date-format DATE_FORMAT]
-                [--datetime-format DATETIME_FORMAT] [-H] [-K SKIP_LINES] [-v]
-                [-l] [--zero] [-V] [--dict] [--agate]
+                [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
+                [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
+                [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [--dict] [--agate]
                 [FILE]
 
    Load a CSV file into a CSV reader and then drop into a Python shell.

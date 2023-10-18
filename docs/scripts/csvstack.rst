@@ -13,7 +13,7 @@ Stack up the rows from multiple CSV files, optionally adding a grouping value to
                    [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
                    [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-g GROUPS]
                    [-n GROUP_NAME] [--filenames]
-                   FILE [FILE ...]
+                   [FILE [FILE ...]]
 
    Stack up the rows from multiple CSV files, optionally adding a grouping value.
 

@@ -12,7 +12,7 @@ Filter tabular data to only those rows where certain columns contain a given val
    usage: csvgrep [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
                   [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS]
-                  [-m PATTERN] [-r REGEX] [-f MATCHFILE] [-i]
+                  [-m PATTERN] [-r REGEX] [-f MATCHFILE] [-i] [-a]
                   [FILE]
 
    Search CSV files. Like the Unix "grep" command, but for tabular data.
