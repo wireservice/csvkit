@@ -1,5 +1,5 @@
+import io
 import sys
-from io import StringIO
 from unittest.mock import patch
 
 from csvkit.utilities.csvlook import CSVLook, launch_new_instance
@@ -127,7 +127,7 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_stdin(self):
-        input_file = StringIO('a,b,c\n1,2,3\n4,5,6\n')
+        input_file = io.BytesIO(b'a,b,c\n1,2,3\n4,5,6\n')
 
         with stdin_as_string(input_file):
             self.assertLines([], [

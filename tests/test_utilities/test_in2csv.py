@@ -1,6 +1,6 @@
+import io
 import os
 import sys
-from io import StringIO
 from unittest.mock import patch
 
 from csvkit.utilities.in2csv import In2CSV, launch_new_instance
@@ -38,7 +38,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         self.assertConverted('csv', 'examples/blanks.csv', 'examples/blanks.csv', ['--blanks'])
 
     def test_null_value(self):
-        input_file = StringIO('a,b\nn/a,\\N')
+        input_file = io.BytesIO(b'a,b\nn/a,\\N')
 
         with stdin_as_string(input_file):
             self.assertLines(['-f', 'csv', '--null-value', '\\N'], [
@@ -49,7 +49,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_null_value_blanks(self):
-        input_file = StringIO('a,b\nn/a,\\N')
+        input_file = io.BytesIO(b'a,b\nn/a,\\N')
 
         with stdin_as_string(input_file):
             self.assertLines(['-f', 'csv', '--null-value', '\\N', '--blanks'], [
@@ -153,7 +153,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
                              ['--no-header-row', '--no-inference', '--snifflimit', '0'])
 
     def test_csv_datetime_inference(self):
-        input_file = StringIO('a\n2015-01-01T00:00:00Z')
+        input_file = io.BytesIO(b'a\n2015-01-01T00:00:00Z')
 
         with stdin_as_string(input_file):
             self.assertLines(['-f', 'csv'], [
@@ -182,9 +182,9 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_geojson_no_inference(self):
-        input_file = StringIO(
-            '{"a": 1, "b": 2, "type": "FeatureCollection", "features": [{"geometry": {}, "properties": '
-            '{"a": 1, "b": 2, "c": 3}}]}')
+        input_file = io.BytesIO(
+            b'{"a": 1, "b": 2, "type": "FeatureCollection", "features": [{"geometry": {}, "properties": '
+            b'{"a": 1, "b": 2, "c": 3}}]}')
 
         with stdin_as_string(input_file):
             self.assertLines(['--no-inference', '-f', 'geojson'], [
@@ -195,7 +195,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_json_no_inference(self):
-        input_file = StringIO('[{"a": 1, "b": 2, "c": 3}]')
+        input_file = io.BytesIO(b'[{"a": 1, "b": 2, "c": 3}]')
 
         with stdin_as_string(input_file):
             self.assertLines(['--no-inference', '-f', 'json'], [
@@ -206,7 +206,7 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_ndjson_no_inference(self):
-        input_file = StringIO('{"a": 1, "b": 2, "c": 3}')
+        input_file = io.BytesIO(b'{"a": 1, "b": 2, "c": 3}')
 
         with stdin_as_string(input_file):
             self.assertLines(['--no-inference', '-f', 'ndjson'], [

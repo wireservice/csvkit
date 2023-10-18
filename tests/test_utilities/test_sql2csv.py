@@ -1,6 +1,6 @@
+import io
 import os
 import sys
-from io import StringIO
 from unittest.mock import patch
 
 try:
@@ -71,7 +71,7 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
         self.assertTrue('54' in csv)
 
     def test_stdin(self):
-        input_file = StringIO('select cast(3.1415 * 13.37 as integer) as answer')
+        input_file = io.BytesIO(b'select cast(3.1415 * 13.37 as integer) as answer')
 
         with stdin_as_string(input_file):
             csv = self.get_output([])
@@ -82,7 +82,7 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_stdin_with_query(self):
-        input_file = StringIO('select cast(3.1415 * 13.37 as integer) as answer')
+        input_file = io.BytesIO(b'select cast(3.1415 * 13.37 as integer) as answer')
 
         with stdin_as_string(input_file):
             csv = self.get_output(['--query', 'select 6*9 as question'])
@@ -93,7 +93,7 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_stdin_with_file(self):
-        input_file = StringIO('select cast(3.1415 * 13.37 as integer) as answer')
+        input_file = io.BytesIO(b'select cast(3.1415 * 13.37 as integer) as answer')
 
         with stdin_as_string(input_file):
             csv = self.get_output(['examples/test.sql'])
@@ -104,7 +104,7 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_stdin_with_file_and_query(self):
-        input_file = StringIO('select cast(3.1415 * 13.37 as integer) as answer')
+        input_file = io.BytesIO(b'select cast(3.1415 * 13.37 as integer) as answer')
 
         with stdin_as_string(input_file):
             csv = self.get_output(['examples/test.sql', '--query', 'select 6*9 as question'])

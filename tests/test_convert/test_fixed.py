@@ -1,4 +1,4 @@
-from io import StringIO
+import io
 
 from csvkit.convert import fixed
 from csvkit.utilities.in2csv import In2CSV
@@ -23,7 +23,7 @@ class TestFixed(CSVKitTestCase):
             self.assertEqual(f.read(), output)
 
     def test_fixed_no_inference(self):
-        input_file = StringIO('     1   2 3')
+        input_file = io.BytesIO(b'     1   2 3')
 
         with stdin_as_string(input_file):
             self.assertLines(['--no-inference', '-f', 'fixed', '--schema',
@@ -36,7 +36,7 @@ class TestFixed(CSVKitTestCase):
 
     def test_fixed_streaming(self):
         with open('examples/testfixed') as f, open('examples/testfixed_schema.csv') as schema:
-            output_file = StringIO()
+            output_file = io.StringIO()
             fixed.fixed2csv(f, schema, output=output_file)
             output = output_file.getvalue()
             output_file.close()
@@ -91,7 +91,7 @@ foo,1,5
 bar,6,2
 baz,8,5"""
 
-        f = StringIO(schema)
+        f = io.StringIO(schema)
         parser = fixed.FixedWidthRowParser(f)
         f.close()
 

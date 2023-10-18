@@ -1,6 +1,6 @@
+import io
 import os
 import sys
-from io import StringIO
 from unittest.mock import patch
 
 from csvkit.utilities.csvclean import CSVClean, launch_new_instance
@@ -17,7 +17,7 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
 
     def assertCleaned(self, basename, output_lines, error_lines, additional_args=[]):
         args = [f'examples/{basename}.csv'] + additional_args
-        output_file = StringIO()
+        output_file = io.StringIO()
 
         utility = CSVClean(args, output_file)
         utility.run()

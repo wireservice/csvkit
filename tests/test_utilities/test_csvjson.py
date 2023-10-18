@@ -1,6 +1,6 @@
+import io
 import json
 import sys
-from io import StringIO
 from unittest.mock import patch
 
 from csvkit.utilities.csvjson import CSVJSON, launch_new_instance
@@ -58,7 +58,7 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         self.assertDictEqual(js, {'True': {'a': True, 'c': 3.0, 'b': 2.0}})
 
     def test_duplicate_keys(self):
-        output_file = StringIO()
+        output_file = io.StringIO()
         utility = CSVJSON(['-k', 'a', 'examples/dummy3.csv'], output_file)
         self.assertRaisesRegex(ValueError,
                                'Value True is not unique in the key column.',

@@ -17,11 +17,11 @@ And paste:
 
 """
 
+import io
 import sys
 import unittest
 import warnings
 from contextlib import contextmanager
-from io import StringIO
 
 import agate
 
@@ -39,7 +39,7 @@ def stderr_as_stdout():
 @contextmanager
 def stdin_as_string(content):
     temp = sys.stdin
-    sys.stdin = content
+    sys.stdin = io.TextIOWrapper(content)
     yield
     sys.stdin = temp
 
@@ -48,7 +48,7 @@ class CSVKitTestCase(unittest.TestCase):
     warnings.filterwarnings(action='ignore', module='agate')
 
     def get_output(self, args):
-        output_file = StringIO()
+        output_file = io.StringIO()
 
         utility = self.Utility(args, output_file)
         utility.run()
@@ -59,7 +59,7 @@ class CSVKitTestCase(unittest.TestCase):
         return output
 
     def get_output_as_io(self, args):
-        return StringIO(self.get_output(args))
+        return io.StringIO(self.get_output(args))
 
     def get_output_as_list(self, args):
         return self.get_output(args).split('\n')
@@ -89,7 +89,7 @@ class CSVKitTestCase(unittest.TestCase):
 
 class EmptyFileTests:
     def test_empty(self):
-        with open('examples/empty.csv') as f, stdin_as_string(f):
+        with open('examples/empty.csv', 'rb') as f, stdin_as_string(f):
             utility = self.Utility(getattr(self, 'default_args', []))
             utility.run()
 
@@ -105,7 +105,7 @@ class NamesTests:
     def test_invalid_options(self):
         args = ['-n', '--no-header-row', 'examples/dummy.csv']
 
-        output_file = StringIO()
+        output_file = io.StringIO()
         utility = self.Utility(args, output_file)
 
         with self.assertRaises(RequiredHeaderError):
@@ -118,7 +118,7 @@ class ColumnsTests:
     def test_invalid_column(self):
         args = getattr(self, 'columns_args', []) + ['-c', '0', 'examples/dummy.csv']
 
-        output_file = StringIO()
+        output_file = io.StringIO()
         utility = self.Utility(args, output_file)
 
         with self.assertRaises(ColumnIdentifierError):

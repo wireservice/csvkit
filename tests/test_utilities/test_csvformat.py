@@ -1,5 +1,5 @@
+import io
 import sys
-from io import StringIO
 from unittest.mock import patch
 
 from csvkit.utilities.csvformat import CSVFormat, launch_new_instance
@@ -54,7 +54,7 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_quotechar(self):
-        input_file = StringIO('a,b,c\n1*2,3,4\n')
+        input_file = io.BytesIO(b'a,b,c\n1*2,3,4\n')
 
         with stdin_as_string(input_file):
             self.assertLines(['-Q', '*'], [
@@ -65,7 +65,7 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_doublequote(self):
-        input_file = StringIO('a\n"a ""quoted"" string"')
+        input_file = io.BytesIO(b'a\n"a ""quoted"" string"')
 
         with stdin_as_string(input_file):
             self.assertLines(['-P', '#', '-B'], [
@@ -76,7 +76,7 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
         input_file.close()
 
     def test_escapechar(self):
-        input_file = StringIO('a,b,c\n1"2,3,4\n')
+        input_file = io.BytesIO(b'a,b,c\n1"2,3,4\n')
 
         with stdin_as_string(input_file):
             self.assertLines(['-P', '#', '-U', '3'], [

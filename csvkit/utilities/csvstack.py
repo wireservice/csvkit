@@ -108,7 +108,7 @@ class CSVStack(CSVKitUtility):
             output.writerow(headers)
 
         for i, path in enumerate(self.args.input_paths):
-            f = self._open_input_file(path)
+            f = self._open_input_file(path, opened=True)
             file_is_stdin = path == '-'
 
             if has_groups:

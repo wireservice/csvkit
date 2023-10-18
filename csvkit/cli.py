@@ -233,11 +233,14 @@ class CSVKitUtility:
             '-V', '--version', action='version', version='%(prog)s 1.2.0',
             help='Display version information and exit.')
 
-    def _open_input_file(self, path):
+    def _open_input_file(self, path, opened=False):
         """
         Open the input file specified on the command line.
         """
         if not path or path == '-':
+            # "UnsupportedOperation: It is not possible to set the encoding or newline of stream after the first read"
+            if not opened:
+                sys.stdin.reconfigure(encoding=self.args.encoding)
             f = sys.stdin
         else:
             extension = splitext(path)[1]

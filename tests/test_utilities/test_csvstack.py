@@ -21,7 +21,7 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_skip_lines_stdin(self):
-        with open('examples/test_skip_lines.csv') as f, stdin_as_string(f):
+        with open('examples/test_skip_lines.csv', 'rb') as f, stdin_as_string(f):
             self.assertRows(['--skip-lines', '3', '-', 'examples/test_skip_lines.csv'], [
                 ['a', 'b', 'c'],
                 ['1', '2', '3'],
@@ -62,14 +62,14 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_multiple_file_stack_col_ragged_stdin(self):
-        with open('examples/dummy.csv') as f, stdin_as_string(f):
+        with open('examples/dummy.csv', 'rb') as f, stdin_as_string(f):
             self.assertRows(['-', 'examples/dummy_col_shuffled_ragged.csv'], [
                 ['a', 'b', 'c', 'd'],
                 ['1', '2', '3', ''],
                 ['1', '2', '3', '4'],
             ])
 
-        with open('examples/dummy.csv') as f, stdin_as_string(f):
+        with open('examples/dummy.csv', 'rb') as f, stdin_as_string(f):
             self.assertRows(['examples/dummy_col_shuffled_ragged.csv', '-'], [
                 ['b', 'c', 'a', 'd'],
                 ['2', '3', '1', '4'],
@@ -101,14 +101,14 @@ class TestNoHeaderRow(TestCSVStack):
         ])
 
     def test_no_header_row_basic_stdin(self):
-        with open('examples/no_header_row.csv') as f, stdin_as_string(f):
+        with open('examples/no_header_row.csv', 'rb') as f, stdin_as_string(f):
             self.assertRows(['--no-header-row', '-', 'examples/no_header_row2.csv'], [
                 ['a', 'b', 'c'],
                 ['1', '2', '3'],
                 ['4', '5', '6'],
             ])
 
-        with open('examples/no_header_row.csv') as f, stdin_as_string(f):
+        with open('examples/no_header_row.csv', 'rb') as f, stdin_as_string(f):
             self.assertRows(['--no-header-row', 'examples/no_header_row2.csv', '-'], [
                 ['a', 'b', 'c'],
                 ['4', '5', '6'],
