@@ -5,11 +5,11 @@ with open('README.rst') as f:
 
 setup(
     name='csvkit',
-    version='1.2.0',
+    version='1.3.0',
     description='A suite of command-line tools for working with CSV, the king of tabular file formats.',
     long_description=long_description,
     long_description_content_type='text/x-rst',
-    author='Christopher Groskopf',
+    author='Christopher Groskopf and James McKinney',
     author_email='chrisgroskopf@gmail.com',
     url='https://github.com/wireservice/csvkit',
     license='MIT',
