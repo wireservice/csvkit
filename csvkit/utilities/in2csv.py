@@ -155,7 +155,7 @@ class In2CSV(CSVKitUtility):
                 table = agate.Table.from_xls(self.input_file, sheet=self.args.sheet,
                                              encoding_override=self.args.encoding_xls, **kwargs)
             elif filetype == 'xlsx':
-                table = agate.Table.from_xlsx(self.input_file, sheet=self.args.sheet, **kwargs)
+                table = agate.Table.from_xlsx(self.input_file, sheet=self.args.sheet, reset_dimensions=True, **kwargs)
             elif filetype == 'dbf':
                 if not hasattr(self.input_file, 'name'):
                     raise ValueError('DBF files can not be converted from stdin. You must pass a filename.')
@@ -177,7 +177,7 @@ class In2CSV(CSVKitUtility):
                 tables = agate.Table.from_xls(self.input_file, sheet=sheets,
                                               encoding_override=self.args.encoding_xls, **kwargs)
             elif filetype == 'xlsx':
-                tables = agate.Table.from_xlsx(self.input_file, sheet=sheets, **kwargs)
+                tables = agate.Table.from_xlsx(self.input_file, sheet=sheets, reset_dimensions=True, **kwargs)
 
             base = splitext(self.input_file.name)[0]
             for i, (sheet_name, table) in enumerate(tables.items()):
