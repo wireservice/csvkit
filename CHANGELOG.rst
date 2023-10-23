@@ -1,7 +1,7 @@
 Unreleased
 ----------
 
-fix: :doc:`/scripts/in2csv` `recalculates <https://openpyxl.readthedocs.io/en/stable/optimized.html#worksheet-dimensions>`_ the dimensions of XLSX files, instead of trusting the file's metadata.
+fix: :doc:`/scripts/in2csv` `recalculates <https://openpyxl.readthedocs.io/en/stable/optimized.html#worksheet-dimensions>`_ the dimensions of an XLSX file, instead of trusting the file's metadata.
 
 1.3.0 - October 18, 2023
 ------------------------
