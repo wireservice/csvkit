@@ -50,6 +50,9 @@ class In2CSV(CSVKitUtility):
             '--use-sheet-names', dest='use_sheet_names', action='store_true',
             help='Use the sheet names as file names when --write-sheets is set.')
         self.argparser.add_argument(
+            '--reset-dimensions', dest='reset_dimensions', action='store_true',
+            help='Ignore the sheet dimensions provided by the XLSX file.')
+        self.argparser.add_argument(
             '--encoding-xls', dest='encoding_xls',
             help='Specify the encoding of the input XLS file.')
         self.argparser.add_argument(
@@ -155,7 +158,9 @@ class In2CSV(CSVKitUtility):
                 table = agate.Table.from_xls(self.input_file, sheet=self.args.sheet,
                                              encoding_override=self.args.encoding_xls, **kwargs)
             elif filetype == 'xlsx':
-                table = agate.Table.from_xlsx(self.input_file, sheet=self.args.sheet, reset_dimensions=True, **kwargs)
+                table = agate.Table.from_xlsx(
+                    self.input_file, sheet=self.args.sheet, reset_dimensions=self.args.reset_dimensions, **kwargs
+                )
             elif filetype == 'dbf':
                 if not hasattr(self.input_file, 'name'):
                     raise ValueError('DBF files can not be converted from stdin. You must pass a filename.')
@@ -177,7 +182,9 @@ class In2CSV(CSVKitUtility):
                 tables = agate.Table.from_xls(self.input_file, sheet=sheets,
                                               encoding_override=self.args.encoding_xls, **kwargs)
             elif filetype == 'xlsx':
-                tables = agate.Table.from_xlsx(self.input_file, sheet=sheets, reset_dimensions=True, **kwargs)
+                tables = agate.Table.from_xlsx(
+                    self.input_file, sheet=sheets, reset_dimensions=self.args.reset_dimensions, **kwargs
+                )
 
             base = splitext(self.input_file.name)[0]
             for i, (sheet_name, table) in enumerate(tables.items()):
