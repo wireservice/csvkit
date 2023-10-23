@@ -137,3 +137,5 @@ Then the input file might have initial rows before the header and data rows. You
 .. code-block:: bash
 
    in2csv --skip-lines 3 examples/test_skip_lines.csv
+
+If an XLSX file yields too few rows or too few columns, then the application that created the file might have `incorrectly set the worksheet's dimensions <https://openpyxl.readthedocs.io/en/stable/optimized.html#worksheet-dimensions>`__. Try again with the :code:`--reset-dimensions` option.
