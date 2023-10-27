@@ -27,8 +27,8 @@ The header line is required though the columns may be in any order:
                  [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V]
                  [-f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}] [-s SCHEMA]
                  [-k KEY] [-n] [--sheet SHEET] [--write-sheets WRITE_SHEETS]
-                 [--use-sheet-names] [--encoding-xls ENCODING_XLS]
-                 [-y SNIFF_LIMIT] [-I]
+                 [--use-sheet-names] [--reset-dimensions]
+                 [--encoding-xls ENCODING_XLS] [-y SNIFF_LIMIT] [-I]
                  [FILE]
 
    Convert common, but less awesome, tabular data formats to CSV.
@@ -54,6 +54,7 @@ The header line is required though the columns may be in any order:
                            "-" to write all sheets.
      --use-sheet-names     Use the sheet names as file names when --write-sheets
                            is set.
+     --reset-dimensions    Ignore the sheet dimensions provided by the XLSX file.
      --encoding-xls ENCODING_XLS
                            Specify the encoding of the input XLS file.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
