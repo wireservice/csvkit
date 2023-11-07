@@ -50,7 +50,7 @@ class In2CSV(CSVKitUtility):
             '--use-sheet-names', dest='use_sheet_names', action='store_true',
             help='Use the sheet names as file names when --write-sheets is set.')
         self.argparser.add_argument(
-            '--reset-dimensions', dest='reset_dimensions', action='store_true',
+            '--reset-dimensions', dest='reset_dimensions', action='store_true', default=None,
             help='Ignore the sheet dimensions provided by the XLSX file.')
         self.argparser.add_argument(
             '--encoding-xls', dest='encoding_xls',
