@@ -43,7 +43,7 @@ See also: :doc:`../common_arguments`.
 Examples
 ========
 
-Joining a set of files for different years:
+Join a set of files for different years:
 
 .. code-block:: bash
 

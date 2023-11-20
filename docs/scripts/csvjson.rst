@@ -62,14 +62,9 @@ Examples
 
 Convert veteran's education dataset to JSON keyed by state abbreviation:
 
-.. code-block:: bash
+.. code-block:: console
 
-   csvjson -k "State Abbreviate" -i 4 examples/realdata/FY09_EDU_Recipients_by_State.csv
-
-Results in a JSON document like:
-
-.. code-block:: json
-
+   $ csvjson -k "State Abbreviate" -i 4 examples/realdata/FY09_EDU_Recipients_by_State.csv
    {
        "AL": {
            "State Name": "ALABAMA",
@@ -88,16 +83,11 @@ Results in a JSON document like:
        }
    }
 
-Converting locations of public art into GeoJSON:
+Convert locations of public art into GeoJSON:
 
-.. code-block:: bash
+.. code-block:: console
 
-   csvjson --lat latitude --lon longitude --k slug --crs EPSG:4269 -i 4 examples/test_geo.csv
-
-Results in a GeoJSON document like:
-
-.. code-block:: json
-
+   $ csvjson --lat latitude --lon longitude --k slug --crs EPSG:4269 -i 4 examples/test_geo.csv
    {
        "type": "FeatureCollection", 
        "bbox": [
