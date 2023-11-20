@@ -139,7 +139,7 @@ Group rows by one column:
 
    csvsql --query "select * from 'dummy3' group by a" examples/dummy3.csv
 
-You can also use CSVSQL to "directly" query one or more CSV files. Please note that this will create an in-memory SQL database, so it won't be very fast:
+You can also use CSVSQL to "directly" query one or more CSV files. Please note that this will create an in-memory SQLite database, so it won't be very fast:
 
 .. code-block:: bash
 

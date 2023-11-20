@@ -220,7 +220,7 @@ Sometimes, if you will only be running a single query, even constructing the dat
 
    csvsql --query "select county,item_name from joined where quantity > 5;" joined.csv | csvlook
 
-SQL queries directly on CSVs! Keep in mind when using this that you are loading the entire dataset into an in-memory database, so it is likely to be very slow for large datasets.
+SQL queries directly on CSVs! Keep in mind when using this that you are loading the entire dataset into an in-memory SQLite database, so it is likely to be very slow for large datasets.
 
 Summing up
 ==========
