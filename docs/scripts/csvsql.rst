@@ -146,22 +146,28 @@ You can use csvsql to "directly" query one or more CSV files. Please note that t
 
 .. code-block:: bash
 
-   csvsql --query  "select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species" examples/iris.csv examples/irismeta.csv
+   csvsql --query  "SELECT m.usda_id, avg(i.sepal_length) AS mean_sepal_length FROM iris AS i JOIN irismeta AS m ON (i.species = m.species) GROUP BY m.species" examples/iris.csv examples/irismeta.csv
 
 Group rows by one column:
 
 .. code-block:: bash
 
-   csvsql --query "select * from 'dummy3' group by a" examples/dummy3.csv
+   csvsql --query "SELECT * FROM 'dummy3' GROUP BY a" examples/dummy3.csv
 
 Concatenate two columns:
 
 .. code-block:: bash
 
-   csvsql --query "select a || b from 'dummy3'" examples/dummy3.csv
+   csvsql --query "SELECT a || b FROM 'dummy3'" --no-inference examples/dummy3.csv
 
 If a column contains null values, you must ``COALESCE`` the column:
 
 .. code-block:: bash
 
-   csvsql --query "select a || COALESCE(b, '') from 'sort_ints_nulls'" --no-inference examples/sort_ints_nulls.csv
+   csvsql --query "SELECT a || COALESCE(b, '') FROM 'sort_ints_nulls'" --no-inference examples/sort_ints_nulls.csv
+
+The ``UPDATE`` SQL statement produces no output. Remember to ``SELECT`` the columns and rows you want:
+
+.. code-block:: bash
+
+   csvsql --query "UPDATE 'dummy3' SET a = 'foo'; SELECT * FROM 'dummy3'" examples/dummy3.csv
