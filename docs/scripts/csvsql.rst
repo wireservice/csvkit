@@ -100,11 +100,17 @@ If you prefer not to enter your password in the connection string, store the pas
 Examples
 ========
 
+Generate SQL statements
+-----------------------
+
 Generate a statement in the PostgreSQL dialect:
 
 .. code-block:: bash
 
    csvsql -i postgresql examples/realdata/FY09_EDU_Recipients_by_State.csv
+
+Interact with a SQL database
+----------------------------
 
 Create a table and import data from the CSV directly into PostgreSQL:
 
@@ -119,7 +125,7 @@ For large tables it may not be practical to process the entire table. One soluti
 
    head -n 20 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsql --no-constraints --tables fy09
 
-Create tables for an entire folder of CSVs and import data from those files directly into PostgreSQL:
+Create tables for an entire directory of CSVs and import data from those files directly into PostgreSQL:
 
 .. code-block:: bash
 
@@ -133,17 +139,20 @@ If those CSVs have identical headers, you can import them into the same table by
    createdb test
    csvstack examples/dummy?.csv | csvsql --db postgresql:///test --insert
 
+Query and output CSV files using SQL
+------------------------------------
+
+You can use csvsql to "directly" query one or more CSV files. Please note that this will create an in-memory SQLite database, so it won't be very fast:
+
+.. code-block:: bash
+
+   csvsql --query  "select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species" examples/iris.csv examples/irismeta.csv
+
 Group rows by one column:
 
 .. code-block:: bash
 
    csvsql --query "select * from 'dummy3' group by a" examples/dummy3.csv
-
-You can also use CSVSQL to "directly" query one or more CSV files. Please note that this will create an in-memory SQLite database, so it won't be very fast:
-
-.. code-block:: bash
-
-   csvsql --query  "select m.usda_id, avg(i.sepal_length) as mean_sepal_length from iris as i join irismeta as m on (i.species = m.species) group by m.species" examples/iris.csv examples/irismeta.csv
 
 Concatenate two columns:
 
