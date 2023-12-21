@@ -1,7 +1,8 @@
 Unreleased
 ----------
 
-* :doc:`/scripts/in2csv` adds a :code:`--reset-dimensions` option to `recalculate <https://openpyxl.readthedocs.io/en/stable/optimized.html#worksheet-dimensions>`_ the dimensions of an XLSX file, instead of trusting the file's metadata. csvkit's dependency `agate-excel <https://agate-excel.readthedocs.io/en/latest/>`_ 0.4.0 automatically recalculates the dimensions if the file's metadata expresses dimensions of "A1:A1" (a single cell).
+* feat: :doc:`/scripts/in2csv` adds a :code:`--reset-dimensions` option to `recalculate <https://openpyxl.readthedocs.io/en/stable/optimized.html#worksheet-dimensions>`_ the dimensions of an XLSX file, instead of trusting the file's metadata. csvkit's dependency `agate-excel <https://agate-excel.readthedocs.io/en/latest/>`_ 0.4.0 automatically recalculates the dimensions if the file's metadata expresses dimensions of "A1:A1" (a single cell).
+* fix: :doc:`/scripts/in2csv`: :code:`--write-sheets` no longer errors when standard input is an XLS or XLSX file.
 
 1.3.0 - October 18, 2023
 ------------------------

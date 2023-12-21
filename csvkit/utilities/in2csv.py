@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import functools
 import sys
 from io import BytesIO
 from os.path import splitext
@@ -63,9 +64,13 @@ class In2CSV(CSVKitUtility):
             '-I', '--no-inference', dest='no_inference', action='store_true',
             help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
+    @functools.lru_cache
+    def stdin(self):
+        return sys.stdin.buffer.read()
+
     def open_excel_input_file(self, path):
         if not path or path == '-':
-            return BytesIO(sys.stdin.buffer.read())
+            return BytesIO(self.stdin())
         return open(path, 'rb')
 
     def sheet_names(self, path, filetype):
@@ -186,7 +191,10 @@ class In2CSV(CSVKitUtility):
                     self.input_file, sheet=sheets, reset_dimensions=self.args.reset_dimensions, **kwargs
                 )
 
-            base = splitext(self.input_file.name)[0]
+            if not path or path == '-':
+                base = 'stdin'
+            else:
+                base = splitext(self.input_file.name)[0]
             for i, (sheet_name, table) in enumerate(tables.items()):
                 if self.args.use_sheet_names:
                     filename = '%s_%s.csv' % (base, sheet_name)
