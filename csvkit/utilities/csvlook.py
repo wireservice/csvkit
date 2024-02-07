@@ -50,6 +50,7 @@ class CSVLook(CSVKitUtility):
             self.input_file,
             skip_lines=self.args.skip_lines,
             sniff_limit=sniff_limit,
+            row_limit=self.args.max_rows,
             column_types=self.get_column_types(),
             line_numbers=self.args.line_numbers,
             **self.reader_kwargs,

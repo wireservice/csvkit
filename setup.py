@@ -57,7 +57,7 @@ setup(
         ],
     },
     install_requires=[
-        'agate>=1.6.1',
+        'agate>=1.6.3',
         'agate-excel>=0.2.2',
         'agate-dbf>=0.2.2',
         'agate-sql>=0.5.3',
