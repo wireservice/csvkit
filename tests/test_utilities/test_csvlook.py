@@ -114,7 +114,6 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
         self.assertLines(['--max-rows', '0', 'examples/dummy.csv'], [
             '| a | b | c |',
             '| - | - | - |',
-            '| ... | ... | ... |',
         ])
 
     def test_max_columns(self):
