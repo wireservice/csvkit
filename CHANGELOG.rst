@@ -1,8 +1,24 @@
 Unreleased
 ----------
 
+* feat: :doc:`/scripts/csvpy` adds the options:
+
+   * :code:`--no-number-ellipsis`, to disable the ellipsis (``…``) if max precision is exceeded, for example, when using ``table.print_table()``
+   * :code:`--sniff-limit``
+   * :code:`--no-inference``
+
+* feat: :doc:`/scripts/csvpy` removes the ``--linenumbers`` and ``--zero`` output options, which had no effect.
 * feat: :doc:`/scripts/in2csv` adds a :code:`--reset-dimensions` option to `recalculate <https://openpyxl.readthedocs.io/en/stable/optimized.html#worksheet-dimensions>`_ the dimensions of an XLSX file, instead of trusting the file's metadata. csvkit's dependency `agate-excel <https://agate-excel.readthedocs.io/en/latest/>`_ 0.4.0 automatically recalculates the dimensions if the file's metadata expresses dimensions of "A1:A1" (a single cell).
 * fix: :doc:`/scripts/csvlook` only reads up to :code:`--max-rows` rows instead of the entire file.
+* fix: :doc:`/scripts/csvpy` supports the existing input options:
+
+   * :code:`--locale`
+   * :code:`--blanks`
+   * :code:`--null-value`
+   * :code:`--date-format`
+   * :code:`--datetime-format`
+   * :code:`--skip-lines`
+
 * fix: :doc:`/scripts/in2csv`: :code:`--write-sheets` no longer errors when standard input is an XLS or XLSX file.
 * Update minimum agate version to 1.6.3.
 
