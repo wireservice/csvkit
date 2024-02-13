@@ -2,8 +2,8 @@
 
 import argparse
 import bz2
-import datetime
 import csv
+import datetime
 import decimal
 import gzip
 import itertools
