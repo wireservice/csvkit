@@ -1,5 +1,5 @@
-Unreleased
-----------
+1.4.0 - February 13, 2024
+-------------------------
 
 * feat: :doc:`/scripts/csvpy` adds the options:
 
