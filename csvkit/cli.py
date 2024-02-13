@@ -3,6 +3,7 @@
 import argparse
 import bz2
 import datetime
+import csv
 import decimal
 import gzip
 import itertools
@@ -264,12 +265,16 @@ class CSVKitUtility:
         """
         kwargs = {}
 
+        field_size_limit = getattr(self.args, 'field_size_limit')
+        if field_size_limit is not None:
+            csv.field_size_limit(field_size_limit)
+
         if self.args.tabs:
             kwargs['delimiter'] = '\t'
         elif self.args.delimiter:
             kwargs['delimiter'] = self.args.delimiter
 
-        for arg in ('quotechar', 'quoting', 'doublequote', 'escapechar', 'field_size_limit', 'skipinitialspace'):
+        for arg in ('quotechar', 'quoting', 'doublequote', 'escapechar', 'skipinitialspace'):
             value = getattr(self.args, arg)
             if value is not None:
                 kwargs[arg] = value

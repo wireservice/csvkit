@@ -19,6 +19,8 @@ Unreleased
    * :code:`--datetime-format`
    * :code:`--skip-lines`
 
+* fix: :doc:`/scripts/csvpy`: :code:`--maxfieldsize` no longer errors when :code:`--dict` is set.
+* fix: :doc:`/scripts/csvstack`: :code:`--maxfieldsize` no longer errors when :code:`--no-header-row` isn't set.
 * fix: :doc:`/scripts/in2csv`: :code:`--write-sheets` no longer errors when standard input is an XLS or XLSX file.
 * Update minimum agate version to 1.6.3.
 
