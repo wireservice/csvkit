@@ -14,7 +14,7 @@ Sort CSV files. Like the Unix "sort" command, but for tabular data:
                   [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
                   [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
                   [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS]
-                  [-r] [-y SNIFF_LIMIT] [-I]
+                  [-r] [-i] [-y SNIFF_LIMIT] [-I]
                   [FILE]
 
    Sort CSV files. Like the Unix "sort" command, but for tabular data.
@@ -32,6 +32,7 @@ Sort CSV files. Like the Unix "sort" command, but for tabular data:
                            ranges to sort by, e.g. "1,id,3-5". Defaults to all
                            columns.
      -r, --reverse         Sort in descending order.
+     -i, --ignore-case     Perform case-independent sorting.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                            Limit CSV dialect sniffing to the specified number of
                            bytes. Specify "0" to disable sniffing.

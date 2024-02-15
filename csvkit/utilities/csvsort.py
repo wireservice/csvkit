@@ -5,6 +5,17 @@ import agate
 from csvkit.cli import CSVKitUtility, parse_column_identifiers
 
 
+def ignore_case_sort(key):
+
+    def inner(row):
+        return tuple(
+            agate.NullOrder() if row[n] is None else (row[n].upper() if isinstance(row[n], str) else row[n])
+            for n in key
+        )
+
+    return inner
+
+
 class CSVSort(CSVKitUtility):
     description = 'Sort CSV files. Like the Unix "sort" command, but for tabular data.'
 
@@ -19,6 +30,9 @@ class CSVSort(CSVKitUtility):
         self.argparser.add_argument(
             '-r', '--reverse', dest='reverse', action='store_true',
             help='Sort in descending order.')
+        self.argparser.add_argument(
+            '-i', '--ignore-case', dest='ignore_case', action='store_true',
+            help='Perform case-independent sorting.')
         self.argparser.add_argument(
             '-y', '--snifflimit', dest='sniff_limit', type=int, default=1024,
             help='Limit CSV dialect sniffing to the specified number of bytes. '
@@ -44,13 +58,16 @@ class CSVSort(CSVKitUtility):
             **self.reader_kwargs,
         )
 
-        column_ids = parse_column_identifiers(
+        key = parse_column_identifiers(
             self.args.columns,
             table.column_names,
             self.get_column_offset(),
         )
 
-        table = table.order_by(column_ids, reverse=self.args.reverse)
+        if self.args.ignore_case:
+            key = ignore_case_sort(key)
+
+        table = table.order_by(key, reverse=self.args.reverse)
         table.to_csv(self.output_file, **self.writer_kwargs)
 
 
