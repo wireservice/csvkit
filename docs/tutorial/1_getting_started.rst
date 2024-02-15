@@ -22,6 +22,12 @@ Installing csvkit is easy:
 
 If you have problems installing, look for help  in the :doc:`../tricks` section of the documentation.
 
+If you need to work with `Zstandard <https://facebook.github.io/zstd/>`_ files with the ``.zst`` extension, install Zstandard support:
+
+.. code-block:: bash
+
+   sudo pip install csvkit[zstandard]
+
 .. note::
 
    If you're familiar with `virtualenv <https://virtualenv.readthedocs.org/en/latest/>`_, it is better to install csvkit in its own environment. If you are doing this, then you should leave off the ``sudo`` in the previous command.

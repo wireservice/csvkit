@@ -69,6 +69,9 @@ setup(
         'importlib_metadata; python_version < "3.10"',
     ],
     extras_require={
+        'zstandard': [
+            'zstandard',
+        ],
         'test': [
             'coverage>=4.4.2',
             'pytest',

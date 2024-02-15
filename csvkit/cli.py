@@ -17,6 +17,11 @@ from agate.data_types.base import DEFAULT_NULL_VALUES
 
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
 
+try:
+    import zstandard
+except ImportError:
+    zstandard = None
+
 
 class LazyFile:
     """
@@ -250,8 +255,10 @@ class CSVKitUtility:
                 func = gzip.open
             elif extension == '.bz2':
                 func = bz2.open
-            elif extension == ".xz":
+            elif extension == '.xz':
                 func = lzma.open
+            elif extension == '.zst' and zstandard:
+                func = zstandard.open
             else:
                 func = open
 
