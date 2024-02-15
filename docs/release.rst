@@ -10,6 +10,14 @@ Release process
 
 #. All tests pass on continuous integration
 #. The changelog is up-to-date and dated
+#. If new options are added, regenerate the usage information in the documentation with, for example:
+
+   .. code-block:: bash
+
+      stty cols 80
+      csvformat -h
+      stty sane
+
 #. The version number is correct in:
 
     -  setup.py

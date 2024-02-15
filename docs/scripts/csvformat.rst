@@ -12,8 +12,9 @@ Convert a CSV file to a custom output format.:
    usage: csvformat [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                     [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
                     [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-E]
-                    [-D OUT_DELIMITER] [-T] [-Q OUT_QUOTECHAR] [-U {0,1,2,3}]
-                    [-B] [-P OUT_ESCAPECHAR] [-M OUT_LINETERMINATOR]
+                    [-D OUT_DELIMITER] [-T] [-A] [-Q OUT_QUOTECHAR]
+                    [-U {0,1,2,3}] [-B] [-P OUT_ESCAPECHAR]
+                    [-M OUT_LINETERMINATOR]
                     [FILE]
 
    Convert a CSV file to a custom output format.
@@ -29,6 +30,9 @@ Convert a CSV file to a custom output format.:
                            Delimiting character of the output file.
      -T, --out-tabs        Specify that the output file is delimited with tabs.
                            Overrides "-D".
+     -A, --out-asv         Specify that the output file is delimited with the
+                           ASCII unit separator and record separator. Overrides
+                           "-T", "-D" and "-M".
      -Q OUT_QUOTECHAR, --out-quotechar OUT_QUOTECHAR
                            Character used to quote strings in the output file.
      -U {0,1,2,3}, --out-quoting {0,1,2,3}
