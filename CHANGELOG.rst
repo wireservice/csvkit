@@ -1,3 +1,8 @@
+Unreleased
+----------
+
+* feat: :doc:`/scripts/csvformat` adds a :code:`--out-asv` (:code:`--A`) option to use the ASCII unit separator and record separator.
+
 1.4.0 - February 13, 2024
 -------------------------
 
