@@ -26,14 +26,13 @@ Convert a CSV file to a custom output format.:
      -h, --help            show this help message and exit
      -E, --skip-header     Do not output a header row.
      -D OUT_DELIMITER, --out-delimiter OUT_DELIMITER
-                           Delimiting character of the output CSV file.
-     -T, --out-tabs        Specify that the output CSV file is delimited with
-                           tabs. Overrides "-D".
+                           Delimiting character of the output file.
+     -T, --out-tabs        Specify that the output file is delimited with tabs.
+                           Overrides "-D".
      -Q OUT_QUOTECHAR, --out-quotechar OUT_QUOTECHAR
-                           Character used to quote strings in the output CSV
-                           file.
+                           Character used to quote strings in the output file.
      -U {0,1,2,3}, --out-quoting {0,1,2,3}
-                           Quoting style used in the output CSV file. 0 = Quote
+                           Quoting style used in the output file. 0 = Quote
                            Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 =
                            Quote None.
      -B, --out-no-doublequote
@@ -45,8 +44,7 @@ Convert a CSV file to a custom output format.:
                            and to escape the QUOTECHAR if --out-no-doublequote is
                            specified.
      -M OUT_LINETERMINATOR, --out-lineterminator OUT_LINETERMINATOR
-                           Character used to terminate lines in the output CSV
-                           file.
+                           Character used to terminate lines in the output file.
 
 See also: :doc:`../common_arguments`.
 
