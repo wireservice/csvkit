@@ -47,11 +47,16 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
             '1|2|3',
         ])
 
-    def test_tab_delimiter(self):
+    def test_tabs(self):
         self.assertLines(['-T', 'examples/dummy.csv'], [
             'a\tb\tc',
             '1\t2\t3',
         ])
+
+    def test_asv(self):
+        self.assertLines(['-A', 'examples/dummy.csv'], [
+            'a\x1fb\x1fc\x1e1\x1f2\x1f3\x1e',
+        ], newline_at_eof=False)
 
     def test_quotechar(self):
         input_file = io.BytesIO(b'a,b,c\n1*2,3,4\n')
