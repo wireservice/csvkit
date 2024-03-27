@@ -109,3 +109,4 @@ The following individuals have contributed code to csvkit:
 * Mark Mayo
 * Kitagawa Yasutaka
 * rachekalmir
+* Tim Vergenz
