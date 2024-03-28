@@ -3,6 +3,23 @@ from setuptools import find_packages, setup
 with open('README.rst') as f:
     long_description = f.read()
 
+bins = (
+    'csvclean',
+    'csvcut',
+    'csvformat',
+    'csvgrep',
+    'csvjoin',
+    'csvjson',
+    'csvlook',
+    'csvpy',
+    'csvsort',
+    'csvsql',
+    'csvstack',
+    'csvstat',
+    'in2csv',
+    'sql2csv',
+)
+
 setup(
     name='csvkit',
     version='1.4.0',
@@ -40,22 +57,17 @@ setup(
     packages=find_packages(exclude=['tests', 'tests.*']),
     entry_points={
         'console_scripts': [
-            'csvclean = csvkit.utilities.csvclean:launch_new_instance',
-            'csvcut = csvkit.utilities.csvcut:launch_new_instance',
-            'csvformat = csvkit.utilities.csvformat:launch_new_instance',
-            'csvgrep = csvkit.utilities.csvgrep:launch_new_instance',
-            'csvjoin = csvkit.utilities.csvjoin:launch_new_instance',
-            'csvjson = csvkit.utilities.csvjson:launch_new_instance',
-            'csvlook = csvkit.utilities.csvlook:launch_new_instance',
-            'csvpy = csvkit.utilities.csvpy:launch_new_instance',
-            'csvsort = csvkit.utilities.csvsort:launch_new_instance',
-            'csvsql = csvkit.utilities.csvsql:launch_new_instance',
-            'csvstack = csvkit.utilities.csvstack:launch_new_instance',
-            'csvstat = csvkit.utilities.csvstat:launch_new_instance',
-            'in2csv = csvkit.utilities.in2csv:launch_new_instance',
-            'sql2csv = csvkit.utilities.sql2csv:launch_new_instance',
+            '{bin} = csvkit.utilities.{bin}:launch_new_instance'.format(bin=bin)
+            for bin in bins
         ],
     },
+
+    # https://stackoverflow.com/a/49501350/718180
+    data_files=[
+        ('share/man/man1', ['docs/_build/man/{}.1'.format(bin)])
+        for bin in bins
+    ],
+
     install_requires=[
         'agate>=1.6.3',
         'agate-excel>=0.2.2',
