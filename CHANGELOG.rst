@@ -1,5 +1,5 @@
-Unreleased
-----------
+1.5.0 - March 28, 2024
+----------------------
 
 * feat: Add support for Zstandard files with the ``.zst`` extension, if the ``zstandard`` package is installed.
 * feat: :doc:`/scripts/csvformat` adds a :code:`--out-asv` (:code:`--A`) option to use the ASCII unit separator and record separator.
