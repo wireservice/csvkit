@@ -71,8 +71,18 @@ Perform a case-insensitive search:
 
    csvgrep -c 1 -r "(?i)illinois" examples/realdata/FY09_EDU_Recipients_by_State.csv
 
+Remove comment rows:
+
+.. code-block:: bash
+
+   printf "a,b\n1,2\n# a comment\n3,4" | csvgrep --invert-match -c1 -r '^#'
+
 Get the indices of the columns that contain matching text (``\x1e`` is the `Record Separator (RS) character <https://en.wikipedia.org/wiki/C0_and_C1_control_codes#Field_separators>`_):
 
 .. code-block::
 
    csvgrep -m 22 -a -c 1- examples/realdata/FY09_EDU_Recipients_by_State.csv | csvformat -M $'\x1e' | xargs -d $'\x1e' -n1 sh -c 'echo $0 | csvcut -n' | grep 22
+
+.. note::
+
+   This last example is not performant.
