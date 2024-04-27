@@ -68,18 +68,25 @@ class CSVKitUtility:
     epilog = ''
     override_flags = ''
 
-    def __init__(self, args=None, output_file=None):
+    def __init__(self, args=None, output_file=None, error_file=None):
         """
         Perform argument processing and other setup for a CSVKitUtility.
         """
         self._init_common_parser()
         self.add_arguments()
         self.args = self.argparser.parse_args(args)
+
         # Output file is only set during testing.
         if output_file is None:
             self.output_file = sys.stdout
         else:
             self.output_file = output_file
+
+        # Error file is only set during testing.
+        if error_file is None:
+            self.error_file = sys.stderr
+        else:
+            self.error_file = error_file
 
         self.reader_kwargs = self._extract_csv_reader_kwargs()
         self.writer_kwargs = self._extract_csv_writer_kwargs()
