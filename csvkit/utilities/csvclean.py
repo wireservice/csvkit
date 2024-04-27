@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import sys
-from os.path import splitext
 
 import agate
 
@@ -14,9 +13,7 @@ class CSVClean(CSVKitUtility):
     override_flags = ['L', 'blanks', 'date-format', 'datetime-format']
 
     def add_arguments(self):
-        self.argparser.add_argument(
-            '-n', '--dry-run', dest='dryrun', action='store_true',
-            help='Do not create output files. Information about what would have been done will be printed to STDERR.')
+        pass
 
     def main(self):
         if self.additional_input_expected():
@@ -24,65 +21,20 @@ class CSVClean(CSVKitUtility):
 
         reader = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
 
-        if self.args.dryrun:
-            checker = RowChecker(reader)
+        checker = RowChecker(reader)
 
-            for _row in checker.checked_rows():
-                pass
+        output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
+        output_writer.writerow(checker.column_names)
+        for row in checker.checked_rows():
+            output_writer.writerow(row)
 
-            if checker.errors:
-                for e in checker.errors:
-                    self.output_file.write('Line %i: %s\n' % (e.line_number, e.msg))
-            else:
-                self.output_file.write('No errors.\n')
+        if checker.errors:
+            error_writer = agate.csv.writer(self.error_file, **self.writer_kwargs)
+            error_writer.writerow(['line_number', 'msg'] + checker.column_names)
+            for error in checker.errors:
+                error_writer.writerow([error.line_number, error.msg] + error.row)
 
-            if checker.joins:
-                self.output_file.write('%i rows would have been joined/reduced to %i rows after eliminating expected '
-                                       'internal line breaks.\n' % (checker.rows_joined, checker.joins))
-        else:
-            if self.input_file == sys.stdin:
-                base = 'stdin'  # "<stdin>_out.csv" is invalid on Windows
-            else:
-                base = splitext(self.input_file.name)[0]
-
-            with open(f'{base}_out.csv', 'w') as f:
-                clean_writer = agate.csv.writer(f, **self.writer_kwargs)
-
-                checker = RowChecker(reader)
-                clean_writer.writerow(checker.column_names)
-
-                for row in checker.checked_rows():
-                    clean_writer.writerow(row)
-
-            if checker.errors:
-                error_filename = f'{base}_err.csv'
-
-                with open(error_filename, 'w') as f:
-                    error_writer = agate.csv.writer(f, **self.writer_kwargs)
-
-                    error_header = ['line_number', 'msg']
-                    error_header.extend(checker.column_names)
-                    error_writer.writerow(error_header)
-
-                    error_count = len(checker.errors)
-
-                    for e in checker.errors:
-                        error_writer.writerow(self._format_error_row(e))
-
-                self.output_file.write('%i error%s logged to %s\n' % (
-                    error_count, '' if error_count == 1 else 's', error_filename))
-            else:
-                self.output_file.write('No errors.\n')
-
-            if checker.joins:
-                self.output_file.write('%i rows were joined/reduced to %i rows after eliminating expected internal '
-                                       'line breaks.\n' % (checker.rows_joined, checker.joins))
-
-    def _format_error_row(self, error):
-        row = [error.line_number, error.msg]
-        row.extend(error.row)
-
-        return row
+            sys.exit(1)
 
 
 def launch_new_instance():
