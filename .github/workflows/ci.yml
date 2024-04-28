@@ -21,6 +21,23 @@ jobs:
           PYTHONIOENCODING: utf-8
           PYTHONUTF8: 1
         run: pytest --cov csvkit
+      # csvpy cannot accept input as piped data via STDIN.
+      - name: Read from stdin
+        if: matrix.os != 'windows-latest'
+        run: |
+          csvclean < examples/dummy.csv
+          csvcut < examples/dummy.csv
+          csvformat < examples/dummy.csv
+          csvgrep -c1 -m1 < examples/dummy.csv
+          csvjoin < examples/dummy.csv
+          csvjson < examples/dummy.csv
+          csvlook < examples/dummy.csv
+          csvsort < examples/dummy.csv
+          csvsql < examples/dummy.csv
+          csvstack < examples/dummy.csv
+          csvstat < examples/dummy.csv
+          in2csv -f csv < examples/dummy.csv
+          sql2csv < examples/test.sql
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: coveralls --service=github
