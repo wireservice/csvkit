@@ -38,6 +38,21 @@ jobs:
           csvstat < examples/dummy.csv
           in2csv -f csv < examples/dummy.csv
           sql2csv < examples/test.sql
+      - name: Read from pipe
+        run: |
+          printf 'a,b,c\n1,2,3' | csvclean
+          printf 'a,b,c\n1,2,3' | csvcut
+          printf 'a,b,c\n1,2,3' | csvformat
+          printf 'a,b,c\n1,2,3' | csvgrep -c1 -m1
+          printf 'a,b,c\n1,2,3' | csvjoin
+          printf 'a,b,c\n1,2,3' | csvjson
+          printf 'a,b,c\n1,2,3' | csvlook
+          printf 'a,b,c\n1,2,3' | csvsort
+          printf 'a,b,c\n1,2,3' | csvsql
+          printf 'a,b,c\n1,2,3' | csvstack
+          printf 'a,b,c\n1,2,3' | csvstat
+          printf 'a,b,c\n1,2,3' | in2csv -f csv
+          printf 'SELECT 1 AS a' | sql2csv
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: coveralls --service=github

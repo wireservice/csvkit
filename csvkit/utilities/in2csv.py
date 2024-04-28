@@ -64,6 +64,7 @@ class In2CSV(CSVKitUtility):
             '-I', '--no-inference', dest='no_inference', action='store_true',
             help='Disable type inference (and --locale, --date-format, --datetime-format) when parsing CSV input.')
 
+    # This is called only from open_excel_input_file(), but is a separate method to use caching.
     @functools.lru_cache
     def stdin(self):
         return sys.stdin.buffer.read()
