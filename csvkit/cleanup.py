@@ -1,6 +1,12 @@
 #!/usr/bin/env python
+from dataclasses import dataclass
 
-from csvkit.exceptions import CSVTestException, LengthMismatchError
+
+@dataclass
+class Error:
+    line_number: int
+    row: int
+    msg: str
 
 
 def join_rows(rows, separator):
@@ -36,12 +42,16 @@ class RowChecker:
         separator='\n',
         fill_short_rows=False,
         fillvalue=None,
+        empty_columns=False,
+        zero_based=False,
     ):
         self.reader = reader
         self.join_short_rows = join_short_rows
         self.separator = separator
         self.fill_short_rows = fill_short_rows
         self.fillvalue = fillvalue
+        self.empty_columns = empty_columns
+        self.zero_based = zero_based
 
         try:
             self.column_names = next(reader)
@@ -56,13 +66,23 @@ class RowChecker:
         """
         A generator which yields rows which are ready to write to output.
         """
-        length = len(self.column_names)
+        len_column_names = len(self.column_names)
         joinable_row_errors = []
 
-        for row in self.reader:
-            row_length = len(row)
+        row_count = 0
+        empty_counts = [0 for _ in range(len_column_names)]
 
-            if row_length == length:
+        for row in self.reader:
+            line_number = self.reader.line_num - 1
+            row_count += 1
+            len_row = len(row)
+
+            if self.empty_columns:
+                for i, value in enumerate(row):
+                    if value == '':
+                        empty_counts[i] += 1
+
+            if len_row == len_column_names:
                 yield row
 
                 if self.join_short_rows:
@@ -71,32 +91,32 @@ class RowChecker:
 
                 continue
 
-            if self.fill_short_rows and row_length < length:
-                yield row + [self.fillvalue] * (length - row_length)
+            if self.fill_short_rows and len_row < len_column_names:
+                yield row + [self.fillvalue] * (len_column_names - len_row)
 
                 continue
 
-            length_mismatch_error = LengthMismatchError(self.reader.line_num - 1, row, length)
+            length_error = Error(line_number, row, f'Expected {len_column_names} columns, found {len_row} columns')
 
-            self.errors.append(length_mismatch_error)
+            self.errors.append(length_error)
 
             if self.join_short_rows:
-                if row_length > length:
+                if len_row > len_column_names:
                     # Don't join with long rows.
                     joinable_row_errors = []
                     continue
 
-                joinable_row_errors.append(length_mismatch_error)
+                joinable_row_errors.append(length_error)
                 if len(joinable_row_errors) == 1:
                     continue
 
                 while joinable_row_errors:
                     fixed_row = join_rows([error.row for error in joinable_row_errors], separator=self.separator)
 
-                    if len(fixed_row) < length:
+                    if len(fixed_row) < len_column_names:
                         break
 
-                    if len(fixed_row) == length:
+                    if len(fixed_row) == len_column_names:
                         yield fixed_row
 
                         for fixed in joinable_row_errors:
@@ -107,3 +127,15 @@ class RowChecker:
 
                     # keep trying in case we're too long because of a straggler
                     joinable_row_errors = joinable_row_errors[1:]
+
+        if row_count:
+            if empty_columns := [i for i, count in enumerate(empty_counts) if count == row_count]:
+                offset = 0 if self.zero_based else 1
+                self.errors.append(
+                    Error(
+                        1,
+                        ["" for _ in range(len_column_names)],
+                        f"Empty columns named {', '.join(repr(self.column_names[i]) for i in empty_columns)}! "
+                        f"Try: csvcut -C {','.join(str(i + offset) for i in empty_columns)}",
+                    )
+                )

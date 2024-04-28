@@ -3,9 +3,9 @@
 
 **BACKWARDS-INCOMPATIBLE CHANGES:**
 
-* :doc:`/scripts/csvclean` now writes its output to standard output and its errors to standard error, instead of to ``basename_out.csv`` and ``basename_err.csv`` files. Consequently, it no longer supports a :code:`--dry-run` flag to output summary information like ``No errors.``, ``42 errors logged to basename_err.csv`` or ``42 rows were joined/reduced to 24 rows after eliminating expected internal line breaks.``.
-* :doc:`/scripts/csvclean` no longer fixes errors by default. Opt in using the :code:`--join-short-rows` option.
-* :doc:`/scripts/csvclean` joins short rows using a newline by default, instead of a space.
+* :doc:`/scripts/csvclean` now writes its output to standard output and its errors to standard error, instead of to ``basename_out.csv`` and ``basename_err.csv`` files. Consequently, it no longer supports a :code:`--dry-run` option to output summary information like ``No errors.``, ``42 errors logged to basename_err.csv`` or ``42 rows were joined/reduced to 24 rows after eliminating expected internal line breaks.``.
+* :doc:`/scripts/csvclean` no longer fixes errors by default. Opt in to the original behavior using the :code:`--join-short-rows` option.
+* :doc:`/scripts/csvclean` joins short rows using a newline by default, instead of a space. Restore the original behavior using the :code:`--separator " "` option.
 
 Other changes:
 
@@ -15,6 +15,7 @@ Other changes:
    * :code:`--separator`, to change the string with which to join short rows
    * :code:`--fill-short-rows`, to fill short rows with the missing cells
    * :code:`--fillvalue`, to change the value with which to fill short rows
+   * :code:`--empty-columns`, to error on empty columns
 
 * feat: The :code:`--quoting` option accepts 4 (`csv.QUOTE_STRINGS <https://docs.python.org/3/library/csv.html#csv.QUOTE_STRINGS>`__) and 5 (`csv.QUOTE_NOTNULL <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNULL>`__) on Python 3.12.
 * feat: :doc:`/scripts/csvformat`: The :code:`--out-quoting` option accepts 4 (`csv.QUOTE_STRINGS <https://docs.python.org/3/library/csv.html#csv.QUOTE_STRINGS>`__) and 5 (`csv.QUOTE_NOTNULL <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNULL>`__) on Python 3.12.

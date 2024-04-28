@@ -75,13 +75,13 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
     def test_no_header_row(self):
         self.assertCleaned(['examples/no_header_row.csv'], [
             ['1', '2', '3'],
-        ], [])
+        ])
 
     def test_header_normalize_space(self):
         self.assertCleaned(['--header-normalize-space', 'examples/test_header_newline.csv'], [
             ['start end', 'b', 'c'],
             ['d', 'e', 'f'],
-        ], [])
+        ])
 
     def test_join_short_rows(self):
         self.assertCleaned(['--join-short-rows', 'examples/test_join_short_rows.csv'], [
@@ -111,6 +111,28 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             ['1', 'cat', 'XYZ'],
             ['dog', 'c', 'XYZ'],
             ['3', 'b', 'c'],
+        ])
+
+    def test_empty_columns(self):
+        self.assertCleaned(['--empty-columns', 'examples/test_empty_columns.csv'], [
+            ['a', 'b', 'c', '', ''],
+            ['a', '', '', '', ''],
+            ['', '', 'c', '', ''],
+            ['', '', '', '', ''],
+        ], [
+            ['line_number', 'msg', 'a', 'b', 'c', '', ''],
+            ['1', "Empty columns named 'b', '', ''! Try: csvcut -C 2,4,5", '', '', '', '', ''],
+        ])
+
+    def test_empty_columns_zero(self):
+        self.assertCleaned(['--empty-columns', '--zero', 'examples/test_empty_columns.csv'], [
+            ['a', 'b', 'c', '', ''],
+            ['a', '', '', '', ''],
+            ['', '', 'c', '', ''],
+            ['', '', '', '', ''],
+        ], [
+            ['line_number', 'msg', 'a', 'b', 'c', '', ''],
+            ['1', "Empty columns named 'b', '', ''! Try: csvcut -C 1,3,4", '', '', '', '', ''],
         ])
 
     def test_removes_optional_quote_characters(self):

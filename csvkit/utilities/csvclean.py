@@ -29,6 +29,9 @@ class CSVClean(CSVKitUtility):
         self.argparser.add_argument(
             '--fillvalue', dest='fillvalue',
             help='The value with which to fill short rows. Defaults to none.')
+        self.argparser.add_argument(
+            '--empty-columns', dest='empty_columns', action='store_true',
+            help='Report empty columns as errors.')
 
     def main(self):
         if self.additional_input_expected():
@@ -46,6 +49,8 @@ class CSVClean(CSVKitUtility):
             separator=self.args.separator,
             fill_short_rows=self.args.fill_short_rows,
             fillvalue=self.args.fillvalue,
+            empty_columns=self.args.empty_columns,
+            zero_based=self.args.zero_based,
         )
 
         output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)

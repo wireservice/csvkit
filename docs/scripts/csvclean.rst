@@ -7,7 +7,8 @@ Description
 
 Cleans a CSV file of common syntax errors:
 
--  reports rows that have a different number of columns than the header row
+-  Reports rows that have a different number of columns than the header row.
+-  Reports columns that are empty, if the :code:`--empty-columns` option is set.
 -  If a CSV has unquoted cells that contain line breaks, like:
 
    .. code-block:: none
@@ -103,13 +104,14 @@ All valid rows are written to standard output, and all error rows along with lin
      --fillvalue FILLVALUE
                            The value with which to fill short rows. Defaults to
                            none.
+     --empty-columns       Report empty columns as errors.
 
 See also: :doc:`../common_arguments`.
 
 Examples
 ========
 
-Test a file with known bad rows:
+Test a file with data rows that are shorter and longer than the header row:
 
 .. code-block:: console
 
@@ -124,6 +126,29 @@ Test a file with known bad rows:
 .. note::
 
    If any data rows are longer than the header row, you need to add columns manually: for example, by adding one or more delimiters (``,``) to the end of the header row. :code:`csvclean` can't do this, because it is designed to work with standard input, and correcting an error at the start of the CSV data based on an observation later in the CSV data would require holding all the CSV data in memory – which is not an option for large files.
+
+Test a file with empty columns:
+
+.. code-block:: console
+
+   $ csvclean --empty-columns examples/test_empty_columns.csv 2> errors.csv
+   a,b,c,,
+   a,,,,
+   ,,c,,
+   ,,,,
+   $ cat errors.csv
+   line_number,msg,a,b,c,,
+   1,"Empty columns named 'b', '', ''! Try: csvcut -C 2,4,5",,,,,
+
+Use :doc:`csvcut` to exclude the empty columns:
+
+.. code-block:: bash
+
+   $ csvcut -C 2,4,5 examples/test_empty_columns.csv
+   a,c
+   a,
+   ,c
+   ,
 
 To change the line ending from line feed (LF or ``\n``) to carriage return and line feed (CRLF or ``\r\n``) use:
 
