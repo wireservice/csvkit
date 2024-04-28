@@ -77,6 +77,12 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             ['1', '2', '3'],
         ], [])
 
+    def test_header_normalize_space(self):
+        self.assertCleaned(['--header-normalize-space', 'examples/test_header_newline.csv'], [
+            ['start end', 'b', 'c'],
+            ['d', 'e', 'f'],
+        ], [])
+
     def test_removes_optional_quote_characters(self):
         self.assertCleaned(['examples/optional_quote_characters.csv'], [
             ['a', 'b', 'c'],

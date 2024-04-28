@@ -13,7 +13,10 @@ class CSVClean(CSVKitUtility):
     override_flags = ['L', 'blanks', 'date-format', 'datetime-format']
 
     def add_arguments(self):
-        pass
+        self.argparser.add_argument(
+            '--header-normalize-space', dest='header_normalize_space', action='store_true',
+            help='Strip leading and trailing whitespace and replace sequences of whitespace characters by a single '
+                 'space in the header.')
 
     def main(self):
         if self.additional_input_expected():
@@ -21,7 +24,7 @@ class CSVClean(CSVKitUtility):
 
         reader = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
 
-        checker = RowChecker(reader)
+        checker = RowChecker(reader, header_normalize_space=self.args.header_normalize_space)
 
         output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
         output_writer.writerow(checker.column_names)

@@ -28,10 +28,12 @@ class RowChecker:
     Iterate over rows of a CSV producing cleaned rows and storing error rows.
     """
 
-    def __init__(self, reader):
+    def __init__(self, reader, header_normalize_space=False):
         self.reader = reader
         try:
             self.column_names = next(reader)
+            if header_normalize_space:
+                self.column_names = [' '.join(column_name.split()) for column_name in self.column_names]
         except StopIteration:
             self.column_names = []
         self.errors = []

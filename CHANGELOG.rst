@@ -7,6 +7,7 @@
 
 Other changes:
 
+* feat: :doc:`/scripts/csvclean` adds a :code:`--header-normalize-space` option to strip leading and trailing whitespace and replace sequences of whitespace characters by a single space in the header.
 * feat: The :code:`--quoting` option accepts 4 (`csv.QUOTE_STRINGS <https://docs.python.org/3/library/csv.html#csv.QUOTE_STRINGS>`__) and 5 (`csv.QUOTE_NOTNULL <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNULL>`__) on Python 3.12.
 * feat: :doc:`/scripts/csvformat`: The :code:`--out-quoting` option accepts 4 (`csv.QUOTE_STRINGS <https://docs.python.org/3/library/csv.html#csv.QUOTE_STRINGS>`__) and 5 (`csv.QUOTE_NOTNULL <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNULL>`__) on Python 3.12.
 * fix: :doc:`/scripts/csvformat`: The :code:`--out-quoting` option works with 2 (`csv.QUOTE_NONUMERIC <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNUMERIC>`__). Use the :code:`--locale` option to set the locale of any formatted numbers.
