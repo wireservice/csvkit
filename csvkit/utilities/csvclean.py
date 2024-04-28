@@ -17,6 +17,12 @@ class CSVClean(CSVKitUtility):
             '--header-normalize-space', dest='header_normalize_space', action='store_true',
             help='Strip leading and trailing whitespace and replace sequences of whitespace characters by a single '
                  'space in the header.')
+        self.argparser.add_argument(
+            '--join-short-rows', dest='join_short_rows', action='store_true',
+            help='Merges short rows into a single row.')
+        self.argparser.add_argument(
+            '--separator', dest='separator', default='\n',
+            help='The string with which to join short rows. Defaults to a newline.')
 
     def main(self):
         if self.additional_input_expected():
@@ -27,6 +33,8 @@ class CSVClean(CSVKitUtility):
         checker = RowChecker(
             reader,
             header_normalize_space=self.args.header_normalize_space,
+            join_short_rows=self.args.join_short_rows,
+            separator=self.args.separator,
         )
 
         output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)

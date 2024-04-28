@@ -83,10 +83,17 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             ['d', 'e', 'f'],
         ], [])
 
-    def test_merge_short_rows(self):
-        self.assertCleaned(['examples/test_merge_short_rows.csv'], [
+    def test_join_short_rows(self):
+        self.assertCleaned(['--join-short-rows', 'examples/test_join_short_rows.csv'], [
             ['a', 'b', 'c'],
-            ['1', 'cat dog', '3'],
+            ['1', 'cat\ndog', '3'],
+            ['3', 'b', 'c'],
+        ])
+
+    def test_join_short_rows_separator(self):
+        self.assertCleaned(['--join-short-rows', '--separator', 'XYZ', 'examples/test_join_short_rows.csv'], [
+            ['a', 'b', 'c'],
+            ['1', 'catXYZdog', '3'],
             ['3', 'b', 'c'],
         ])
 

@@ -3,12 +3,12 @@
 from csvkit.exceptions import CSVTestException, LengthMismatchError
 
 
-def join_rows(rows, joiner=' '):
+def join_rows(rows, separator):
     """
     Given a series of rows, return them as a single row where the inner edge cells are merged.
 
-    :param joiner:
-        The separator between cells, a single space by default.
+    :param separator:
+        The string with which to join the cells.
     """
     rows = list(rows)
     fixed_row = rows[0][:]
@@ -17,7 +17,7 @@ def join_rows(rows, joiner=' '):
         if len(row) == 0:
             row = ['']
 
-        fixed_row[-1] += f"{joiner}{row[0]}"
+        fixed_row[-1] += f"{separator}{row[0]}"
         fixed_row.extend(row[1:])
 
     return fixed_row
@@ -28,8 +28,10 @@ class RowChecker:
     Iterate over rows of a CSV producing cleaned rows and storing error rows.
     """
 
-    def __init__(self, reader, header_normalize_space=False):
+    def __init__(self, reader, header_normalize_space=False, join_short_rows=False, separator='\n'):
         self.reader = reader
+        self.join_short_rows = join_short_rows
+        self.separator = separator
 
         try:
             self.column_names = next(reader)
@@ -64,12 +66,15 @@ class RowChecker:
                 joinable_row_errors = []
                 continue
 
+            if not self.join_short_rows:
+                continue
+
             joinable_row_errors.append(length_mismatch_error)
             if len(joinable_row_errors) == 1:
                 continue
 
             while joinable_row_errors:
-                fixed_row = join_rows([error.row for error in joinable_row_errors], joiner=' ')
+                fixed_row = join_rows([error.row for error in joinable_row_errors], separator=self.separator)
 
                 if len(fixed_row) < length:
                     break

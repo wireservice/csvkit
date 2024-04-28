@@ -7,18 +7,46 @@ Description
 
 Cleans a CSV file of common syntax errors:
 
-* reports rows that have a different number of columns than the header row
-* attempts to correct the CSV by merging short rows into a single row
+-  reports rows that have a different number of columns than the header row
+-  If a CSV has unquoted cells that contain line breaks, like:
 
-Note that every csvkit tool does the following:
+   .. code-block:: none
 
-* removes optional quote characters, unless the `--quoting` (`-u`) option is set to change this behavior
-* changes the field delimiter to a comma, if the input delimiter is set with the `--delimiter` (`-d`) or `--tabs` (`-t`) options
-* changes the record delimiter to a line feed (LF or ``\n``)
-* changes the quote character to a double-quotation mark, if the character is set with the `--quotechar` (`-q`) option
-* changes the character encoding to UTF-8, if the input encoding is set with the `--encoding` (`-e`) option
+      id,address,country
+      1,1 Main St
+      Springfield,US
+      2,123 Acadia Avenue
+      London,GB
 
-All valid rows are written to standard output, and all error rows along with line numbers and descriptions are written to standard error. If there are error rows, the exit code will be 1::
+   Use :code:`--join-short-rows` to attempt to correct the errors by merging short rows into a single row:
+
+   .. code-block:: none
+
+      id,address,country
+      1,"1 Main St
+      Springfield",US
+      2,"123 Acadia Avenue
+      London",GB
+
+   To change the string used to join the lines, use :code:`--separator`. For example, with :code:`--separator ", "`:
+
+   .. code-block:: none
+
+      id,address,country
+      1,"1 Main St, Springfield",US
+      2,"123 Acadia Avenue, London",GB
+
+All valid rows are written to standard output, and all error rows along with line numbers and descriptions are written to standard error. If there are error rows, the exit code will be 1.
+
+.. note::
+
+   Every csvkit tool does the following:
+
+   -  Removes optional quote characters, unless the `--quoting` (`-u`) option is set to change this behavior
+   -  Changes the field delimiter to a comma, if the input delimiter is set with the `--delimiter` (`-d`) or `--tabs` (`-t`) options
+   -  Changes the record delimiter to a line feed (LF or ``\n``)
+   -  Changes the quote character to a double-quotation mark, if the character is set with the `--quotechar` (`-q`) option
+   -  Changes the character encoding to UTF-8, if the input encoding is set with the `--encoding` (`-e`) option
 
 .. code-block:: none
 
