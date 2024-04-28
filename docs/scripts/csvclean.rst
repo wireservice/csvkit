@@ -52,6 +52,10 @@ Cleans a CSV file of common syntax errors:
       1,Alice,
       2,Bob,CA
 
+   .. tip::
+
+      :doc:`csvcut` without options also adds missing delimiters!
+
    To change the value used to fill short rows, use :code:`--fillvalue`. For example, with :code:`--fillvalue "US"`:
 
    .. code-block:: none
@@ -116,6 +120,10 @@ Test a file with known bad rows:
    line_number,msg,column_a,column_b,column_c
    1,"Expected 3 columns, found 4 columns",1,27,,I'm too long!
    2,"Expected 3 columns, found 2 columns",,I'm too short!
+
+.. note::
+
+   If any data rows are longer than the header row, you need to add columns manually: for example, by adding one or more delimiters (``,``) to the end of the header row. :code:`csvclean` can't do this, because it is designed to work with standard input, and correcting an error at the start of the CSV data based on an observation later in the CSV data would require holding all the CSV data in memory – which is not an option for large files.
 
 To change the line ending from line feed (LF or ``\n``) to carriage return and line feed (CRLF or ``\r\n``) use:
 
