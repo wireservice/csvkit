@@ -107,7 +107,6 @@ class TestCSVFormatQuoteNonNumeric(CSVKitTestCase, EmptyFileTests):
             '1.7,200000000,""',
         ])
 
-
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
