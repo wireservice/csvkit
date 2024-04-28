@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 import argparse
 import bz2
 import csv
@@ -21,6 +20,8 @@ try:
     import zstandard
 except ImportError:
     zstandard = None
+
+QUOTING_CHOICES = sorted(getattr(csv, name) for name in dir(csv) if name.startswith('QUOTE_'))
 
 
 class LazyFile:
@@ -170,9 +171,9 @@ class CSVKitUtility:
                 help='Character used to quote strings in the input CSV file.')
         if 'u' not in self.override_flags:
             self.argparser.add_argument(
-                '-u', '--quoting', dest='quoting', type=int, choices=[0, 1, 2, 3],
-                help='Quoting style used in the input CSV file. 0 = Quote Minimal, 1 = Quote All, '
-                     '2 = Quote Non-numeric, 3 = Quote None.')
+                '-u', '--quoting', dest='quoting', type=int, choices=QUOTING_CHOICES,
+                help='Quoting style used in the input CSV file: 0 quote minimal, 1 quote all, '
+                     '2 quote non-numeric, 3 quote none.')
         if 'b' not in self.override_flags:
             self.argparser.add_argument(
                 '-b', '--no-doublequote', dest='doublequote', action='store_false',
@@ -180,7 +181,7 @@ class CSVKitUtility:
         if 'p' not in self.override_flags:
             self.argparser.add_argument(
                 '-p', '--escapechar', dest='escapechar',
-                help='Character used to escape the delimiter if --quoting 3 ("Quote None") is specified and to escape '
+                help='Character used to escape the delimiter if --quoting 3 ("quote none") is specified and to escape '
                      'the QUOTECHAR if --no-doublequote is specified.')
         if 'z' not in self.override_flags:
             self.argparser.add_argument(
@@ -337,12 +338,13 @@ class CSVKitUtility:
             type_kwargs['null_values'].append(null_value)
 
         text_type = agate.Text(**type_kwargs)
+        number_type = agate.Number(locale=self.args.locale, **type_kwargs)
 
-        if self.args.no_inference:
+        if getattr(self.args, 'no_inference', None):
             types = [text_type]
+        elif getattr(self.args, 'out_quoting', None) == 2:
+            types = [number_type, text_type]
         else:
-            number_type = agate.Number(locale=self.args.locale, **type_kwargs)
-
             # See the order in the `agate.TypeTester` class.
             types = [
                 agate.Boolean(**type_kwargs),

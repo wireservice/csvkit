@@ -1,9 +1,15 @@
 2.0.0 - Unreleased
 ------------------
 
-**BACKWARDS-INCOMPATIBLE CHANGES**
+**BACKWARDS-INCOMPATIBLE CHANGES:**
 
 * :doc:`/scripts/csvclean` now writes its output to standard output and its errors to standard error, instead of to ``basename_out.csv`` and ``basename_err.csv`` files. Consequently, it no longer supports a :code:`--dry-run` flag to output summary information like ``No errors.``, ``42 errors logged to basename_err.csv`` or ``42 rows were joined/reduced to 24 rows after eliminating expected internal line breaks.``.
+
+Other changes:
+
+* feat: The :code:`--quoting` option accepts 4 (`csv.QUOTE_STRINGS <https://docs.python.org/3/library/csv.html#csv.QUOTE_STRINGS>`__) and 5 (`csv.QUOTE_NOTNULL <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNULL>`__) on Python 3.12.
+* feat: :doc:`/scripts/csvformat`: The :code:`--out-quoting` option accepts 4 (`csv.QUOTE_STRINGS <https://docs.python.org/3/library/csv.html#csv.QUOTE_STRINGS>`__) and 5 (`csv.QUOTE_NOTNULL <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNULL>`__) on Python 3.12.
+* fix: :doc:`/scripts/csvformat`: The :code:`--out-quoting` option works with 2 (`csv.QUOTE_NONUMERIC <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNUMERIC>`__). Use the :code:`--locale` option to set the locale of any formatted numbers.
 
 1.5.0 - March 28, 2024
 ----------------------
@@ -21,7 +27,7 @@
    * :code:`--sniff-limit``
    * :code:`--no-inference``
 
-* feat: :doc:`/scripts/csvpy` removes the ``--linenumbers`` and ``--zero`` output options, which had no effect.
+* feat: :doc:`/scripts/csvpy` removes the :code:`--linenumbers` and :code:`--zero` output options, which had no effect.
 * feat: :doc:`/scripts/in2csv` adds a :code:`--reset-dimensions` option to `recalculate <https://openpyxl.readthedocs.io/en/stable/optimized.html#worksheet-dimensions>`_ the dimensions of an XLSX file, instead of trusting the file's metadata. csvkit's dependency `agate-excel <https://agate-excel.readthedocs.io/en/latest/>`_ 0.4.0 automatically recalculates the dimensions if the file's metadata expresses dimensions of "A1:A1" (a single cell).
 * fix: :doc:`/scripts/csvlook` only reads up to :code:`--max-rows` rows instead of the entire file.
 * fix: :doc:`/scripts/csvpy` supports the existing input options:
@@ -61,7 +67,7 @@
 1.2.0 - October 4, 2023
 -----------------------
 
-* fix: :doc:`/scripts/csvjoin` uses the correct columns when performing a ``--right`` join.
+* fix: :doc:`/scripts/csvjoin` uses the correct columns when performing a :code:`--right` join.
 * Add SQLAlchemy 2 support.
 * Drop Python 3.7 support (end-of-life was June 5, 2023).
 

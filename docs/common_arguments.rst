@@ -13,14 +13,14 @@ csvkit's tools share a set of common command-line arguments. Not every argument 
    -q QUOTECHAR, --quotechar QUOTECHAR
                          Character used to quote strings in the input CSV file.
    -u {0,1,2,3}, --quoting {0,1,2,3}
-                         Quoting style used in the input CSV file. 0 = Quote
-                         Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 =
-                         Quote None.
+                         Quoting style used in the input CSV file: 0 quote
+                         minimal, 1 quote all, 2 quote non-numeric, 3 quote
+                         none.
    -b, --no-doublequote  Whether or not double quotes are doubled in the input
                          CSV file.
    -p ESCAPECHAR, --escapechar ESCAPECHAR
                          Character used to escape the delimiter if --quoting 3
-                         ("Quote None") is specified and to escape the
+                         ("quote none") is specified and to escape the
                          QUOTECHAR if --no-doublequote is specified.
    -z FIELD_SIZE_LIMIT, --maxfieldsize FIELD_SIZE_LIMIT
                          Maximum length of a single field in the input CSV
