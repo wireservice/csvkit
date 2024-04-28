@@ -23,10 +23,19 @@ class CSVClean(CSVKitUtility):
         self.argparser.add_argument(
             '--separator', dest='separator', default='\n',
             help='The string with which to join short rows. Defaults to a newline.')
+        self.argparser.add_argument(
+            '--fill-short-rows', dest='fill_short_rows', action='store_true',
+            help='Fill short rows with the missing cells.')
+        self.argparser.add_argument(
+            '--fillvalue', dest='fillvalue',
+            help='The value with which to fill short rows. Defaults to none.')
 
     def main(self):
         if self.additional_input_expected():
             sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
+
+        if self.args.join_short_rows and self.args.fill_short_rows:
+            self.argparser.error('The --join-short-rows and --fill-short-rows options are mutually exclusive.')
 
         reader = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
 
@@ -35,6 +44,8 @@ class CSVClean(CSVKitUtility):
             header_normalize_space=self.args.header_normalize_space,
             join_short_rows=self.args.join_short_rows,
             separator=self.args.separator,
+            fill_short_rows=self.args.fill_short_rows,
+            fillvalue=self.args.fillvalue,
         )
 
         output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)

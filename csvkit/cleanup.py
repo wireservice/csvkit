@@ -28,10 +28,20 @@ class RowChecker:
     Iterate over rows of a CSV producing cleaned rows and storing error rows.
     """
 
-    def __init__(self, reader, header_normalize_space=False, join_short_rows=False, separator='\n'):
+    def __init__(
+        self,
+        reader,
+        header_normalize_space=False,
+        join_short_rows=False,
+        separator='\n',
+        fill_short_rows=False,
+        fillvalue=None,
+    ):
         self.reader = reader
         self.join_short_rows = join_short_rows
         self.separator = separator
+        self.fill_short_rows = fill_short_rows
+        self.fillvalue = fillvalue
 
         try:
             self.column_names = next(reader)
@@ -50,43 +60,50 @@ class RowChecker:
         joinable_row_errors = []
 
         for row in self.reader:
-            if len(row) == length:
+            row_length = len(row)
+
+            if row_length == length:
                 yield row
 
-                # Don't join rows across valid rows.
-                joinable_row_errors = []
+                if self.join_short_rows:
+                    # Don't join rows across valid rows.
+                    joinable_row_errors = []
+
+                continue
+
+            if self.fill_short_rows and row_length < length:
+                yield row + [self.fillvalue] * (length - row_length)
+
                 continue
 
             length_mismatch_error = LengthMismatchError(self.reader.line_num - 1, row, length)
 
             self.errors.append(length_mismatch_error)
 
-            if len(row) > length:
-                # Don't join with long rows.
-                joinable_row_errors = []
-                continue
-
-            if not self.join_short_rows:
-                continue
-
-            joinable_row_errors.append(length_mismatch_error)
-            if len(joinable_row_errors) == 1:
-                continue
-
-            while joinable_row_errors:
-                fixed_row = join_rows([error.row for error in joinable_row_errors], separator=self.separator)
-
-                if len(fixed_row) < length:
-                    break
-
-                if len(fixed_row) == length:
-                    yield fixed_row
-
-                    for fixed in joinable_row_errors:
-                        self.errors.remove(fixed)
-
+            if self.join_short_rows:
+                if row_length > length:
+                    # Don't join with long rows.
                     joinable_row_errors = []
-                    break
+                    continue
 
-                # keep trying in case we're too long because of a straggler
-                joinable_row_errors = joinable_row_errors[1:]
+                joinable_row_errors.append(length_mismatch_error)
+                if len(joinable_row_errors) == 1:
+                    continue
+
+                while joinable_row_errors:
+                    fixed_row = join_rows([error.row for error in joinable_row_errors], separator=self.separator)
+
+                    if len(fixed_row) < length:
+                        break
+
+                    if len(fixed_row) == length:
+                        yield fixed_row
+
+                        for fixed in joinable_row_errors:
+                            self.errors.remove(fixed)
+
+                        joinable_row_errors = []
+                        break
+
+                    # keep trying in case we're too long because of a straggler
+                    joinable_row_errors = joinable_row_errors[1:]

@@ -86,14 +86,30 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
     def test_join_short_rows(self):
         self.assertCleaned(['--join-short-rows', 'examples/test_join_short_rows.csv'], [
             ['a', 'b', 'c'],
-            ['1', 'cat\ndog', '3'],
+            ['1', 'cat\ndog', 'c'],
             ['3', 'b', 'c'],
         ])
 
     def test_join_short_rows_separator(self):
         self.assertCleaned(['--join-short-rows', '--separator', 'XYZ', 'examples/test_join_short_rows.csv'], [
             ['a', 'b', 'c'],
-            ['1', 'catXYZdog', '3'],
+            ['1', 'catXYZdog', 'c'],
+            ['3', 'b', 'c'],
+        ])
+
+    def test_fill_short_rows(self):
+        self.assertCleaned(['--fill-short-rows', 'examples/test_join_short_rows.csv'], [
+            ['a', 'b', 'c'],
+            ['1', 'cat', ''],
+            ['dog', 'c', ''],
+            ['3', 'b', 'c'],
+        ])
+
+    def test_fill_short_rows_separator(self):
+        self.assertCleaned(['--fill-short-rows', '--fillvalue', 'XYZ', 'examples/test_join_short_rows.csv'], [
+            ['a', 'b', 'c'],
+            ['1', 'cat', 'XYZ'],
+            ['dog', 'c', 'XYZ'],
             ['3', 'b', 'c'],
         ])
 

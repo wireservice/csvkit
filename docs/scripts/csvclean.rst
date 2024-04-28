@@ -36,6 +36,30 @@ Cleans a CSV file of common syntax errors:
       1,"1 Main St, Springfield",US
       2,"123 Acadia Avenue, London",GB
 
+-  If a CSV has missing delimiters, like:
+
+   .. code-block:: none
+
+      id,name,country
+      1,Alice
+      2,Bob,CA
+
+   You can add the missing delimiters with :code:`--fill-short-rows`:
+
+   .. code-block:: none
+
+      id,name,country
+      1,Alice,
+      2,Bob,CA
+
+   To change the value used to fill short rows, use :code:`--fillvalue`. For example, with :code:`--fillvalue "US"`:
+
+   .. code-block:: none
+
+      id,name,country
+      1,Alice,US
+      2,Bob,CA
+
 All valid rows are written to standard output, and all error rows along with line numbers and descriptions are written to standard error. If there are error rows, the exit code will be 1.
 
 .. note::
@@ -63,6 +87,18 @@ All valid rows are written to standard output, and all error rows along with lin
 
    optional arguments:
      -h, --help            show this help message and exit
+     --header-normalize-space
+                           Strip leading and trailing whitespace and replace
+                           sequences of whitespace characters by a single space
+                           in the header.
+     --join-short-rows     Merges short rows into a single row.
+     --separator SEPARATOR
+                           The string with which to join short rows. Defaults to
+                           a newline.
+     --fill-short-rows     Fill short rows with the missing cells.
+     --fillvalue FILLVALUE
+                           The value with which to fill short rows. Defaults to
+                           none.
 
 See also: :doc:`../common_arguments`.
 

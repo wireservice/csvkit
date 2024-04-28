@@ -13,6 +13,8 @@ Other changes:
 
    * :code:`--header-normalize-space`, to strip leading and trailing whitespace and replace sequences of whitespace characters by a single space in the header
    * :code:`--separator`, to change the string with which to join short rows
+   * :code:`--fill-short-rows`, to fill short rows with the missing cells
+   * :code:`--fillvalue`, to change the value with which to fill short rows
 
 * feat: The :code:`--quoting` option accepts 4 (`csv.QUOTE_STRINGS <https://docs.python.org/3/library/csv.html#csv.QUOTE_STRINGS>`__) and 5 (`csv.QUOTE_NOTNULL <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNULL>`__) on Python 3.12.
 * feat: :doc:`/scripts/csvformat`: The :code:`--out-quoting` option accepts 4 (`csv.QUOTE_STRINGS <https://docs.python.org/3/library/csv.html#csv.QUOTE_STRINGS>`__) and 5 (`csv.QUOTE_NOTNULL <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNULL>`__) on Python 3.12.
