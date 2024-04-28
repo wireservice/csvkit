@@ -39,7 +39,7 @@ def stderr_as_stdout():
 @contextmanager
 def stdin_as_string(content):
     temp = sys.stdin
-    sys.stdin = io.TextIOWrapper(content)
+    sys.stdin = io.TextIOWrapper(io.BufferedReader(content))
     yield
     sys.stdin = temp
 
