@@ -43,49 +43,41 @@ class RowChecker:
         A generator which yields rows which are ready to write to output.
         """
         length = len(self.column_names)
-        line_number = self.reader.line_num
         joinable_row_errors = []
 
         for row in self.reader:
-            try:
-                if len(row) != length:
-                    raise LengthMismatchError(line_number, row, length)
-
+            if len(row) == length:
                 yield row
 
                 # Don't join rows across valid rows.
                 joinable_row_errors = []
-            except LengthMismatchError as e:
-                self.errors.append(e)
+                continue
 
+            e = LengthMismatchError(self.reader.line_num - 1, row, length)
+
+            self.errors.append(e)
+
+            if len(row) > length:
                 # Don't join with long rows.
-                if len(row) > length:
-                    joinable_row_errors = []
-                else:
-                    joinable_row_errors.append(e)
-
-                    while joinable_row_errors:
-                        fixed_row = join_rows([error.row for error in joinable_row_errors], joiner=' ')
-
-                        if len(fixed_row) < length:
-                            break
-
-                        if len(fixed_row) == length:
-                            yield fixed_row
-
-                            for fixed in joinable_row_errors:
-                                joinable_row_errors.remove(fixed)
-                                self.errors.remove(fixed)
-
-                            break
-
-                        # keep trying in case we're too long because of a straggler
-                        joinable_row_errors = joinable_row_errors[1:]
-
-            except CSVTestException as e:
-                self.errors.append(e)
-
-                # Don't join rows across other errors.
                 joinable_row_errors = []
+                continue
 
-            line_number = self.reader.line_num
+            joinable_row_errors.append(e)
+
+            while joinable_row_errors:
+                fixed_row = join_rows([error.row for error in joinable_row_errors], joiner=' ')
+
+                if len(fixed_row) < length:
+                    break
+
+                if len(fixed_row) == length:
+                    yield fixed_row
+
+                    for fixed in joinable_row_errors:
+                        joinable_row_errors.remove(fixed)
+                        self.errors.remove(fixed)
+
+                    break
+
+                # keep trying in case we're too long because of a straggler
+                joinable_row_errors = joinable_row_errors[1:]
