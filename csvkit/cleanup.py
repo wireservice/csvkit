@@ -30,12 +30,14 @@ class RowChecker:
 
     def __init__(self, reader, header_normalize_space=False):
         self.reader = reader
+
         try:
             self.column_names = next(reader)
             if header_normalize_space:
                 self.column_names = [' '.join(column_name.split()) for column_name in self.column_names]
         except StopIteration:
             self.column_names = []
+
         self.errors = []
 
     def checked_rows(self):
@@ -53,16 +55,18 @@ class RowChecker:
                 joinable_row_errors = []
                 continue
 
-            e = LengthMismatchError(self.reader.line_num - 1, row, length)
+            length_mismatch_error = LengthMismatchError(self.reader.line_num - 1, row, length)
 
-            self.errors.append(e)
+            self.errors.append(length_mismatch_error)
 
             if len(row) > length:
                 # Don't join with long rows.
                 joinable_row_errors = []
                 continue
 
-            joinable_row_errors.append(e)
+            joinable_row_errors.append(length_mismatch_error)
+            if len(joinable_row_errors) == 1:
+                continue
 
             while joinable_row_errors:
                 fixed_row = join_rows([error.row for error in joinable_row_errors], joiner=' ')
@@ -74,9 +78,9 @@ class RowChecker:
                     yield fixed_row
 
                     for fixed in joinable_row_errors:
-                        joinable_row_errors.remove(fixed)
                         self.errors.remove(fixed)
 
+                    joinable_row_errors = []
                     break
 
                 # keep trying in case we're too long because of a straggler

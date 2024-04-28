@@ -83,6 +83,13 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             ['d', 'e', 'f'],
         ], [])
 
+    def test_merge_short_rows(self):
+        self.assertCleaned(['examples/test_merge_short_rows.csv'], [
+            ['a', 'b', 'c'],
+            ['1', 'cat dog', '3'],
+            ['3', 'b', 'c'],
+        ])
+
     def test_removes_optional_quote_characters(self):
         self.assertCleaned(['examples/optional_quote_characters.csv'], [
             ['a', 'b', 'c'],

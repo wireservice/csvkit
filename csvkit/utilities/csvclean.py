@@ -24,7 +24,10 @@ class CSVClean(CSVKitUtility):
 
         reader = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
 
-        checker = RowChecker(reader, header_normalize_space=self.args.header_normalize_space)
+        checker = RowChecker(
+            reader,
+            header_normalize_space=self.args.header_normalize_space,
+        )
 
         output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
         output_writer.writerow(checker.column_names)
