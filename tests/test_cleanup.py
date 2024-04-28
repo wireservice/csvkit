@@ -12,7 +12,7 @@ class TestCleanup(unittest.TestCase):
                  ['abc'],
                  ['4', '5'],
                  ]
-        fixed = join_rows(start)
+        fixed = join_rows(start, ' ')
         self.assertEqual(4, len(fixed))
         self.assertEqual(start[0][0], fixed[0])
         self.assertEqual(start[0][1], fixed[1])
@@ -23,7 +23,7 @@ class TestCleanup(unittest.TestCase):
         start = [['168772', '1102', '$0.23 TO $0.72', 'HOUR', '1.5%'],
                  ['GROSS', '1.5% '],
                  ['GROSS', '430938']]
-        fixed = join_rows(start)
+        fixed = join_rows(start, ' ')
         self.assertEqual(7, len(fixed))
         self.assertEqual(start[0][0], fixed[0])
         self.assertEqual(start[0][1], fixed[1])
