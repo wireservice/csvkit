@@ -14,9 +14,9 @@ Release process
 
 #. The version number is correct in:
 
-    -  setup.py
-    -  docs/conf.py
-    -  csvkit/cli.py
+   -  setup.py
+   -  docs/conf.py
+   -  csvkit/cli.py
 
 #. Check for new authors:
 
