@@ -12,11 +12,6 @@ from tests.utils import CSVKitTestCase, EmptyFileTests
 class TestCSVClean(CSVKitTestCase, EmptyFileTests):
     Utility = CSVClean
 
-    def tearDown(self):
-        output_file = "stdin_out.csv"
-        if os.path.isfile(output_file):
-            os.remove(output_file)
-
     def assertCleaned(self, args, output_rows, error_rows=[]):
         output_file = io.StringIO()
         error_file = io.StringIO()
