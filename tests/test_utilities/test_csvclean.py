@@ -125,6 +125,24 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             ['1', "Empty columns named 'b', '', ''! Try: csvcut -C 2,4,5", '', '', '', '', ''],
         ])
 
+    def test_empty_columns_short_row(self):
+        self.assertCleaned(['--empty-columns', 'examples/test_empty_columns_short_row.csv'], [
+            ['a', 'b', 'c'],
+            ['', ''],
+        ], [
+            ['line_number', 'msg', 'a', 'b', 'c'],
+            ['1', "Empty columns named 'a', 'b', 'c'! Try: csvcut -C 1,2,3", '', '', ''],
+        ])
+
+    def test_empty_columns_long_row(self):
+        self.assertCleaned(['--empty-columns', 'examples/test_empty_columns_long_row.csv'], [
+            ['a', 'b', 'c'],
+            ['', '', '', ''],
+        ], [
+            ['line_number', 'msg', 'a', 'b', 'c'],
+            ['1', "Empty columns named 'a', 'b', 'c'! Try: csvcut -C 1,2,3", '', '', ''],
+        ])
+
     def test_empty_columns_zero(self):
         self.assertCleaned(['--empty-columns', '--zero', 'examples/test_empty_columns.csv'], [
             ['a', 'b', 'c', '', ''],

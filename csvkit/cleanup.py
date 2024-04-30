@@ -134,8 +134,8 @@ class RowChecker:
 
             # Increment the number of empty cells for each column.
             if self.empty_columns:
-                for i, value in enumerate(row):
-                    if value == '':
+                for i in range(len_column_names):
+                    if i >= len(row) or row[i] == '':
                         empty_counts[i] += 1
 
             # Standard output
