@@ -5,7 +5,7 @@ from unittest.mock import patch
 import agate
 
 from csvkit.utilities.csvclean import CSVClean, launch_new_instance
-from tests.utils import CSVKitTestCase, EmptyFileTests
+from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 
 
 class TestCSVClean(CSVKitTestCase, EmptyFileTests):
@@ -179,6 +179,43 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             ['2', 'Expected 5 columns, found 4 columns', '', '', 'c', ''],
             ['1', "Empty columns named 'b', '', ''! Try: csvcut -C 2,4,5", '', '', '', '', ''],
         ])
+
+    def test_label(self):
+        self.assertCleaned(['-a', '--label', 'xyz', 'examples/test_empty_columns.csv'], [
+            ['a', 'b', 'c', '', ''],
+            ['a', '', '', '', ''],
+            ['', '', 'c', ''],
+            ['', '', '', '', ''],
+        ], [
+            ['label', 'line_number', 'msg', 'a', 'b', 'c', '', ''],
+            ['xyz', '2', 'Expected 5 columns, found 4 columns', '', '', 'c', ''],
+            ['xyz', '1', "Empty columns named 'b', '', ''! Try: csvcut -C 2,4,5", '', '', '', '', ''],
+        ])
+
+    def test_label_default(self):
+        self.assertCleaned(['-a', '--label', '-', 'examples/test_empty_columns.csv'], [
+            ['a', 'b', 'c', '', ''],
+            ['a', '', '', '', ''],
+            ['', '', 'c', ''],
+            ['', '', '', '', ''],
+        ], [
+            ['label', 'line_number', 'msg', 'a', 'b', 'c', '', ''],
+            ['examples/test_empty_columns.csv', '2', 'Expected 5 columns, found 4 columns', '', '', 'c', ''],
+            ['examples/test_empty_columns.csv', '1', "Empty columns named 'b', '', ''! Try: csvcut -C 2,4,5", '', '', '', '', ''],  # noqa: E501
+        ])
+
+    def test_label_default_stdin(self):
+        input_file = io.BytesIO(b'a,b,c\n,\n')
+
+        with stdin_as_string(input_file):
+            self.assertCleaned(['-a', '--label', '-'], [
+                ['a', 'b', 'c'],
+                ['', ''],
+            ], [
+                ['label', 'line_number', 'msg', 'a', 'b', 'c'],
+                ['stdin', '1', 'Expected 3 columns, found 2 columns', '', ''],
+                ['stdin', '1', "Empty columns named 'a', 'b', 'c'! Try: csvcut -C 1,2,3", '', '', ''],
+            ])
 
     def test_removes_optional_quote_characters(self):
         self.assertCleaned(['--length-mismatch', 'examples/optional_quote_characters.csv'], [

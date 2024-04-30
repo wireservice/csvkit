@@ -26,6 +26,10 @@ class CSVClean(CSVKitUtility):
             '--omit-error-rows', dest='omit_error_rows', action='store_true',
             help='Omit data rows that contain errors, from standard output.')
         self.argparser.add_argument(
+            '--label', dest='label',
+            help='Add a "label" column to standard error. Useful in automated workflows. '
+                 'Use "-" to default to the input filename.')
+        self.argparser.add_argument(
             '--header-normalize-space', dest='header_normalize_space', action='store_true',
             help='Strip leading and trailing whitespace and replace sequences of whitespace characters by a single '
                  'space in the header.')
@@ -81,6 +85,13 @@ class CSVClean(CSVKitUtility):
             omit_error_rows=self.args.omit_error_rows,
         )
 
+        label = self.args.label
+        if label == '-':
+            if self.input_file == sys.stdin:
+                label = 'stdin'
+            else:
+                label = self.input_file.name
+
         output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
         output_writer.writerow(checker.column_names)
         for row in checker.checked_rows():
@@ -88,9 +99,17 @@ class CSVClean(CSVKitUtility):
 
         if checker.errors:
             error_writer = agate.csv.writer(self.error_file, **self.writer_kwargs)
-            error_writer.writerow(['line_number', 'msg'] + checker.column_names)
+
+            fieldnames = ['line_number', 'msg'] + checker.column_names
+            if self.args.label:
+                fieldnames.insert(0, 'label')
+            error_writer.writerow(fieldnames)
+
             for error in checker.errors:
-                error_writer.writerow([error.line_number, error.msg] + error.row)
+                row = [error.line_number, error.msg] + error.row
+                if self.args.label:
+                    row.insert(0, label)
+                error_writer.writerow(row)
 
             sys.exit(1)
 

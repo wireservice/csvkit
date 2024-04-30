@@ -125,6 +125,8 @@ Usage
                            Enable all error reporting.
      --omit-error-rows     Omit data rows that contain errors, from standard
                            output.
+     --label LABEL         Add a "label" column to standard error. Useful in
+                           automated workflows.
      --header-normalize-space
                            Strip leading and trailing whitespace and replace
                            sequences of whitespace characters by a single space

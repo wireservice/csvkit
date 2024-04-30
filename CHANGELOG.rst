@@ -25,6 +25,8 @@ Other changes:
    -  :code:`--length-mismatch`, to error on data rows that are shorter or longer than the header row
    -  :code:`--empty-columns`, to error on empty columns
    -  :code:`--enable-all-checks`, to enable all error reporting.
+   -  :code:`--omit-error-rows`, to omit data rows that contain errors, from standard output.
+   -  :code:`--label`, to add a "label" column to standard error.
    -  :code:`--header-normalize-space`, to strip leading and trailing whitespace and replace sequences of whitespace characters by a single space in the header
    -  :code:`--separator`, to change the string with which to join short rows
    -  :code:`--fill-short-rows`, to fill short rows with the missing cells
