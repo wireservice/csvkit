@@ -1,5 +1,4 @@
 import io
-import os
 import sys
 from unittest.mock import patch
 
