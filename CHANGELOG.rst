@@ -8,8 +8,15 @@
    -  The :code:`--dry-run` option is removed. The :code:`--dry-run` option changed error output from the CSV format used in ``basename_err.csv`` files to ``Line 1: Expected 2 columns, found 3 columns`` messages.
    -  Summary information like ``No errors.``, ``42 errors logged to basename_err.csv`` and ``42 rows were joined/reduced to 24 rows after eliminating expected internal line breaks.`` is not written.
 
--  :doc:`/scripts/csvclean` neither reports nor fixes errors by default; it errors if no checks or fixes are enabled. Opt in to the original behavior using the :code:`--length-mismatch` and :code:`--join-short-rows` options. See new options below.
+-  :doc:`/scripts/csvclean` no longer reports or fixes errors by default; it errors if no checks or fixes are enabled. Opt in to the original behavior using the :code:`--length-mismatch` and :code:`--join-short-rows` options. See new options below.
+-  :doc:`/scripts/csvclean` no longer omits rows with errors from the output. Opt in to the original behavior using the :code:`--omit-error-rows` option.
 -  :doc:`/scripts/csvclean` joins short rows using a newline by default, instead of a space. Restore the original behavior using the :code:`--separator " "` option.
+
+In brief, to restore the original behavior for :doc:`/scripts/csvclean`:
+
+.. code-block:: bash
+
+   csvclean --length-mismatch --omit-error-rows --join-short-rows --separator " " myfile.csv
 
 Other changes:
 

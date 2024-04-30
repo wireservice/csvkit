@@ -48,17 +48,20 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             launch_new_instance()
 
     def test_skip_lines(self):
-        self.assertCleaned(['--length-mismatch', '--skip-lines', '3', 'examples/bad_skip_lines.csv'], [
-            ['column_a', 'column_b', 'column_c'],
-            ['0', 'mixed types.... uh oh', '17'],
-        ], [
-            ['line_number', 'msg', 'column_a', 'column_b', 'column_c'],
-            ['1', 'Expected 3 columns, found 4 columns', '1', '27', '', "I'm too long!"],
-            ['2', 'Expected 3 columns, found 2 columns', '', "I'm too short!"],
-        ])
+        self.assertCleaned(
+            ['--length-mismatch', '--omit-error-rows', '--skip-lines', '3', 'examples/bad_skip_lines.csv'],
+            [
+                ['column_a', 'column_b', 'column_c'],
+                ['0', 'mixed types.... uh oh', '17'],
+            ], [
+                ['line_number', 'msg', 'column_a', 'column_b', 'column_c'],
+                ['1', 'Expected 3 columns, found 4 columns', '1', '27', '', "I'm too long!"],
+                ['2', 'Expected 3 columns, found 2 columns', '', "I'm too short!"],
+            ],
+        )
 
     def test_simple(self):
-        self.assertCleaned(['--length-mismatch', 'examples/bad.csv'], [
+        self.assertCleaned(['--length-mismatch', '--omit-error-rows', 'examples/bad.csv'], [
             ['column_a', 'column_b', 'column_c'],
             ['0', 'mixed types.... uh oh', '17'],
         ], [
@@ -79,18 +82,21 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_join_short_rows(self):
-        self.assertCleaned(['--join-short-rows', 'examples/test_join_short_rows.csv'], [
+        self.assertCleaned(['--omit-error-rows', '--join-short-rows', 'examples/test_join_short_rows.csv'], [
             ['a', 'b', 'c'],
             ['1', 'cat\ndog', 'c'],
             ['3', 'b', 'c'],
         ])
 
     def test_join_short_rows_separator(self):
-        self.assertCleaned(['--join-short-rows', '--separator', 'XYZ', 'examples/test_join_short_rows.csv'], [
-            ['a', 'b', 'c'],
-            ['1', 'catXYZdog', 'c'],
-            ['3', 'b', 'c'],
-        ])
+        self.assertCleaned(
+            ['--omit-error-rows', '--join-short-rows', '--separator', 'XYZ', 'examples/test_join_short_rows.csv'],
+            [
+                ['a', 'b', 'c'],
+                ['1', 'catXYZdog', 'c'],
+                ['3', 'b', 'c'],
+            ],
+        )
 
     def test_fill_short_rows(self):
         self.assertCleaned(['--fill-short-rows', 'examples/test_join_short_rows.csv'], [

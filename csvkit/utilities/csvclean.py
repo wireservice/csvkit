@@ -23,6 +23,9 @@ class CSVClean(CSVKitUtility):
             '-a', '--enable-all-checks', dest='enable_all_checks', action='store_true',
             help='Enable all error reporting.')
         self.argparser.add_argument(
+            '--omit-error-rows', dest='omit_error_rows', action='store_true',
+            help='Omit data rows that contain errors, from standard output.')
+        self.argparser.add_argument(
             '--header-normalize-space', dest='header_normalize_space', action='store_true',
             help='Strip leading and trailing whitespace and replace sequences of whitespace characters by a single '
                  'space in the header.')
@@ -75,6 +78,7 @@ class CSVClean(CSVKitUtility):
             fillvalue=self.args.fillvalue,
             # Other
             zero_based=self.args.zero_based,
+            omit_error_rows=self.args.omit_error_rows,
         )
 
         output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)

@@ -48,6 +48,7 @@ class RowChecker:
         fillvalue=None,
         # Other
         zero_based=False,
+        omit_error_rows=False,
     ):
         self.reader = reader
         # Checks
@@ -60,6 +61,7 @@ class RowChecker:
         self.fillvalue = fillvalue
         # Other
         self.zero_based = zero_based
+        self.omit_error_rows = omit_error_rows
 
         try:
             self.column_names = next(reader)
@@ -138,7 +140,7 @@ class RowChecker:
 
             # Standard output
 
-            if len(row) == len_column_names:
+            if not self.omit_error_rows or len(row) == len_column_names:
                 yield row
 
         # File-level checks and fixes.
