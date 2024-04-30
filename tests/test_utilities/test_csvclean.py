@@ -47,6 +47,20 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower()] + self.default_args + ['examples/dummy.csv']):
             launch_new_instance()
 
+    def test_options(self):
+        for args, message in (
+            (
+                [],
+                'No checks or fixes were enabled. See available options with: csvclean --help',
+            ),
+            (
+                ['--join-short-rows', '--fill-short-rows'],
+                'The --join-short-rows and --fill-short-rows options are mutually exclusive.',
+            ),
+        ):
+            with self.subTest(args=args):
+                self.assertError(launch_new_instance, args, message)
+
     def test_skip_lines(self):
         self.assertCleaned(
             ['--length-mismatch', '--omit-error-rows', '--skip-lines', '3', 'examples/bad_skip_lines.csv'],

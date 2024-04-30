@@ -13,6 +13,13 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def test_options(self):
+        self.assertError(
+            launch_new_instance,
+            ['-g', '1,2'],
+            'The number of grouping values must be equal to the number of CSV files being stacked.',
+        )
+
     def test_skip_lines(self):
         self.assertRows(['--skip-lines', '3', 'examples/test_skip_lines.csv', 'examples/test_skip_lines.csv'], [
             ['a', 'b', 'c'],

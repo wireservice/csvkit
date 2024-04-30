@@ -14,6 +14,24 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def test_options(self):
+        self.assertError(
+            launch_new_instance,
+            ['--key', 'value', '--stream'],
+            '--key is only allowed with --stream when --lat and --lon are also specified.',
+        )
+
+    def test_latlon_options(self):
+        for option, message in (
+            ('lat', '--lon is required whenever --lat is specified.'),
+            ('lon', '--lat is required whenever --lon is specified.'),
+            ('crs', '--crs is only allowed when --lat and --lon are also specified.'),
+            ('type', '--type is only allowed when --lat and --lon are also specified.'),
+            ('geometry', '--geometry is only allowed when --lat and --lon are also specified.'),
+        ):
+            with self.subTest(option=option):
+                self.assertError(launch_new_instance, [f'--{option}', 'value'], message)
+
     def test_simple(self):
         js = json.loads(self.get_output(['examples/dummy.csv']))
         self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})

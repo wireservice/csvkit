@@ -21,7 +21,8 @@ import io
 import sys
 import unittest
 import warnings
-from contextlib import contextmanager
+from contextlib import contextmanager, redirect_stderr
+from unittest.mock import patch
 
 import agate
 
@@ -66,6 +67,21 @@ class CSVKitTestCase(unittest.TestCase):
 
     def get_output_as_reader(self, args):
         return agate.csv.reader(self.get_output_as_io(args))
+
+    def assertError(self, launch_new_instance, options, message, args=None):
+        command = self.Utility.__name__.lower()
+
+        if args is None:
+            args = ['examples/dummy.csv']
+
+        f = io.StringIO()
+        with redirect_stderr(f):
+            with patch.object(sys, 'argv', [command] + options + args):
+                with self.assertRaises(SystemExit) as e:
+                    launch_new_instance()
+
+        self.assertEqual(e.exception.code, 2)
+        self.assertEqual(f.getvalue().splitlines()[-1], f'{command}: error: {message}')
 
     def assertRows(self, args, rows):
         reader = self.get_output_as_reader(args)

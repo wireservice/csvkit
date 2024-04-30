@@ -15,6 +15,22 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def test_options(self):
+        self.assertError(
+            launch_new_instance,
+            ['--min', '--max'],
+            'Only one operation argument may be specified (--mean, --median, etc).',
+        )
+
+    def test_format_options(self):
+        for option in ('csv', 'json', 'count'):
+            with self.subTest(option=option):
+                self.assertError(
+                    launch_new_instance,
+                    ['--min', f'--{option}'],
+                    f'You may not specify --{option} and an operation (--mean, --median, etc) at the same time.',
+                )
+
     def test_runs(self):
         # Test that csvstat doesn't error on UTF-8 input.
         self.get_output(['examples/test_utf8.csv'])
