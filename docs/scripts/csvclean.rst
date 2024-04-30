@@ -5,10 +5,21 @@ csvclean
 Description
 ===========
 
-Cleans a CSV file of common syntax errors:
+Reports and fixes common errors in a CSV file.
 
--  Reports rows that have a different number of columns than the header row.
+Checks
+------
+
+-  Reports rows that have a different number of columns than the header row, if the :code:`--length-mismatch` option is set.
 -  Reports columns that are empty, if the :code:`--empty-columns` option is set.
+
+.. tip::
+
+   Enable all checks with :code:`--enable-all-checks` (:code:`-a`).
+
+Fixes
+-----
+
 -  If a CSV has unquoted cells that contain line breaks, like:
 
    .. code-block:: none
@@ -65,7 +76,9 @@ Cleans a CSV file of common syntax errors:
       1,Alice,US
       2,Bob,CA
 
-All valid rows are written to standard output, and all error rows along with line numbers and descriptions are written to standard error. If there are error rows, the exit code will be 1.
+.. seealso::
+
+   :code:`--header-normalize-space` under :ref:`csvclean-usage`.
 
 .. note::
 
@@ -76,6 +89,19 @@ All valid rows are written to standard output, and all error rows along with lin
    -  Changes the record delimiter to a line feed (LF or ``\n``)
    -  Changes the quote character to a double-quotation mark, if the character is set with the `--quotechar` (`-q`) option
    -  Changes the character encoding to UTF-8, if the input encoding is set with the `--encoding` (`-e`) option
+
+Output
+------
+
+:code:`csvclean` attempts to make the selected fixes. Then:
+
+-  If the :code:`--omit-error-rows` option is set, **only** rows that pass the selected checks are written to standard output. If not, **all** rows are written to standard output.
+-  If any checks are enabled, **error** rows along with line numbers and descriptions are written to standard error. If there are error rows, the exit code is 1.
+
+.. _csvclean-usage:
+
+Usage
+-----
 
 .. code-block:: none
 
@@ -92,6 +118,13 @@ All valid rows are written to standard output, and all error rows along with lin
 
    optional arguments:
      -h, --help            show this help message and exit
+     --length-mismatch     Report data rows that are shorter or longer than the
+                           header row.
+     --empty-columns       Report empty columns as errors.
+     -a, --enable-all-checks
+                           Enable all error reporting.
+     --omit-error-rows     Omit data rows that contain errors, from standard
+                           output.
      --header-normalize-space
                            Strip leading and trailing whitespace and replace
                            sequences of whitespace characters by a single space
@@ -104,7 +137,6 @@ All valid rows are written to standard output, and all error rows along with lin
      --fillvalue FILLVALUE
                            The value with which to fill short rows. Defaults to
                            none.
-     --empty-columns       Report empty columns as errors.
 
 See also: :doc:`../common_arguments`.
 

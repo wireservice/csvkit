@@ -9,7 +9,7 @@ from csvkit.cli import CSVKitUtility
 
 
 class CSVClean(CSVKitUtility):
-    description = 'Fix common errors in a CSV file.'
+    description = 'Report and fix common errors in a CSV file.'
     override_flags = ['L', 'blanks', 'date-format', 'datetime-format']
 
     def add_arguments(self):
