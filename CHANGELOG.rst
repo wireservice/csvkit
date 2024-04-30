@@ -3,8 +3,12 @@
 
 **BACKWARDS-INCOMPATIBLE CHANGES:**
 
--  :doc:`/scripts/csvclean` now writes its output to standard output and its errors to standard error, instead of to ``basename_out.csv`` and ``basename_err.csv`` files. Consequently, it no longer supports a :code:`--dry-run` option to output summary information like ``No errors.``, ``42 errors logged to basename_err.csv`` or ``42 rows were joined/reduced to 24 rows after eliminating expected internal line breaks.``.
--  :doc:`/scripts/csvclean` no longer fixes errors by default. Opt in to the original behavior using the :code:`--join-short-rows` option.
+-  :doc:`/scripts/csvclean` now writes its output to standard output and its errors to standard error, instead of to ``basename_out.csv`` and ``basename_err.csv`` files. Consequently:
+
+   -  The :code:`--dry-run` option is removed. The :code:`--dry-run` option changed error output from the CSV format used in ``basename_err.csv`` files to ``Line 1: Expected 2 columns, found 3 columns`` messages.
+   -  Summary information like ``No errors.``, ``42 errors logged to basename_err.csv`` and ``42 rows were joined/reduced to 24 rows after eliminating expected internal line breaks.`` is not written.
+
+-  :doc:`/scripts/csvclean` no longer fixes errors by default. Opt in to the original behavior using the :code:`--join-short-rows` option. See new options below.
 -  :doc:`/scripts/csvclean` joins short rows using a newline by default, instead of a space. Restore the original behavior using the :code:`--separator " "` option.
 
 Other changes:
