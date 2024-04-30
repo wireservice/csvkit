@@ -72,63 +72,68 @@ class RowChecker:
         row_count = 0
         empty_counts = [0 for _ in range(len_column_names)]
 
+        # Row-level checks and fixes.
         for row in self.reader:
             line_number = self.reader.line_num - 1
             row_count += 1
-            len_row = len(row)
 
+            # Potential errors
+
+            length_error = Error(line_number, row, f'Expected {len_column_names} columns, found {len(row)} columns')
+
+            # Fixes (replace `row`)
+
+            if self.fill_short_rows:
+                if len(row) < len_column_names:
+                    row += [self.fillvalue] * (len_column_names - len(row))
+            # --join-error-rows and --fill-error-rows are mutually exclusive.
+            elif self.join_short_rows:
+                # Don't join short rows across valid rows or with long rows.
+                if len(row) >= len_column_names:
+                    joinable_row_errors = []
+                else:
+                    joinable_row_errors.append(length_error)
+
+                    if len(joinable_row_errors) > 1:
+                        while joinable_row_errors:
+                            fixed_row = join_rows([e.row for e in joinable_row_errors], separator=self.separator)
+
+                            if len(fixed_row) < len_column_names:
+                                # Stop trying, if we are too short.
+                                break
+
+                            if len(fixed_row) == len_column_names:
+                                row = fixed_row
+
+                                # Remove the errors that are now fixed.
+                                for fixed in joinable_row_errors[:-1]:
+                                    self.errors.remove(fixed)
+
+                                joinable_row_errors = []
+                                break
+
+                            # Keep trying, if we are too long.
+                            joinable_row_errors = joinable_row_errors[1:]
+
+            # Standard error
+
+            if len(row) != len_column_names:
+                self.errors.append(length_error)
+
+            # Increment the number of empty cells for each column.
             if self.empty_columns:
                 for i, value in enumerate(row):
                     if value == '':
                         empty_counts[i] += 1
 
-            if len_row == len_column_names:
+            # Standard output
+
+            if len(row) == len_column_names:
                 yield row
 
-                if self.join_short_rows:
-                    # Don't join rows across valid rows.
-                    joinable_row_errors = []
+        # File-level checks and fixes.
 
-                continue
-
-            if self.fill_short_rows and len_row < len_column_names:
-                yield row + [self.fillvalue] * (len_column_names - len_row)
-
-                continue
-
-            length_error = Error(line_number, row, f'Expected {len_column_names} columns, found {len_row} columns')
-
-            self.errors.append(length_error)
-
-            if self.join_short_rows:
-                if len_row > len_column_names:
-                    # Don't join with long rows.
-                    joinable_row_errors = []
-                    continue
-
-                joinable_row_errors.append(length_error)
-                if len(joinable_row_errors) == 1:
-                    continue
-
-                while joinable_row_errors:
-                    fixed_row = join_rows([error.row for error in joinable_row_errors], separator=self.separator)
-
-                    if len(fixed_row) < len_column_names:
-                        break
-
-                    if len(fixed_row) == len_column_names:
-                        yield fixed_row
-
-                        for fixed in joinable_row_errors:
-                            self.errors.remove(fixed)
-
-                        joinable_row_errors = []
-                        break
-
-                    # keep trying in case we're too long because of a straggler
-                    joinable_row_errors = joinable_row_errors[1:]
-
-        if row_count:
+        if row_count:  # Don't report all columns as empty if there are no data rows.
             if empty_columns := [i for i, count in enumerate(empty_counts) if count == row_count]:
                 offset = 0 if self.zero_based else 1
                 self.errors.append(
