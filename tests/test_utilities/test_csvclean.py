@@ -118,7 +118,7 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         self.assertCleaned(['--empty-columns', 'examples/test_empty_columns.csv'], [
             ['a', 'b', 'c', '', ''],
             ['a', '', '', '', ''],
-            ['', '', 'c', '', ''],
+            ['', '', 'c', ''],
             ['', '', '', '', ''],
         ], [
             ['line_number', 'msg', 'a', 'b', 'c', '', ''],
@@ -147,11 +147,23 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         self.assertCleaned(['--empty-columns', '--zero', 'examples/test_empty_columns.csv'], [
             ['a', 'b', 'c', '', ''],
             ['a', '', '', '', ''],
-            ['', '', 'c', '', ''],
+            ['', '', 'c', ''],
             ['', '', '', '', ''],
         ], [
             ['line_number', 'msg', 'a', 'b', 'c', '', ''],
             ['1', "Empty columns named 'b', '', ''! Try: csvcut -C 1,3,4", '', '', '', '', ''],
+        ])
+
+    def test_enable_all_checks(self):
+        self.assertCleaned(['-a', 'examples/test_empty_columns.csv'], [
+            ['a', 'b', 'c', '', ''],
+            ['a', '', '', '', ''],
+            ['', '', 'c', ''],
+            ['', '', '', '', ''],
+        ], [
+            ['line_number', 'msg', 'a', 'b', 'c', '', ''],
+            ['2', 'Expected 5 columns, found 4 columns', '', '', 'c', ''],
+            ['1', "Empty columns named 'b', '', ''! Try: csvcut -C 2,4,5", '', '', '', '', ''],
         ])
 
     def test_removes_optional_quote_characters(self):
