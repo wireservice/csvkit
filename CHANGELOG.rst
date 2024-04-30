@@ -8,18 +8,20 @@
    -  The :code:`--dry-run` option is removed. The :code:`--dry-run` option changed error output from the CSV format used in ``basename_err.csv`` files to ``Line 1: Expected 2 columns, found 3 columns`` messages.
    -  Summary information like ``No errors.``, ``42 errors logged to basename_err.csv`` and ``42 rows were joined/reduced to 24 rows after eliminating expected internal line breaks.`` is not written.
 
--  :doc:`/scripts/csvclean` no longer fixes errors by default. Opt in to the original behavior using the :code:`--join-short-rows` option. See new options below.
+-  :doc:`/scripts/csvclean` neither reports nor fixes errors by default; it errors if no checks or fixes are enabled. Opt in to the original behavior using the :code:`--length-mismatch` and :code:`--join-short-rows` options. See new options below.
 -  :doc:`/scripts/csvclean` joins short rows using a newline by default, instead of a space. Restore the original behavior using the :code:`--separator " "` option.
 
 Other changes:
 
 -  feat: :doc:`/scripts/csvclean` adds the options:
 
+   -  :code:`--length-mismatch`, to error on data rows that are shorter or longer than the header row
+   -  :code:`--empty-columns`, to error on empty columns
+   -  :code:`--enable-all-checks`, to enable all error reporting.
    -  :code:`--header-normalize-space`, to strip leading and trailing whitespace and replace sequences of whitespace characters by a single space in the header
    -  :code:`--separator`, to change the string with which to join short rows
    -  :code:`--fill-short-rows`, to fill short rows with the missing cells
    -  :code:`--fillvalue`, to change the value with which to fill short rows
-   -  :code:`--empty-columns`, to error on empty columns
 
 -  feat: The :code:`--quoting` option accepts 4 (`csv.QUOTE_STRINGS <https://docs.python.org/3/library/csv.html#csv.QUOTE_STRINGS>`__) and 5 (`csv.QUOTE_NOTNULL <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNULL>`__) on Python 3.12.
 -  feat: :doc:`/scripts/csvformat`: The :code:`--out-quoting` option accepts 4 (`csv.QUOTE_STRINGS <https://docs.python.org/3/library/csv.html#csv.QUOTE_STRINGS>`__) and 5 (`csv.QUOTE_NOTNULL <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNULL>`__) on Python 3.12.

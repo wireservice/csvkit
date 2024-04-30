@@ -37,20 +37,28 @@ class RowChecker:
     def __init__(
         self,
         reader,
+        # Checks
+        length_mismatch=False,
+        empty_columns=False,
+        # Fixes
         header_normalize_space=False,
         join_short_rows=False,
         separator='\n',
         fill_short_rows=False,
         fillvalue=None,
-        empty_columns=False,
+        # Other
         zero_based=False,
     ):
         self.reader = reader
+        # Checks
+        self.length_mismatch = length_mismatch
+        self.empty_columns = empty_columns
+        # Fixes
         self.join_short_rows = join_short_rows
         self.separator = separator
         self.fill_short_rows = fill_short_rows
         self.fillvalue = fillvalue
-        self.empty_columns = empty_columns
+        # Other
         self.zero_based = zero_based
 
         try:
@@ -106,8 +114,9 @@ class RowChecker:
                                 row = fixed_row
 
                                 # Remove the errors that are now fixed.
-                                for fixed in joinable_row_errors[:-1]:
-                                    self.errors.remove(fixed)
+                                if self.length_mismatch:
+                                    for fixed in joinable_row_errors:
+                                        self.errors.remove(fixed)
 
                                 joinable_row_errors = []
                                 break
@@ -117,8 +126,9 @@ class RowChecker:
 
             # Standard error
 
-            if len(row) != len_column_names:
-                self.errors.append(length_error)
+            if self.length_mismatch:
+                if len(row) != len_column_names:
+                    self.errors.append(length_error)
 
             # Increment the number of empty cells for each column.
             if self.empty_columns:

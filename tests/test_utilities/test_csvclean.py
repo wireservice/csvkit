@@ -10,6 +10,7 @@ from tests.utils import CSVKitTestCase, EmptyFileTests
 
 class TestCSVClean(CSVKitTestCase, EmptyFileTests):
     Utility = CSVClean
+    default_args = ['--length-mismatch']
 
     def assertCleaned(self, args, output_rows, error_rows=[]):
         output_file = io.StringIO()
@@ -43,11 +44,11 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         error_file.close()
 
     def test_launch_new_instance(self):
-        with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
+        with patch.object(sys, 'argv', [self.Utility.__name__.lower()] + self.default_args + ['examples/dummy.csv']):
             launch_new_instance()
 
     def test_skip_lines(self):
-        self.assertCleaned(['--skip-lines', '3', 'examples/bad_skip_lines.csv'], [
+        self.assertCleaned(['--length-mismatch', '--skip-lines', '3', 'examples/bad_skip_lines.csv'], [
             ['column_a', 'column_b', 'column_c'],
             ['0', 'mixed types.... uh oh', '17'],
         ], [
@@ -57,7 +58,7 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_simple(self):
-        self.assertCleaned(['examples/bad.csv'], [
+        self.assertCleaned(['--length-mismatch', 'examples/bad.csv'], [
             ['column_a', 'column_b', 'column_c'],
             ['0', 'mixed types.... uh oh', '17'],
         ], [
@@ -67,7 +68,7 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_no_header_row(self):
-        self.assertCleaned(['examples/no_header_row.csv'], [
+        self.assertCleaned(['--length-mismatch', 'examples/no_header_row.csv'], [
             ['1', '2', '3'],
         ])
 
@@ -130,27 +131,27 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         ])
 
     def test_removes_optional_quote_characters(self):
-        self.assertCleaned(['examples/optional_quote_characters.csv'], [
+        self.assertCleaned(['--length-mismatch', 'examples/optional_quote_characters.csv'], [
             ['a', 'b', 'c'],
             ['1', '2', '3'],
         ])
 
     def test_changes_line_endings(self):
-        self.assertCleaned(['examples/mac_newlines.csv'], [
+        self.assertCleaned(['--length-mismatch', 'examples/mac_newlines.csv'], [
             ['a', 'b', 'c'],
             ['1', '2', '3'],
             ['Once upon\na time', '5', '6'],
         ])
 
     def test_changes_character_encoding(self):
-        self.assertCleaned(['-e', 'latin1', 'examples/test_latin1.csv'], [
+        self.assertCleaned(['--length-mismatch', '-e', 'latin1', 'examples/test_latin1.csv'], [
             ['a', 'b', 'c'],
             ['1', '2', '3'],
             ['4', '5', u'©'],
         ])
 
     def test_removes_bom(self):
-        self.assertCleaned(['examples/test_utf8_bom.csv'], [
+        self.assertCleaned(['--length-mismatch', 'examples/test_utf8_bom.csv'], [
             ['foo', 'bar', 'baz'],
             ['1', '2', '3'],
             ['4', '5', 'ʤ'],
