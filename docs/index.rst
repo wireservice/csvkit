@@ -126,6 +126,8 @@ When citing csvkit in publications, you may use this BibTeX entry:
      url = "https://csvkit.readthedocs.org/"
    }
 
+.. _authors:
+
 Authors
 =======
 

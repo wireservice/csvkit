@@ -1,11 +1,15 @@
-2.0.0 - Unreleased
-------------------
+2.0.0 - May 1, 2024
+-------------------
+
+This is the first major release since December 27, 2016. Thank you to all :ref:`contributors<authors>`, including 44 new contributors since 1.0.0!
+
+Want to use csvkit programmatically? Check out `agate <https://agate.readthedocs.io/en/latest/>`__, used internally by csvkit.
 
 **BACKWARDS-INCOMPATIBLE CHANGES:**
 
 -  :doc:`/scripts/csvclean` now writes its output to standard output and its errors to standard error, instead of to ``basename_out.csv`` and ``basename_err.csv`` files. Consequently:
 
-   -  The :code:`--dry-run` option is removed. The :code:`--dry-run` option changed error output from the CSV format used in ``basename_err.csv`` files to ``Line 1: Expected 2 columns, found 3 columns`` messages.
+   -  The :code:`--dry-run` option is removed. The :code:`--dry-run` option changed error output from the CSV format used in ``basename_err.csv`` files to a prosaic format like ``Line 1: Expected 2 columns, found 3 columns``.
    -  Summary information like ``No errors.``, ``42 errors logged to basename_err.csv`` and ``42 rows were joined/reduced to 24 rows after eliminating expected internal line breaks.`` is not written.
 
 -  :doc:`/scripts/csvclean` no longer reports or fixes errors by default; it errors if no checks or fixes are enabled. Opt in to the original behavior using the :code:`--length-mismatch` and :code:`--join-short-rows` options. See new options below.
@@ -24,13 +28,14 @@ Other changes:
 
    -  :code:`--length-mismatch`, to error on data rows that are shorter or longer than the header row
    -  :code:`--empty-columns`, to error on empty columns
-   -  :code:`--enable-all-checks`, to enable all error reporting.
-   -  :code:`--omit-error-rows`, to omit data rows that contain errors, from standard output.
-   -  :code:`--label`, to add a "label" column to standard error.
+   -  :code:`--enable-all-checks`, to enable all error reporting
+   -  :code:`--omit-error-rows`, to omit data rows that contain errors, from standard output
+   -  :code:`--label LABEL`, to add a "label" column to standard error
    -  :code:`--header-normalize-space`, to strip leading and trailing whitespace and replace sequences of whitespace characters by a single space in the header
-   -  :code:`--separator`, to change the string with which to join short rows
+   -  :code:`--join-short-rows`, to merge short rows into a single row
+   -  :code:`--separator SEPARATOR`, to change the string with which to join short rows (default is newline)
    -  :code:`--fill-short-rows`, to fill short rows with the missing cells
-   -  :code:`--fillvalue`, to change the value with which to fill short rows
+   -  :code:`--fillvalue FILLVALUE`, to change the value with which to fill short rows (default is none)
 
 -  feat: The :code:`--quoting` option accepts 4 (`csv.QUOTE_STRINGS <https://docs.python.org/3/library/csv.html#csv.QUOTE_STRINGS>`__) and 5 (`csv.QUOTE_NOTNULL <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNULL>`__) on Python 3.12.
 -  feat: :doc:`/scripts/csvformat`: The :code:`--out-quoting` option accepts 4 (`csv.QUOTE_STRINGS <https://docs.python.org/3/library/csv.html#csv.QUOTE_STRINGS>`__) and 5 (`csv.QUOTE_NOTNULL <https://docs.python.org/3/library/csv.html#csv.QUOTE_NOTNULL>`__) on Python 3.12.
