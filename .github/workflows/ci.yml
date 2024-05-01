@@ -25,7 +25,7 @@ jobs:
       - name: Read from stdin
         if: matrix.os != 'windows-latest'
         run: |
-          csvclean < examples/dummy.csv
+          csvclean -a < examples/dummy.csv
           csvcut < examples/dummy.csv
           csvformat < examples/dummy.csv
           csvgrep -c1 -m1 < examples/dummy.csv
@@ -40,7 +40,7 @@ jobs:
           sql2csv < examples/test.sql
       - name: Read from pipe
         run: |
-          printf 'a,b,c\n1,2,3' | csvclean
+          printf 'a,b,c\n1,2,3' | csvclean -a
           printf 'a,b,c\n1,2,3' | csvcut
           printf 'a,b,c\n1,2,3' | csvformat
           printf 'a,b,c\n1,2,3' | csvgrep -c1 -m1
