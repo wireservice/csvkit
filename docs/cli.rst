@@ -26,18 +26,13 @@ Processing
     scripts/csvsort
     scripts/csvstack
 
-To deduplicate and merge CSV files, consider `csvdedupe <https://pypi.org/project/csvdedupe/>`__.
+.. seealso::
 
-To change field values (i.e. to run ``sed`` or ``awk``-like commands on CSV files), consider `csvsed <https://pypi.org/project/csvsed/>`__ or `miller <https://miller.readthedocs.io/en/latest/>`_ (``mlr put``).
+   To deduplicate and merge CSV files, consider `csvdedupe <https://pypi.org/project/csvdedupe/>`_.
 
-To transpose CSVs, consider `csvtool <https://colin.maudry.com/csvtool-manual-page/>`_. Install ``csvtool`` on Linux using your package manager, or on macOS using:
+   To change field values (i.e. to run ``sed`` or ``awk``-like commands on CSV files), consider `qsv <https://github.com/jqnatividad/qsv>`_'s ``replace`` command or `miller <https://miller.readthedocs.io/en/latest/>`_ (``mlr put``).
 
-.. code-block:: bash
-
-   brew install ocaml
-   opam install csv
-   ln -s ~/.opam/system/bin/csvtool /usr/local/bin/
-   csvtool --help
+   To transpose CSVs, consider `qsv <https://github.com/jqnatividad/qsv>`_'s ``flatten`` command or `miller <https://miller.readthedocs.io/en/latest/>`_'s `XTAB <https://miller.readthedocs.io/en/latest/file-formats/#xtab-vertical-tabular>`_ support (``mlr --oxtab``).
 
 Output and Analysis
 ===================
