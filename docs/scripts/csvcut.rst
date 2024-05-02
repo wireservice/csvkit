@@ -45,7 +45,7 @@ See also: :doc:`../common_arguments`.
 
 .. note::
 
-    If a data row is longer than the header row, its additional columns are truncated. Use :doc:`csvclean` first to fix such rows.
+    If a data row is longer than the header row, its additional columns are truncated.
 
 Examples
 ========

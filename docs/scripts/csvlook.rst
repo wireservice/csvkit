@@ -72,7 +72,7 @@ This tool is especially useful as a final operation when piping through other to
 
    csvcut -c 9,1 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvlook
 
-If a data row contains more cells than the header row, csvlook will error. To fix the header row, use :doc:`csvclean`.
+If a data row contains more cells than the header row, csvlook will error. Use :doc:`csvclean` to remove such rows.
 
 To ignore the extra cells, instead:
 
