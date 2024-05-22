@@ -444,6 +444,8 @@ def default_str_decimal(obj):
 
 
 def default_float_decimal(obj):
+    if isinstance(obj, datetime.timedelta):
+        return obj.total_seconds()
     if isinstance(obj, decimal.Decimal):
         return float(obj)
     return default_str_decimal(obj)

@@ -1,3 +1,8 @@
+Unreleased
+----------
+
+-  fix: :doc:`/scripts/csvstat` no longer errors when a column is a time delta and :code:`--json` is set.
+
 2.0.0 - May 1, 2024
 -------------------
 
