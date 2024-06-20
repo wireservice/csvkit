@@ -1,0 +1,283 @@
+---
+name: Publish
+
+## Overview
+# Build and publish a container image
+#
+# This will clone a repository and attempt to build a
+# Docker-compatible container image.  If the image is
+# build successfully, it will be published to zero or
+# more container registries.  The image's tags will be
+# based on the semantic version (semver) associated
+# with tags associated with the commit being built.
+#
+# Images may built for a variety of platforms
+# and architectures.  By default, images are built
+# for:
+#
+# * linux/amd64
+# * linux/arm64
+# * linux/arm/v6
+# * linux/arm/v7
+#
+# Supported image registries include:
+#
+# * Dockerhub
+# * GHCR
+# * Quay
+#
+## Environment Variables
+#
+# This action may be configured through a variety
+# of environment variables:
+#
+# * DOCKERHUB_USERNAME (no default)
+# * DOCKERHUB_PAT (no default)
+# * GHCR_USERNAME (no default)
+# * GHCR_PAT (no default)
+# * QUAY_USERNAME (no default)
+# * QUAY_PAT (no default)
+# * dockerhub_image (default: DOCKERHUB_USERNAME/repo_name)
+# * ghcr_image (default: GHCR_USERNAME/repo_name)
+# * quay_image (default: QUAY_USERNAME/repo_name)
+# * context (default: .)
+# * dockerfile (default: $CONTEXT/Dockerfile)
+# * platforms (linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7)
+#
+# To push to Dockerhub, GHCR, or Quay, define the
+# corresponding _USERNAME and _PAT variables (e.g., to
+# push to GHCR, define GHCR_USERNAME and GHCR_PAT).  If
+# the _USERNAME and _PAT for a given platform aren't defined,
+# they'll be skipped.  Zero, some, or all platforms may be
+# used.
+#
+# Note: acknowledged that GHCR users PATs while Dockerhub and
+# Quay don't use that terminology.  What can I say.. I did
+# GHCR first before considering Dockerhub or Quay.
+#
+## Image tagging and labeling
+#
+# Depending on how the action was triggered, tags are applied
+# to the images differently.
+#
+# When commits are pushed to the `main` branch with no version
+# tag, an image will be built and pushed with the tag `:edge`.
+#
+# However, when commits are pushed with a version tag (e.g.,
+# a tag that starts with `v`) -- such as when a release is
+# cut -- then several tags are applied:
+#
+# * :edge
+# * :latest
+# * :{major version}
+# * :{major.minor version}
+# * :{major.minor.patch version}
+# * :{short commit SHA}
+# * :{full commit SHA}
+#
+# So, if a commit is pushed with a tag of 'v1.2.3' then
+# the following tags are added to the resulting image:
+#
+# * :edge
+# * :latest
+# * v1
+# * v1.2
+# * v1.2.3
+# * sha-db12abc
+# * sha-db12abc7b3025c32d44b54c84ae2c851f1eeaebc
+#
+# Additionally, images have standard OCI annotations
+# and labels (e.g., `org.opencontainers.image. ...)
+# added automatically.  For more information, check
+# out the annotation spec:
+#
+# https://github.com/opencontainers/image-spec/blob/main/annotations.md
+#
+## READMEs and descriptions
+#
+# For registries that support it, descriptions are automatically
+# added / updated after successfully publishing the relevant
+# images.  These descriptions are taken from the repository's
+# /README.md files.
+#
+# Note: descriptions are only updated when releases are cut.  If,
+# for example, a commit is pushed to `main` that doesn't have a tag
+# that starts with `v*` then while the `:edge` tag is updated, the
+# desciption won't be updated.  Such is the trade-off of living
+# on the `:edge`.
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  publish_image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # pin@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@2b82ce82d56a2a04d2637cd93a637ae1b359c0a7 # pin@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@885d1462b80bc1c1c7f0b00334ad271f09369c55 # pin@v2
+
+      - name: Custom Variables
+        id: customvars
+        shell: bash
+        run: |
+          ( echo -n "dockerhub="
+            if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" ] \
+            && [ -n "${{ secrets.DOCKERHUB_PAT }}" ] ; then
+              echo "true"
+            else
+              echo "false"
+            fi
+
+            echo -n "ghcr="
+            if [ -n "${{ secrets.GHCR_USERNAME }}" ] \
+            && [ -n "${{ secrets.GHCR_PAT }}" ] ; then
+              echo "true"
+            else
+              echo "false"
+            fi
+
+            echo -n "quay="
+            if [ -n "${{ secrets.QUAY_USERNAME }}" ] \
+            && [ -n "${{ secrets.QUAY_PAT }}" ] ; then
+              echo "quay=true"
+            else
+              echo "quay=false"
+            fi
+
+            echo -n "is_release="
+            if [[ "${{ github.ref }}" =~ refs/tags/v.* ]] ; then
+              echo "true"
+            else
+              echo "false"
+            fi
+
+            echo -n "dockerhub_image="
+            if [ -n "${{ env.dockerhub_image }}" ] ; then
+              echo "${{ env.dockerhub_image }}"
+            else
+              echo "${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}"
+            fi
+
+            echo -n "ghcr_image="
+            if [ -n "${{ env.ghcr_image }}" ] ; then
+              echo "${{ env.ghcr_image }}"
+            else
+              echo "${{ secrets.GHCR_USERNAME }}/${{ github.event.repository.name }}"
+            fi
+
+            echo -n "quay_image="
+            if [ -n "${{ env.quay_image }}" ] ; then
+              echo "${{ env.quay_image }}"
+            else
+              echo "${{ secrets.QUAY_USERNAME }}/${{ github.event.repository.name }}"
+            fi
+
+            echo -n "context="
+            if [ -n "${{ env.context }}" ] ; then
+              echo "${{ env.context }}"
+            else
+              echo "."
+            fi
+
+            echo -n "dockerfile="
+            if [ -n "${{ env.dockerfile }}" ] ; then
+              echo "${{ env.dockerfile }}"
+            else
+              echo "${{ env.context }}/Dockerfile"
+            fi
+
+            echo -n "platforms="
+            if [ -n "${{ env.platforms }}" ] ; then
+              echo ${{ env.platforms }}
+            else
+              echo "linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6"
+            fi
+          ) >> $GITHUB_OUTPUT
+
+      - name: Login to GitHub Packages
+        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # pin@v2
+        if: ${{ steps.customvars.outputs.ghcr == 'true' }}
+        with:
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_PAT }}
+          registry: ghcr.io
+
+      - name: Login to Dockerhub
+        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # pin@v2
+        if: ${{ steps.customvars.outputs.dockerhub == 'true' }}
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PAT }}
+          registry: registry.hub.docker.com
+
+      - name: Login to Quay
+        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # pin@v2
+        if: ${{ steps.customvars.outputs.quay == 'true' }}
+        with:
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_PAT }}
+          registry: quay.io
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # pin@v5
+        with:
+          images: |
+            name=registry.hub.docker.com/${{ steps.customvars.outputs.dockerhub_image }},enable=${{ steps.customvars.outputs.dockerhub == 'true' }}
+            name=ghcr.io/${{ steps.customvars.outputs.ghcr_image }},enable=${{ steps.customvars.outputs.ghcr == 'true' }}
+            name=quay.io/${{ steps.customvars.outputs.quay_image }},enable=${{ steps.customvars.outputs.quay == 'true' }}
+          tags: |
+            type=raw,value=latest,enable=${{ steps.customvars.outputs.is_release == 'true' }}
+            type=semver,pattern={{version}},enable=${{ steps.customvars.outputs.is_release == 'true' }}
+            type=semver,pattern={{major}},enable=${{ steps.customvars.outputs.is_release == 'true' }}
+            type=semver,pattern={{major}}.{{minor}},enable=${{ steps.customvars.outputs.is_release == 'true' }}
+            type=edge,branch=main
+            type=sha
+            type=sha,format=long
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+
+      - name: Build and push
+        uses: docker/build-push-action@0a97817b6ade9f46837855d676c4cca3a2471fc9 # pin@v4
+        with:
+          push: true
+          sbom: true
+          platforms: ${{ steps.customvars.outputs.platforms }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          context: ${{ steps.customvars.outputs.context }}
+          file: ${{ steps.customvars.outputs.dockerfile }}
+
+      - name: update DockerHub description
+        uses: christian-korneck/update-container-description-action@d36005551adeaba9698d8d67a296bd16fa91f8e8 # pin@v1
+        if: ${{ steps.customvars.outputs.dockerhub == 'true' }} && ${{ steps.customvars.outputs.is_release == 'true' }}
+        with:
+          destination_container_repo: ${{ steps.customvars.outputs.dockerhub_image }}
+          provider: dockerhub
+        env:
+          DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_PASS: ${{ secrets.DOCKERHUB_PAT }}
+
+      - name: update Quay description
+        uses: christian-korneck/update-container-description-action@d36005551adeaba9698d8d67a296bd16fa91f8e8 # pin@v1
+        if: ${{ steps.customvars.outputs.quay == 'true' }} && ${{ steps.customvars.outputs.is_release == 'true' }}
+        with:
+          destination_container_repo: ${{ steps.customvars.outputs.quay_image }}
+          provider: quay
+        env:
+          DOCKER_APIKEY: ${{ secrets.QUAY_PAT }}
