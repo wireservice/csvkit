@@ -16,7 +16,7 @@ class SQL2CSV(CSVKitUtility):
             '--db', dest='connection_string', default='sqlite://',
             help='An sqlalchemy connection string to connect to a database.')
         self.argparser.add_argument(
-            '--engine-kwargs', dest='engine_kwargs', nargs='*', action='append',
+            '--engine-kwargs', dest='engine_kwargs', nargs=2, action='append',
             help='Additional space-separated key-value pairs for sqlalchemy `create_engine`, e.g., `thick_mode True`.')
         self.argparser.add_argument(
             metavar='FILE', nargs='?', dest='input_path',
