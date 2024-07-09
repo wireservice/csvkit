@@ -16,6 +16,9 @@ class SQL2CSV(CSVKitUtility):
             '--db', dest='connection_string', default='sqlite://',
             help='An sqlalchemy connection string to connect to a database.')
         self.argparser.add_argument(
+            '--engine-kwargs', dest='engine_kwargs', nargs='*', action='append',
+            help='Additional, space-separated key-value pairs for sqlalchemy `create_engine`, e.g., `thick_mode True`.')
+        self.argparser.add_argument(
             metavar='FILE', nargs='?', dest='input_path',
             help='The file to use as SQL query. If FILE and --query are omitted, the query is piped data via STDIN.')
         self.argparser.add_argument(
@@ -44,8 +47,21 @@ class SQL2CSV(CSVKitUtility):
         if self.additional_input_expected() and not self.args.query:
             self.argparser.error('You must provide an input file or piped data.')
 
+        if self.args.engine_kwargs:
+            try:
+                engine_kwargs = {i[0]:i[1] for i in self.args.engine_kwargs}
+            except IndexError as e:
+                raise IndexError(
+                    "You must provide a key and a value separated by a space for each additional sqlalchemy "
+                    "`create_engine` keyword argument, e.g., `--engine-kwargs thick_mode True`."
+                    "For more information on available parameters, please see the SQLAlchemy documentation:\n\n"
+                    "https://docs.sqlalchemy.org/en/20/core/engines.html#sqlalchemy.create_engine"
+                ) from e
+        else:
+            engine_kwargs = {}
+
         try:
-            engine = create_engine(self.args.connection_string)
+            engine = create_engine(self.args.connection_string, **engine_kwargs)
         except ImportError as e:
             raise ImportError(
                 "You don't appear to have the necessary database backend installed for connection string you're "
