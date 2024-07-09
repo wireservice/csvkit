@@ -17,7 +17,7 @@ class SQL2CSV(CSVKitUtility):
             help='An sqlalchemy connection string to connect to a database.')
         self.argparser.add_argument(
             '--engine-kwargs', dest='engine_kwargs', nargs='*', action='append',
-            help='Additional, space-separated key-value pairs for sqlalchemy `create_engine`, e.g., `thick_mode True`.')
+            help='Additional space-separated key-value pairs for sqlalchemy `create_engine`, e.g., `thick_mode True`.')
         self.argparser.add_argument(
             metavar='FILE', nargs='?', dest='input_path',
             help='The file to use as SQL query. If FILE and --query are omitted, the query is piped data via STDIN.')
@@ -49,7 +49,7 @@ class SQL2CSV(CSVKitUtility):
 
         if self.args.engine_kwargs:
             try:
-                engine_kwargs = {i[0]:i[1] for i in self.args.engine_kwargs}
+                engine_kwargs = {i[0]: i[1] for i in self.args.engine_kwargs}
             except IndexError as e:
                 raise IndexError(
                     "You must provide a key and a value separated by a space for each additional sqlalchemy "
