@@ -10,7 +10,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - run: pip install --upgrade build
+      - run: pip install --upgrade build sphinx
+      - run: sphinx-build -b man docs man
       - run: python -m build --sdist --wheel
       - name: Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1

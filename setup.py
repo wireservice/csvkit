@@ -64,7 +64,7 @@ setup(
 
     # https://stackoverflow.com/a/49501350/718180
     data_files=[
-        ('share/man/man1', [f'docs/_build/man/{bin}.1'])
+        ('share/man/man1', [f'man/{bin}.1'])
         for bin in bins
     ],
 
