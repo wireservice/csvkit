@@ -7,6 +7,7 @@ Unreleased
    -  :code:`--min-col-len`
    -  :code:`--col-len-multiplier`
 
+-  feat: :doc:`/scripts/sql2csv` adds the `--engine-option` option.
 -  fix: :doc:`/scripts/csvstat` no longer errors when a column is a time delta and :code:`--json` is set.
 
 2.0.0 - May 1, 2024
