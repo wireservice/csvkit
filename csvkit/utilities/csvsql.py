@@ -81,6 +81,12 @@ class CSVSQL(CSVKitUtility):
         self.argparser.add_argument(
             '--chunk-size', dest='chunk_size', type=int,
             help='Chunk size for batch insert into the table. Requires --insert.')
+        self.argparser.add_argument(
+            '--min-col-len', dest='min_col_len', type=int,
+            help='The minimum length of text columns.')
+        self.argparser.add_argument(
+            '--col-len-multiplier', dest='col_len_multiplier', type=int,
+            help='Multiply the maximum column length by this multiplier to accomodate larger values in later runs.')
 
     def main(self):
         if isatty(sys.stdin) and self.args.input_paths == ['-']:
@@ -206,6 +212,8 @@ class CSVSQL(CSVKitUtility):
                         constraints=not self.args.no_constraints,
                         unique_constraint=self.unique_constraint,
                         chunk_size=self.args.chunk_size,
+                        min_col_len=self.args.min_col_len,
+                        col_len_multiplier=self.args.col_len_multiplier,
                     )
 
                     if self.args.after_insert:

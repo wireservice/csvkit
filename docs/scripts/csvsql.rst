@@ -74,6 +74,11 @@ Generate SQL statements for a CSV file or execute those statements directly on a
      --chunk-size CHUNK_SIZE
                            Chunk size for batch insert into the table. Requires
                            --insert.
+     --min-col-len MIN_COL_LEN
+                           The minimum length of text columns.
+     --col-len-multiplier COL_LEN_MULTIPLIER
+                           Multiply the maximum column length by this multiplier
+                           to accomodate larger values in later runs.
 
 See also: :doc:`../common_arguments`.
 
