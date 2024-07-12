@@ -54,21 +54,21 @@ Processes running in a crontab `will not have a tty allocated <https://github.co
    # works fine 
    0 0 * * * /usr/bin/csvsql --query 'select max(time) from temp' -d ';' --tables temp < /my/csv/file.csv
 
+.. _troubleshooting:
+
 Troubleshooting
 ===============
 
 Installation
 ------------
 
-csvkit is supported on non-end-of-life versions of Python.
-
-It is tested on macOS, and has also been used on Linux and Windows.
+csvkit is supported on non-end-of-life versions of Python on Linux, macOS and Windows.
 
 If installing on macOS, you may need to install Homebrew first:
 
 .. code-block:: bash
 
-   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    brew install python
    pip install csvkit
 

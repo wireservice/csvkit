@@ -18,6 +18,44 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def test_options(self):
+        for args, message in (
+            (
+                ['--db', 'sqlite:///:memory:', '--dialect', 'sqlite'],
+                'The --dialect option is only valid when neither --db nor --query are specified.',
+            ),
+            (
+                ['--insert'],
+                'The --insert option is only valid when either --db or --query is specified.',
+            ),
+            (
+                ['--db', 'sqlite:///:memory:', '--insert', '--no-create', '--overwrite'],
+                'The --overwrite option is only valid if --no-create is not specified.',
+            ),
+            (
+                ['--db', 'sqlite:///:memory:', '--insert', '--no-create', '--create-if-not-exists'],
+                'The --no-create and --create-if-not-exists options are mutually exclusive.',
+            ),
+        ):
+            with self.subTest(args=args):
+                self.assertError(launch_new_instance, args, message)
+
+    def test_insert_options(self):
+        for args in (
+            ['--no-create'],
+            ['--create-if-not-exists'],
+            ['--overwrite'],
+            ['--before-insert'],
+            ['--after-insert'],
+            ['--chunk-size', '1'],
+        ):
+            with self.subTest(args=args):
+                self.assertError(
+                    launch_new_instance,
+                    args,
+                    f'The {args[0]} option is only valid if --insert is also specified.'
+                )
+
     def setUp(self):
         self.db_file = 'foo.db'
 

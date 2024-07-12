@@ -2,12 +2,6 @@
 Release process
 ===============
 
-.. admonition:: One-time setup
-
-   .. code-block:: bash
-
-      pip install --upgrade build twine
-
 #. All tests pass on continuous integration
 #. The changelog is up-to-date and dated
 #. If new options are added, regenerate the usage information in the documentation with, for example:
@@ -20,9 +14,9 @@ Release process
 
 #. The version number is correct in:
 
-    -  setup.py
-    -  docs/conf.py
-    -  csvkit/cli.py
+   -  setup.py
+   -  docs/conf.py
+   -  csvkit/cli.py
 
 #. Check for new authors:
 

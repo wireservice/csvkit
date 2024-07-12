@@ -8,20 +8,14 @@ We seek contributions from developers and non-developers of all skill levels. We
 
 Before making any changes or additions to csvkit, please be sure to read the rest of this document, especially the "Principles of development" section.
 
-Getting Started
+Getting started
 ===============
-
-Set up your environment for development:
 
 .. code-block:: bash
 
    git clone git://github.com/wireservice/csvkit.git
    cd csvkit
-   mkvirtualenv csvkit
-
    pip install -e .[test]
-
-   python setup.py develop
 
 Principles of development
 =========================
@@ -76,7 +70,7 @@ Currently, the following tools stream:
 
 * :doc:`/scripts/csvclean`
 * :doc:`/scripts/csvcut`
-* :doc:`/scripts/csvformat`
+* :doc:`/scripts/csvformat` unless :code:`--quoting 2` is set
 * :doc:`/scripts/csvgrep`
 * :doc:`/scripts/csvstack`
 * :doc:`/scripts/sql2csv`

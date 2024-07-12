@@ -14,6 +14,14 @@ class TestCSVGrep(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower()] + self.default_args + ['examples/dummy.csv']):
             launch_new_instance()
 
+    def test_options(self):
+        for args, message in (
+            ([], 'You must specify at least one column to search using the -c option.'),
+            (['-c', '1'], 'One of -r, -m or -f must be specified, unless using the -n option.'),
+        ):
+            with self.subTest(args=args):
+                self.assertError(launch_new_instance, args, message)
+
     def test_skip_lines(self):
         self.assertRows(['--skip-lines', '3', '-c', '1', '-m', '1', 'examples/test_skip_lines.csv'], [
             ['a', 'b', 'c'],

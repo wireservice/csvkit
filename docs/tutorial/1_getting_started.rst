@@ -14,23 +14,27 @@ This tutorial assumes you have some basic familiarity with the command line. If 
 Installing csvkit
 =================
 
-Installing csvkit is easy:
+.. note::
+
+   It's best to install csvkit in a `virtual environment <https://docs.python.org/3/library/venv.html>`_.
 
 .. code-block:: bash
 
-   sudo pip install csvkit
+   pip install csvkit
 
-If you have problems installing, look for help  in the :doc:`../tricks` section of the documentation.
+Not working? Check :ref:`troubleshooting`.
 
 If you need to work with `Zstandard <https://facebook.github.io/zstd/>`_ files with the ``.zst`` extension, install Zstandard support:
 
 .. code-block:: bash
 
-   sudo pip install csvkit[zstandard]
+   pip install csvkit[zstandard]
 
-.. note::
+Do you use Homebrew? You can `install csvkit system-wide <https://formulae.brew.sh/formula/csvkit>`_ with:
 
-   If you're familiar with `virtualenv <https://virtualenv.readthedocs.org/en/latest/>`_, it is better to install csvkit in its own environment. If you are doing this, then you should leave off the ``sudo`` in the previous command.
+.. code-block:: bash
+
+   brew install csvkit
 
 Getting the data
 ================

@@ -10,9 +10,9 @@ Convert a CSV file to a custom output format.:
 .. code-block:: none
 
    usage: csvformat [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                    [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                    [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-E]
-                    [-D OUT_DELIMITER] [-T] [-A] [-Q OUT_QUOTECHAR]
+                    [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING]
+                    [-L LOCALE] [-S] [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V]
+                    [-E] [-D OUT_DELIMITER] [-T] [-A] [-Q OUT_QUOTECHAR]
                     [-U {0,1,2,3}] [-B] [-P OUT_ESCAPECHAR]
                     [-M OUT_LINETERMINATOR]
                     [FILE]
@@ -36,9 +36,9 @@ Convert a CSV file to a custom output format.:
      -Q OUT_QUOTECHAR, --out-quotechar OUT_QUOTECHAR
                            Character used to quote strings in the output file.
      -U {0,1,2,3}, --out-quoting {0,1,2,3}
-                           Quoting style used in the output file. 0 = Quote
-                           Minimal, 1 = Quote All, 2 = Quote Non-numeric, 3 =
-                           Quote None.
+                           Quoting style used in the output file: 0 quote
+                           minimal, 1 quote all, 2 quote non-numeric, 3 quote
+                           none.
      -B, --out-no-doublequote
                            Whether or not double quotes are doubled in the output
                            CSV file.

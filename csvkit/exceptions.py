@@ -23,32 +23,6 @@ class ColumnIdentifierError(CustomException):
     pass
 
 
-class CSVTestException(CustomException):
-    """
-    Superclass for all row-test-failed exceptions.
-    All must have a line number, the problematic row, and a text explanation.
-    """
-
-    def __init__(self, line_number, row, msg):
-        super().__init__(msg)
-        self.line_number = line_number
-        self.row = row
-
-
-class LengthMismatchError(CSVTestException):
-    """
-    Encapsulate information about a row which as the wrong length.
-    """
-
-    def __init__(self, line_number, row, expected_length):
-        msg = 'Expected %i columns, found %i columns' % (expected_length, len(row))
-        super().__init__(line_number, row, msg)
-
-    @property
-    def length(self):
-        return len(self.row)
-
-
 class InvalidValueForTypeException(CustomException):
     """
     Exception raised when a value can not be normalized to a specified type.

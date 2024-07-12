@@ -13,6 +13,27 @@ class TestCSVJoin(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/join_a.csv', 'examples/join_b.csv']):
             launch_new_instance()
 
+    def test_options(self):
+        for args, message in (
+            (
+                ['-c' '1,2'],
+                'The number of join column names must match the number of files, '
+                'or be a single column name that exists in all files.',
+            ),
+            (['-c', '1', '--left', '--right'], 'It is not valid to specify both a left and a right join.'),
+        ):
+            with self.subTest(args=args):
+                self.assertError(launch_new_instance, args, message)
+
+    def test_join_options(self):
+        for option in ('--left', '--right', '--outer'):
+            with self.subTest(option=option):
+                self.assertError(
+                    launch_new_instance,
+                    [option],
+                    'You must provide join column names when performing an outer join.',
+                )
+
     def test_sequential(self):
         output = self.get_output_as_io(['examples/join_a.csv', 'examples/join_b.csv'])
         self.assertEqual(len(output.readlines()), 4)

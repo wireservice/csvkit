@@ -27,6 +27,33 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
         self.assertEqual(e.exception.code, 0)
 
+    def test_args(self):
+        for args in ([], ['-']):
+            with self.subTest(args=args):
+                self.assertError(
+                    launch_new_instance,
+                    [],
+                    'You must specify a format when providing input as piped data via STDIN.',
+                    args=args,
+                )
+
+    def test_options(self):
+        for options, args, message in (
+            (
+                [],
+                ['dummy.unknown'],
+                'Unable to automatically determine the format of the input file. '
+                'Try specifying a format with --format.',
+            ),
+            (
+                ['-n'],
+                ['dummy.csv'],
+                'You cannot use the -n or --names options with non-Excel files.',
+            ),
+        ):
+            with self.subTest(args=options + args):
+                self.assertError(launch_new_instance, options, message, args=args)
+
     def test_locale(self):
         self.assertConverted('csv', 'examples/test_locale.csv',
                              'examples/test_locale_converted.csv', ['--locale', 'de_DE'])
