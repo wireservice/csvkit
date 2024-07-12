@@ -7,14 +7,18 @@ from csvkit.cli import CSVKitUtility
 
 
 class SQL2CSV(CSVKitUtility):
-    description = 'Execute an SQL query on a database and output the result to a CSV file.'
+    description = 'Execute a SQL query on a database and output the result to a CSV file.'
     # Overrides all flags except --linenumbers, --verbose, --version.
     override_flags = 'f,b,d,e,H,K,L,p,q,S,t,u,z,blanks,date-format,datetime-format,zero'.split(',')
 
     def add_arguments(self):
         self.argparser.add_argument(
             '--db', dest='connection_string', default='sqlite://',
-            help='An sqlalchemy connection string to connect to a database.')
+            help='A SQLAlchemy connection string to connect to a database.')
+        self.argparser.add_argument(
+            '--engine-option', dest='engine_option', nargs=2, action='append', default=[],
+            help="A keyword argument to SQLAlchemy's create_engine(), as a space-separated pair. "
+                 "This option can be specified multiple times. For example: thick_mode True")
         self.argparser.add_argument(
             metavar='FILE', nargs='?', dest='input_path',
             help='The file to use as SQL query. If FILE and --query are omitted, the query is piped data via STDIN.')
@@ -45,14 +49,14 @@ class SQL2CSV(CSVKitUtility):
             self.argparser.error('You must provide an input file or piped data.')
 
         try:
-            engine = create_engine(self.args.connection_string)
+            engine = create_engine(self.args.connection_string, **dict(self.args.engine_option))
         except ImportError as e:
             raise ImportError(
                 "You don't appear to have the necessary database backend installed for connection string you're "
                 "trying to use. Available backends include:\n\nPostgreSQL:\tpip install psycopg2\nMySQL:\t\tpip "
                 "install mysql-connector-python OR pip install mysqlclient\n\nFor details on connection strings "
                 "and other backends, please see the SQLAlchemy documentation on dialects at:\n\n"
-                "https://www.sqlalchemy.org/docs/dialects/\n\n"
+                "https://www.sqlalchemy.org/docs/dialects/"
             ) from e
 
         connection = engine.connect()

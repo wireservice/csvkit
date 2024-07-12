@@ -148,7 +148,6 @@ Are you seeing this error message, even after running :code:`pip install psycopg
 
     https://www.sqlalchemy.org/docs/dialects/
 
-
 If you installed csvkit with Homebrew (``brew install csvkit``), then you need to install those packages with the same version of ``pip`` as the ``csvkit`` formula. For example:
 
 .. code-block:: bash

@@ -81,6 +81,12 @@ class CSVSQL(CSVKitUtility):
         self.argparser.add_argument(
             '--chunk-size', dest='chunk_size', type=int,
             help='Chunk size for batch insert into the table. Requires --insert.')
+        self.argparser.add_argument(
+            '--min-col-len', dest='min_col_len', type=int,
+            help='The minimum length of text columns.')
+        self.argparser.add_argument(
+            '--col-len-multiplier', dest='col_len_multiplier', type=int,
+            help='Multiply the maximum column length by this multiplier to accomodate larger values in later runs.')
 
     def main(self):
         if isatty(sys.stdin) and self.args.input_paths == ['-']:
@@ -96,7 +102,7 @@ class CSVSQL(CSVKitUtility):
         if self.args.unique_constraint:
             self.unique_constraint = self.args.unique_constraint.split(',')
 
-        # Create an SQLite database in memory if no connection string is specified
+        # Create a SQLite database in memory if no connection string is specified
         if self.args.queries and not self.args.connection_string:
             self.args.connection_string = "sqlite:///:memory:"
             self.args.insert = True
@@ -138,7 +144,7 @@ class CSVSQL(CSVKitUtility):
                     "trying to use. Available backends include:\n\nPostgreSQL:\tpip install psycopg2\nMySQL:\t\tpip "
                     "install mysql-connector-python OR pip install mysqlclient\n\nFor details on connection strings "
                     "and other backends, please see the SQLAlchemy documentation on dialects at:\n\n"
-                    "https://www.sqlalchemy.org/docs/dialects/\n\n"
+                    "https://www.sqlalchemy.org/docs/dialects/"
                 ) from e
 
             self.connection = engine.connect()
@@ -206,6 +212,8 @@ class CSVSQL(CSVKitUtility):
                         constraints=not self.args.no_constraints,
                         unique_constraint=self.unique_constraint,
                         chunk_size=self.args.chunk_size,
+                        min_col_len=self.args.min_col_len,
+                        col_len_multiplier=self.args.col_len_multiplier,
                     )
 
                     if self.args.after_insert:

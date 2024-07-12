@@ -110,3 +110,4 @@ The following individuals have contributed code to csvkit:
 * Kitagawa Yasutaka
 * rachekalmir
 * Tim Vergenz
+* sgpeter1
