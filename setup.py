@@ -57,14 +57,14 @@ setup(
     packages=find_packages(exclude=['tests', 'tests.*']),
     entry_points={
         'console_scripts': [
-            '{bin} = csvkit.utilities.{bin}:launch_new_instance'.format(bin=bin)
+            f'{bin} = csvkit.utilities.{bin}:launch_new_instance'
             for bin in bins
         ],
     },
 
     # https://stackoverflow.com/a/49501350/718180
     data_files=[
-        ('share/man/man1', ['docs/_build/man/{}.1'.format(bin)])
+        ('share/man/man1', [f'docs/_build/man/{bin}.1'])
         for bin in bins
     ],
 
