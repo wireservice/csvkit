@@ -2,6 +2,11 @@ Unreleased
 ----------
 
 -  feat: Add man pages.
+-  feat: :doc:`/scripts/csvsql` adds the options:
+
+   -  :code:`--min-col-len`
+   -  :code:`--col-len-multiplier`
+
 -  fix: :doc:`/scripts/csvstat` no longer errors when a column is a time delta and :code:`--json` is set.
 
 2.0.0 - May 1, 2024
