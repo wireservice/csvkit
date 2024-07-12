@@ -22,8 +22,12 @@ Executes arbitrary commands against a SQL database and outputs the results as a 
    optional arguments:
      -h, --help            show this help message and exit
      --db CONNECTION_STRING
-                           An sqlalchemy connection string to connect to a
+                           An SQLAlchemy connection string to connect to a
                            database.
+     --engine-option ENGINE_OPTION ENGINE_OPTION
+                           A keyword argument to SQLAlchemy's create_engine(), as
+                           a space-separated pair. This option can be specified
+                           multiple times. For example: thick_mode True
      --query QUERY         The SQL query to execute. Overrides FILE and STDIN.
      -e ENCODING, --encoding ENCODING
                            Specify the encoding of the input query file.

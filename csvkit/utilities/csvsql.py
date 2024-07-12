@@ -144,7 +144,7 @@ class CSVSQL(CSVKitUtility):
                     "trying to use. Available backends include:\n\nPostgreSQL:\tpip install psycopg2\nMySQL:\t\tpip "
                     "install mysql-connector-python OR pip install mysqlclient\n\nFor details on connection strings "
                     "and other backends, please see the SQLAlchemy documentation on dialects at:\n\n"
-                    "https://www.sqlalchemy.org/docs/dialects/\n\n"
+                    "https://www.sqlalchemy.org/docs/dialects/"
                 ) from e
 
             self.connection = engine.connect()
