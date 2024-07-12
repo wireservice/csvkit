@@ -7,14 +7,14 @@ from csvkit.cli import CSVKitUtility
 
 
 class SQL2CSV(CSVKitUtility):
-    description = 'Execute an SQL query on a database and output the result to a CSV file.'
+    description = 'Execute a SQL query on a database and output the result to a CSV file.'
     # Overrides all flags except --linenumbers, --verbose, --version.
     override_flags = 'f,b,d,e,H,K,L,p,q,S,t,u,z,blanks,date-format,datetime-format,zero'.split(',')
 
     def add_arguments(self):
         self.argparser.add_argument(
             '--db', dest='connection_string', default='sqlite://',
-            help='An SQLAlchemy connection string to connect to a database.')
+            help='A SQLAlchemy connection string to connect to a database.')
         self.argparser.add_argument(
             '--engine-option', dest='engine_option', nargs=2, action='append', default=[],
             help="A keyword argument to SQLAlchemy's create_engine(), as a space-separated pair. "

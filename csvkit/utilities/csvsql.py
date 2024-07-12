@@ -102,7 +102,7 @@ class CSVSQL(CSVKitUtility):
         if self.args.unique_constraint:
             self.unique_constraint = self.args.unique_constraint.split(',')
 
-        # Create an SQLite database in memory if no connection string is specified
+        # Create a SQLite database in memory if no connection string is specified
         if self.args.queries and not self.args.connection_string:
             self.args.connection_string = "sqlite:///:memory:"
             self.args.insert = True
