@@ -6,4 +6,4 @@
 /dist
 /csvkit.egg-info
 /docs/_build
-/man
+/man/.doctrees
