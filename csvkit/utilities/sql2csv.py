@@ -48,10 +48,8 @@ class SQL2CSV(CSVKitUtility):
         if self.additional_input_expected() and not self.args.query:
             self.argparser.error('You must provide an input file or piped data.')
 
-        engine_option = {i[0]: i[1] for i in self.args.engine_option}
-
         try:
-            engine = create_engine(self.args.connection_string, **engine_option)
+            engine = create_engine(self.args.connection_string, **dict(self.args.engine_option))
         except ImportError as e:
             raise ImportError(
                 "You don't appear to have the necessary database backend installed for connection string you're "
