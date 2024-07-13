@@ -1,6 +1,7 @@
 import io
 import os
 import sys
+import unittest
 from textwrap import dedent
 from unittest.mock import patch
 
@@ -62,6 +63,23 @@ class TestCSVSQL(CSVKitTestCase, EmptyFileTests):
     def tearDown(self):
         if os.path.exists(self.db_file):
             os.remove(self.db_file)
+
+    @unittest.skipIf(os.name != 'nt', 'Windows only')
+    def test_glob(self):
+        sql = self.get_output(['examples/dummy?.csv'])
+
+        self.assertEqual(sql.replace('\t', '  '), dedent('''\
+            CREATE TABLE dummy2 (
+              a BOOLEAN NOT NULL, 
+              b DECIMAL NOT NULL, 
+              c DECIMAL NOT NULL
+            );
+            CREATE TABLE dummy3 (
+              a BOOLEAN NOT NULL, 
+              b DECIMAL NOT NULL, 
+              c DECIMAL NOT NULL
+            );
+        '''))  # noqa: W291
 
     def test_create_table(self):
         sql = self.get_output(['--tables', 'foo', 'examples/testfixed_converted.csv'])

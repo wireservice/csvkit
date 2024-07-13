@@ -6,6 +6,7 @@ Unreleased
 -  feat: Add a Docker image.
 -  feat: Add man pages to the sdist and wheel distributions.
 -  fix: :doc:`/scripts/csvstat` no longer errors when a column is a time delta and :code:`--json` is set.
+-  fix: When taking arguments from ``sys.argv`` on Windows, glob patterns, user directories, and environment variables are expanded.
 
 2.0.0 - May 1, 2024
 -------------------

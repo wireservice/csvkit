@@ -1,4 +1,6 @@
+import os
 import sys
+import unittest
 from unittest.mock import patch
 
 from csvkit.utilities.csvstack import CSVStack, launch_new_instance
@@ -19,6 +21,18 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
             ['-g', '1,2'],
             'The number of grouping values must be equal to the number of CSV files being stacked.',
         )
+
+    @unittest.skipIf(os.name != 'nt', 'Windows only')
+    def test_glob(self):
+        self.assertRows(['examples/dummy*.csv'], [
+            ['a', 'b', 'c', 'd'],
+            ['1', '2', '3', ''],
+            ['1', '2', '3', ''],
+            ['1', '2', '3', ''],
+            ['1', '4', '5', ''],
+            ['1', '2', '3', ''],
+            ['1', '2', '3', '4'],
+        ])
 
     def test_skip_lines(self):
         self.assertRows(['--skip-lines', '3', 'examples/test_skip_lines.csv', 'examples/test_skip_lines.csv'], [

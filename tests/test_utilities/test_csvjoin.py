@@ -1,4 +1,6 @@
+import os
 import sys
+import unittest
 from unittest.mock import patch
 
 from csvkit.utilities.csvjoin import CSVJoin, launch_new_instance
@@ -33,6 +35,14 @@ class TestCSVJoin(CSVKitTestCase, EmptyFileTests):
                     [option],
                     'You must provide join column names when performing an outer join.',
                 )
+
+    @unittest.skipIf(os.name != 'nt', 'Windows only')
+    def test_glob(self):
+        self.assertRows(['--no-inference', '-c', 'a', 'examples/dummy?.csv'], [
+            ['a', 'b', 'c', 'b2', 'c2'],
+            ['1', '2', '3', '2', '3'],
+            ['1', '2', '3', '4', '5'],
+        ])
 
     def test_sequential(self):
         output = self.get_output_as_io(['examples/join_a.csv', 'examples/join_b.csv'])
