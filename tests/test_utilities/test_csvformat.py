@@ -59,12 +59,12 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
         ], newline_at_eof=False)
 
     def test_quotechar(self):
-        input_file = io.BytesIO(b'a,b,c\n1*2,3,4\n')
+        input_file = io.BytesIO(b'a,b,c\n1#2,3,4\n')
 
         with stdin_as_string(input_file):
-            self.assertLines(['-Q', '*'], [
+            self.assertLines(['-Q', '#'], [
                 'a,b,c',
-                '*1**2*,3,4',
+                '#1##2#,3,4',
             ])
 
         input_file.close()
@@ -157,12 +157,12 @@ class TestCSVFormatQuoteNonNumeric(CSVKitTestCase, EmptyFileTests):
         ], newline_at_eof=False)
 
     def test_quotechar(self):
-        input_file = io.BytesIO(b'a,b,c\n1*2,3,4\n')
+        input_file = io.BytesIO(b'a,b,c\n1#2,3,4\n')
 
         with stdin_as_string(input_file):
-            self.assertLines(['-U', '2', '-Q', '*'], [
-                '*a*,*b*,*c*',
-                '*1**2*,3,4',
+            self.assertLines(['-U', '2', '-Q', '#'], [
+                '#a#,#b#,#c#',
+                '#1##2#,3,4',
             ])
 
         input_file.close()
