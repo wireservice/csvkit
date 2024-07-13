@@ -1,5 +1,7 @@
 FROM python:alpine
 
-COPY csvkit man README.rst setup.py .
+COPY csvkit csvkit
+COPY man man
+COPY README.rst setup.py .
 
 RUN pip install --no-cache-dir .
