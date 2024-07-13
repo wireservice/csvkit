@@ -111,3 +111,4 @@ The following individuals have contributed code to csvkit:
 * rachekalmir
 * Tim Vergenz
 * sgpeter1
+* Wes Dean
