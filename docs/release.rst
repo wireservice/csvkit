@@ -18,6 +18,12 @@ Release process
    -  docs/conf.py
    -  csvkit/cli.py
 
+#. Regenerate the man pages:
+
+   .. code-block:: bash
+
+      sphinx-build -b man docs man
+
 #. Check for new authors:
 
    .. code-block:: bash

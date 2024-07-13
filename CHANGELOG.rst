@@ -1,5 +1,5 @@
-Unreleased
-----------
+2.0.1 - July 12, 2024
+---------------------
 
 -  feat: :doc:`/scripts/csvsql` adds :code:`--min-col-len` and :code:`--col-len-multiplier` options.
 -  feat: :doc:`/scripts/sql2csv` adds a :code:`--engine-option` option.
