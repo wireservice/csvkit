@@ -7,8 +7,11 @@ import decimal
 import gzip
 import itertools
 import lzma
+import os
+import re
 import sys
 import warnings
+from glob import glob
 from os.path import splitext
 
 import agate
@@ -73,6 +76,11 @@ class CSVKitUtility:
         """
         Perform argument processing and other setup for a CSVKitUtility.
         """
+        if args is None:
+            args = sys.argv[1:]
+        if os.name == 'nt':
+            args = _expand_args(args)
+
         self._init_common_parser()
         self.add_arguments()
         self.args = self.argparser.parse_args(args)
@@ -550,3 +558,24 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                     excludes.append(match_column_identifier(column_names, x, column_offset))
 
     return [c for c in columns if c not in excludes]
+
+
+# Adapted from https://github.com/pallets/click/blame/main/src/click/utils.py
+def _expand_args(args):
+    out = []
+
+    for arg in args:
+        arg = os.path.expanduser(arg)
+        arg = os.path.expandvars(arg)
+
+        try:
+            matches = glob(arg, recursive=True)
+        except re.error:
+            matches = []
+
+        if matches:
+            out.extend(matches)
+        else:
+            out.append(arg)
+
+    return out
