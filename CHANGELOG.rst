@@ -3,7 +3,7 @@
 
 -  feat: :doc:`/scripts/csvsql` adds :code:`--min-col-len` and :code:`--col-len-multiplier` options.
 -  feat: :doc:`/scripts/sql2csv` adds a :code:`--engine-option` option.
--  feat: Add a Docker image.
+-  feat: Add a Docker image: ``docker pull ghcr.io/wireservice/csvkit:latest``.
 -  feat: Add man pages to the sdist and wheel distributions.
 -  fix: :doc:`/scripts/csvstat` no longer errors when a column is a time delta and :code:`--json` is set.
 -  fix: When taking arguments from ``sys.argv`` on Windows, glob patterns, user directories, and environment variables are expanded.
