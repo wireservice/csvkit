@@ -35,6 +35,7 @@ class SQL2CSV(CSVKitUtility):
             '--execution-option', dest='execution_option', nargs=2, action='append',
             # https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Connection.execution_options.params.no_parameters
             # https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Connection.execution_options.params.stream_results
+            # https://docs.sqlalchemy.org/en/20/core/connections.html#using-server-side-cursors-a-k-a-stream-results
             default=[['no_parameters', True], ['stream_results', True]],
             help="A keyword argument to SQLAlchemy's execution_options(), as a space-separated pair. "
                  "This option can be specified multiple times. For example: stream_results True")
