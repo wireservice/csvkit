@@ -1,9 +1,21 @@
 #!/usr/bin/env python
+import ast
 
 import agate
 from sqlalchemy import create_engine
 
 from csvkit.cli import CSVKitUtility
+
+
+def parse_list(pairs):
+    options = {}
+    for key, value in pairs:
+        try:
+            value = ast.literal_eval(value)
+        except ValueError:
+            pass
+        options[key] = value
+    return options
 
 
 class SQL2CSV(CSVKitUtility):
@@ -19,6 +31,13 @@ class SQL2CSV(CSVKitUtility):
             '--engine-option', dest='engine_option', nargs=2, action='append', default=[],
             help="A keyword argument to SQLAlchemy's create_engine(), as a space-separated pair. "
                  "This option can be specified multiple times. For example: thick_mode True")
+        self.argparser.add_argument(
+            '--execution-option', dest='execution_option', nargs=2, action='append',
+            # https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Connection.execution_options.params.no_parameters
+            # https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Connection.execution_options.params.stream_results
+            default=[['no_parameters', True], ['stream_results', True]],
+            help="A keyword argument to SQLAlchemy's execution_options(), as a space-separated pair. "
+                 "This option can be specified multiple times. For example: stream_results True")
         self.argparser.add_argument(
             metavar='FILE', nargs='?', dest='input_path',
             help='The file to use as SQL query. If FILE and --query are omitted, the query is piped data via STDIN.')
@@ -49,7 +68,7 @@ class SQL2CSV(CSVKitUtility):
             self.argparser.error('You must provide an input file or piped data.')
 
         try:
-            engine = create_engine(self.args.connection_string, **dict(self.args.engine_option))
+            engine = create_engine(self.args.connection_string, **parse_list(self.args.engine_option))
         except ImportError as e:
             raise ImportError(
                 "You don't appear to have the necessary database backend installed for connection string you're "
@@ -73,7 +92,7 @@ class SQL2CSV(CSVKitUtility):
 
             self.input_file.close()
 
-        rows = connection.execution_options(no_parameters=True).exec_driver_sql(query)
+        rows = connection.execution_options(**parse_list(self.args.execution_option)).exec_driver_sql(query)
         output = agate.csv.writer(self.output_file, **self.writer_kwargs)
 
         if rows.returns_rows:

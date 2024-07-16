@@ -28,6 +28,11 @@ Executes arbitrary commands against a SQL database and outputs the results as a 
                            A keyword argument to SQLAlchemy's create_engine(), as
                            a space-separated pair. This option can be specified
                            multiple times. For example: thick_mode True
+     --execution-option EXECUTION_OPTION EXECUTION_OPTION
+                           A keyword argument to SQLAlchemy's
+                           execution_options(), as a space-separated pair. This
+                           option can be specified multiple times. For example:
+                           stream_results True
      --query QUERY         The SQL query to execute. Overrides FILE and STDIN.
      -e ENCODING, --encoding ENCODING
                            Specify the encoding of the input query file.
