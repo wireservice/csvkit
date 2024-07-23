@@ -1,21 +1,8 @@
 #!/usr/bin/env python
-import ast
-
 import agate
 from sqlalchemy import create_engine
 
-from csvkit.cli import CSVKitUtility
-
-
-def parse_list(pairs):
-    options = {}
-    for key, value in pairs:
-        try:
-            value = ast.literal_eval(value)
-        except ValueError:
-            pass
-        options[key] = value
-    return options
+from csvkit.cli import CSVKitUtility, parse_list
 
 
 class SQL2CSV(CSVKitUtility):

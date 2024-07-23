@@ -1,6 +1,7 @@
 Unreleased
 ----------
 
+-  feat: :doc:`/scripts/csvsql` adds a :code:`--engine-option` option.
 -  feat: :doc:`/scripts/sql2csv` adds a :code:`--execution-option` option.
 -  feat: :doc:`/scripts/sql2csv` uses the ``stream_results=True`` execution option, by default, to not load all data into memory at once.
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import ast
 import argparse
 import bz2
 import csv
@@ -558,6 +559,17 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                     excludes.append(match_column_identifier(column_names, x, column_offset))
 
     return [c for c in columns if c not in excludes]
+
+
+def parse_list(pairs):
+    options = {}
+    for key, value in pairs:
+        try:
+            value = ast.literal_eval(value)
+        except ValueError:
+            pass
+        options[key] = value
+    return options
 
 
 # Adapted from https://github.com/pallets/click/blame/main/src/click/utils.py
