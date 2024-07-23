@@ -8,6 +8,13 @@ import agatesql  # noqa: F401
 from csvkit.cli import CSVKitUtility, isatty
 from sqlalchemy import create_engine, dialects
 
+try:
+    import importlib_metadata
+except ImportError:
+    import importlib.metadata as importlib_metadata
+
+DIALECTS = dialects.__all__ + tuple(e.name for e in importlib_metadata.entry_points(group='sqlalchemy.dialects'))
+
 
 def parse_list(pairs):
     options = {}
@@ -18,14 +25,6 @@ def parse_list(pairs):
             pass
         options[key] = value
     return options
-
-
-try:
-    import importlib_metadata
-except ImportError:
-    import importlib.metadata as importlib_metadata
-
-DIALECTS = dialects.__all__ + tuple(e.name for e in importlib_metadata.entry_points(group='sqlalchemy.dialects'))
 
 
 class CSVSQL(CSVKitUtility):
