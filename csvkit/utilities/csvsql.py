@@ -1,12 +1,14 @@
 #!/usr/bin/env python
+
 import ast
 import os.path
 import sys
 
 import agate
 import agatesql  # noqa: F401
-from csvkit.cli import CSVKitUtility, isatty
 from sqlalchemy import create_engine, dialects
+
+from csvkit.cli import CSVKitUtility, isatty
 
 try:
     import importlib_metadata
