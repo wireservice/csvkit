@@ -5,8 +5,8 @@ import sys
 
 import agate
 import agatesql  # noqa: F401
-from sqlalchemy import create_engine, dialects
 from csvkit.cli import CSVKitUtility, isatty
+from sqlalchemy import create_engine, dialects
 
 
 def parse_list(pairs):
