@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-
-import ast
 import os.path
 import sys
 
@@ -8,7 +6,7 @@ import agate
 import agatesql  # noqa: F401
 from sqlalchemy import create_engine, dialects
 
-from csvkit.cli import CSVKitUtility, isatty
+from csvkit.cli import CSVKitUtility, isatty, parse_list
 
 try:
     import importlib_metadata
@@ -16,17 +14,6 @@ except ImportError:
     import importlib.metadata as importlib_metadata
 
 DIALECTS = dialects.__all__ + tuple(e.name for e in importlib_metadata.entry_points(group='sqlalchemy.dialects'))
-
-
-def parse_list(pairs):
-    options = {}
-    for key, value in pairs:
-        try:
-            value = ast.literal_eval(value)
-        except ValueError:
-            pass
-        options[key] = value
-    return options
 
 
 class CSVSQL(CSVKitUtility):
