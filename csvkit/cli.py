@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-import ast
 import argparse
+import ast
 import bz2
 import csv
 import datetime
