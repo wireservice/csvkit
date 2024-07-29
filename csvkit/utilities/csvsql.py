@@ -38,8 +38,12 @@ class CSVSQL(CSVKitUtility):
                  "This option can be specified multiple times. For example: thick_mode True")
         self.argparser.add_argument(
             '--query', dest='queries', action='append',
-            help='Execute one or more SQL queries delimited by ";" and output the result of the last query as CSV. '
+            help='Execute one or more SQL queries delimited by --sql-delimiter and '
+                 'output the result of the last query as CSV. Default delimiter is ";". '
                  'QUERY may be a filename. --query may be specified multiple times.')
+        self.argparser.add_argument(
+            '--sql-delimiter', dest='sql_delimiter', default=';',
+            help='Delimiter separating SQL queries in --query, --before-insert, and --after-insert.')
         self.argparser.add_argument(
             '--insert', dest='insert', action='store_true',
             help='Insert the data into the table. Requires --db.')
@@ -200,7 +204,7 @@ class CSVSQL(CSVKitUtility):
             if table:
                 if self.connection:
                     if self.args.before_insert:
-                        for query in self.args.before_insert.split(';'):
+                        for query in self.args.before_insert.split(self.args.sql_delimiter):
                             self.connection.exec_driver_sql(query)
 
                     table.to_sql(
@@ -220,7 +224,7 @@ class CSVSQL(CSVKitUtility):
                     )
 
                     if self.args.after_insert:
-                        for query in self.args.after_insert.split(';'):
+                        for query in self.args.after_insert.split(self.args.sql_delimiter):
                             self.connection.exec_driver_sql(query)
 
                 # Output SQL statements
@@ -242,7 +246,7 @@ class CSVSQL(CSVKitUtility):
                     if os.path.exists(query):
                         with open(query) as f:
                             query = f.read()
-                    queries += query.split(';')
+                    queries += query.split(self.args.sql_delimiter)
 
                 # Execute the specified SQL queries.
                 rows = None
