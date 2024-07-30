@@ -69,10 +69,10 @@ setup(
     ],
 
     install_requires=[
-        'agate>=1.6.3',
-        'agate-excel>=0.2.2',
-        'agate-dbf>=0.2.2',
-        'agate-sql>=0.5.3',
+        'agate>=1.12.0',
+        'agate-excel>=0.4.0',
+        'agate-dbf>=0.2.3',
+        'agate-sql>=0.7.0',
         'openpyxl',
         'sqlalchemy',
         'xlrd',
