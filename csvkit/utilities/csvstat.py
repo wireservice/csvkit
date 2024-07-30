@@ -145,7 +145,8 @@ class CSVStat(CSVKitUtility):
                  'Specify "0" to disable sniffing entirely, or "-1" to sniff the entire file.')
         self.argparser.add_argument(
             '-I', '--no-inference', dest='no_inference', action='store_true',
-            help='Disable type inference when parsing the input. Disable reformatting of values.')
+            help='Disable type inference (and --locale, --date-format, --datetime-format, --no-leading-zeroes) '
+                 'when parsing the input.')
 
     def main(self):
         if self.args.names_only:

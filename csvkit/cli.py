@@ -208,22 +208,22 @@ class CSVKitUtility:
             self.argparser.add_argument(
                 '-S', '--skipinitialspace', dest='skipinitialspace', action='store_true',
                 help='Ignore whitespace immediately following the delimiter.')
-        if 'blanks' not in self.override_flags:
+        if 'I' not in self.override_flags:
             self.argparser.add_argument(
                 '--blanks', dest='blanks', action='store_true',
                 help='Do not convert "", "na", "n/a", "none", "null", "." to NULL.')
-        if 'blanks' not in self.override_flags:
             self.argparser.add_argument(
                 '--null-value', dest='null_values', nargs='+', default=[],
                 help='Convert this value to NULL. --null-value can be specified multiple times.')
-        if 'date-format' not in self.override_flags:
             self.argparser.add_argument(
                 '--date-format', dest='date_format',
                 help='Specify a strptime date format string like "%%m/%%d/%%Y".')
-        if 'datetime-format' not in self.override_flags:
             self.argparser.add_argument(
                 '--datetime-format', dest='datetime_format',
                 help='Specify a strptime datetime format string like "%%m/%%d/%%Y %%I:%%M %%p".')
+            self.argparser.add_argument(
+                '--no-leading-zeroes', dest='no_leading_zeroes', action='store_true',
+                help='Do not convert a numeric value with leading zeroes to a number.')
         if 'H' not in self.override_flags:
             self.argparser.add_argument(
                 '-H', '--no-header-row', dest='no_header_row', action='store_true',
@@ -347,27 +347,31 @@ class CSVKitUtility:
             type_kwargs['null_values'].append(null_value)
 
         text_type = agate.Text(**type_kwargs)
-        number_type = agate.Number(locale=self.args.locale, **type_kwargs)
 
         if getattr(self.args, 'no_inference', None):
             types = [text_type]
-        elif getattr(self.args, 'out_quoting', None) == 2:
-            types = [number_type, text_type]
         else:
-            # See the order in the `agate.TypeTester` class.
-            types = [
-                agate.Boolean(**type_kwargs),
-                agate.TimeDelta(**type_kwargs),
-                agate.Date(date_format=self.args.date_format, **type_kwargs),
-                agate.DateTime(datetime_format=self.args.datetime_format, **type_kwargs),
-                text_type,
-            ]
+            number_type = agate.Number(
+                locale=self.args.locale, no_leading_zeroes=getattr(self.args, 'no_leading_zeroes', None), **type_kwargs
+            )
 
-            # In order to parse dates like "20010101".
-            if self.args.date_format or self.args.datetime_format:
-                types.insert(-1, number_type)
+            if getattr(self.args, 'out_quoting', None) == 2:  # QUOTE_NONUMERIC
+                types = [number_type, text_type]
             else:
-                types.insert(1, number_type)
+                # See the order in the `agate.TypeTester` class.
+                types = [
+                    agate.Boolean(**type_kwargs),
+                    agate.TimeDelta(**type_kwargs),
+                    agate.Date(date_format=self.args.date_format, **type_kwargs),
+                    agate.DateTime(datetime_format=self.args.datetime_format, **type_kwargs),
+                    text_type,
+                ]
+
+                # In order to parse dates like "20010101".
+                if self.args.date_format or self.args.datetime_format:
+                    types.insert(-1, number_type)
+                else:
+                    types.insert(1, number_type)
 
         return agate.TypeTester(types=types)
 

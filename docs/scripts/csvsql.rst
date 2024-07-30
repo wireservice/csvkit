@@ -33,14 +33,19 @@ Generate SQL statements for a CSV file or execute those statements directly on a
 
    optional arguments:
      -h, --help            show this help message and exit
-     -i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}, --dialect {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase,crate}
+     -i {mssql,mysql,oracle,postgresql,sqlite,duckdb,crate,ingres}, --dialect {mssql,mysql,oracle,postgresql,sqlite,duckdb,crate,ingres}
                            Dialect of SQL to generate. Cannot be used with --db.
      --db CONNECTION_STRING
                            If present, a SQLAlchemy connection string to use to
                            directly execute generated SQL on a database.
-     --query QUERY         Execute one or more SQL queries delimited by ";" and
+     --engine-option ENGINE_OPTION ENGINE_OPTION
+                           A keyword argument to SQLAlchemy's create_engine(), as
+                           a space-separated pair. This option can be specified
+                           multiple times. For example: thick_mode True
+     --query QUERIES       Execute one or more SQL queries delimited by ";" and
                            output the result of the last query as CSV. QUERY may
-                           be a filename.
+                           be a filename. --query may be specified multiple
+                           times.
      --insert              Insert the data into the table. Requires --db.
      --prefix PREFIX       Add an expression following the INSERT keyword, like
                            OR IGNORE or OR REPLACE.
@@ -69,8 +74,11 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                            in.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                            Limit CSV dialect sniffing to the specified number of
-                           bytes. Specify "0" to disable sniffing.
-     -I, --no-inference    Disable type inference when parsing the input.
+                           bytes. Specify "0" to disable sniffing entirely, or
+                           "-1" to sniff the entire file.
+     -I, --no-inference    Disable type inference (and --locale, --date-format,
+                           --datetime-format, --no-leading-zeroes) when parsing
+                           the input.
      --chunk-size CHUNK_SIZE
                            Chunk size for batch insert into the table. Requires
                            --insert.

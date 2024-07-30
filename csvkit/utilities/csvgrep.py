@@ -12,7 +12,7 @@ from csvkit.grep import FilteringCSVReader
 
 class CSVGrep(CSVKitUtility):
     description = 'Search CSV files. Like the Unix "grep" command, but for tabular data.'
-    override_flags = ['L', 'blanks', 'date-format', 'datetime-format']
+    override_flags = ['L', 'I']
 
     def add_arguments(self):
         self.argparser.add_argument(

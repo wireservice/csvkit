@@ -27,7 +27,7 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-.TH "CSVJOIN" "1" "Jul 16, 2024" "2.0.1" "csvkit"
+.TH "CSVJOIN" "1" "Jul 29, 2024" "2.0.1" "csvkit"
 .SH NAME
 csvjoin \- csvjoin Documentation
 .SH DESCRIPTION
@@ -72,8 +72,11 @@ optional arguments:
                         starting at the right.
   \-y SNIFF_LIMIT, \-\-snifflimit SNIFF_LIMIT
                         Limit CSV dialect sniffing to the specified number of
-                        bytes. Specify \(dq0\(dq to disable sniffing.
-  \-I, \-\-no\-inference    Disable type inference when parsing CSV input.
+                        bytes. Specify \(dq0\(dq to disable sniffing entirely, or
+                        \(dq\-1\(dq to sniff the entire file.
+  \-I, \-\-no\-inference    Disable type inference (and \-\-locale, \-\-date\-format,
+                        \-\-datetime\-format, \-\-no\-leading\-zeroes) when parsing
+                        the input.
 
 Note that the join operation requires reading all files into memory. Don\(aqt try
 this on very large files.

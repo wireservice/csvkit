@@ -18,7 +18,7 @@ from csvkit.cli import CSVKitUtility
 
 class CSVCut(CSVKitUtility):
     description = 'Filter and truncate CSV files. Like the Unix "cut" command, but for tabular data.'
-    override_flags = ['L', 'blanks', 'date-format', 'datetime-format']
+    override_flags = ['L', 'I']
 
     def add_arguments(self):
         self.argparser.add_argument(

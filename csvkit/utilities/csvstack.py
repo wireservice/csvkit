@@ -23,7 +23,7 @@ def _skip_lines(f, args):
 class CSVStack(CSVKitUtility):
     description = 'Stack up the rows from multiple CSV files, optionally adding a grouping value.'
     # Override 'f' because the utility accepts multiple files.
-    override_flags = ['f', 'L', 'blanks', 'date-format', 'datetime-format']
+    override_flags = ['f', 'L', 'I']
 
     def add_arguments(self):
         self.argparser.add_argument(

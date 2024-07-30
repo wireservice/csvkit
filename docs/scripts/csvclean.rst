@@ -126,7 +126,8 @@ Usage
      --omit-error-rows     Omit data rows that contain errors, from standard
                            output.
      --label LABEL         Add a "label" column to standard error. Useful in
-                           automated workflows.
+                           automated workflows. Use "-" to default to the input
+                           filename.
      --header-normalize-space
                            Strip leading and trailing whitespace and replace
                            sequences of whitespace characters by a single space
@@ -139,6 +140,7 @@ Usage
      --fillvalue FILLVALUE
                            The value with which to fill short rows. Defaults to
                            none.
+
 
 See also: :doc:`../common_arguments`.
 

@@ -32,8 +32,9 @@ Loads a CSV file into a :class:`agate.csv.Reader` object and then drops into a P
                            Limit CSV dialect sniffing to the specified number of
                            bytes. Specify "0" to disable sniffing entirely, or
                            "-1" to sniff the entire file.
-     -I, --no-inference    Disable type inference when parsing the input. This
-                           disables the reformatting of values.
+     -I, --no-inference    Disable type inference (and --locale, --date-format,
+                           --datetime-format, --no-leading-zeroes) when parsing
+                           the input.
 
 This tool will automatically use the IPython shell if it is installed, otherwise it will use the running Python shell.
 

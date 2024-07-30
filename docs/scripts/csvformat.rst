@@ -41,11 +41,11 @@ Convert a CSV file to a custom output format.:
                            none.
      -B, --out-no-doublequote
                            Whether or not double quotes are doubled in the output
-                           CSV file.
+                           file.
      -P OUT_ESCAPECHAR, --out-escapechar OUT_ESCAPECHAR
                            Character used to escape the delimiter in the output
-                           CSV file if --quoting 3 ("Quote None") is specified
-                           and to escape the QUOTECHAR if --out-no-doublequote is
+                           file if --quoting 3 ("Quote None") is specified and to
+                           escape the QUOTECHAR if --out-no-doublequote is
                            specified.
      -M OUT_LINETERMINATOR, --out-lineterminator OUT_LINETERMINATOR
                            Character used to terminate lines in the output file.

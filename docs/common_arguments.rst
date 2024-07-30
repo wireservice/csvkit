@@ -41,6 +41,8 @@ csvkit's tools share a set of common command-line arguments. Not every argument 
    --datetime-format DATETIME_FORMAT
                          Specify a strptime datetime format string like
                          "%m/%d/%Y %I:%M %p".
+   --no-leading-zeroes   Do not convert a numeric value with leading zeroes to
+                         a number.
    -H, --no-header-row   Specify that the input CSV file has no header row.
                          Will create default headers (a,b,c,...).
    -K SKIP_LINES, --skip-lines SKIP_LINES

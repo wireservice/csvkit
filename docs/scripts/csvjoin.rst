@@ -43,8 +43,11 @@ Merges two or more CSV tables together using a method analogous to SQL JOIN oper
                            starting at the right.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                            Limit CSV dialect sniffing to the specified number of
-                           bytes. Specify "0" to disable sniffing.
-     -I, --no-inference    Disable type inference when parsing CSV input.
+                           bytes. Specify "0" to disable sniffing entirely, or
+                           "-1" to sniff the entire file.
+     -I, --no-inference    Disable type inference (and --locale, --date-format,
+                           --datetime-format, --no-leading-zeroes) when parsing
+                           the input.
 
    Note that the join operation requires reading all files into memory. Don't try
    this on very large files.
