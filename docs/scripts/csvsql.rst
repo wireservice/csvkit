@@ -42,19 +42,24 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                            A keyword argument to SQLAlchemy's create_engine(), as
                            a space-separated pair. This option can be specified
                            multiple times. For example: thick_mode True
-     --query QUERIES       Execute one or more SQL queries delimited by ";" and
-                           output the result of the last query as CSV. QUERY may
-                           be a filename. --query may be specified multiple
-                           times.
+     --query QUERIES       Execute one or more SQL queries delimited by --sql-
+                           delimiter, and output the result of the last query as
+                           CSV. QUERY may be a filename. --query may be specified
+                           multiple times.
      --insert              Insert the data into the table. Requires --db.
      --prefix PREFIX       Add an expression following the INSERT keyword, like
                            OR IGNORE or OR REPLACE.
      --before-insert BEFORE_INSERT
-                           Execute SQL before the INSERT command. Requires
+                           Before the INSERT command, execute one or more SQL
+                           queries delimited by --sql-delimiter. Requires
                            --insert.
      --after-insert AFTER_INSERT
-                           Execute SQL after the INSERT command. Requires
+                           After the INSERT command, execute one or more SQL
+                           queries delimited by --sql-delimiter. Requires
                            --insert.
+     --sql-delimiter SQL_DELIMITER
+                           Delimiter separating SQL queries in --query, --before-
+                           insert, and --after-insert.
      --tables TABLE_NAMES  A comma-separated list of names of tables to be
                            created. By default, the tables will be named after
                            the filenames without extensions or "stdin".
@@ -87,6 +92,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
      --col-len-multiplier COL_LEN_MULTIPLIER
                            Multiply the maximum column length by this multiplier
                            to accomodate larger values in later runs.
+
 
 See also: :doc:`../common_arguments`.
 
