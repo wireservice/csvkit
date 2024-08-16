@@ -2,6 +2,7 @@ Unreleased
 ----------
 
 -  feat: :doc:`/scripts/csvsql` adds a :code:`--engine-option` option.
+-  feat: :doc:`/scripts/csvsql` adds a :code:`--sql-delimiter` option, to set a different delimiter than ``;`` for the :code:`--query`, :code:`--before-insert` and :code:`after-insert` options.
 -  feat: :doc:`/scripts/sql2csv` adds a :code:`--execution-option` option.
 -  feat: :doc:`/scripts/sql2csv` uses the ``stream_results=True`` execution option, by default, to not load all data into memory at once.
 

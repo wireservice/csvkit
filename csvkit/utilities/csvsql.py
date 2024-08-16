@@ -38,12 +38,8 @@ class CSVSQL(CSVKitUtility):
                  "This option can be specified multiple times. For example: thick_mode True")
         self.argparser.add_argument(
             '--query', dest='queries', action='append',
-            help='Execute one or more SQL queries delimited by --sql-delimiter and '
-                 'output the result of the last query as CSV. Default delimiter is ";". '
-                 'QUERY may be a filename. --query may be specified multiple times.')
-        self.argparser.add_argument(
-            '--sql-delimiter', dest='sql_delimiter', default=';',
-            help='Delimiter separating SQL queries in --query, --before-insert, and --after-insert.')
+            help='Execute one or more SQL queries delimited by --sql-delimiter, and output the result of the last '
+                 'query as CSV. QUERY may be a filename. --query may be specified multiple times.')
         self.argparser.add_argument(
             '--insert', dest='insert', action='store_true',
             help='Insert the data into the table. Requires --db.')
@@ -52,10 +48,15 @@ class CSVSQL(CSVKitUtility):
             help='Add an expression following the INSERT keyword, like OR IGNORE or OR REPLACE.')
         self.argparser.add_argument(
             '--before-insert', dest='before_insert',
-            help='Execute SQL before the INSERT command. Requires --insert.')
+            help='Before the INSERT command, execute one or more SQL queries delimited by --sql-delimiter. '
+                 'Requires --insert.')
         self.argparser.add_argument(
             '--after-insert', dest='after_insert',
-            help='Execute SQL after the INSERT command. Requires --insert.')
+            help='After the INSERT command, execute one or more SQL queries delimited by --sql-delimiter. '
+                 'Requires --insert.')
+        self.argparser.add_argument(
+            '--sql-delimiter', dest='sql_delimiter', default=';',
+            help='Delimiter separating SQL queries in --query, --before-insert, and --after-insert.')
         self.argparser.add_argument(
             '--tables', dest='table_names',
             help='A comma-separated list of names of tables to be created. By default, the tables will be named after '
