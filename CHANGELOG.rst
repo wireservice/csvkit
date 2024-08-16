@@ -5,6 +5,7 @@ Unreleased
 -  feat: :doc:`/scripts/csvsql` adds a :code:`--engine-option` option.
 -  feat: :doc:`/scripts/sql2csv` adds a :code:`--execution-option` option.
 -  feat: :doc:`/scripts/sql2csv` uses the ``stream_results=True`` execution option, by default, to not load all data into memory at once.
+-  fix: :doc:`/scripts/csvsql` uses a default value of 1 for the :code:`--min-col-len` and :code:`--col-len-multiplier` options.
 
 2.0.1 - July 12, 2024
 ---------------------
