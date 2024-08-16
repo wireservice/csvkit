@@ -9,7 +9,7 @@ from csvkit.cli import QUOTING_CHOICES, CSVKitUtility, make_default_headers
 
 class CSVFormat(CSVKitUtility):
     description = 'Convert a CSV file to a custom output format.'
-    override_flags = ['blanks', 'date-format', 'datetime-format']
+    override_flags = ['I']
 
     def add_arguments(self):
         self.argparser.add_argument(

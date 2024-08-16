@@ -35,8 +35,11 @@ Sort CSV files. Like the Unix "sort" command, but for tabular data:
      -i, --ignore-case     Perform case-independent sorting.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                            Limit CSV dialect sniffing to the specified number of
-                           bytes. Specify "0" to disable sniffing.
-     -I, --no-inference    Disable type inference when parsing the input.
+                           bytes. Specify "0" to disable sniffing entirely, or
+                           "-1" to sniff the entire file.
+     -I, --no-inference    Disable type inference (and --locale, --date-format,
+                           --datetime-format, --no-leading-zeroes) when parsing
+                           the input.
 
 See also: :doc:`../common_arguments`.
 

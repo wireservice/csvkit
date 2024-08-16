@@ -86,6 +86,10 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
         input_file.close()
 
+    def test_no_leading_zeroes(self):
+        self.assertConverted('csv', 'examples/test_no_leading_zeroes.csv',
+                             'examples/test_no_leading_zeroes.csv', ['--no-leading-zeroes'])
+
     def test_date_format(self):
         self.assertConverted('csv', 'examples/test_date_format.csv',
                              'examples/test_date_format_converted.csv', ['--date-format', '%d/%m/%Y'])

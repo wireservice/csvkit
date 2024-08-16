@@ -51,9 +51,11 @@ Converts a CSV file into JSON or GeoJSON (depending on flags):
                            rather than an as an array.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                            Limit CSV dialect sniffing to the specified number of
-                           bytes. Specify "0" to disable sniffing.
+                           bytes. Specify "0" to disable sniffing entirely, or
+                           "-1" to sniff the entire file.
      -I, --no-inference    Disable type inference (and --locale, --date-format,
-                           --datetime-format) when parsing CSV input.
+                           --datetime-format, --no-leading-zeroes) when parsing
+                           the input.
 
 See also: :doc:`../common_arguments`.
 

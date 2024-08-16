@@ -59,9 +59,11 @@ The header line is required though the columns may be in any order:
                            Specify the encoding of the input XLS file.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                            Limit CSV dialect sniffing to the specified number of
-                           bytes. Specify "0" to disable sniffing.
+                           bytes. Specify "0" to disable sniffing entirely, or
+                           "-1" to sniff the entire file.
      -I, --no-inference    Disable type inference (and --locale, --date-format,
-                           --datetime-format) when parsing CSV input.
+                           --datetime-format, --no-leading-zeroes) when parsing
+                           CSV input.
 
     Some command-line flags only pertain to specific input formats.
 

@@ -65,8 +65,9 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
                            Limit CSV dialect sniffing to the specified number of
                            bytes. Specify "0" to disable sniffing entirely, or
                            "-1" to sniff the entire file.
-     -I, --no-inference    Disable type inference when parsing the input. Disable
-                           reformatting of values.
+     -I, --no-inference    Disable type inference (and --locale, --date-format,
+                           --datetime-format, --no-leading-zeroes) when parsing
+                           the input.
 
 See also: :doc:`../common_arguments`.
 

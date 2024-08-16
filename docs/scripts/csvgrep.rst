@@ -37,7 +37,7 @@ Filter tabular data to only those rows where certain columns contain a given val
                            file (stripped of line separators) is an exact match
                            of the cell value, the row matches.
      -i, --invert-match    Select non-matching rows, instead of matching rows.
-     -a  --any-match       Select rows in which any column matches, instead of
+     -a, --any-match       Select rows in which any column matches, instead of
                            all columns.
 
 See also: :doc:`../common_arguments`.

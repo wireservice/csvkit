@@ -27,7 +27,7 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-.TH "CSVPY" "1" "Jul 16, 2024" "2.0.1" "csvkit"
+.TH "CSVPY" "1" "Jul 29, 2024" "2.0.1" "csvkit"
 .SH NAME
 csvpy \- csvpy Documentation
 .SH DESCRIPTION
@@ -61,8 +61,9 @@ optional arguments:
                         Limit CSV dialect sniffing to the specified number of
                         bytes. Specify \(dq0\(dq to disable sniffing entirely, or
                         \(dq\-1\(dq to sniff the entire file.
-  \-I, \-\-no\-inference    Disable type inference when parsing the input. This
-                        disables the reformatting of values.
+  \-I, \-\-no\-inference    Disable type inference (and \-\-locale, \-\-date\-format,
+                        \-\-datetime\-format, \-\-no\-leading\-zeroes) when parsing
+                        the input.
 .ft P
 .fi
 .UNINDENT
