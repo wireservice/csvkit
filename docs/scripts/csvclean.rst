@@ -147,13 +147,16 @@ See also: :doc:`../common_arguments`.
 Examples
 ========
 
-Test a file with data rows that are shorter and longer than the header row:
+Process a file with data rows that are shorter and longer than the header row, and omit those rows:
 
 .. code-block:: console
 
-   $ csvclean examples/bad.csv 2> errors.csv
+   $ csvclean --length-mismatch --omit-error-rows examples/bad.csv 2> errors.csv
    column_a,column_b,column_c
    0,mixed types.... uh oh,17
+
+.. code-block:: console
+
    $ cat errors.csv
    line_number,msg,column_a,column_b,column_c
    1,"Expected 3 columns, found 4 columns",1,27,,I'm too long!
@@ -163,7 +166,7 @@ Test a file with data rows that are shorter and longer than the header row:
 
    If any data rows are longer than the header row, you need to add columns manually: for example, by adding one or more delimiters (``,``) to the end of the header row. :code:`csvclean` can't do this, because it is designed to work with standard input, and correcting an error at the start of the CSV data based on an observation later in the CSV data would require holding all the CSV data in memory – which is not an option for large files.
 
-Test a file with empty columns:
+Process a file with empty columns:
 
 .. code-block:: console
 
@@ -172,19 +175,61 @@ Test a file with empty columns:
    a,,,,
    ,,c,,
    ,,,,
+
+.. code-block:: console
+   :emphasize-lines: 3
+
    $ cat errors.csv
    line_number,msg,a,b,c,,
    1,"Empty columns named 'b', '', ''! Try: csvcut -C 2,4,5",,,,,
 
-Use :doc:`csvcut` to exclude the empty columns:
+Then, use :doc:`csvcut` to exclude the empty columns:
 
-.. code-block:: bash
+.. code-block:: console
 
    $ csvcut -C 2,4,5 examples/test_empty_columns.csv
    a,c
    a,
    ,c
    ,
+
+Check whether any errors found:
+
+.. code-block:: console
+
+   $ if [ csvclean -a examples/bad.csv ]; then echo "my message"; fi
+   my message
+
+Or:
+
+.. code-block:: console
+
+   $ [ csvclean -a examples/bad.csv ] && echo "my message"
+   my message
+
+Or:
+
+.. code-block:: console
+
+   $ csvclean -a examples/bad.csv >/dev/null 2>&1
+   $ echo $?
+   1
+
+Count the number of errors found:
+
+.. code-block:: console
+
+   $ csvclean -a examples/bad.csv 2>&1 >/dev/null | csvstat --count
+   2
+
+View only the errors found:
+
+.. code-block:: console
+
+   $ csvclean -a examples/bad.csv 2>&1 >/dev/null
+   line_number,msg,column_a,column_b,column_c
+   1,"Expected 3 columns, found 4 columns",1,27,,I'm too long!
+   2,"Expected 3 columns, found 2 columns",,I'm too short!
 
 To change the line ending from line feed (LF or ``\n``) to carriage return and line feed (CRLF or ``\r\n``) use:
 
