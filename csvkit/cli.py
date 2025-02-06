@@ -368,8 +368,10 @@ class CSVKitUtility:
                 ]
 
                 # In order to parse dates like "20010101".
-                if self.args.date_format or self.args.datetime_format:
+                if self.args.datetime_format:
                     types.insert(-1, number_type)
+                elif self.args.date_format:
+                    types.insert(-2, number_type)
                 else:
                     types.insert(1, number_type)
 
