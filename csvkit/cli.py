@@ -19,6 +19,7 @@ import agate
 from agate.data_types.base import DEFAULT_NULL_VALUES
 
 from csvkit.exceptions import ColumnIdentifierError, RequiredHeaderError
+from csvkit.features.AddBom import AddBOM
 
 try:
     import zstandard
@@ -134,6 +135,8 @@ class CSVKitUtility:
         if 'f' not in self.override_flags:
             self.input_file = self._open_input_file(self.args.input_path)
 
+        AddBOM.run(self.output_file, self.args)
+
         try:
             with warnings.catch_warnings():
                 if getattr(self.args, 'no_header_row', None):
@@ -244,6 +247,8 @@ class CSVKitUtility:
                 '-l', '--linenumbers', dest='line_numbers', action='store_true',
                 help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a '
                      'simple primary key.')
+
+        AddBOM.argument(self.argparser,self)
 
         # Input/Output
         if 'zero' not in self.override_flags:
