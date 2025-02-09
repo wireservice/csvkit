@@ -44,7 +44,7 @@ class AddBOM:
     @staticmethod
     def run(
         output: TextIOWrapper,
-        arguments: Union[Namespace, None] = None,
+        arguments: Union[Namespace,list, None] = None,
     ):
 
         if not AddBOM.enabled(arguments):
