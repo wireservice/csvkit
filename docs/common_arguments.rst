@@ -68,10 +68,6 @@ The output of csvkit's tools is always formatted with "default" formatting optio
 
 See the documentation of :doc:`/scripts/csvclean` for a description of the default formatting options.
 
-.. note::
-
-   The ``--encoding`` option has no effect if reading from standard input. Set the ``PYTHONIOENCODING`` environment variable instead.
-
 .. seealso::
 
    For a list of possible values for the ``--encoding`` option, see the `Python documentation <https://docs.python.org/3/library/codecs.html#standard-encodings>`__.
