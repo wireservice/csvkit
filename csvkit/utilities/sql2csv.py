@@ -8,7 +8,7 @@ from csvkit.cli import CSVKitUtility, parse_list
 class SQL2CSV(CSVKitUtility):
     description = 'Execute a SQL query on a database and output the result to a CSV file.'
     # Overrides all flags except --linenumbers, --verbose, --version.
-    override_flags = ['f', 'b', 'd', 'e', 'H', 'I', 'K', 'L', 'p', 'q', 'S', 't', 'u', 'z', 'zero']
+    override_flags = ['f', 'b', 'd', 'e', 'H', 'I', 'K', 'L', 'p', 'q', 'S', 't', 'u', 'z', 'zero','add-bom']
 
     def add_arguments(self):
         self.argparser.add_argument(
