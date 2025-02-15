@@ -15,7 +15,6 @@ import warnings
 from glob import glob
 from os.path import splitext
 from codecs import BOM_UTF8
-from argparse import Namespace
 
 import agate
 from agate.data_types.base import DEFAULT_NULL_VALUES
@@ -136,10 +135,8 @@ class CSVKitUtility:
         if 'f' not in self.override_flags:
             self.input_file = self._open_input_file(self.args.input_path)
 
-        if isinstance(self.args, Namespace):
-            if "add_bom" in self.args and self.args.add_bom:
-                BOM = AddBOM._get_BOM()
-                self.output.buffer.write(BOM_UTF8)
+        if getattr(self.args, 'add_bom', False):
+            self.output.buffer.write(BOM_UTF8)
 
         try:
             with warnings.catch_warnings():
@@ -251,15 +248,10 @@ class CSVKitUtility:
                 '-l', '--linenumbers', dest='line_numbers', action='store_true',
                 help='Insert a column of line numbers at the front of the output. Useful when piping to grep or as a '
                      'simple primary key.')
-
         if 'add-bom' not in self.override_flags:
             self.argparser.add_argument(
-                "--add-bom",
-                dest="add_bom",
-                action="store_true",
-                default=False,
-                help="Add Byte Order Mark (BOM) to the output",
-            )
+                '--add-bom', dest='add_bom', action='store_true',
+                help='Add the UTF-8 byte-order mark (BOM) to the output, for Excel compatibility')
 
         # Input/Output
         if 'zero' not in self.override_flags:
