@@ -12,9 +12,9 @@ import os
 import re
 import sys
 import warnings
+from codecs import BOM_UTF8
 from glob import glob
 from os.path import splitext
-from codecs import BOM_UTF8
 
 import agate
 from agate.data_types.base import DEFAULT_NULL_VALUES
