@@ -136,7 +136,7 @@ class CSVKitUtility:
             self.input_file = self._open_input_file(self.args.input_path)
 
         if getattr(self.args, 'add_bom', False):
-            self.output.buffer.write(BOM_UTF8)
+            self.output_file.buffer.write(BOM_UTF8)
 
         try:
             with warnings.catch_warnings():

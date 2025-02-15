@@ -58,6 +58,10 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
         self.assertConverted('csv', 'examples/test_locale.csv',
                              'examples/test_locale_converted.csv', ['--locale', 'de_DE'])
 
+    def test_add_bom(self):
+        self.assertConverted('csv', 'examples/test_utf8.csv',
+                             'examples/test_utf8_bom.csv', ['--add-bom'])
+
     def test_no_blanks(self):
         self.assertConverted('csv', 'examples/blanks.csv', 'examples/blanks_converted.csv')
 

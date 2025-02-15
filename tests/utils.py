@@ -49,12 +49,12 @@ class CSVKitTestCase(unittest.TestCase):
     warnings.filterwarnings(action='ignore', module='agate')
 
     def get_output(self, args):
-        output_file = io.StringIO()
+        output_file = io.TextIOWrapper(io.BytesIO(), encoding='utf-8', newline='', write_through=True)
 
         utility = self.Utility(args, output_file)
         utility.run()
 
-        output = output_file.getvalue()
+        output = output_file.buffer.getvalue().decode('utf-8')
         output_file.close()
 
         return output
