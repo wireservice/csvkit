@@ -2,6 +2,7 @@ Unreleased
 ----------
 
 -  feat: Add a :code:`--no-leading-zeroes` option to tools that support type inference.
+-  feat: Add a :code:`--add-bom` option to add the UTF-8 byte-order mark (BOM) to CSV output, for Excel compatibility.
 -  feat: :doc:`/scripts/csvsql` adds a :code:`--engine-option` option.
 -  feat: :doc:`/scripts/csvsql` adds a :code:`--sql-delimiter` option, to set a different delimiter than ``;`` for the :code:`--query`, :code:`--before-insert` and :code:`after-insert` options.
 -  feat: :doc:`/scripts/sql2csv` adds a :code:`--execution-option` option.
