@@ -112,3 +112,4 @@ The following individuals have contributed code to csvkit:
 * Tim Vergenz
 * sgpeter1
 * Wes Dean
+* Álvaro Osvaldo
