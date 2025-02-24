@@ -33,7 +33,7 @@ Filters and truncates CSV files. Like the Unix "cut" command, but for tabular da
      -C NOT_COLUMNS, --not-columns NOT_COLUMNS
                            A comma-separated list of column indices, names or
                            ranges to be excluded, e.g. "1,id,3-5". Defaults to no
-                           columns.
+                           columns. Ignores unknown columns.
      -x, --delete-empty-rows
                            After cutting, delete rows which are completely empty.
 

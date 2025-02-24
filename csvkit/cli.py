@@ -561,7 +561,8 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                 elif '-' in c:
                     a, b = c.split('-', 1)
                 else:
-                    raise
+                    # ignore unknown columns
+                    continue
 
                 try:
                     a = int(a) if a else 1

@@ -55,6 +55,12 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             ['2'],
         ])
 
+    def test_exclude_unknown_columns(self):
+        self.assertRows(['-C', '1,foo,42', 'examples/dummy.csv'], [
+            ['b', 'c'],
+            ['2', '3'],
+        ])
+
     def test_include_and_exclude(self):
         self.assertRows(['-c', '1,3', '-C', '3', 'examples/dummy.csv'], [
             ['a'],

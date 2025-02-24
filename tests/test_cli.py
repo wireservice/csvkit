@@ -23,6 +23,7 @@ class TestCli(unittest.TestCase):
     def test_parse_column_identifiers(self):
         self.assertEqual([2, 0, 1], parse_column_identifiers('i_work_here,1,name', self.headers))
         self.assertEqual([2, 1, 1], parse_column_identifiers('i_work_here,1,name', self.headers, column_offset=0))
+        self.assertEqual([1, 1], parse_column_identifiers('i_work_here,1,name', self.headers, column_offset=0, excluded_columns="i_work_here,foobar"))
 
     def test_range_notation(self):
         self.assertEqual([0, 1, 2], parse_column_identifiers('1:3', self.headers))
