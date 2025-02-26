@@ -31,7 +31,7 @@ class TestCli(unittest.TestCase):
                 column_offset=0,
                 excluded_columns='i_work_here,foobar',
             ),
-    )
+        )
 
     def test_range_notation(self):
         self.assertEqual([0, 1, 2], parse_column_identifiers('1:3', self.headers))
