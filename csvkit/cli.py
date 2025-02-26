@@ -261,7 +261,7 @@ class CSVKitUtility:
                      '1-based numbering.')
 
         self.argparser.add_argument(
-            '-V', '--version', action='version', version='%(prog)s 2.0.1',
+            '-V', '--version', action='version', version='%(prog)s 2.1.0',
             help='Display version information and exit.')
 
     def _open_input_file(self, path, opened=False):
@@ -561,7 +561,7 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                 elif '-' in c:
                     a, b = c.split('-', 1)
                 else:
-                    # ignore unknown columns
+                    # Ignore unknown columns.
                     continue
 
                 try:

@@ -22,7 +22,7 @@ bins = (
 
 setup(
     name='csvkit',
-    version='2.0.1',
+    version='2.1.0',
     description='A suite of command-line tools for working with CSV, the king of tabular file formats.',
     long_description=long_description,
     long_description_content_type='text/x-rst',

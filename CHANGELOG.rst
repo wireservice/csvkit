@@ -1,5 +1,5 @@
-Unreleased
-----------
+2.1.0 - February 26, 2025
+-------------------------
 
 -  feat: Add a :code:`--no-leading-zeroes` option to tools that support type inference.
 -  feat: Add a :code:`--add-bom` option to add the UTF-8 byte-order mark (BOM) to CSV output, for Excel compatibility.
@@ -7,7 +7,7 @@ Unreleased
 -  feat: :doc:`/scripts/csvsql` adds a :code:`--sql-delimiter` option, to set a different delimiter than ``;`` for the :code:`--query`, :code:`--before-insert` and :code:`after-insert` options.
 -  feat: :doc:`/scripts/sql2csv` adds a :code:`--execution-option` option.
 -  feat: :doc:`/scripts/sql2csv` uses the ``stream_results=True`` execution option, by default, to not load all data into memory at once.
--  feat: Make :code:`csvcut -C` ignore unknown columns instead of throwing an exception.
+-  fix: :doc:`/scripts/csvcut` no longer errors on unknown columns when using the :code:`--not-columns` (:code:`-C`) option.
 -  fix: :doc:`/scripts/csvsql` uses a default value of 1 for the :code:`--min-col-len` and :code:`--col-len-multiplier` options.
 -  fix: The :code:`--encoding` option defaults to the ``PYTHONIOENCODING`` environment variable if set.
 -  fix: For type inference, number takes priority over date-time, if not using the :code:`--datetime-format` option.
