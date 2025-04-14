@@ -15,7 +15,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
           cache-dependency-path: setup.py
-      - run: pip install .[test] coveralls
+      - run: pip install --ignore-installed .[test] coveralls
       - env:
           LANG: en_US.UTF-8
           PYTHONUTF8: 1
