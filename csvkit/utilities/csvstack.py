@@ -75,9 +75,10 @@ class CSVStack(CSVKitUtility):
             rows = Reader(f, **self.reader_kwargs)
 
             if use_fieldnames:
-                for field in rows.fieldnames:
-                    if field not in headers:
-                        headers.append(field)
+                if rows.fieldnames:
+                    for field in rows.fieldnames:
+                        if field not in headers:
+                            headers.append(field)
 
                 # If the file is standard input, store the fieldnames so that the rows can be read correctly later.
                 if file_is_stdin:

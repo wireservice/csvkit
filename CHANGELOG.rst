@@ -1,3 +1,8 @@
+Unreleased
+----------
+
+-  fix: :doc:`/scripts/csvstack` no longer errors if a CSV file is empty.
+
 2.1.0 - February 26, 2025
 -------------------------
 
