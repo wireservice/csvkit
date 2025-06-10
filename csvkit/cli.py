@@ -163,7 +163,9 @@ class CSVKitUtility:
         whose single-letter form is contained in 'omitflags' will be left out of the configured parser. Use 'f' for
         file.
         """
-        self.argparser = argparse.ArgumentParser(prog='csvkit', description=self.description, epilog=self.epilog)
+        self.argparser = argparse.ArgumentParser(
+            prog=type(self).__name__.lower(), description=self.description, epilog=self.epilog
+        )
 
         # Input
         if 'f' not in self.override_flags:
