@@ -15,8 +15,9 @@ from csvkit import convert
 from csvkit.cli import CSVKitUtility
 from csvkit.convert.fixed import fixed2csv
 from csvkit.convert.geojs import geojson2csv
+from csvkit.convert.ods import ods2csv
 
-SUPPORTED_FORMATS = ['csv', 'dbf', 'fixed', 'geojson', 'json', 'ndjson', 'xls', 'xlsx']
+SUPPORTED_FORMATS = ['csv', 'dbf', 'fixed', 'geojson', 'json', 'ndjson', 'xls', 'xlsx','ods']
 
 
 class In2CSV(CSVKitUtility):
@@ -40,13 +41,13 @@ class In2CSV(CSVKitUtility):
             help='Specify a top-level key to look within for a list of objects to be converted when processing JSON.')
         self.argparser.add_argument(
             '-n', '--names', dest='names_only', action='store_true',
-            help='Display sheet names from the input Excel file.')
+            help='Display sheet names from the input Excel or ODS file.')
         self.argparser.add_argument(
             '--sheet', dest='sheet',
-            help='The name of the Excel sheet to operate on.')
+            help='The name of the Excel or ODS sheet to operate on.')
         self.argparser.add_argument(
             '--write-sheets', dest='write_sheets',
-            help='The names of the Excel sheets to write to files, or "-" to write all sheets.')
+            help='The names of the Excel sheets or ODS sheets to write to files, or "-" to write all sheets.')
         self.argparser.add_argument(
             '--use-sheet-names', dest='use_sheet_names', action='store_true',
             help='Use the sheet names as file names when --write-sheets is set.')
@@ -107,6 +108,10 @@ class In2CSV(CSVKitUtility):
                 sheets = self.sheet_names(path, filetype)
                 for sheet in sheets:
                     self.output_file.write(f'{sheet}\n')
+            elif filetype in ('ods'):
+                sheets = ods2csv(path,display_sheetnames=True)
+                for sheet in sheets:
+                    self.output_file.write(f'{sheet}\n')
             else:
                 self.argparser.error('You cannot use the -n or --names options with non-Excel files.')
             return
@@ -139,6 +144,12 @@ class In2CSV(CSVKitUtility):
         if filetype != 'dbf':
             kwargs['column_types'] = self.get_column_types()
 
+        if filetype in ('ods'):
+            kwargs['sheetname'] = self.args.sheet
+            kwargs['write_sheets'] = self.args.write_sheets
+            kwargs['display_sheetnames'] = self.args.names_only
+
+
         # Convert the file.
         if (
             filetype == 'csv'
@@ -154,6 +165,8 @@ class In2CSV(CSVKitUtility):
             self.output_file.write(fixed2csv(self.input_file, schema, output=self.output_file, **kwargs))
         elif filetype == 'geojson':
             self.output_file.write(geojson2csv(self.input_file, **kwargs))
+        elif filetype == 'ods':
+            self.output_file.write(ods2csv(self.input_file.name, **kwargs))
         elif filetype in ('csv', 'dbf', 'json', 'ndjson', 'xls', 'xlsx'):
             if filetype == 'csv':
                 table = agate.Table.from_csv(self.input_file, **kwargs)
@@ -175,35 +188,36 @@ class In2CSV(CSVKitUtility):
             table.to_csv(self.output_file, **self.writer_kwargs)
 
         if self.args.write_sheets:
-            # Close and re-open the file, as the file object has been mutated or closed.
-            self.input_file.close()
+            if filetype in ('xls', 'xlsx'):
+                # Close and re-open the file, as the file object has been mutated or closed.
+                self.input_file.close()
 
-            self.input_file = self.open_excel_input_file(path)
+                self.input_file = self.open_excel_input_file(path)
 
-            if self.args.write_sheets == '-':
-                sheets = self.sheet_names(path, filetype)
-            else:
-                sheets = [int(sheet) if sheet.isdigit() else sheet for sheet in self.args.write_sheets.split(',')]
-
-            if filetype == 'xls':
-                tables = agate.Table.from_xls(self.input_file, sheet=sheets,
-                                              encoding_override=self.args.encoding_xls, **kwargs)
-            elif filetype == 'xlsx':
-                tables = agate.Table.from_xlsx(
-                    self.input_file, sheet=sheets, reset_dimensions=self.args.reset_dimensions, **kwargs
-                )
-
-            if not path or path == '-':
-                base = 'stdin'
-            else:
-                base = splitext(self.input_file.name)[0]
-            for i, (sheet_name, table) in enumerate(tables.items()):
-                if self.args.use_sheet_names:
-                    filename = '%s_%s.csv' % (base, sheet_name)
+                if self.args.write_sheets == '-':
+                    sheets = self.sheet_names(path, filetype)
                 else:
-                    filename = '%s_%d.csv' % (base, i)
-                with open(filename, 'w') as f:
-                    table.to_csv(f, **self.writer_kwargs)
+                    sheets = [int(sheet) if sheet.isdigit() else sheet for sheet in self.args.write_sheets.split(',')]
+
+                if filetype == 'xls':
+                    tables = agate.Table.from_xls(self.input_file, sheet=sheets,
+                                                encoding_override=self.args.encoding_xls, **kwargs)
+                elif filetype == 'xlsx':
+                    tables = agate.Table.from_xlsx(
+                        self.input_file, sheet=sheets, reset_dimensions=self.args.reset_dimensions, **kwargs
+                    )
+
+                if not path or path == '-':
+                    base = 'stdin'
+                else:
+                    base = splitext(self.input_file.name)[0]
+                for i, (sheet_name, table) in enumerate(tables.items()):
+                    if self.args.use_sheet_names:
+                        filename = '%s_%s.csv' % (base, sheet_name)
+                    else:
+                        filename = '%s_%d.csv' % (base, i)
+                    with open(filename, 'w') as f:
+                        table.to_csv(f, **self.writer_kwargs)
 
         self.input_file.close()
 
