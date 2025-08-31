@@ -1,0 +1,4 @@
+name,price
+pen,1.2
+notebook,2.5
+ruler,0.99
