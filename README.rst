@@ -32,3 +32,7 @@ Important links:
 * Repository:    https://github.com/wireservice/csvkit
 * Issues:        https://github.com/wireservice/csvkit/issues
 * Schemas:       https://github.com/wireservice/ffs
+* Local/offline setup: `docs/LOCAL_DEVELOPMENT.md <docs/LOCAL_DEVELOPMENT.md>`_
+* Evidence (env, versions, commands): `EVIDENCE.md <EVIDENCE.md>`_
+
+
