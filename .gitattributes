@@ -1,0 +1,10 @@
+# Keep text consistent in repo
+* text=auto
+
+# Force LF for data & goldens (avoid Windows CRLF noise)
+*.csv text eol=lf
+tests/goldens/*.txt text eol=lf
+out/*.txt text eol=lf
+
+# Keep Windows batch scripts with CRLF
+*.cmd eol=crlf
