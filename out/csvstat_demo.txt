@@ -1,0 +1,46 @@
+  1. "id"
+
+	Type of data:          Number
+	Contains null values:  False
+	Non-null values:       3
+	Unique values:         3
+	Smallest value:        1
+	Largest value:         3
+	Sum:                   6
+	Mean:                  2
+	Median:                2
+	StDev:                 1
+	Most decimal places:   0
+	Most common values:    1 (1x)
+	                       2 (1x)
+	                       3 (1x)
+
+  2. "name"
+
+	Type of data:          Text
+	Contains null values:  False
+	Non-null values:       3
+	Unique values:         3
+	Longest value:         8 characters
+	Most common values:    pen (1x)
+	                       notebook (1x)
+	                       ruler (1x)
+
+  3. "price"
+
+	Type of data:          Number
+	Contains null values:  False
+	Non-null values:       3
+	Unique values:         3
+	Smallest value:        0.99
+	Largest value:         2.5
+	Sum:                   4.69
+	Mean:                  1.563
+	Median:                1.2
+	StDev:                 0.818
+	Most decimal places:   2
+	Most common values:    1.2 (1x)
+	                       2.5 (1x)
+	                       0.99 (1x)
+
+Row count: 3
