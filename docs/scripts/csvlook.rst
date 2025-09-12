@@ -56,7 +56,7 @@ See also: :doc:`../common_arguments`.
 
 .. note::
 
-   The fractional part of a decimal numberal is always truncated. To control this truncation, use ``--no-inference`` along with ``--max-column-width``.
+   The fractional part of a decimal numeral is always truncated. To control this truncation, use ``--no-inference`` along with ``--max-column-width``.
 
 Examples
 ========

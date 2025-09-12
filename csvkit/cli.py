@@ -123,7 +123,7 @@ class CSVKitUtility:
         """
         Called upon initialization once the parser for common arguments has been constructed.
 
-        Should be overriden by individual utilities.
+        Should be overridden by individual utilities.
         """
         raise NotImplementedError('add_arguments must be provided by each subclass of CSVKitUtility.')
 
@@ -152,7 +152,7 @@ class CSVKitUtility:
         """
         Main loop of the utility.
 
-        Should be overriden by individual utilities and explicitly called by the executing script.
+        Should be overridden by individual utilities and explicitly called by the executing script.
         """
         raise NotImplementedError(' must be provided by each subclass of CSVKitUtility.')
 
