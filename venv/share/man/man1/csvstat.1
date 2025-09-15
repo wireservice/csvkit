@@ -1,0 +1,159 @@
+.\" Man page generated from reStructuredText.
+.
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.TH "CSVSTAT" "1" "Aug 16, 2024" "2.1.0" "csvkit"
+.SH NAME
+csvstat \- csvstat Documentation
+.SH DESCRIPTION
+.sp
+Prints descriptive statistics for all columns in a CSV file. Will intelligently determine the type of each column and then print analysis relevant to that type (ranges for dates, mean and median for integers, etc.):
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+usage: csvstat [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3}] [\-b]
+               [\-p ESCAPECHAR] [\-z FIELD_SIZE_LIMIT] [\-e ENCODING] [\-L LOCALE]
+               [\-S] [\-\-blanks] [\-\-null\-value NULL_VALUES [NULL_VALUES ...]]
+               [\-\-date\-format DATE_FORMAT] [\-\-datetime\-format DATETIME_FORMAT]
+               [\-H] [\-K SKIP_LINES] [\-v] [\-l] [\-\-zero] [\-V] [\-\-csv] [\-\-json]
+               [\-i INDENT] [\-n] [\-c COLUMNS] [\-\-type] [\-\-nulls] [\-\-non\-nulls]
+               [\-\-unique] [\-\-min] [\-\-max] [\-\-sum] [\-\-mean] [\-\-median]
+               [\-\-stdev] [\-\-len] [\-\-max\-precision] [\-\-freq]
+               [\-\-freq\-count FREQ_COUNT] [\-\-count]
+               [\-\-decimal\-format DECIMAL_FORMAT] [\-G] [\-y SNIFF_LIMIT] [\-I]
+               [FILE]
+
+Print descriptive statistics for each column in a CSV file.
+
+positional arguments:
+  FILE                  The CSV file to operate on. If omitted, will accept
+                        input as piped data via STDIN.
+
+optional arguments:
+  \-h, \-\-help            show this help message and exit
+  \-\-csv                 Output results as a CSV table, rather than plain text.
+  \-\-json                Output results as JSON text, rather than plain text.
+  \-i INDENT, \-\-indent INDENT
+                        Indent the output JSON this many spaces. Disabled by
+                        default.
+  \-n, \-\-names           Display column names and indices from the input CSV
+                        and exit.
+  \-c COLUMNS, \-\-columns COLUMNS
+                        A comma\-separated list of column indices, names or
+                        ranges to be examined, e.g. \(dq1,id,3\-5\(dq. Defaults to
+                        all columns.
+  \-\-type                Only output data type.
+  \-\-nulls               Only output whether columns contains nulls.
+  \-\-non\-nulls           Only output counts of non\-null values.
+  \-\-unique              Only output counts of unique values.
+  \-\-min                 Only output smallest values.
+  \-\-max                 Only output largest values.
+  \-\-sum                 Only output sums.
+  \-\-mean                Only output means.
+  \-\-median              Only output medians.
+  \-\-stdev               Only output standard deviations.
+  \-\-len                 Only output the length of the longest values.
+  \-\-max\-precision       Only output the most decimal places.
+  \-\-freq                Only output lists of frequent values.
+  \-\-freq\-count FREQ_COUNT
+                        The maximum number of frequent values to display.
+  \-\-count               Only output total row count.
+  \-\-decimal\-format DECIMAL_FORMAT
+                        %\-format specification for printing decimal numbers.
+                        Defaults to locale\-specific formatting with \(dq%.3f\(dq.
+  \-G, \-\-no\-grouping\-separator
+                        Do not use grouping separators in decimal numbers.
+  \-y SNIFF_LIMIT, \-\-snifflimit SNIFF_LIMIT
+                        Limit CSV dialect sniffing to the specified number of
+                        bytes. Specify \(dq0\(dq to disable sniffing entirely, or
+                        \(dq\-1\(dq to sniff the entire file.
+  \-I, \-\-no\-inference    Disable type inference (and \-\-locale, \-\-date\-format,
+                        \-\-datetime\-format, \-\-no\-leading\-zeroes) when parsing
+                        the input.
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+See also: \fI\%Arguments common to all tools\fP\&.
+.SH EXAMPLES
+.sp
+Basic use:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvstat examples/realdata/FY09_EDU_Recipients_by_State.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+When an statistic name is passed, only that stat will be printed:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ csvstat \-\-min examples/realdata/FY09_EDU_Recipients_by_State.csv
+  1. State Name: None
+  2. State Abbreviate: None
+  3. Code: 1
+  4. Montgomery GI Bill\-Active Duty: 435
+  5. Montgomery GI Bill\- Selective Reserve: 48
+  6. Dependents\(aq Educational Assistance: 118
+  7. Reserve Educational Assistance Program: 60
+  8. Post\-Vietnam Era Veteran\(aqs Educational Assistance Program: 1
+  9. TOTAL: 768
+ 10. j: None
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+If a single stat \fIand\fP a single column are requested, only a value will be returned:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ csvstat \-c 4 \-\-mean examples/realdata/FY09_EDU_Recipients_by_State.csv
+6,263.904
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH AUTHOR
+Christopher Groskopf and contributors
+.SH COPYRIGHT
+2016, Christopher Groskopf and James McKinney
+.\" Generated by docutils manpage writer.
+.

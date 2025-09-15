@@ -1,0 +1,91 @@
+Metadata-Version: 2.2
+Name: csvkit
+Version: 2.1.0
+Summary: A suite of command-line tools for working with CSV, the king of tabular file formats.
+Home-page: https://github.com/wireservice/csvkit
+Author: Christopher Groskopf and James McKinney
+Author-email: chrisgroskopf@gmail.com
+License: MIT
+Project-URL: Documentation, https://csvkit.readthedocs.io/en/latest/
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Utilities
+Description-Content-Type: text/x-rst
+License-File: COPYING
+License-File: AUTHORS.rst
+Requires-Dist: agate>=1.12.0
+Requires-Dist: agate-excel>=0.4.0
+Requires-Dist: agate-dbf>=0.2.3
+Requires-Dist: agate-sql>=0.7.0
+Requires-Dist: openpyxl
+Requires-Dist: sqlalchemy
+Requires-Dist: xlrd
+Requires-Dist: importlib_metadata; python_version < "3.10"
+Provides-Extra: zstandard
+Requires-Dist: zstandard; extra == "zstandard"
+Provides-Extra: test
+Requires-Dist: coverage>=4.4.2; extra == "test"
+Requires-Dist: pytest; extra == "test"
+Requires-Dist: pytest-cov; extra == "test"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: project-url
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: summary
+
+.. image:: https://github.com/wireservice/csvkit/workflows/CI/badge.svg
+    :target: https://github.com/wireservice/csvkit/actions
+    :alt: Build status
+
+.. image:: https://coveralls.io/repos/wireservice/csvkit/badge.svg?branch=master
+    :target: https://coveralls.io/r/wireservice/csvkit
+    :alt: Coverage status
+
+.. image:: https://img.shields.io/pypi/dm/csvkit.svg
+    :target: https://pypi.python.org/pypi/csvkit
+    :alt: PyPI downloads
+
+.. image:: https://img.shields.io/pypi/v/csvkit.svg
+    :target: https://pypi.python.org/pypi/csvkit
+    :alt: Version
+
+.. image:: https://img.shields.io/pypi/l/csvkit.svg
+    :target: https://pypi.python.org/pypi/csvkit
+    :alt: License
+
+.. image:: https://img.shields.io/pypi/pyversions/csvkit.svg
+    :target: https://pypi.python.org/pypi/csvkit
+    :alt: Support Python versions
+
+csvkit is a suite of command-line tools for converting to and working with CSV, the king of tabular file formats.
+
+It is inspired by pdftk, GDAL and the original csvcut tool by Joe Germuska and Aaron Bycoffe.
+
+Important links:
+
+* Documentation: https://csvkit.rtfd.org/
+* Repository:    https://github.com/wireservice/csvkit
+* Issues:        https://github.com/wireservice/csvkit/issues
+* Schemas:       https://github.com/wireservice/ffs

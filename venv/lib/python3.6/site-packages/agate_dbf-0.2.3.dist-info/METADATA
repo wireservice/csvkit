@@ -1,0 +1,65 @@
+Metadata-Version: 2.1
+Name: agate-dbf
+Version: 0.2.3
+Summary: agate-dbf adds read support for dbf files to agate.
+Home-page: https://agate-dbf.readthedocs.org/
+Author: Christopher Groskopf
+Author-email: chrisgroskopf@gmail.com
+License: MIT
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Description-Content-Type: text/x-rst
+License-File: COPYING
+License-File: AUTHORS.rst
+Requires-Dist: agate >=1.5.0
+Requires-Dist: dbfread >=2.0.5
+Provides-Extra: test
+Requires-Dist: pytest ; extra == 'test'
+Requires-Dist: pytest-cov ; extra == 'test'
+
+.. image:: https://github.com/wireservice/agate-dbf/workflows/CI/badge.svg
+    :target: https://github.com/wireservice/agate-dbf/actions
+    :alt: Build status
+
+.. image:: https://coveralls.io/repos/wireservice/agate-dbf/badge.svg?branch=master
+    :target: https://coveralls.io/r/wireservice/agate-dbf
+    :alt: Coverage status
+
+.. image:: https://img.shields.io/pypi/dw/agate-dbf.svg
+    :target: https://pypi.python.org/pypi/agate-dbf
+    :alt: PyPI downloads
+
+.. image:: https://img.shields.io/pypi/v/agate-dbf.svg
+    :target: https://pypi.python.org/pypi/agate-dbf
+    :alt: Version
+
+.. image:: https://img.shields.io/pypi/l/agate-dbf.svg
+    :target: https://pypi.python.org/pypi/agate-dbf
+    :alt: License
+
+.. image:: https://img.shields.io/pypi/pyversions/agate-dbf.svg
+    :target: https://pypi.python.org/pypi/agate-dbf
+    :alt: Support Python versions
+
+agate-dbf adds read support for dbf files to `agate <https://github.com/wireservice/agate>`_.
+
+Important links:
+
+* agate             https://agate.rtfd.org
+* Documentation:    https://agate-dbf.rtfd.org
+* Repository:       https://github.com/wireservice/agate-dbf
+* Issues:           https://github.com/wireservice/agate-dbf/issues
