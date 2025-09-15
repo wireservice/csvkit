@@ -1,0 +1,67 @@
+Metadata-Version: 2.1
+Name: agate-excel
+Version: 0.4.1
+Summary: agate-excel adds read support for Excel files (xls and xlsx) to agate.
+Home-page: https://agate-excel.readthedocs.org/
+Author: Christopher Groskopf
+Author-email: chrisgroskopf@gmail.com
+License: MIT
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Description-Content-Type: text/x-rst
+License-File: COPYING
+License-File: AUTHORS.rst
+Requires-Dist: agate >=1.5.0
+Requires-Dist: olefile
+Requires-Dist: openpyxl >=2.3.0
+Requires-Dist: xlrd >=0.9.4
+Provides-Extra: test
+Requires-Dist: pytest ; extra == 'test'
+Requires-Dist: pytest-cov ; extra == 'test'
+
+.. image:: https://github.com/wireservice/agate-excel/workflows/CI/badge.svg
+    :target: https://github.com/wireservice/agate-excel/actions
+    :alt: Build status
+
+.. image:: https://coveralls.io/repos/wireservice/agate-excel/badge.svg?branch=master
+    :target: https://coveralls.io/r/wireservice/agate-excel
+    :alt: Coverage status
+
+.. image:: https://img.shields.io/pypi/dm/agate-excel.svg
+    :target: https://pypi.python.org/pypi/agate-excel
+    :alt: PyPI downloads
+
+.. image:: https://img.shields.io/pypi/v/agate-excel.svg
+    :target: https://pypi.python.org/pypi/agate-excel
+    :alt: Version
+
+.. image:: https://img.shields.io/pypi/l/agate-excel.svg
+    :target: https://pypi.python.org/pypi/agate-excel
+    :alt: License
+
+.. image:: https://img.shields.io/pypi/pyversions/agate-excel.svg
+    :target: https://pypi.python.org/pypi/agate-excel
+    :alt: Support Python versions
+
+agate-excel adds read support for Excel files (xls and xlsx) to `agate <https://github.com/wireservice/agate>`_.
+
+Important links:
+
+* agate             https://agate.rtfd.org
+* Documentation:    https://agate-excel.rtfd.org
+* Repository:       https://github.com/wireservice/agate-excel
+* Issues:           https://github.com/wireservice/agate-excel/issues

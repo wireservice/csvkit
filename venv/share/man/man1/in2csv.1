@@ -1,0 +1,245 @@
+.\" Man page generated from reStructuredText.
+.
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.TH "IN2CSV" "1" "Aug 16, 2024" "2.1.0" "csvkit"
+.SH NAME
+in2csv \- in2csv Documentation
+.SH DESCRIPTION
+.sp
+Converts various tabular data formats into CSV.
+.sp
+Converting fixed width requires that you provide a schema file with the \(dq\-s\(dq option. The schema file should have the following format:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+column,start,length
+name,0,30
+birthday,30,10
+age,40,3
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+The header line is required though the columns may be in any order:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+usage: in2csv [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3}] [\-b]
+              [\-p ESCAPECHAR] [\-z FIELD_SIZE_LIMIT] [\-e ENCODING] [\-L LOCALE]
+              [\-S] [\-\-blanks] [\-\-null\-value NULL_VALUES [NULL_VALUES ...]]
+              [\-\-date\-format DATE_FORMAT] [\-\-datetime\-format DATETIME_FORMAT]
+              [\-H] [\-K SKIP_LINES] [\-v] [\-l] [\-\-zero] [\-V]
+              [\-f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}] [\-s SCHEMA]
+              [\-k KEY] [\-n] [\-\-sheet SHEET] [\-\-write\-sheets WRITE_SHEETS]
+              [\-\-use\-sheet\-names] [\-\-reset\-dimensions]
+              [\-\-encoding\-xls ENCODING_XLS] [\-y SNIFF_LIMIT] [\-I]
+              [FILE]
+
+Convert common, but less awesome, tabular data formats to CSV.
+
+positional arguments:
+  FILE                  The CSV file to operate on. If omitted, will accept
+                        input as piped data via STDIN.
+
+optional arguments:
+  \-h, \-\-help            show this help message and exit
+  \-f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}, \-\-format {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}
+                        The format of the input file. If not specified will be
+                        inferred from the file type.
+  \-s SCHEMA, \-\-schema SCHEMA
+                        Specify a CSV\-formatted schema file for converting
+                        fixed\-width files. See web documentation.
+  \-k KEY, \-\-key KEY     Specify a top\-level key to look within for a list of
+                        objects to be converted when processing JSON.
+  \-n, \-\-names           Display sheet names from the input Excel file.
+  \-\-sheet SHEET         The name of the Excel sheet to operate on.
+  \-\-write\-sheets WRITE_SHEETS
+                        The names of the Excel sheets to write to files, or
+                        \(dq\-\(dq to write all sheets.
+  \-\-use\-sheet\-names     Use the sheet names as file names when \-\-write\-sheets
+                        is set.
+  \-\-reset\-dimensions    Ignore the sheet dimensions provided by the XLSX file.
+  \-\-encoding\-xls ENCODING_XLS
+                        Specify the encoding of the input XLS file.
+  \-y SNIFF_LIMIT, \-\-snifflimit SNIFF_LIMIT
+                        Limit CSV dialect sniffing to the specified number of
+                        bytes. Specify \(dq0\(dq to disable sniffing entirely, or
+                        \(dq\-1\(dq to sniff the entire file.
+  \-I, \-\-no\-inference    Disable type inference (and \-\-locale, \-\-date\-format,
+                        \-\-datetime\-format, \-\-no\-leading\-zeroes) when parsing
+                        CSV input.
+
+ Some command\-line flags only pertain to specific input formats.
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+See also: \fI\%Arguments common to all tools\fP\&.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+The \(dqndjson\(dq format refers to \(dqnewline delimited JSON\(dq, as used by many streaming APIs.
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+If an XLS looks identical to an XLSX when viewed in Excel, they may not be identical as CSV. For example, XLSX has an integer type, but XLS doesn\(aqt. Numbers that look like integers from an XLS will have decimals in CSV, but those from an XLSX won\(aqt.
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+To convert from HTML, consider \fI\%messytables\fP\&.
+.UNINDENT
+.UNINDENT
+.SH EXAMPLES
+.sp
+Convert the 2000 census geo headers file from fixed\-width to CSV and from latin\-1 encoding to utf8:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+in2csv \-e iso\-8859\-1 \-f fixed \-s examples/realdata/census_2000/census2000_geo_schema.csv examples/realdata/census_2000/usgeo_excerpt.upl
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+A library of fixed\-width schemas is maintained in the \fBffs\fP project:
+.sp
+\fI\%https://github.com/wireservice/ffs\fP
+.UNINDENT
+.UNINDENT
+.sp
+Convert an Excel .xls file:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+in2csv examples/test.xls
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Standardize the formatting of a CSV file (quoting, line endings, etc.):
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+in2csv examples/realdata/FY09_EDU_Recipients_by_State.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Fetch csvkit\(aqs open issues from the GitHub API, convert the JSON response into a CSV and write it to a file:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+curl https://api.github.com/repos/wireservice/csvkit/issues?state=open | in2csv \-f json \-v
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Convert a DBase DBF file to an equivalent CSV:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+in2csv examples/testdbf.dbf
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+This tool names unnamed headers. To avoid that behavior, run:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+in2csv \-\-no\-header\-row examples/test.xlsx | tail \-n +2
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH TROUBLESHOOTING
+.sp
+If an error like the following occurs when providing an input file in CSV or Excel format:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ValueError: Row 0 has 11 values, but Table only has 1 columns.
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Then the input file might have initial rows before the header and data rows. You can skip such rows with \fB\-\-skip\-lines\fP (\fB\-K\fP):
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+in2csv \-\-skip\-lines 3 examples/test_skip_lines.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+If an XLSX file yields too few rows or too few columns, then the application that created the file might have \fI\%incorrectly set the worksheet\(aqs dimensions\fP\&. Try again with the \fB\-\-reset\-dimensions\fP option.
+.SH AUTHOR
+Christopher Groskopf and contributors
+.SH COPYRIGHT
+2016, Christopher Groskopf and James McKinney
+.\" Generated by docutils manpage writer.
+.

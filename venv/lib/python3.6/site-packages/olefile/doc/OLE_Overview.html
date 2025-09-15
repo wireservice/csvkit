@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+</head>
+<body>
+<h1 id="about-the-structure-of-ole-files">About the structure of OLE files</h1>
+<p>This page is part of the documentation for <a href="https://bitbucket.org/decalage/olefileio_pl/wiki">olefile</a>. It provides a brief overview of the structure of <a href="http://en.wikipedia.org/wiki/Compound_File_Binary_Format">Microsoft OLE2 files (also called Structured Storage, Compound File Binary Format or Compound Document File Format)</a>, such as Microsoft Office 97-2003 documents, Image Composer and FlashPix files, Outlook messages, StickyNotes, several Microscopy file formats, McAfee antivirus quarantine files, etc.</p>
+<p>An OLE file can be seen as a mini file system or a Zip archive: It contains <strong>streams</strong> of data that look like files embedded within the OLE file. Each stream has a name. For example, the main stream of a MS Word document containing its text is named &quot;WordDocument&quot;.</p>
+<p>An OLE file can also contain <strong>storages</strong>. A storage is a folder that contains streams or other storages. For example, a MS Word document with VBA macros has a storage called &quot;Macros&quot;.</p>
+<p>Special streams can contain <strong>properties</strong>. A property is a specific value that can be used to store information such as the metadata of a document (title, author, creation date, etc). Property stream names usually start with the character '05'.</p>
+<p>For example, a typical MS Word document may look like this:</p>
+<div class="figure">
+<img src="OLE_VBA_sample.png" /><p class="caption"></p>
+</div>
+<p>Go to the <a href="API.html">API</a> page to see how to use all olefile features to parse OLE files.</p>
+<hr />
+<h2 id="olefile-documentation">olefile documentation</h2>
+<ul>
+<li><a href="Home.html">Home</a></li>
+<li><a href="License.html">License</a></li>
+<li><a href="Install.html">Install</a></li>
+<li><a href="Contribute.html">Contribute</a>, Suggest Improvements or Report Issues</li>
+<li><a href="OLE_Overview.html">OLE_Overview</a></li>
+<li><a href="API.html">API</a> and Usage</li>
+</ul>
+</body>
+</html>

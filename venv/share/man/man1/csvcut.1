@@ -1,0 +1,213 @@
+.\" Man page generated from reStructuredText.
+.
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.TH "CSVCUT" "1" "Aug 16, 2024" "2.1.0" "csvkit"
+.SH NAME
+csvcut \- csvcut Documentation
+.SH DESCRIPTION
+.sp
+Filters and truncates CSV files. Like the Unix \(dqcut\(dq command, but for tabular data:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+usage: csvcut [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3}] [\-b]
+              [\-p ESCAPECHAR] [\-z FIELD_SIZE_LIMIT] [\-e ENCODING] [\-S] [\-H]
+              [\-K SKIP_LINES] [\-v] [\-l] [\-\-zero] [\-V] [\-n] [\-c COLUMNS]
+              [\-C NOT_COLUMNS] [\-x]
+              [FILE]
+
+Filter and truncate CSV files. Like the Unix \(dqcut\(dq command, but for tabular
+data.
+
+positional arguments:
+  FILE                  The CSV file to operate on. If omitted, will accept
+                        input as piped data via STDIN.
+
+optional arguments:
+  \-h, \-\-help            show this help message and exit
+  \-n, \-\-names           Display column names and indices from the input CSV
+                        and exit.
+  \-c COLUMNS, \-\-columns COLUMNS
+                        A comma\-separated list of column indices, names or
+                        ranges to be extracted, e.g. \(dq1,id,3\-5\(dq. Defaults to
+                        all columns.
+  \-C NOT_COLUMNS, \-\-not\-columns NOT_COLUMNS
+                        A comma\-separated list of column indices, names or
+                        ranges to be excluded, e.g. \(dq1,id,3\-5\(dq. Defaults to no
+                        columns. Ignores unknown columns.
+  \-x, \-\-delete\-empty\-rows
+                        After cutting, delete rows which are completely empty.
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+See also: \fI\%Arguments common to all tools\fP\&.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+csvcut does not implement row filtering, for this you should pipe data to \fI\%csvgrep\fP\&.
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+If a data row is longer than the header row, its additional columns are truncated.
+.UNINDENT
+.UNINDENT
+.SH EXAMPLES
+.SS Print columns
+.sp
+Print the indices and names of all columns:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ csvcut \-n examples/realdata/FY09_EDU_Recipients_by_State.csv
+  1: State Name
+  2: State Abbreviate
+  3: Code
+  4: Montgomery GI Bill\-Active Duty
+  5: Montgomery GI Bill\- Selective Reserve
+  6: Dependents\(aq Educational Assistance
+  7: Reserve Educational Assistance Program
+  8: Post\-Vietnam Era Veteran\(aqs Educational Assistance Program
+  9: TOTAL
+ 10:
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Print only the names of all columns, by removing the indices with the \fBcut\fP command:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ csvcut \-n examples/realdata/FY09_EDU_Recipients_by_State.csv | cut \-c6\-
+State Name
+State Abbreviate
+Code
+Montgomery GI Bill\-Active Duty
+Montgomery GI Bill\- Selective Reserve
+Dependents\(aq Educational Assistance
+Reserve Educational Assistance Program
+Post\-Vietnam Era Veteran\(aqs Educational Assistance Program
+TOTAL
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Extract columns
+.sp
+Extract the first and third columns:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvcut \-c 1,3 examples/realdata/FY09_EDU_Recipients_by_State.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Extract columns named \(dqTOTAL\(dq and \(dqState Name\(dq (in that order):
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvcut \-c TOTAL,\(dqState Name\(dq examples/realdata/FY09_EDU_Recipients_by_State.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Extract a column that may not exist in all files:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+echo d, | csvjoin examples/dummy.csv \- | csvcut \-c d
+ echo d, | csvjoin examples/join_no_header_row.csv \- | csvcut \-c d
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Other
+.sp
+Add line numbers to a file, making no other changes:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvcut \-l examples/realdata/FY09_EDU_Recipients_by_State.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Display a column\(aqs unique values:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvcut \-c 1 examples/realdata/FY09_EDU_Recipients_by_State.csv | sed 1d | sort | uniq
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Or:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvcut \-c 1 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsql \-\-query \(aqSELECT DISTINCT(\(dqState Name\(dq) FROM stdin\(aq
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH AUTHOR
+Christopher Groskopf and contributors
+.SH COPYRIGHT
+2016, Christopher Groskopf and James McKinney
+.\" Generated by docutils manpage writer.
+.
