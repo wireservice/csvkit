@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+</head>
+<body>
+<h1 id="how-to-use-olefile---api">How to use olefile - API</h1>
+<p>This page is part of the documentation for <a href="https://bitbucket.org/decalage/olefileio_pl/wiki">olefile</a>. It explains how to use all its features to parse and write OLE files. For more information about OLE files, see <a href="OLE_Overview.html">OLE_Overview</a>.</p>
+<p>olefile can be used as an independent module or with PIL/Pillow. The main functions and methods are explained below.</p>
+<p>For more information, see also the file <strong>olefile.html</strong>, sample code at the end of the module itself, and docstrings within the code.</p>
+<h2 id="import-olefile">Import olefile</h2>
+<p>When the olefile package has been installed, it can be imported in Python applications with this statement:</p>
+<pre><code>import olefile</code></pre>
+<p>Before v0.40, olefile was named OleFileIO_PL. To maintain backward compatibility with older applications and samples, a simple script is also installed so that the following statement imports olefile as OleFileIO_PL:</p>
+<pre><code>import OleFileIO_PL</code></pre>
+<p>As of version 0.30, the code has been changed to be compatible with Python 3.x. As a consequence, compatibility with Python 2.5 or older is not provided anymore. However, a copy of OleFileIO_PL v0.26 (with some backported enhancements) is available as olefile2.py. When importing the olefile package, it falls back automatically to olefile2 if running on Python 2.5 or older. This is implemented in olefile/<strong>init</strong>.py. (new in v0.40)</p>
+<p>If you think olefile should stay compatible with Python 2.5 or older, please <a href="http://decalage.info/contact">contact me</a>.</p>
+<h2 id="test-if-a-file-is-an-ole-container">Test if a file is an OLE container</h2>
+<p>Use <strong>isOleFile</strong> to check if the first bytes of the file contain the Magic for OLE files, before opening it. isOleFile returns True if it is an OLE file, False otherwise (new in v0.16).</p>
+<pre><code>assert olefile.isOleFile(&#39;myfile.doc&#39;)</code></pre>
+<p>The argument of isOleFile can be (new in v0.41):</p>
+<ul>
+<li>the path of the file to open on disk (bytes or unicode string smaller than 1536 bytes),</li>
+<li>or a bytes string containing the file in memory. (bytes string longer than 1535 bytes),</li>
+<li>or a file-like object (with read and seek methods).</li>
+</ul>
+<h2 id="open-an-ole-file-from-disk">Open an OLE file from disk</h2>
+<p>Create an <strong>OleFileIO</strong> object with the file path as parameter:</p>
+<pre><code>ole = olefile.OleFileIO(&#39;myfile.doc&#39;)</code></pre>
+<h2 id="open-an-ole-file-from-a-bytes-string">Open an OLE file from a bytes string</h2>
+<p>This is useful if the file is already stored in memory as a bytes string.</p>
+<pre><code>ole = olefile.OleFileIO(s)</code></pre>
+<p>Note: olefile checks the size of the string provided as argument to determine if it is a file path or the content of an OLE file. An OLE file cannot be smaller than 1536 bytes. If the string is larger than 1535 bytes, then it is expected to contain an OLE file, otherwise it is expected to be a file path.</p>
+<p>(new in v0.41)</p>
+<h2 id="open-an-ole-file-from-a-file-like-object">Open an OLE file from a file-like object</h2>
+<p>This is useful if the file is not on disk but only available as a file-like object (with read, seek and tell methods).</p>
+<pre><code>ole = olefile.OleFileIO(f)</code></pre>
+<p>If the file-like object does not have seek or tell methods, the easiest solution is to read the file entirely in a bytes string before parsing:</p>
+<pre><code>data = f.read()
+ole = olefile.OleFileIO(data)</code></pre>
+<h2 id="how-to-handle-malformed-ole-files">How to handle malformed OLE files</h2>
+<p>By default, the parser is configured to be as robust and permissive as possible, allowing to parse most malformed OLE files. Only fatal errors will raise an exception. It is possible to tell the parser to be more strict in order to raise exceptions for files that do not fully conform to the OLE specifications, using the raise_defect option (new in v0.14):</p>
+<pre><code>ole = olefile.OleFileIO(&#39;myfile.doc&#39;, raise_defects=olefile.DEFECT_INCORRECT)</code></pre>
+<p>When the parsing is done, the list of non-fatal issues detected is available as a list in the parsing_issues attribute of the OleFileIO object (new in 0.25):</p>
+<pre><code>print(&#39;Non-fatal issues raised during parsing:&#39;)
+if ole.parsing_issues:
+    for exctype, msg in ole.parsing_issues:
+        print(&#39;- %s: %s&#39; % (exctype.__name__, msg))
+else:
+    print(&#39;None&#39;)</code></pre>
+<h2 id="open-an-ole-file-in-write-mode">Open an OLE file in write mode</h2>
+<p>Before using the write features, the OLE file must be opened in read/write mode:</p>
+<pre><code>ole = olefile.OleFileIO(&#39;test.doc&#39;, write_mode=True)</code></pre>
+<p>(new in v0.40)</p>
+<p>The code for write features is new and it has not been thoroughly tested yet. See <a href="https://bitbucket.org/decalage/olefileio_pl/issue/6/improve-olefileio_pl-to-write-ole-files">issue #6</a> for the roadmap and the implementation status. If you encounter any issue, please send me your <a href="http://www.decalage.info/en/contact">feedback</a> or <a href="https://bitbucket.org/decalage/olefileio_pl/issues?status=new&amp;status=open">report issues</a>.</p>
+<h2 id="syntax-for-stream-and-storage-paths">Syntax for stream and storage paths</h2>
+<p>Two different syntaxes are allowed for methods that need or return the path of streams and storages:</p>
+<ol style="list-style-type: decimal">
+<li><p>Either a <strong>list of strings</strong> including all the storages from the root up to the stream/storage name. For example a stream called &quot;WordDocument&quot; at the root will have ['WordDocument'] as full path. A stream called &quot;ThisDocument&quot; located in the storage &quot;Macros/VBA&quot; will be ['Macros', 'VBA', 'ThisDocument']. This is the original syntax from PIL. While hard to read and not very convenient, this syntax works in all cases.</p></li>
+<li><p>Or a <strong>single string with slashes</strong> to separate storage and stream names (similar to the Unix path syntax). The previous examples would be 'WordDocument' and 'Macros/VBA/ThisDocument'. This syntax is easier, but may fail if a stream or storage name contains a slash (which is normally not allowed, according to the Microsoft specifications [MS-CFB]). (new in v0.15)</p></li>
+</ol>
+<p>Both are case-insensitive.</p>
+<p>Switching between the two is easy:</p>
+<pre><code>slash_path = &#39;/&#39;.join(list_path)
+list_path  = slash_path.split(&#39;/&#39;)</code></pre>
+<p><strong>Encoding</strong>:</p>
+<ul>
+<li>Stream and Storage names are stored in Unicode format in OLE files, which means they may contain special characters (e.g. Greek, Cyrillic, Japanese, etc) that applications must support to avoid exceptions.</li>
+<li><strong>On Python 2.x</strong>, all stream and storage paths are handled by olefile in bytes strings, using the <strong>UTF-8 encoding</strong> by default. If you need to use Unicode instead, add the option <strong>path_encoding=None</strong> when creating the OleFileIO object. This is new in v0.42. Olefile was using the Latin-1 encoding until v0.41, therefore special characters were not supported.<br /></li>
+<li><strong>On Python 3.x</strong>, all stream and storage paths are handled by olefile in unicode strings, without encoding.</li>
+</ul>
+<h2 id="get-the-list-of-streams">Get the list of streams</h2>
+<p>listdir() returns a list of all the streams contained in the OLE file, including those stored in storages. Each stream is listed itself as a list, as described above.</p>
+<pre><code>print(ole.listdir())</code></pre>
+<p>Sample result:</p>
+<pre><code>[[&#39;\x01CompObj&#39;], [&#39;\x05DocumentSummaryInformation&#39;], [&#39;\x05SummaryInformation&#39;]
+, [&#39;1Table&#39;], [&#39;Macros&#39;, &#39;PROJECT&#39;], [&#39;Macros&#39;, &#39;PROJECTwm&#39;], [&#39;Macros&#39;, &#39;VBA&#39;,
+&#39;Module1&#39;], [&#39;Macros&#39;, &#39;VBA&#39;, &#39;ThisDocument&#39;], [&#39;Macros&#39;, &#39;VBA&#39;, &#39;_VBA_PROJECT&#39;]
+, [&#39;Macros&#39;, &#39;VBA&#39;, &#39;dir&#39;], [&#39;ObjectPool&#39;], [&#39;WordDocument&#39;]]</code></pre>
+<p>As an option it is possible to choose if storages should also be listed, with or without streams (new in v0.26):</p>
+<pre><code>ole.listdir (streams=False, storages=True)</code></pre>
+<h2 id="test-if-known-streamsstorages-exist">Test if known streams/storages exist:</h2>
+<p>exists(path) checks if a given stream or storage exists in the OLE file (new in v0.16). The provided path is case-insensitive.</p>
+<pre><code>if ole.exists(&#39;worddocument&#39;):
+    print(&quot;This is a Word document.&quot;)
+    if ole.exists(&#39;macros/vba&#39;):
+         print(&quot;This document seems to contain VBA macros.&quot;)</code></pre>
+<h2 id="read-data-from-a-stream">Read data from a stream</h2>
+<p>openstream(path) opens a stream as a file-like object. The provided path is case-insensitive.</p>
+<p>The following example extracts the &quot;Pictures&quot; stream from a PPT file:</p>
+<pre><code>pics = ole.openstream(&#39;Pictures&#39;)
+data = pics.read()</code></pre>
+<h2 id="get-information-about-a-streamstorage">Get information about a stream/storage</h2>
+<p>Several methods can provide the size, type and timestamps of a given stream/storage:</p>
+<p>get_size(path) returns the size of a stream in bytes (new in v0.16):</p>
+<pre><code>s = ole.get_size(&#39;WordDocument&#39;)</code></pre>
+<p>get_type(path) returns the type of a stream/storage, as one of the following constants: STGTY_STREAM for a stream, STGTY_STORAGE for a storage, STGTY_ROOT for the root entry, and False for a non existing path (new in v0.15).</p>
+<pre><code>t = ole.get_type(&#39;WordDocument&#39;)</code></pre>
+<p>get_ctime(path) and get_mtime(path) return the creation and modification timestamps of a stream/storage, as a Python datetime object with UTC timezone. Please note that these timestamps are only present if the application that created the OLE file explicitly stored them, which is rarely the case. When not present, these methods return None (new in v0.26).</p>
+<pre><code>c = ole.get_ctime(&#39;WordDocument&#39;)
+m = ole.get_mtime(&#39;WordDocument&#39;)</code></pre>
+<p>The root storage is a special case: You can get its creation and modification timestamps using the OleFileIO.root attribute (new in v0.26):</p>
+<pre><code>c = ole.root.getctime()
+m = ole.root.getmtime()</code></pre>
+<p>Note: all these methods are case-insensitive.</p>
+<h2 id="overwriting-a-sector">Overwriting a sector</h2>
+<p>The write_sect method can overwrite any sector of the file. If the provided data is smaller than the sector size (normally 512 bytes, sometimes 4KB), data is padded with null characters. (new in v0.40)</p>
+<p>Here is an example:</p>
+<pre><code>ole.write_sect(0x17, b&#39;TEST&#39;)</code></pre>
+<p>Note: following the <a href="http://msdn.microsoft.com/en-us/library/dd942138.aspx">MS-CFB specifications</a>, sector 0 is actually the second sector of the file. You may use -1 as index to write the first sector.</p>
+<h2 id="overwriting-a-stream">Overwriting a stream</h2>
+<p>The write_stream method can overwrite an existing stream in the file. The new stream data must be the exact same size as the existing one. For now, write_stream can only write streams of 4KB or larger (stored in the main FAT).</p>
+<p>For example, you may change text in a MS Word document:</p>
+<pre><code>ole = olefile.OleFileIO(&#39;test.doc&#39;, write_mode=True)
+data = ole.openstream(&#39;WordDocument&#39;).read()
+data = data.replace(b&#39;foo&#39;, b&#39;bar&#39;)
+ole.write_stream(&#39;WordDocument&#39;, data)
+ole.close()</code></pre>
+<p>(new in v0.40)</p>
+<h2 id="extract-metadata">Extract metadata</h2>
+<p>get_metadata() will check if standard property streams exist, parse all the properties they contain, and return an OleMetadata object with the found properties as attributes (new in v0.24).</p>
+<pre><code>meta = ole.get_metadata()
+print(&#39;Author:&#39;, meta.author)
+print(&#39;Title:&#39;, meta.title)
+print(&#39;Creation date:&#39;, meta.create_time)
+# print all metadata:
+meta.dump()</code></pre>
+<p>Available attributes include:</p>
+<pre><code>codepage, title, subject, author, keywords, comments, template,
+last_saved_by, revision_number, total_edit_time, last_printed, create_time,
+last_saved_time, num_pages, num_words, num_chars, thumbnail,
+creating_application, security, codepage_doc, category, presentation_target,
+bytes, lines, paragraphs, slides, notes, hidden_slides, mm_clips,
+scale_crop, heading_pairs, titles_of_parts, manager, company, links_dirty,
+chars_with_spaces, unused, shared_doc, link_base, hlinks, hlinks_changed,
+version, dig_sig, content_type, content_status, language, doc_version</code></pre>
+<p>See the source code of the OleMetadata class for more information.</p>
+<h2 id="parse-a-property-stream">Parse a property stream</h2>
+<p>get_properties(path) can be used to parse any property stream that is not handled by get_metadata. It returns a dictionary indexed by integers. Each integer is the index of the property, pointing to its value. For example in the standard property stream '05SummaryInformation', the document title is property #2, and the subject is #3.</p>
+<pre><code>p = ole.getproperties(&#39;specialprops&#39;)</code></pre>
+<p>By default as in the original PIL version, timestamp properties are converted into a number of seconds since Jan 1,1601. With the option convert_time, you can obtain more convenient Python datetime objects (UTC timezone). If some time properties should not be converted (such as total editing time in '05SummaryInformation'), the list of indexes can be passed as no_conversion (new in v0.25):</p>
+<pre><code>p = ole.getproperties(&#39;specialprops&#39;, convert_time=True, no_conversion=[10])</code></pre>
+<h2 id="close-the-ole-file">Close the OLE file</h2>
+<p>Unless your application is a simple script that terminates after processing an OLE file, do not forget to close each OleFileIO object after parsing to close the file on disk. (new in v0.22)</p>
+<pre><code>ole.close()</code></pre>
+<h2 id="use-olefile-as-a-script-for-testingdebugging">Use olefile as a script for testing/debugging</h2>
+<p>olefile can also be used as a script from the command-line to display the structure of an OLE file and its metadata, for example:</p>
+<pre><code>olefile.py myfile.doc</code></pre>
+<p>You can use the option -c to check that all streams can be read fully, and -d to generate very verbose debugging information.</p>
+<hr />
+<h2 id="olefile-documentation">olefile documentation</h2>
+<ul>
+<li><a href="Home.html">Home</a></li>
+<li><a href="License.html">License</a></li>
+<li><a href="Install.html">Install</a></li>
+<li><a href="Contribute.html">Contribute</a>, Suggest Improvements or Report Issues</li>
+<li><a href="OLE_Overview.html">OLE_Overview</a></li>
+<li><a href="API.html">API</a> and Usage</li>
+</ul>
+</body>
+</html>

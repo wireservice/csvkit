@@ -1,0 +1,10 @@
+
+[docs]
+Sphinx
+
+[docs:python_version < "3"]
+docutils<0.18
+
+[test]
+objgraph
+psutil
