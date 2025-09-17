@@ -35,9 +35,9 @@ csvclean \- csvclean Documentation
 Reports and fixes common errors in a CSV file.
 .SS Checks
 .INDENT 0.0
-.IP \(bu 2
+.IP \(by 2
 Reports rows that have a different number of columns than the header row, if the \fB\-\-length\-mismatch\fP option is set.
-.IP \(bu 2
+.IP \(by 2
 Reports columns that are empty, if the \fB\-\-empty\-columns\fP option is set.
 .UNINDENT
 .sp
@@ -49,7 +49,7 @@ Enable all checks with \fB\-\-enable\-all\-checks\fP (\fB\-a\fP).
 .UNINDENT
 .SS Fixes
 .INDENT 0.0
-.IP \(bu 2
+.IP \(by 2
 If a CSV has unquoted cells that contain line breaks, like:
 .INDENT 2.0
 .INDENT 3.5
@@ -95,7 +95,7 @@ id,address,country
 .fi
 .UNINDENT
 .UNINDENT
-.IP \(bu 2
+.IP \(by 2
 If a CSV has missing delimiters, like:
 .INDENT 2.0
 .INDENT 3.5
@@ -158,15 +158,15 @@ id,name,country
 .INDENT 3.5
 Every csvkit tool does the following:
 .INDENT 0.0
-.IP \(bu 2
+.IP \(by 2
 Removes optional quote characters, unless the \fI\-\-quoting\fP (\fI\-u\fP) option is set to change this behavior
-.IP \(bu 2
+.IP \(by 2
 Changes the field delimiter to a comma, if the input delimiter is set with the \fI\-\-delimiter\fP (\fI\-d\fP) or \fI\-\-tabs\fP (\fI\-t\fP) options
-.IP \(bu 2
+.IP \(by 2
 Changes the record delimiter to a line feed (LF or \fB\en\fP)
-.IP \(bu 2
+.IP \(by 2
 Changes the quote character to a double\-quotation mark, if the character is set with the \fI\-\-quotechar\fP (\fI\-q\fP) option
-.IP \(bu 2
+.IP \(by 2
 Changes the character encoding to UTF\-8, if the input encoding is set with the \fI\-\-encoding\fP (\fI\-e\fP) option
 .UNINDENT
 .UNINDENT
@@ -175,9 +175,9 @@ Changes the character encoding to UTF\-8, if the input encoding is set with the 
 .sp
 \fBcsvclean\fP attempts to make the selected fixes. Then:
 .INDENT 0.0
-.IP \(bu 2
+.IP \(by 2
 If the \fB\-\-omit\-error\-rows\fP option is set, \fBonly\fP rows that pass the selected checks are written to standard output. If not, \fBall\fP rows are written to standard output.
-.IP \(bu 2
+.IP \(by 2
 If any checks are enabled, \fBerror\fP rows along with line numbers and descriptions are written to standard error. If there are error rows, the exit code is 1.
 .UNINDENT
 .SS Usage
