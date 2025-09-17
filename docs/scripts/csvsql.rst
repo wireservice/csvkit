@@ -91,7 +91,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                            The minimum length of text columns.
      --col-len-multiplier COL_LEN_MULTIPLIER
                            Multiply the maximum column length by this multiplier
-                           to accomodate larger values in later runs.
+                           to accommodate larger values in later runs.
 
 
 See also: :doc:`../common_arguments`.
