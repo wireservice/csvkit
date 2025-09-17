@@ -1,0 +1,75 @@
+agrv->argv
+alloced->allocated
+amin->main
+apoint->appoint
+atend->attend
+atending->attending
+bre->be, brie,
+brouter->router
+cas->case, cast,
+clas->class
+cloneable->clonable
+cmo->com
+copyable->copiable
+creat->create, crate,
+define'd->defined
+deque->dequeue
+dof->of, doff,
+dont->don't
+dosclose->disclose
+dur->due
+endcode->encode
+errorstring->error string
+exitst->exits, exists,
+files'->file's
+gae->game, Gael, gale,
+hist->heist, his,
+iam->I am, aim,
+iff->if
+isenough->is enough
+ith->with
+jupyter->Jupiter
+keyserver->key server
+lateset->latest
+movei->movie
+musl->must
+mut->must, mutt, moot,
+nmake->make
+nto->not
+objext->object
+od->of
+outputof->output of, output-of,
+packat->packet
+process'->process's
+protecten->protection, protected,
+reday->ready
+referer->referrer
+rela->real
+rendir->render
+rendirs->renders
+seeked->sought
+sinc->sync, sink, since,
+sincs->syncs, sinks, since,
+snd->send, and, sound,
+stdio->studio
+stdios->studios
+stoll->still
+storaged->storage, stored,
+storaget->storage
+stringly->strongly, stringy,
+subpatchs->subpatches
+subprocess'->subprocess's
+sur->sure, sir,
+tarceback->traceback
+tarcebacks->tracebacks
+templace->template
+thead->thread
+todays->today's
+udate->update, date,
+udates->updates, dates,
+uint->unit
+uis->is, use,
+usesd->used, uses,
+wan->want
+were'->we're
+whome->whom

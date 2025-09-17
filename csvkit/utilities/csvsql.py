@@ -95,7 +95,7 @@ class CSVSQL(CSVKitUtility):
             help='The minimum length of text columns.')
         self.argparser.add_argument(
             '--col-len-multiplier', dest='col_len_multiplier', type=int, default=1,
-            help='Multiply the maximum column length by this multiplier to accomodate larger values in later runs.')
+            help='Multiply the maximum column length by this multiplier to accommodate larger values in later runs.')
 
     def main(self):
         if isatty(sys.stdin) and self.args.input_paths == ['-']:

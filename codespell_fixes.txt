@@ -1,0 +1,733 @@
+./docs/scripts/csvlook.rst:59: numeral ==> numeral
+./docs/scripts/csvsql.rst:36: create ==> create
+./docs/scripts/csvsql.rst:36: create ==> create
+./docs/scripts/csvsql.rst:94: accommodate ==> accommodate
+./man/csvsql.1:65: create ==> create
+./man/csvsql.1:65: create ==> create
+./man/csvsql.1:123: accommodate ==> accommodate
+./man/csvlook.1:93: numeral ==> numeral
+./man/csvclean.1:38: by ==> by
+./man/csvclean.1:40: by ==> by
+./man/csvclean.1:52: by ==> by
+./man/csvclean.1:98: by ==> by
+./man/csvclean.1:161: by ==> by
+./man/csvclean.1:163: by ==> by
+./man/csvclean.1:165: by ==> by
+./man/csvclean.1:167: by ==> by
+./man/csvclean.1:169: by ==> by
+./man/csvclean.1:178: by ==> by
+./man/csvclean.1:180: by ==> by
+./csvkit/cli.py:126: overridden ==> overridden
+./csvkit/cli.py:155: overridden ==> overridden
+./csvkit/utilities/csvsql.py:98: accommodate ==> accommodate
+./examples/realdata/event-notification-rpt-lastmonth.txt:5: Buses ==> Buses
+./examples/realdata/event-notification-rpt-lastmonth.txt:5: Buses ==> Buses
+./examples/realdata/event-notification-rpt-lastmonth.txt:11: SPECIF ==> SPECIFY, SPECIFIC
+./examples/realdata/event-notification-rpt-lastmonth.txt:17: SPECIF ==> SPECIFY, SPECIFIC
+./examples/realdata/event-notification-rpt-lastmonth.txt:17: NOTIFICATION ==> NOTIFICATION
+./examples/realdata/event-notification-rpt-lastmonth.txt:22: SPECIF ==> SPECIFY, SPECIFIC
+./examples/realdata/event-notification-rpt-lastmonth.txt:22: INADVERTENT ==> INADVERTENT
+./examples/realdata/event-notification-rpt-lastmonth.txt:27: SPECIF ==> SPECIFY, SPECIFIC
+./examples/realdata/event-notification-rpt-lastmonth.txt:27: INADVERTENT ==> INADVERTENT
+./examples/realdata/event-notification-rpt-lastmonth.txt:32: ND ==> AND, 2ND
+./examples/realdata/event-notification-rpt-lastmonth.txt:45: SPECIF ==> SPECIFY, SPECIFIC
+./examples/realdata/event-notification-rpt-lastmonth.txt:50: dependent ==> dependent
+./examples/realdata/event-notification-rpt-lastmonth.txt:53: UE ==> USE, DUE
+./examples/realdata/event-notification-rpt-lastmonth.txt:55: VARIANT ==> VARIANT
+./examples/realdata/event-notification-rpt-lastmonth.txt:55: Variant ==> Variant
+./examples/realdata/event-notification-rpt-lastmonth.txt:61: SPECIF ==> SPECIFY, SPECIFIC
+./examples/realdata/event-notification-rpt-lastmonth.txt:66: SPECIF ==> SPECIFY, SPECIFIC
+./examples/realdata/event-notification-rpt-lastmonth.txt:72: UE ==> USE, DUE
+./examples/realdata/FY09_EDU_Recipients_by_State.csv:36: ND ==> AND, 2ND
+./examples/realdata/Datagov_FY10_EDU_recp_by_State.csv:2: Received ==> Received
+./examples/realdata/Datagov_FY10_EDU_recp_by_State.csv:38: ND ==> AND, 2ND
+./examples/realdata/census_2000/usgeo_excerpt.upl:400: ND ==> AND, 2ND
+./examples/realdata/census_2000/usgeo_excerpt.upl:401: ND ==> AND, 2ND
+./examples/realdata/census_2000/usgeo_excerpt.upl:566: Kake ==> Cake, take
+./examples/realdata/census_2000/usgeo_excerpt.upl:567: Kake ==> Cake, take
+./examples/realdata/census_2000/determination.csv:1010: ND ==> AND, 2ND
+./examples/realdata/census_2000/determination.csv:1011: ND ==> AND, 2ND
+./examples/realdata/census_2000/determination.csv:1012: ND ==> AND, 2ND
+./examples/realdata/census_2000/determination.csv:1013: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/docs/scripts/csvlook.rst:59: numeral ==> numeral
+./CaseStudy_02/csvkit/docs/scripts/csvsql.rst:36: create ==> create
+./CaseStudy_02/csvkit/docs/scripts/csvsql.rst:36: create ==> create
+./CaseStudy_02/csvkit/docs/scripts/csvsql.rst:94: accommodate ==> accommodate
+./CaseStudy_02/csvkit/man/csvsql.1:65: create ==> create
+./CaseStudy_02/csvkit/man/csvsql.1:65: create ==> create
+./CaseStudy_02/csvkit/man/csvsql.1:123: accommodate ==> accommodate
+./CaseStudy_02/csvkit/man/csvlook.1:93: numeral ==> numeral
+./CaseStudy_02/csvkit/man/csvclean.1:38: by ==> by
+./CaseStudy_02/csvkit/man/csvclean.1:40: by ==> by
+./CaseStudy_02/csvkit/man/csvclean.1:52: by ==> by
+./CaseStudy_02/csvkit/man/csvclean.1:98: by ==> by
+./CaseStudy_02/csvkit/man/csvclean.1:161: by ==> by
+./CaseStudy_02/csvkit/man/csvclean.1:163: by ==> by
+./CaseStudy_02/csvkit/man/csvclean.1:165: by ==> by
+./CaseStudy_02/csvkit/man/csvclean.1:167: by ==> by
+./CaseStudy_02/csvkit/man/csvclean.1:169: by ==> by
+./CaseStudy_02/csvkit/man/csvclean.1:178: by ==> by
+./CaseStudy_02/csvkit/man/csvclean.1:180: by ==> by
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/index.py:1070: falsy ==> falsely, false
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/utils/ui.py:151: needs ==> needs
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/vcs/subversion.py:139: readd ==> re-add, read
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/vcs/git.py:60: because ==> because
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/vcs/__init__.py:124: information ==> information
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/vcs/bazaar.py:77: readd ==> re-add, read
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/appdirs.py:193: default ==> default
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/appdirs.py:503: kernel ==> kernel
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/ipaddress.py:39: endianness ==> endianness
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/ipaddress.py:40: endianness ==> endianness
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/ipaddress.py:48: endianness ==> endianness
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/ipaddress.py:50: endianness ==> endianness
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/pyparsing.py:1591: explicitly ==> explicitly
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/pyparsing.py:2825: won't ==> won't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/pyparsing.py:4349: only once ==> only once
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/cachecontrol/controller.py:281: permanent ==> permanent
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/cachecontrol/filewrapper.py:22: vagaries ==> vagaries
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/cachecontrol/filewrapper.py:25: things ==> things
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/cachecontrol/caches/redis_cache.py:7: compatibility ==> compatibility
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/chardet/sbcharsetprober.py:117: threshold ==> threshold
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/packaging/specifiers.py:195: in case ==> in case
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/packaging/specifiers.py:201: beginning ==> beginning
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/packaging/specifiers.py:506: technically ==> technically
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/urllib3/request.py:120: mimic ==> mimic
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/urllib3/poolmanager.py:370: containing ==> containing
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/urllib3/fields.py:124: tuples ==> tuples
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/urllib3/exceptions.py:157: performing ==> performing
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/urllib3/util/ssl_.py:186: abbreviation ==> abbreviation
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/urllib3/contrib/securetransport.py:91: because ==> because
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/html5lib/_inputstream.py:464: overridden ==> overridden
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/html5lib/_inputstream.py:464: overridden ==> overridden
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/html5lib/constants.py:1311: and ==> and
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/html5lib/constants.py:1368: because ==> because
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/html5lib/constants.py:1560: current ==> current
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/html5lib/constants.py:1561: current ==> current
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/html5lib/constants.py:1756: ges ==> goes, guess
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/html5lib/constants.py:1932: lates ==> later, latest
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/html5lib/constants.py:2292: old ==> old
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/html5lib/constants.py:2356: pulse ==> pulse
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/html5lib/constants.py:2559: simlE ==> simple, smile, simile
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/html5lib/serializer.py:221: identifier ==> identifier
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/requests/models.py:447: fo ==> of, for, to, do, go
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/requests/utils.py:143: usable ==> usable
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/webencodings/__init__.py:194: presence ==> presence
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/webencodings/__init__.py:221: chunk ==> chunk
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/webencodings/__init__.py:222: chunk ==> chunk
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/webencodings/__init__.py:237: chunk ==> chunk
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/webencodings/__init__.py:238: chunk ==> chunk
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/webencodings/__init__.py:263: chunk ==> chunk
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/_vendor/webencodings/__init__.py:264: chunk ==> chunk
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/commands/list.py:49: up-to-date ==> up-to-date
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/commands/list.py:146: up-to-date ==> up-to-date
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/commands/list.py:158: up-to-date ==> up-to-date
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/commands/show.py:122: information ==> information
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/compat/dictconfig.py:435: te ==> the, be, we, to
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/compat/dictconfig.py:436: te ==> the, be, we, to
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/compat/dictconfig.py:504: te ==> the, be, we, to
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/compat/dictconfig.py:505: te ==> the, be, we, to
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pip/req/req_set.py:227: environment ==> environment
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/xlrd/formula.py:697: the ==> the
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/xlrd/formula.py:737: the ==> the
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/xlrd/formula.py:855: the ==> the
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/xlrd/formula.py:1457: the ==> the
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell-2.2.1.dist-info/METADATA:37: and ==> and
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:327: calculate ==> calculate
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:1294: describe ==> describe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:1330: describe ==> describe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:1376: describe ==> describe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:1423: describe ==> describe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:1497: describe ==> describe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:1535: describe ==> describe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:1573: describe ==> describe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:1616: describe ==> describe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:1654: describe ==> describe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:1699: describe ==> describe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:2132: proceded ==> proceeded, preceded
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/__init__.py:2678: nd ==> and, 2nd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/parsedatetime/pdt_locales/base.py:104: nd ==> and, 2nd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/msvc.py:134: environment ==> environment
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/msvc.py:243: information ==> information
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/msvc.py:334: information ==> information
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/msvc.py:478: comparison ==> comparison
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/msvc.py:839: comparison ==> comparison
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/package_index.py:162: interpretation ==> interpretation
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/site-patch.py:51: nd ==> and, 2nd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/site-patch.py:58: nd ==> and, 2nd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/_vendor/pyparsing.py:1591: explicitly ==> explicitly
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/_vendor/pyparsing.py:2825: won't ==> won't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/_vendor/pyparsing.py:4349: only once ==> only once
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/_vendor/packaging/specifiers.py:195: in case ==> in case
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/_vendor/packaging/specifiers.py:201: beginning ==> beginning
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/setuptools/_vendor/packaging/specifiers.py:506: technically ==> technically
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/isodate-0.6.1.dist-info/METADATA:227: formatting ==> formatting
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/isodate-0.6.1.dist-info/METADATA:262: formatting ==> formatting
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:1: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:2: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:3: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:4: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:5: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:6: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:7: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:8: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:9: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:10: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:11: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:12: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:13: Dryas ==> Dryas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:17: compatibility ==> compatibility
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:18: compatibility ==> compatibility
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:19: compatibility ==> compatibility
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:20: compatibility ==> compatibility
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:23: The ==> The
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:23: the ==> the
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:24: the ==> the
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:24: cello ==> cello
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:25: the ==> the
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:28: Millennium ==> Millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:29: Millennium ==> Millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:31: Millennium ==> Millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:32: Millennium ==> Millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:33: Millennium ==> Millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:34: Millennium ==> Millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:35: Millennium ==> Millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:36: millennium ==> millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:37: millennium ==> millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:38: Millennium ==> Millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:39: millennium ==> millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:41: Millennium ==> Millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:42: Millennium ==> Millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:43: Millennium ==> Millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:44: Millennium ==> Millennium
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:47: International ==> International
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:48: International ==> International
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:50: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:51: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:52: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:54: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:55: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:56: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:57: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:58: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:59: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:60: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:61: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:62: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:63: ETC ==> ETC
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:68: which ==> which
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:72: etc ==> etc
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:73: infinite ==> infinite
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:74: infinite ==> infinite
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:76: ISN'T ==> ISN'T
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:77: The ==> The
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:78: The ==> The
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:79: The ==> The
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:80: The ==> The
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:81: palette ==> palette
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:82: palette ==> palette
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:83: palette ==> palette
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:84: virtually ==> virtually
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:85: archetype ==> archetype
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:86: Satellite ==> Satellite
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/linux-kernel.exclude:87: SOME ==> SOME
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:2686: aren't ==> aren't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:5103: calculable ==> calculable
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:5256: can't ==> can't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:6016: circular ==> circular
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:6658: commas ==> commas
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:6667: commend ==> comment, command
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:8769: couldn't ==> couldn't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:8875: create ==> create
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:8884: create ==> create
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:8885: created ==> created
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:10994: didn't ==> didn't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:12028: doesnt ==> doesn't, does not
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:12105: dosen ==> dozen, dose, doesn
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:12109: doesn't ==> doesn't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:15424: fluorescent ==> fluorescent
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:15427: fluorescent ==> fluorescent
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:15515: following ==> following
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:15532: following ==> following
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:16951: heterogeneous ==> heterogeneous
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:19525: isn't ==> isn't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:20531: manager ==> manager
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:20669: mater ==> matter, master, mother
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:23023: or ==> or
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:26811: readd ==> re-add, read
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:26811: read ==> read
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:30241: shouldn't ==> shouldn't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:31639: streams ==> streams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:33224: that's ==> that's
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:36181: wasn ==> wasn't, was
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:36184: wasn't ==> wasn't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:36193: what's ==> what's
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary.txt:36584: wouldn't ==> wouldn't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/codespell_lib/data/dictionary_code.txt:14: create ==> create
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/dates.py:814: normal ==> normal
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/dates.py:1605: omitted ==> omitted
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/dates.py:1860: falsy ==> falsely, false
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/plural.py:417: instantiation ==> instantiation
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/core.py:205: different ==> different
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/core.py:211: identifiers ==> identifiers
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/localedata.py:121: identifier ==> identifier
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/support.py:354: gets ==> gets
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/numbers.py:97: string ==> string
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/numbers.py:519: overridden ==> overridden
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/numbers.py:1067: significant ==> significant
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/messages/checkers.py:67: formatting ==> formatting
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/messages/extract.py:473: preceed ==> precede, proceed
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/babel/messages/extract.py:595: preceed ==> precede, proceed
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/isodate/isotime.py:103: complete ==> complete
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/isodate/isotzinfo.py:62: objects ==> objects
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/isodate/duration.py:48: using ==> using
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/isodate/duration.py:238: objects ==> objects
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/isodate/tests/test_duration.py:136: addition ==> addition
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/isodate/tests/test_duration.py:304: unparsable ==> unparsable
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/isodate/tests/test_strf.py:74: before ==> before
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/isodate/tests/test_strf.py:90: override ==> override
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/agate_sql-0.7.2.dist-info/METADATA:31: create ==> create
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/agatesql/table.py:275: accommodate ==> accommodate
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/csvkit/cli.py:104: overridden ==> overridden
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/csvkit/cli.py:112: overridden ==> overridden
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/csvkit/typeinference.py:30: coercible ==> coercible
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/csvkit/__init__.py:4: compatibility ==> compatibility
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/csvkit/unicsv.py:96: re-encode ==> re-encode
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/csvkit/convert/xls.py:90: insufficient ==> insufficient
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/tzinfo.py:267: ambiguous ==> ambiguous
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/tzinfo.py:381: weird ==> weird
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/tzdata.zi:3221: WITH ==> WITH
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/tzdata.zi:3256: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/tzdata.zi:3258: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/tzdata.zi:3260: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/tzdata.zi:3674: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/tzdata.zi:3676: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/tzdata.zi:3677: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/tzdata.zi:3679: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/tzdata.zi:3681: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/tzdata.zi:3682: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/iso3166.tab:104: FO ==> OF, FOR, TO, DO, GO
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/iso3166.tab:219: RO ==> TO, ROW, ROB, ROD, ROE, ROT
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zonenow.tab:142: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zonenow.tab:143: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zonenow.tab:175: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zonenow.tab:205: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zonenow.tab:206: IST ==> IS, IT, ITS, IT'S, SIT, LIST
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zonenow.tab:253: WITH ==> WITH
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zonenow.tab:254: WITH ==> WITH
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zone1970.tab:154: FO ==> OF, FOR, TO, DO, GO
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zone1970.tab:264: RO ==> TO, ROW, ROB, ROD, ROE, ROT
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zone1970.tab:329: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zone1970.tab:330: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zone1970.tab:331: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zone.tab:180: FO ==> OF, FOR, TO, DO, GO
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zone.tab:329: RO ==> TO, ROW, ROB, ROD, ROE, ROT
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zone.tab:417: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zone.tab:418: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz/zoneinfo/zone.tab:419: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pkg_resources/_vendor/appdirs.py:193: default ==> default
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pkg_resources/_vendor/appdirs.py:503: kernel ==> kernel
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pkg_resources/_vendor/pyparsing.py:1591: explicitly ==> explicitly
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pkg_resources/_vendor/pyparsing.py:2825: won't ==> won't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pkg_resources/_vendor/pyparsing.py:4349: only once ==> only once
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pkg_resources/_vendor/packaging/specifiers.py:195: in case ==> in case
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pkg_resources/_vendor/packaging/specifiers.py:201: beginning ==> beginning
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pkg_resources/_vendor/packaging/specifiers.py:506: technically ==> technically
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/text_unidecode-1.3.dist-info/LICENSE.txt:132: MERCHANTABILITY ==> MERCHANTABILITY
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/olefile/olefile2.py:1220: directory ==> directory
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/olefile/olefile.py:2368: handling ==> handling
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/Babel-2.11.0.dist-info/RECORD:326: fo ==> of, for, to, do, go
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/Babel-2.11.0.dist-info/RECORD:565: nd ==> and, 2nd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/Babel-2.11.0.dist-info/RECORD:633: ro ==> to, row, rob, rod, roe, rot
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/Babel-2.11.0.dist-info/RECORD:672: she ==> she
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/Babel-2.11.0.dist-info/RECORD:730: te ==> the, be, we, to
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:465: believe ==> believe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:793: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:794: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:796: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:797: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:797: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:850: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:851: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:851: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:854: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:855: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:855: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:858: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:859: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:859: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:867: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:868: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/tz.py:868: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/relativedelta.py:48: excellent ==> excellent
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:164: penalty ==> penalty
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1042: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1043: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1045: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1046: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1046: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1048: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1048: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1049: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1049: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1052: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1052: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1053: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1054: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1054: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1057: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1057: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1058: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1058: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1061: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1061: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1062: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1063: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1063: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1066: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1066: parms ==> params, prams
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1067: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/rrule.py:1067: parm ==> param, pram, parma
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/easter.py:20: Clause ==> Clause
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dateutil/easter.py:49: clause ==> clause
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/util/compat.py:221: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/util/compat.py:311: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/util/langhelpers.py:1914: won't ==> won't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/util/__init__.py:101: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:282: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:299: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:301: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:301: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:302: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:306: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:331: FORMS ==> FORMS
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:340: FORMS ==> FORMS
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:343: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:344: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:347: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:352: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:353: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:356: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:356: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:1419: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:2929: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3012: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3099: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3357: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3364: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3368: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3454: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3548: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3625: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3632: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3637: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3648: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3656: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3672: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3685: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3697: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/compiler.py:3927: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/util.py:159: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/dml.py:86: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/dml.py:94: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/dml.py:97: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/dml.py:98: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/type_api.py:1785: expression ==> expression
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4375: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4395: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4503: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4512: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4515: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4518: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4524: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4524: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4526: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4533: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4540: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4540: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4545: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4547: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4551: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4559: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4561: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4565: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4574: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4577: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4579: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4581: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4584: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4594: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4604: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:4719: FORMS ==> FORMS
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:5646: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:5702: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:5714: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:5733: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:5744: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:5864: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:5872: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:5912: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:5988: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:6027: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:6805: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/sql/selectable.py:6819: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/sybase/base.py:153: inout ==> input, in out
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/sybase/base.py:555: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mssql/base.py:2226: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/pymysql.py:36: gourd ==> gourd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/pymysql.py:37: gourd ==> gourd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/pymysql.py:38: gourd ==> gourd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/reserved_words.py:109: inout ==> input, in out
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/reserved_words.py:393: inout ==> input, in out
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/base.py:1171: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/base.py:1246: gourd ==> gourd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/base.py:1606: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/mysqldb.py:47: gourd ==> gourd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/mysqldb.py:48: gourd ==> gourd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/mysqldb.py:49: gourd ==> gourd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/mysqldb.py:61: gourd ==> gourd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/mysqldb.py:62: gourd ==> gourd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/mysql/mysqldb.py:63: gourd ==> gourd
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/sqlite/base.py:2205: DOUB ==> DOUBT, DAUB
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/sqlite/pysqlite.py:71: ro ==> to, row, rob, rod, roe, rot
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/sqlite/pysqlite.py:89: ro ==> to, row, rob, rod, roe, rot
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/sqlite/pysqlite.py:95: ro ==> to, row, rob, rod, roe, rot
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/oracle/base.py:956: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/oracle/base.py:984: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/oracle/base.py:1017: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/oracle/base.py:1095: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/oracle/base.py:1098: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/firebird/base.py:440: can't ==> can't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/firebird/base.py:443: can't ==> can't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:731: transation ==> transaction, translation
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:740: transation ==> transaction, translation
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/engine/cursor.py:352: te ==> the, be, we, to
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/engine/create.py:505: strat ==> start, strata
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/engine/create.py:506: strat ==> start, strata
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/engine/create.py:509: strat ==> start, strata
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/engine/base.py:2378: deactivate ==> deactivate
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/engine/base.py:2484: deactivate ==> deactivate
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/loading.py:756: in ==> in
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/interfaces.py:643: strat ==> start, strata
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/interfaces.py:645: strat ==> start, strata
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/interfaces.py:646: strat ==> start, strata
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/interfaces.py:655: strat ==> start, strata
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/interfaces.py:657: strat ==> start, strata
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/interfaces.py:658: strat ==> start, strata
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/strategies.py:2655: selectin ==> selection, selecting
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/strategy_options.py:1327: ot ==> to, of, or, not
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/strategy_options.py:1328: ot ==> to, of, or, not
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/strategy_options.py:1564: selectin ==> selection, selecting
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/strategy_options.py:2004: selectin ==> selection, selecting
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/query.py:384: won't ==> won't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/mapper.py:1049: safe ==> safe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/mapper.py:1066: safe ==> safe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/mapper.py:1155: selectin ==> selection, selecting
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/mapper.py:2163: in ==> in
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/mapper.py:3159: selectin ==> selection, selecting
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/mapper.py:3162: selectin ==> selection, selecting
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/mapper.py:3169: selectin ==> selection, selecting
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/context.py:881: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/context.py:1709: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/context.py:1722: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/context.py:1814: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/context.py:1815: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/context.py:1827: FORMS ==> FORMS
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/context.py:1843: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/context.py:1873: FORMS ==> FORMS
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/context.py:3110: forms ==> forms
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/relationships.py:960: selectin ==> selection, selecting
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/relationships.py:1019: selectin ==> selection, selecting
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/relationships.py:2788: safe ==> safe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/relationships.py:2803: safe ==> safe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/relationships.py:2817: safe ==> safe
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/session.py:107: DEACTIVATE ==> DEACTIVATE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/session.py:107: DEACTIVATE ==> DEACTIVATE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/session.py:601: DEACTIVATE ==> DEACTIVATE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/session.py:635: up to ==> up to
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/session.py:641: up to ==> up to
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/session.py:646: up to ==> up to
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/session.py:804: up to ==> up to
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/session.py:858: up to ==> up to
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/session.py:870: DEACTIVATE ==> DEACTIVATE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/session.py:875: DEACTIVATE ==> DEACTIVATE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/orm/session.py:882: DEACTIVATE ==> DEACTIVATE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/ext/associationproxy.py:390: retrieve ==> retrieve
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/ext/declarative/extensions.py:92: useless ==> useless
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/ext/mypy/util.py:270: can't ==> can't
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/profiling.py:229: warmup ==> warm up, warm-up
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/profiling.py:259: warmup ==> warm up, warm-up
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_dialect.py:333: owns ==> owns
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:21: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:36: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:44: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:55: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:58: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:64: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:66: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:72: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:74: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:80: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:83: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:88: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:90: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:95: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:100: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:101: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:103: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:112: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:117: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:118: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:120: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:126: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:133: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:134: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:136: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:139: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:144: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:145: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:147: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:156: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:157: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:161: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:162: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:164: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:182: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:190: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_unicode_ddl.py:190: ue ==> use, due
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/sqlalchemy/testing/suite/test_deprecations.py:60: FORMS ==> FORMS
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/error_bar.py:26: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/series.py:12: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/series.py:69: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/series.py:149: Series ==> Series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/reference.py:10: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:155: set ==> set
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:156: set ==> set
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:157: set ==> set
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:160: set ==> set
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:164: set ==> set
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:168: set ==> set
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:172: set ==> set
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:175: set ==> set
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:178: set ==> set
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:180: set ==> set
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:226: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:233: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:239: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:240: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:243: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:244: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:298: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:301: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:302: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:313: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:314: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/charts/writer.py:316: series ==> series
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/cell/cell.py:248: Explicitly ==> Explicitly
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/writer/theme.py:64: Being ==> Being
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/writer/theme.py:98: Being ==> Being
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/reader/excel.py:90: preserve ==> preserve
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/styles/numbers.py:93: Number ==> Number
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/utils/__init__.py:70: indices ==> indices
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/drawing/drawing.py:95: coordinates ==> coordinates
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/drawing/drawing.py:346: coordinates ==> coordinates
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/comments/comments.py:32: comment ==> comment
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/worksheet/datavalidation.py:16: coordinates ==> coordinates
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/worksheet/worksheet.py:322: coordinate ==> coordinate
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/openpyxl/worksheet/worksheet.py:473: additional ==> additional
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz-2025.2.dist-info/METADATA:453: apart ==> apart
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/pytz-2025.2.dist-info/METADATA:624: functionaly ==> functionally, functionality
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/greenlet_thread_state.hpp:166: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/greenlet.cpp:1323: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/greenlet.cpp:1324: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/greenlet.cpp:1405: her ==> her
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/tests/test_greenlet.py:37: crash ==> crash
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/tests/test_greenlet.py:39: crash ==> crash
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/tests/test_greenlet.py:133: ths ==> the, this
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/tests/test_greenlet.py:134: ths ==> the, this
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/tests/test_greenlet.py:136: ths ==> the, this
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/tests/test_greenlet.py:138: ths ==> the, this
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:55: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:57: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:65: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:67: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:68: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:71: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:75: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:78: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:79: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:81: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:82: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:83: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:84: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:85: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:86: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:88: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:89: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:93: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:97: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:99: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:101: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:102: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:105: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:112: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:113: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:136: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:139: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:157: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:173: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:242: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:253: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_msvc.h:315: SHE ==> SHE
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/setup_switch_x64_masm.cmd:2: Fo ==> Of, for, to, do, go
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_mips_unix.h:7: ths ==> the, this
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_unix.h:50: she ==> she
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_unix.h:63: she ==> she
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/greenlet/platform/switch_x86_unix.h:84: she ==> she
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/agate/utils.py:18: Sentinel ==> Sentinel
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/agate/utils.py:255: identifier ==> identifier
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/agate/utils.py:256: Identifiers ==> Identifiers
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/agate/utils.py:256: occurrence ==> occurrence
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/agate/config.py:6: configuration ==> configuration
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/agate/table/print_bars.py:34: outputted ==> outputted
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/agate/table/rename.py:26: duplicate ==> duplicate
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/agate/computations/slug.py:18: identifiers ==> identifiers
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/agate/aggregations/count.py:8: occurrences ==> occurrences
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dbfread/field_parser.py:68: boolean ==> boolean
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dbfread/field_parser.py:101: parseF ==> parsed, parser, parsec
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dbfread/memo.py:4: length ==> length
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dbfread/deprecated_dbf.py:9: compatibility ==> compatibility
+./CaseStudy_02/csvkit/venv/lib/python3.6/site-packages/dbfread/struct_parser.py:40: implementing ==> implementing
+./CaseStudy_02/csvkit/csvkit/cli.py:126: overridden ==> overridden
+./CaseStudy_02/csvkit/csvkit/cli.py:155: overridden ==> overridden
+./CaseStudy_02/csvkit/csvkit/utilities/csvsql.py:98: accommodate ==> accommodate
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:5: Buses ==> Buses
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:5: Buses ==> Buses
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:11: SPECIF ==> SPECIFY, SPECIFIC
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:17: SPECIF ==> SPECIFY, SPECIFIC
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:17: NOTIFICATION ==> NOTIFICATION
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:22: SPECIF ==> SPECIFY, SPECIFIC
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:22: INADVERTENT ==> INADVERTENT
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:27: SPECIF ==> SPECIFY, SPECIFIC
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:27: INADVERTENT ==> INADVERTENT
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:32: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:45: SPECIF ==> SPECIFY, SPECIFIC
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:50: dependent ==> dependent
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:53: UE ==> USE, DUE
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:55: VARIANT ==> VARIANT
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:55: Variant ==> Variant
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:61: SPECIF ==> SPECIFY, SPECIFIC
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:66: SPECIF ==> SPECIFY, SPECIFIC
+./CaseStudy_02/csvkit/examples/realdata/event-notification-rpt-lastmonth.txt:72: UE ==> USE, DUE
+./CaseStudy_02/csvkit/examples/realdata/Datagov_FY10_EDU_recp_by_State_out.csv:2: Received ==> Received
+./CaseStudy_02/csvkit/examples/realdata/Datagov_FY10_EDU_recp_by_State_out.csv:38: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/examples/realdata/FY09_EDU_Recipients_by_State.csv:36: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/examples/realdata/Datagov_FY10_EDU_recp_by_State.csv:2: Received ==> Received
+./CaseStudy_02/csvkit/examples/realdata/Datagov_FY10_EDU_recp_by_State.csv:38: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/examples/realdata/census_2000/usgeo_excerpt.upl:400: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/examples/realdata/census_2000/usgeo_excerpt.upl:401: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/examples/realdata/census_2000/usgeo_excerpt.upl:566: Kake ==> Cake, take
+./CaseStudy_02/csvkit/examples/realdata/census_2000/usgeo_excerpt.upl:567: Kake ==> Cake, take
+./CaseStudy_02/csvkit/examples/realdata/census_2000/determination.csv:1010: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/examples/realdata/census_2000/determination.csv:1011: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/examples/realdata/census_2000/determination.csv:1012: ND ==> AND, 2ND
+./CaseStudy_02/csvkit/examples/realdata/census_2000/determination.csv:1013: ND ==> AND, 2ND
