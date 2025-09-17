@@ -33,7 +33,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
 
    optional arguments:
      -h, --help            show this help message and exit
-     -i {mssql,mysql,oracle,postgresql,sqlite,duckdb,crate,ingres}, --dialect {mssql,mysql,oracle,postgresql,sqlite,duckdb,crate,ingres}
+     -i {mssql,mysql,oracle,postgresql,sqlite,duckdb,create,ingres}, --dialect {mssql,mysql,oracle,postgresql,sqlite,duckdb,create,ingres}
                            Dialect of SQL to generate. Cannot be used with --db.
      --db CONNECTION_STRING
                            If present, a SQLAlchemy connection string to use to
