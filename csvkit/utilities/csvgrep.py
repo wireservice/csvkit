@@ -34,6 +34,10 @@ class CSVGrep(CSVKitUtility):
         self.argparser.add_argument(
             '-i', '--invert-match', dest='inverse', action='store_true',
             help='Select non-matching rows, instead of matching rows.')
+        # 대소문자 무시 옵션
+        self.argparser.add_argument(
+            '-I', '--case-insensitive', dest='case_insensitive', action='store_true',
+            help='Perform case-insensitive, case-folding matching.')
         self.argparser.add_argument(
             '-a', '--any-match', dest='any_match', action='store_true',
             help='Select rows in which any column matches, instead of all columns.')
@@ -61,19 +65,40 @@ class CSVGrep(CSVKitUtility):
         rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids(**reader_kwargs)
 
         if self.args.regex:
-            pattern = re.compile(self.args.regex)
+            flags = re.IGNORECASE if self.args.case_insensitive else 0
+            pattern = re.compile(self.args.regex, flags)
         elif self.args.matchfile:
-            lines = {line.rstrip() for line in self.args.matchfile}
-            self.args.matchfile.close()
-
-            def pattern(x):
-                return x in lines
+            if self.args.case_insensitive:
+                # 대소문자 무시: 파일의 각 줄과 셀 값을 모두 소문자로 변환
+                lines = {line.rstrip().lower() for line in self.args.matchfile}
+                self.args.matchfile.close()
+                def pattern(x):
+                    return x.lower() in lines
+            else:
+                lines = {line.rstrip() for line in self.args.matchfile}
+                self.args.matchfile.close()
+                def pattern(x):
+                    return x in lines
+        
         else:
-            pattern = self.args.pattern
+            # 문자열 패턴: 직접 문자열 사용 (부분 문자열 포함 검사)
+            if self.args.case_insensitive:
+                # 대소문자 무시: 패턴과 셀 값을 모두 소문자로 변환하여 비교
+                pattern_lower = self.args.pattern.lower()
+                def pattern(x):
+                    return pattern_lower in x.lower()
+            else:
+                pattern = self.args.pattern
 
         patterns = {column_id: pattern for column_id in column_ids}
-        filter_reader = FilteringCSVReader(rows, header=False, patterns=patterns,
-                                           inverse=self.args.inverse, any_match=self.args.any_match)
+        
+        filter_reader = FilteringCSVReader(
+            rows, 
+            header=False,
+            patterns=patterns,
+            inverse=self.args.inverse,
+            any_match=self.args.any_match
+        )
 
         output = agate.csv.writer(self.output_file, **writer_kwargs)
         output.writerow(column_names)

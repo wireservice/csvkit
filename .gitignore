@@ -7,3 +7,4 @@
 /csvkit.egg-info
 /docs/_build
 /man/.doctrees
+user.csv
