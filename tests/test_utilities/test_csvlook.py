@@ -163,3 +163,60 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             ])
 
         input_file.close()
+
+    def test_expanded_view(self):
+        """
+        Test the expanded view feature (issue #1313).
+        
+        This test verifies that the --expanded flag displays records
+        in psql-like expanded format with column names on the left
+        and values on the right. Column names are aligned to the
+        maximum column name width for readability.
+        """
+        self.assertLines(['--expanded', 'examples/test_utf8.csv'], [
+            '-[ RECORD 1 ]-------------------------------------------------',
+            'foo | 1',
+            'bar | 2',
+            'baz | 3',
+            '',
+            '-[ RECORD 2 ]-------------------------------------------------',
+            'foo | 4',
+            'bar | 5',
+            'baz | ʤ',
+        ])
+
+    def test_expanded_view_max_rows(self):
+        """
+        Test expanded view with max-rows limit.
+        
+        This ensures that the max-rows option works correctly
+        with the expanded view format. Only the specified number
+        of records should be displayed.
+        """
+        self.assertLines(['--expanded', '--max-rows', '1', 'examples/test_utf8.csv'], [
+            '-[ RECORD 1 ]-------------------------------------------------',
+            'foo | 1',
+            'bar | 2',
+            'baz | 3',
+        ])
+
+    def test_expanded_view_max_column_width(self):
+        """
+        Test expanded view with max-column-width truncation.
+        
+        This verifies that long column values are properly
+        truncated in expanded view when max-column-width is set.
+        Values longer than the specified width should be truncated
+        with ellipsis.
+        """
+        self.assertLines(['--expanded', '--max-column-width', '2', 'examples/test_utf8.csv'], [
+            '-[ RECORD 1 ]-------------------------------------------------',
+            'foo | 1',
+            'bar | 2',
+            'baz | 3',
+            '',
+            '-[ RECORD 2 ]-------------------------------------------------',
+            'foo | 4',
+            'bar | 5',
+            'baz | ..',
+        ])
