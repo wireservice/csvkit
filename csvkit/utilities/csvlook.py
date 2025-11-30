@@ -108,14 +108,17 @@ class CSVLook(CSVKitUtility):
         # Format: -[ RECORD N ]-------------------------------------------------
         # This creates a visual separator for each record, making it easy
         # to distinguish between different records in the output.
+        # The total length should be 62 characters to match psql's format.
         record_header = f"-[ RECORD {record_num} ]"
         
         # Total width of the separator line
         # This determines how long the dashed line will be
-        separator_length = 60  # Total width of the separator line
+        # We use 62 characters total to match the psql expanded format
+        separator_length = 62  # Total width of the separator line
         
         # Calculate how many dashes we need to fill the rest of the line
         # We subtract the length of the header text from the total width
+        # The header length varies based on the record number (e.g., "RECORD 1" vs "RECORD 10")
         dashes_needed = separator_length - len(record_header)
         
         # Ensure we have at least some dashes
@@ -126,6 +129,7 @@ class CSVLook(CSVKitUtility):
         
         # Print the record separator line
         # This writes the header followed by dashes to create the separator
+        # The total line will always be exactly separator_length characters
         self.output_file.write(record_header + ('-' * dashes_needed) + '\n')
         
         # ====================================================================
