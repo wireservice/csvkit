@@ -199,7 +199,7 @@ class In2CSV(CSVKitUtility):
                 base = splitext(self.input_file.name)[0]
             for i, (sheet_name, table) in enumerate(tables.items()):
                 if self.args.use_sheet_names:
-                    filename = '%s_%s.csv' % (base, sheet_name)
+                    filename = '{}_{}.csv'.format(base, sheet_name)
                 else:
                     filename = '%s_%d.csv' % (base, i)
                 with open(filename, 'w') as f:

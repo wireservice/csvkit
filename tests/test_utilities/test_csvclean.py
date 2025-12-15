@@ -234,7 +234,7 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
         self.assertCleaned(['--length-mismatch', '-e', 'latin1', 'examples/test_latin1.csv'], [
             ['a', 'b', 'c'],
             ['1', '2', '3'],
-            ['4', '5', u'©'],
+            ['4', '5', '©'],
         ])
 
     def test_removes_bom(self):
