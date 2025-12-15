@@ -1,5 +1,5 @@
-Unreleased
-----------
+2.2.0 - December 15, 2025
+-------------------------
 
 -  fix: :doc:`/scripts/csvstack` no longer errors if a CSV file is empty.
 -  Add Python 3.14 support. Drop support for end-of-life version 3.9.
