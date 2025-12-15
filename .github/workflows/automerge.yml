@@ -4,5 +4,6 @@ jobs:
   automerge:
     uses: open-contracting/.github/.github/workflows/automerge.yml@main
     permissions:
-      pull-requests: write
+      actions: true
       contents: write
+      pull-requests: write
