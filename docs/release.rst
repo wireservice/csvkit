@@ -14,7 +14,7 @@ Release process
 
 #. The version number is correct in:
 
-   -  setup.py
+   -  pyproject.toml
    -  docs/conf.py
    -  csvkit/cli.py
 
