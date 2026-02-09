@@ -5,6 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "csvkit"
 version = "2.2.0"
+requires-python = ">=3.10"
 authors = [{name = "Christopher Groskopf and James McKinney", email = "chrisgroskopf@gmail.com"}]
 description = "A suite of command-line tools for working with CSV, the king of tabular file formats."
 readme = "README.rst"
