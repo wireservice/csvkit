@@ -63,12 +63,15 @@ class RowChecker:
         self.zero_based = zero_based
         self.omit_error_rows = omit_error_rows
 
+        self._exhausted = False
+
         try:
             self.column_names = next(reader)
             if header_normalize_space:
                 self.column_names = [' '.join(column_name.split()) for column_name in self.column_names]
         except StopIteration:
             self.column_names = []
+            self._exhausted = True
 
         self.errors = []
 
@@ -76,6 +79,9 @@ class RowChecker:
         """
         A generator which yields rows which are ready to write to output.
         """
+        if self._exhausted:
+            return
+
         len_column_names = len(self.column_names)
         joinable_row_errors = []
 

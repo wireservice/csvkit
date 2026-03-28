@@ -37,9 +37,15 @@ class FilteringCSVReader:
 
         self.reader = reader
         self.header = header
+        self.returned_header = False
+        self._exhausted = False
 
         if self.header:
-            self.column_names = next(reader)
+            try:
+                self.column_names = next(reader)
+            except StopIteration:
+                self.column_names = None
+                self._exhausted = True
 
         self.any_match = any_match
         self.inverse = inverse
@@ -49,7 +55,10 @@ class FilteringCSVReader:
         return self
 
     def __next__(self):
-        if self.column_names and not self.returned_header:
+        if self._exhausted:
+            raise StopIteration()
+
+        if self.column_names is not None and not self.returned_header:
             self.returned_header = True
             return self.column_names
 
