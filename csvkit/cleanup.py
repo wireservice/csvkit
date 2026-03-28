@@ -17,6 +17,9 @@ def join_rows(rows, separator):
         The string with which to join the cells.
     """
     rows = list(rows)
+    if not rows:
+        return []
+
     fixed_row = rows[0][:]
 
     for row in rows[1:]:
