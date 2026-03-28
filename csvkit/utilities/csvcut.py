@@ -33,6 +33,9 @@ class CSVCut(CSVKitUtility):
             help='A comma-separated list of column indices, names or ranges to be excluded, e.g. "1,id,3-5". '
                  'Defaults to no columns.')
         self.argparser.add_argument(
+            '--ignore-unknown', dest='ignore_unknown', action='store_true',
+            help='Silently ignore unknown column identifiers in --columns.')
+        self.argparser.add_argument(
             '-x', '--delete-empty-rows', dest='delete_empty', action='store_true',
             help='After cutting, delete rows which are completely empty.')
 
@@ -44,7 +47,10 @@ class CSVCut(CSVKitUtility):
         if self.additional_input_expected():
             sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
 
-        rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids(**self.reader_kwargs)
+        rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids(
+            ignore_unknown_columns=self.args.ignore_unknown,
+            **self.reader_kwargs,
+        )
 
         output = agate.csv.writer(self.output_file, **self.writer_kwargs)
         output.writerow([column_names[column_id] for column_id in column_ids])
