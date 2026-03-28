@@ -29,6 +29,14 @@ except ImportError:
 QUOTING_CHOICES = sorted(getattr(csv, name) for name in dir(csv) if name.startswith('QUOTE_'))
 
 
+class UnderscoreDisallowingNumber(agate.Number):
+    def cast(self, d):
+        if isinstance(d, str) and '_' in d and not self.is_null(d):
+            raise agate.exceptions.CastError()
+
+        return super().cast(d)
+
+
 class LazyFile:
     """
     A proxy for a File object that delays opening it until
@@ -362,7 +370,7 @@ class CSVKitUtility:
         if getattr(self.args, 'no_inference', None):
             types = [text_type]
         else:
-            number_type = agate.Number(
+            number_type = UnderscoreDisallowingNumber(
                 locale=self.args.locale, no_leading_zeroes=getattr(self.args, 'no_leading_zeroes', None), **type_kwargs
             )
 
