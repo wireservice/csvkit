@@ -9,15 +9,20 @@ from csvkit.cli import CSVKitUtility
 
 
 class CSVLook(CSVKitUtility):
-    description = 'Render a CSV file in the console as a Markdown-compatible, fixed-width table.'
+    description = 'Render a CSV file in the console as a Markdown-compatible, fixed-width table.\n\n输出后会附带一行说明文字，显示实际展示了多少行数据。对于普通文件，还会以二进制扫换行符的方式粗估文件总行数（不加载全表），粗估值可能不准但开销极小；stdin或压缩文件不做粗估。'
 
     def add_arguments(self):
         self.argparser.add_argument(
             '-n', '--max-rows', dest='max_rows', type=int, nargs='?', const=50,
-            help='The maximum number of rows to display before truncating the data. Defaults to 50 if no value specified.')
+            help='The maximum number of rows to display before truncating the data. '
+                 'If no value is specified, defaults to 50. '
+                 'Without this flag, all rows are displayed.')
         self.argparser.add_argument(
             '-s', '--stderr-info', dest='stderr_info', action='store_true',
-            help='Print row count info to stderr instead of stdout. Useful when piping output.')
+            help='Print the footer row count info to stderr instead of stdout. '
+                 'Useful when piping or redirecting output, so that only the table '
+                 'data goes to the downstream command or file, while the info line '
+                 'remains visible in the terminal.')
         self.argparser.add_argument(
             '--max-columns', dest='max_columns', type=int,
             help='The maximum number of columns to display before truncating the data.')
