@@ -16,6 +16,9 @@ class CSVLook(CSVKitUtility):
             '-n', '--max-rows', dest='max_rows', type=int, nargs='?', const=50,
             help='The maximum number of rows to display before truncating the data. Defaults to 50 if no value specified.')
         self.argparser.add_argument(
+            '-s', '--stderr-info', dest='stderr_info', action='store_true',
+            help='Print row count info to stderr instead of stdout. Useful when piping output.')
+        self.argparser.add_argument(
             '--max-columns', dest='max_columns', type=int,
             help='The maximum number of columns to display before truncating the data.')
         self.argparser.add_argument(
@@ -118,7 +121,8 @@ class CSVLook(CSVKitUtility):
                 else:
                     info = f"显示了前 {displayed_rows} 行数据"
         
-        self.output_file.write(f"\n{info}\n")
+        info_output = self.error_file if self.args.stderr_info else self.output_file
+        info_output.write(f"\n{info}\n")
 
 
 def launch_new_instance():
