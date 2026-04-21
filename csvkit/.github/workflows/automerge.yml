@@ -1,0 +1,9 @@
+name: Auto-merge
+on: pull_request_target
+jobs:
+  automerge:
+    uses: open-contracting/.github/.github/workflows/automerge.yml@main
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write

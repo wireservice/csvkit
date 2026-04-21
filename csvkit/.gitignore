@@ -1,0 +1,9 @@
+.DS_Store
+*.pyc
+*.swo
+*.swp
+/build
+/dist
+/csvkit.egg-info
+/docs/_build
+/man/.doctrees

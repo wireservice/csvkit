@@ -1,0 +1,9 @@
+column,start,length
+text,0,18
+date,18,10
+integer,29,4
+boolean,33,5
+float,38,11
+time,50,8
+datetime,58,19
+empty_column,77,2
