@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import os
+
 import agate
 from agate import config
 
@@ -34,12 +36,40 @@ class CSVLook(CSVKitUtility):
             help='Disable type inference (and --locale, --date-format, --datetime-format, --no-leading-zeroes) '
                  'when parsing the input.')
 
+    def _estimate_total_rows(self):
+        """
+        Estimate the total number of rows in the input file by counting newline characters.
+        This is done in binary mode for efficiency and does not load the entire file into memory.
+        Returns None if estimation is not possible (e.g., stdin or compressed files).
+        """
+        input_path = self.args.input_path
+        
+        if not input_path or input_path == '-':
+            return None
+        
+        ext = os.path.splitext(input_path)[1].lower()
+        if ext in ('.gz', '.bz2', '.xz', '.zst'):
+            return None
+        
+        try:
+            with open(input_path, 'rb') as f:
+                chunk_size = 64 * 1024
+                newline_count = 0
+                while True:
+                    chunk = f.read(chunk_size)
+                    if not chunk:
+                        break
+                    newline_count += chunk.count(b'\n')
+                estimated_rows = max(0, newline_count - self.args.skip_lines)
+                return estimated_rows
+        except (IOError, OSError):
+            return None
+
     def main(self):
         if self.additional_input_expected():
             self.argparser.error('You must provide an input file or piped data.')
 
         kwargs = {}
-        # In agate, max_precision defaults to 3. None means infinity.
         if self.args.max_precision is not None:
             kwargs['max_precision'] = self.args.max_precision
 
@@ -64,6 +94,31 @@ class CSVLook(CSVKitUtility):
             max_column_width=self.args.max_column_width,
             **kwargs,
         )
+        
+        displayed_rows = len(table.rows)
+        total_rows = self._estimate_total_rows()
+        
+        if total_rows is not None:
+            if self.args.max_rows is None:
+                if displayed_rows == total_rows:
+                    info = f"显示了全部 {displayed_rows} 行数据"
+                else:
+                    info = f"显示了 {displayed_rows} 行数据（文件共约 {total_rows} 行）"
+            else:
+                if displayed_rows < self.args.max_rows:
+                    info = f"显示了全部 {displayed_rows} 行数据（文件共约 {total_rows} 行）"
+                else:
+                    info = f"显示了前 {displayed_rows} 行数据（文件共约 {total_rows} 行）"
+        else:
+            if self.args.max_rows is None:
+                info = f"显示了 {displayed_rows} 行数据"
+            else:
+                if displayed_rows < self.args.max_rows:
+                    info = f"显示了全部 {displayed_rows} 行数据"
+                else:
+                    info = f"显示了前 {displayed_rows} 行数据"
+        
+        self.output_file.write(f"\n{info}\n")
 
 
 def launch_new_instance():
