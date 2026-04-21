@@ -106,12 +106,12 @@ class CSVLook(CSVKitUtility):
                 if displayed_rows == total_rows:
                     info = f"显示了全部 {displayed_rows} 行数据"
                 else:
-                    info = f"显示了 {displayed_rows} 行数据（文件共约 {total_rows} 行）"
+                    info = f"显示了 {displayed_rows} 行数据（文件粗估约 {total_rows} 行）"
             else:
                 if displayed_rows < self.args.max_rows:
-                    info = f"显示了全部 {displayed_rows} 行数据（文件共约 {total_rows} 行）"
+                    info = f"显示了全部 {displayed_rows} 行数据（文件粗估约 {total_rows} 行）"
                 else:
-                    info = f"显示了前 {displayed_rows} 行数据（文件共约 {total_rows} 行）"
+                    info = f"显示了前 {displayed_rows} 行数据（文件粗估约 {total_rows} 行）"
         else:
             if self.args.max_rows is None:
                 info = f"显示了 {displayed_rows} 行数据"
