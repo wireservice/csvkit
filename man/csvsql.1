@@ -1,0 +1,297 @@
+.\" Man page generated from reStructuredText.
+.
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.TH "CSVSQL" "1" "Aug 16, 2024" "2.2.0" "csvkit"
+.SH NAME
+csvsql \- csvsql Documentation
+.SH DESCRIPTION
+.sp
+Generate SQL statements for a CSV file or execute those statements directly on a database. In the latter case supports both creating tables and inserting data:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+usage: csvsql [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3}] [\-b]
+              [\-p ESCAPECHAR] [\-z FIELD_SIZE_LIMIT] [\-e ENCODING] [\-L LOCALE]
+              [\-S] [\-\-blanks] [\-\-null\-value NULL_VALUES [NULL_VALUES ...]]
+              [\-\-date\-format DATE_FORMAT] [\-\-datetime\-format DATETIME_FORMAT]
+              [\-H] [\-K SKIP_LINES] [\-v] [\-l] [\-\-zero] [\-V]
+              [\-i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase}]
+              [\-\-db CONNECTION_STRING] [\-\-query QUERIES] [\-\-insert]
+              [\-\-prefix PREFIX] [\-\-before\-insert BEFORE_INSERT]
+              [\-\-after\-insert AFTER_INSERT] [\-\-tables TABLE_NAMES]
+              [\-\-no\-constraints] [\-\-unique\-constraint UNIQUE_CONSTRAINT]
+              [\-\-no\-create] [\-\-create\-if\-not\-exists] [\-\-overwrite]
+              [\-\-db\-schema DB_SCHEMA] [\-y SNIFF_LIMIT] [\-I]
+              [\-\-chunk\-size CHUNK_SIZE]
+              [FILE [FILE ...]]
+
+Generate SQL statements for one or more CSV files, or execute those statements
+directly on a database, and execute one or more SQL queries.
+
+positional arguments:
+  FILE                  The CSV file(s) to operate on. If omitted, will accept
+                        input as piped data via STDIN.
+
+optional arguments:
+  \-h, \-\-help            show this help message and exit
+  \-i {mssql,mysql,oracle,postgresql,sqlite,duckdb,crate,ingres}, \-\-dialect {mssql,mysql,oracle,postgresql,sqlite,duckdb,crate,ingres}
+                        Dialect of SQL to generate. Cannot be used with \-\-db.
+  \-\-db CONNECTION_STRING
+                        If present, a SQLAlchemy connection string to use to
+                        directly execute generated SQL on a database.
+  \-\-engine\-option ENGINE_OPTION ENGINE_OPTION
+                        A keyword argument to SQLAlchemy\(aqs create_engine(), as
+                        a space\-separated pair. This option can be specified
+                        multiple times. For example: thick_mode True
+  \-\-query QUERIES       Execute one or more SQL queries delimited by \-\-sql\-
+                        delimiter, and output the result of the last query as
+                        CSV. QUERY may be a filename. \-\-query may be specified
+                        multiple times.
+  \-\-insert              Insert the data into the table. Requires \-\-db.
+  \-\-prefix PREFIX       Add an expression following the INSERT keyword, like
+                        OR IGNORE or OR REPLACE.
+  \-\-before\-insert BEFORE_INSERT
+                        Before the INSERT command, execute one or more SQL
+                        queries delimited by \-\-sql\-delimiter. Requires
+                        \-\-insert.
+  \-\-after\-insert AFTER_INSERT
+                        After the INSERT command, execute one or more SQL
+                        queries delimited by \-\-sql\-delimiter. Requires
+                        \-\-insert.
+  \-\-sql\-delimiter SQL_DELIMITER
+                        Delimiter separating SQL queries in \-\-query, \-\-before\-
+                        insert, and \-\-after\-insert.
+  \-\-tables TABLE_NAMES  A comma\-separated list of names of tables to be
+                        created. By default, the tables will be named after
+                        the filenames without extensions or \(dqstdin\(dq.
+  \-\-no\-constraints      Generate a schema without length limits or null
+                        checks. Useful when sampling big tables.
+  \-\-unique\-constraint UNIQUE_CONSTRAINT
+                        A column\-separated list of names of columns to include
+                        in a UNIQUE constraint.
+  \-\-no\-create           Skip creating the table. Requires \-\-insert.
+  \-\-create\-if\-not\-exists
+                        Create the table if it does not exist, otherwise keep
+                        going. Requires \-\-insert.
+  \-\-overwrite           Drop the table if it already exists. Requires
+                        \-\-insert. Cannot be used with \-\-no\-create.
+  \-\-db\-schema DB_SCHEMA
+                        Optional name of database schema to create table(s)
+                        in.
+  \-y SNIFF_LIMIT, \-\-snifflimit SNIFF_LIMIT
+                        Limit CSV dialect sniffing to the specified number of
+                        bytes. Specify \(dq0\(dq to disable sniffing entirely, or
+                        \(dq\-1\(dq to sniff the entire file.
+  \-I, \-\-no\-inference    Disable type inference (and \-\-locale, \-\-date\-format,
+                        \-\-datetime\-format, \-\-no\-leading\-zeroes) when parsing
+                        the input.
+  \-\-chunk\-size CHUNK_SIZE
+                        Chunk size for batch insert into the table. Requires
+                        \-\-insert.
+  \-\-min\-col\-len MIN_COL_LEN
+                        The minimum length of text columns.
+  \-\-col\-len\-multiplier COL_LEN_MULTIPLIER
+                        Multiply the maximum column length by this multiplier
+                        to accomodate larger values in later runs.
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+See also: \fI\%Arguments common to all tools\fP\&.
+.sp
+For information on connection strings and supported dialects refer to the \fI\%SQLAlchemy documentation\fP\&.
+.sp
+If you prefer not to enter your password in the connection string, store the password securely in a \fI\%PostgreSQL Password File\fP, a \fI\%MySQL Options File\fP or similar files for other systems.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+Using the \fB\-\-query\fP option may cause rounding (in Python 2) or introduce \fI\%Python floating point issues\fP (in Python 3).
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+If the CSV file was created from a JSON file using \fI\%in2csv\fP, remember to quote SQL columns properly. For example:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+echo \(aq{\(dqa\(dq:{\(dqb\(dq:\(dqc\(dq},\(dqd\(dq:\(dqe\(dq}\(aq | in2csv \-f ndjson | csvsql \-\-query \(aqSELECT \(dqa/b\(dq FROM stdin\(aq
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+Alternatives to \fI\%csvsql\fP are \fI\%q\fP and \fI\%textql\fP\&.
+.UNINDENT
+.UNINDENT
+.SH EXAMPLES
+.SS Generate SQL statements
+.sp
+Generate a statement in the PostgreSQL dialect:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvsql \-i postgresql examples/realdata/FY09_EDU_Recipients_by_State.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Interact with a SQL database
+.sp
+Create a table and import data from the CSV directly into PostgreSQL:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+createdb test
+csvsql \-\-db postgresql:///test \-\-tables fy09 \-\-insert examples/realdata/FY09_EDU_Recipients_by_State.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+For large tables it may not be practical to process the entire table. One solution to this is to analyze a sample of the table. In this case it can be useful to turn off length limits and null checks with the \fB\-\-no\-constraints\fP option:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+head \-n 20 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsql \-\-no\-constraints \-\-tables fy09
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Create tables for an entire directory of CSVs and import data from those files directly into PostgreSQL:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+createdb test
+csvsql \-\-db postgresql:///test \-\-insert examples/*_converted.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+If those CSVs have identical headers, you can import them into the same table by using \fI\%csvstack\fP first:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+createdb test
+csvstack examples/dummy?.csv | csvsql \-\-db postgresql:///test \-\-insert
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Query and output CSV files using SQL
+.sp
+You can use csvsql to \(dqdirectly\(dq query one or more CSV files. Please note that this will create an in\-memory SQLite database, so it won\(aqt be very fast:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvsql \-\-query  \(dqSELECT m.usda_id, avg(i.sepal_length) AS mean_sepal_length FROM iris AS i JOIN irismeta AS m ON (i.species = m.species) GROUP BY m.species\(dq examples/iris.csv examples/irismeta.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Group rows by one column:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvsql \-\-query \(dqSELECT * FROM \(aqdummy3\(aq GROUP BY a\(dq examples/dummy3.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Concatenate two columns:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvsql \-\-query \(dqSELECT a || b FROM \(aqdummy3\(aq\(dq \-\-no\-inference examples/dummy3.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+If a column contains null values, you must \fBCOALESCE\fP the column:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvsql \-\-query \(dqSELECT a || COALESCE(b, \(aq\(aq) FROM \(aqsort_ints_nulls\(aq\(dq \-\-no\-inference examples/sort_ints_nulls.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+The \fBUPDATE\fP SQL statement produces no output. Remember to \fBSELECT\fP the columns and rows you want:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvsql \-\-query \(dqUPDATE \(aqdummy3\(aq SET a = \(aqfoo\(aq; SELECT * FROM \(aqdummy3\(aq\(dq examples/dummy3.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH AUTHOR
+Christopher Groskopf and contributors
+.SH COPYRIGHT
+2016, Christopher Groskopf and James McKinney
+.\" Generated by docutils manpage writer.
+.

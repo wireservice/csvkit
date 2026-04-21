@@ -1,0 +1,28 @@
+[
+    {
+        "text": "Chicago Reader", 
+        "float": 1.0, 
+        "datetime": "1971-01-01T04:14:00", 
+        "boolean": true,
+        "nested": {
+          "time": "04:14:00",
+          "nested": {
+            "date": "1971-01-01",
+            "integer": 40
+          }
+        }
+    }, 
+    {
+        "text": "Chicago Sun-Times", 
+        "float": 1.27, 
+        "datetime": "1948-01-01T14:57:13", 
+        "boolean": true,
+        "nested": {
+          "time": "14:57:13",
+          "nested": {
+            "date": "1948-01-01",
+            "integer": 63
+          }
+        }
+    }
+]
