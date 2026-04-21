@@ -1,0 +1,308 @@
+.\" Man page generated from reStructuredText.
+.
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.TH "CSVCLEAN" "1" "Aug 16, 2024" "2.2.0" "csvkit"
+.SH NAME
+csvclean \- csvclean Documentation
+.SH DESCRIPTION
+.sp
+Reports and fixes common errors in a CSV file.
+.SS Checks
+.INDENT 0.0
+.IP \(bu 2
+Reports rows that have a different number of columns than the header row, if the \fB\-\-length\-mismatch\fP option is set.
+.IP \(bu 2
+Reports columns that are empty, if the \fB\-\-empty\-columns\fP option is set.
+.UNINDENT
+.sp
+\fBTIP:\fP
+.INDENT 0.0
+.INDENT 3.5
+Enable all checks with \fB\-\-enable\-all\-checks\fP (\fB\-a\fP).
+.UNINDENT
+.UNINDENT
+.SS Fixes
+.INDENT 0.0
+.IP \(bu 2
+If a CSV has unquoted cells that contain line breaks, like:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+id,address,country
+1,1 Main St
+Springfield,US
+2,123 Acadia Avenue
+London,GB
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Use \fB\-\-join\-short\-rows\fP to attempt to correct the errors by merging short rows into a single row:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+id,address,country
+1,\(dq1 Main St
+Springfield\(dq,US
+2,\(dq123 Acadia Avenue
+London\(dq,GB
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+To change the string used to join the lines, use \fB\-\-separator\fP\&. For example, with \fB\-\-separator \(dq, \(dq\fP:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+id,address,country
+1,\(dq1 Main St, Springfield\(dq,US
+2,\(dq123 Acadia Avenue, London\(dq,GB
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP \(bu 2
+If a CSV has missing delimiters, like:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+id,name,country
+1,Alice
+2,Bob,CA
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+You can add the missing delimiters with \fB\-\-fill\-short\-rows\fP:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+id,name,country
+1,Alice,
+2,Bob,CA
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+\fBTIP:\fP
+.INDENT 2.0
+.INDENT 3.5
+\fI\%csvcut\fP without options also adds missing delimiters!
+.UNINDENT
+.UNINDENT
+.sp
+To change the value used to fill short rows, use \fB\-\-fillvalue\fP\&. For example, with \fB\-\-fillvalue \(dqUS\(dq\fP:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+id,name,country
+1,Alice,US
+2,Bob,CA
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+\fBSEE ALSO:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fB\-\-header\-normalize\-space\fP under \fI\%Usage\fP\&.
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+Every csvkit tool does the following:
+.INDENT 0.0
+.IP \(bu 2
+Removes optional quote characters, unless the \fI\-\-quoting\fP (\fI\-u\fP) option is set to change this behavior
+.IP \(bu 2
+Changes the field delimiter to a comma, if the input delimiter is set with the \fI\-\-delimiter\fP (\fI\-d\fP) or \fI\-\-tabs\fP (\fI\-t\fP) options
+.IP \(bu 2
+Changes the record delimiter to a line feed (LF or \fB\en\fP)
+.IP \(bu 2
+Changes the quote character to a double\-quotation mark, if the character is set with the \fI\-\-quotechar\fP (\fI\-q\fP) option
+.IP \(bu 2
+Changes the character encoding to UTF\-8, if the input encoding is set with the \fI\-\-encoding\fP (\fI\-e\fP) option
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Output
+.sp
+\fBcsvclean\fP attempts to make the selected fixes. Then:
+.INDENT 0.0
+.IP \(bu 2
+If the \fB\-\-omit\-error\-rows\fP option is set, \fBonly\fP rows that pass the selected checks are written to standard output. If not, \fBall\fP rows are written to standard output.
+.IP \(bu 2
+If any checks are enabled, \fBerror\fP rows along with line numbers and descriptions are written to standard error. If there are error rows, the exit code is 1.
+.UNINDENT
+.SS Usage
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+usage: csvclean [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3}] [\-b]
+                [\-p ESCAPECHAR] [\-z FIELD_SIZE_LIMIT] [\-e ENCODING] [\-S] [\-H]
+                [\-K SKIP_LINES] [\-v] [\-l] [\-\-zero] [\-V]
+                [FILE]
+
+Fix common errors in a CSV file.
+
+positional arguments:
+  FILE                  The CSV file to operate on. If omitted, will accept
+                        input as piped data via STDIN.
+
+optional arguments:
+  \-h, \-\-help            show this help message and exit
+  \-\-length\-mismatch     Report data rows that are shorter or longer than the
+                        header row.
+  \-\-empty\-columns       Report empty columns as errors.
+  \-a, \-\-enable\-all\-checks
+                        Enable all error reporting.
+  \-\-omit\-error\-rows     Omit data rows that contain errors, from standard
+                        output.
+  \-\-label LABEL         Add a \(dqlabel\(dq column to standard error. Useful in
+                        automated workflows. Use \(dq\-\(dq to default to the input
+                        filename.
+  \-\-header\-normalize\-space
+                        Strip leading and trailing whitespace and replace
+                        sequences of whitespace characters by a single space
+                        in the header.
+  \-\-join\-short\-rows     Merges short rows into a single row.
+  \-\-separator SEPARATOR
+                        The string with which to join short rows. Defaults to
+                        a newline.
+  \-\-fill\-short\-rows     Fill short rows with the missing cells.
+  \-\-fillvalue FILLVALUE
+                        The value with which to fill short rows. Defaults to
+                        none.
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+See also: \fI\%Arguments common to all tools\fP\&.
+.SH EXAMPLES
+.sp
+Test a file with data rows that are shorter and longer than the header row:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ csvclean examples/bad.csv 2> errors.csv
+column_a,column_b,column_c
+0,mixed types.... uh oh,17
+$ cat errors.csv
+line_number,msg,column_a,column_b,column_c
+1,\(dqExpected 3 columns, found 4 columns\(dq,1,27,,I\(aqm too long!
+2,\(dqExpected 3 columns, found 2 columns\(dq,,I\(aqm too short!
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+If any data rows are longer than the header row, you need to add columns manually: for example, by adding one or more delimiters (\fB,\fP) to the end of the header row. \fBcsvclean\fP can\(aqt do this, because it is designed to work with standard input, and correcting an error at the start of the CSV data based on an observation later in the CSV data would require holding all the CSV data in memory – which is not an option for large files.
+.UNINDENT
+.UNINDENT
+.sp
+Test a file with empty columns:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ csvclean \-\-empty\-columns examples/test_empty_columns.csv 2> errors.csv
+a,b,c,,
+a,,,,
+,,c,,
+,,,,
+$ cat errors.csv
+line_number,msg,a,b,c,,
+1,\(dqEmpty columns named \(aqb\(aq, \(aq\(aq, \(aq\(aq! Try: csvcut \-C 2,4,5\(dq,,,,,
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Use \fI\%csvcut\fP to exclude the empty columns:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ csvcut \-C 2,4,5 examples/test_empty_columns.csv
+a,c
+a,
+,c
+,
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+To change the line ending from line feed (LF or \fB\en\fP) to carriage return and line feed (CRLF or \fB\er\en\fP) use:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvformat \-M $\(aq\er\en\(aq examples/dummy.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH AUTHOR
+Christopher Groskopf and contributors
+.SH COPYRIGHT
+2016, Christopher Groskopf and James McKinney
+.\" Generated by docutils manpage writer.
+.

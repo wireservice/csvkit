@@ -1,0 +1,6 @@
+text,date,integer,boolean,float,datetime,empty_column,h
+Chicago Reader,1971-01-01,40,True,1,1971-01-01T04:14:00,,
+Chicago Sun-Times,1948-01-01,63,True,1.27,1948-01-01T14:57:13,,Extra data beyond headers will be trimmed
+Chicago Tribune,1920-01-01,164,False,41800000.01,1920-01-01T00:00:00,,
+This row has blanks,,,,,,,
+Unicode! Σ,,,,,,,
