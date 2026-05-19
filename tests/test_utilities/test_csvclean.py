@@ -168,6 +168,20 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             ['1', "Empty columns named 'b', '', ''! Try: csvcut -C 1,3,4", '', '', '', '', ''],
         ])
 
+    def test_remove_empty_columns(self):
+        self.assertCleaned(['--remove-empty-columns', 'examples/test_empty_columns.csv'], [
+            ['a', 'c'],
+            ['a', ''],
+            ['', 'c'],
+            ['', ''],
+        ])
+
+    def test_remove_empty_columns_no_empty(self):
+        self.assertCleaned(['--remove-empty-columns', 'examples/dummy.csv'], [
+            ['a', 'b', 'c'],
+            ['1', '2', '3'],
+        ])
+
     def test_enable_all_checks(self):
         self.assertCleaned(['-a', 'examples/test_empty_columns.csv'], [
             ['a', 'b', 'c', '', ''],

@@ -49,6 +49,7 @@ class RowChecker:
         # Other
         zero_based=False,
         omit_error_rows=False,
+        report_empty_columns=True,
     ):
         self.reader = reader
         # Checks
@@ -62,6 +63,7 @@ class RowChecker:
         # Other
         self.zero_based = zero_based
         self.omit_error_rows = omit_error_rows
+        self.report_empty_columns = report_empty_columns
 
         try:
             self.column_names = next(reader)
@@ -71,6 +73,7 @@ class RowChecker:
             self.column_names = []
 
         self.errors = []
+        self.empty_column_indices = []
 
     def checked_rows(self):
         """
@@ -147,12 +150,14 @@ class RowChecker:
 
         if row_count:  # Don't report all columns as empty if there are no data rows.
             if empty_columns := [i for i, count in enumerate(empty_counts) if count == row_count]:
-                offset = 0 if self.zero_based else 1
-                self.errors.append(
-                    Error(
-                        1,
-                        ["" for _ in range(len_column_names)],
-                        f"Empty columns named {', '.join(repr(self.column_names[i]) for i in empty_columns)}! "
-                        f"Try: csvcut -C {','.join(str(i + offset) for i in empty_columns)}",
+                self.empty_column_indices = empty_columns
+                if self.report_empty_columns:
+                    offset = 0 if self.zero_based else 1
+                    self.errors.append(
+                        Error(
+                            1,
+                            ["" for _ in range(len_column_names)],
+                            f"Empty columns named {', '.join(repr(self.column_names[i]) for i in empty_columns)}! "
+                            f"Try: csvcut -C {','.join(str(i + offset) for i in empty_columns)}",
+                        )
                     )
-                )

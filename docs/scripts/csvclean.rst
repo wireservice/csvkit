@@ -76,6 +76,8 @@ Fixes
       1,Alice,US
       2,Bob,CA
 
+-  If a CSV has columns that are empty in every data row, use :code:`--remove-empty-columns` to drop them from standard output.
+
 .. seealso::
 
    :code:`--header-normalize-space` under :ref:`csvclean-usage`.
@@ -140,6 +142,9 @@ Usage
      --fillvalue FILLVALUE
                            The value with which to fill short rows. Defaults to
                            none.
+     --remove-empty-columns
+                           Remove columns that are empty in all data rows from
+                           standard output.
 
 
 See also: :doc:`../common_arguments`.
