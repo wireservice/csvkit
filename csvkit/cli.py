@@ -428,6 +428,7 @@ class CSVKitUtility:
             column_names,
             column_offset,
             getattr(self.args, 'not_columns', None),
+            ignore_unknown_columns=getattr(self.args, 'ignore_unknown_columns', False),
         )
 
         return rows, column_names, column_ids
@@ -512,7 +513,7 @@ def match_column_identifier(column_names, c, column_offset=1):
     return c
 
 
-def parse_column_identifiers(ids, column_names, column_offset=1, excluded_columns=None):
+def parse_column_identifiers(ids, column_names, column_offset=1, excluded_columns=None, ignore_unknown_columns=False):
     """
     Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
     Ranges of integers can be specified with two integers separated by a '-' or ':' character.
@@ -537,6 +538,8 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                 elif '-' in c:
                     a, b = c.split('-', 1)
                 else:
+                    if ignore_unknown_columns:
+                        continue
                     raise
 
                 try:
@@ -547,7 +550,12 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                         "Invalid range %s. Ranges must be two integers separated by a - or : character.")
 
                 for x in range(a, b):
-                    columns.append(match_column_identifier(column_names, x, column_offset))
+                    try:
+                        columns.append(match_column_identifier(column_names, x, column_offset))
+                    except ColumnIdentifierError:
+                        if ignore_unknown_columns:
+                            continue
+                        raise
     else:
         columns = range(len(column_names))
 

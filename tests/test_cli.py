@@ -44,6 +44,16 @@ class TestCli(unittest.TestCase):
         self.assertEqual([4, 3, 5], parse_column_identifiers(
             'more-header-values,3,stuff', self.headers, column_offset=0))
 
+    def test_ignore_unknown_columns(self):
+        self.assertEqual(
+            [0, 2],
+            parse_column_identifiers('id,nope,i_work_here', self.headers, ignore_unknown_columns=True),
+        )
+        self.assertEqual(
+            [],
+            parse_column_identifiers('nope,missing', self.headers, ignore_unknown_columns=True),
+        )
+
     def test_range_notation_open_ended(self):
         self.assertEqual([0, 1, 2], parse_column_identifiers(':3', self.headers))
 
