@@ -36,6 +36,9 @@ Filters and truncates CSV files. Like the Unix "cut" command, but for tabular da
                            columns. Ignores unknown columns.
      -x, --delete-empty-rows
                            After cutting, delete rows which are completely empty.
+     --ignore-unknown-columns
+                           Ignore identifiers in --columns (-c) that do not match
+                           a column in the input, instead of erroring.
 
 See also: :doc:`../common_arguments`.
 
