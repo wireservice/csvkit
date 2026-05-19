@@ -1,0 +1,432 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module olefile</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>olefile</strong></big></big> (version 0.42, 2015-01-24)</font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:./olefile.py">.\olefile.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;olefile&nbsp;(formerly&nbsp;OleFileIO_PL)&nbsp;version&nbsp;0.42&nbsp;2015-01-24<br>
+#<br>
+#&nbsp;Module&nbsp;to&nbsp;read/write&nbsp;Microsoft&nbsp;OLE2&nbsp;files&nbsp;(also&nbsp;called&nbsp;Structured&nbsp;Storage&nbsp;or<br>
+#&nbsp;Microsoft&nbsp;Compound&nbsp;Document&nbsp;File&nbsp;Format),&nbsp;such&nbsp;as&nbsp;Microsoft&nbsp;Office&nbsp;97-2003<br>
+#&nbsp;documents,&nbsp;Image&nbsp;Composer&nbsp;and&nbsp;FlashPix&nbsp;files,&nbsp;Outlook&nbsp;messages,&nbsp;...<br>
+#&nbsp;This&nbsp;version&nbsp;is&nbsp;compatible&nbsp;with&nbsp;Python&nbsp;2.6+&nbsp;and&nbsp;3.x<br>
+#<br>
+#&nbsp;Project&nbsp;website:&nbsp;<a href="http://www.decalage.info/olefile">http://www.decalage.info/olefile</a><br>
+#<br>
+#&nbsp;olefile&nbsp;is&nbsp;copyright&nbsp;(c)&nbsp;2005-2015&nbsp;Philippe&nbsp;Lagadec&nbsp;(<a href="http://www.decalage.info">http://www.decalage.info</a>)<br>
+#<br>
+#&nbsp;olefile&nbsp;is&nbsp;based&nbsp;on&nbsp;the&nbsp;<a href="#OleFileIO">OleFileIO</a>&nbsp;module&nbsp;from&nbsp;the&nbsp;PIL&nbsp;library&nbsp;v1.1.6<br>
+#&nbsp;See:&nbsp;<a href="http://www.pythonware.com/products/pil/index.htm">http://www.pythonware.com/products/pil/index.htm</a><br>
+#<br>
+#&nbsp;The&nbsp;Python&nbsp;Imaging&nbsp;Library&nbsp;(PIL)&nbsp;is<br>
+#&nbsp;Copyright&nbsp;(c)&nbsp;1997-2005&nbsp;by&nbsp;Secret&nbsp;Labs&nbsp;AB<br>
+#&nbsp;Copyright&nbsp;(c)&nbsp;1995-2005&nbsp;by&nbsp;Fredrik&nbsp;Lundh<br>
+#<br>
+#&nbsp;See&nbsp;source&nbsp;code&nbsp;and&nbsp;LICENSE.txt&nbsp;for&nbsp;information&nbsp;on&nbsp;usage&nbsp;and&nbsp;redistribution.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="array.html">array</a><br>
+<a href="datetime.html">datetime</a><br>
+</td><td width="25%" valign=top><a href="io.html">io</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="struct.html">struct</a><br>
+<a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="olefile.html#OleFileIO">OleFileIO</a>
+</font></dt><dt><font face="helvetica, arial"><a href="olefile.html#OleMetadata">OleMetadata</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="OleFileIO">class <strong>OleFileIO</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>OLE&nbsp;container&nbsp;object<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;encapsulates&nbsp;the&nbsp;interface&nbsp;to&nbsp;an&nbsp;OLE&nbsp;2&nbsp;structured<br>
+storage&nbsp;file.&nbsp;&nbsp;Use&nbsp;the&nbsp;listdir&nbsp;and&nbsp;openstream&nbsp;methods&nbsp;to<br>
+access&nbsp;the&nbsp;contents&nbsp;of&nbsp;this&nbsp;file.<br>
+&nbsp;<br>
+Object&nbsp;names&nbsp;are&nbsp;given&nbsp;as&nbsp;a&nbsp;list&nbsp;of&nbsp;strings,&nbsp;one&nbsp;for&nbsp;each&nbsp;subentry<br>
+level.&nbsp;&nbsp;The&nbsp;root&nbsp;entry&nbsp;should&nbsp;be&nbsp;omitted.&nbsp;&nbsp;For&nbsp;example,&nbsp;the&nbsp;following<br>
+code&nbsp;extracts&nbsp;all&nbsp;image&nbsp;streams&nbsp;from&nbsp;a&nbsp;Microsoft&nbsp;Image&nbsp;Composer&nbsp;file::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ole&nbsp;=&nbsp;<a href="#OleFileIO">OleFileIO</a>("fan.mic")<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;entry&nbsp;in&nbsp;ole.<a href="#OleFileIO-listdir">listdir</a>():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;entry[1:2]&nbsp;==&nbsp;"Image":<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fin&nbsp;=&nbsp;ole.<a href="#OleFileIO-openstream">openstream</a>(entry)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fout&nbsp;=&nbsp;<a href="#OleFileIO-open">open</a>(entry[0:1],&nbsp;"wb")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;True:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s&nbsp;=&nbsp;fin.read(8192)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;not&nbsp;s:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fout.write(s)<br>
+&nbsp;<br>
+You&nbsp;can&nbsp;use&nbsp;the&nbsp;viewer&nbsp;application&nbsp;provided&nbsp;with&nbsp;the&nbsp;Python&nbsp;Imaging<br>
+Library&nbsp;to&nbsp;view&nbsp;the&nbsp;resulting&nbsp;files&nbsp;(which&nbsp;happens&nbsp;to&nbsp;be&nbsp;standard<br>
+TIFF&nbsp;files).<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="OleFileIO-__init__"><strong>__init__</strong></a>(self, filename<font color="#909090">=None</font>, raise_defects<font color="#909090">=40</font>, write_mode<font color="#909090">=False</font>, debug<font color="#909090">=False</font>, path_encoding<font color="#909090">='utf-8'</font>)</dt><dd><tt>Constructor&nbsp;for&nbsp;the&nbsp;<a href="#OleFileIO">OleFileIO</a>&nbsp;class.<br>
+&nbsp;<br>
+:param&nbsp;filename:&nbsp;file&nbsp;to&nbsp;open.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;if&nbsp;filename&nbsp;is&nbsp;a&nbsp;string&nbsp;smaller&nbsp;than&nbsp;1536&nbsp;bytes,&nbsp;it&nbsp;is&nbsp;the&nbsp;path<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;file&nbsp;to&nbsp;open.&nbsp;(bytes&nbsp;or&nbsp;unicode&nbsp;string)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;if&nbsp;filename&nbsp;is&nbsp;a&nbsp;string&nbsp;longer&nbsp;than&nbsp;1535&nbsp;bytes,&nbsp;it&nbsp;is&nbsp;parsed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;the&nbsp;content&nbsp;of&nbsp;an&nbsp;OLE&nbsp;file&nbsp;in&nbsp;memory.&nbsp;(bytes&nbsp;type&nbsp;only)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;if&nbsp;filename&nbsp;is&nbsp;a&nbsp;file-like&nbsp;object&nbsp;(with&nbsp;read,&nbsp;seek&nbsp;and&nbsp;tell&nbsp;methods),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;it&nbsp;is&nbsp;parsed&nbsp;as-is.<br>
+&nbsp;<br>
+:param&nbsp;raise_defects:&nbsp;minimal&nbsp;level&nbsp;for&nbsp;defects&nbsp;to&nbsp;be&nbsp;raised&nbsp;as&nbsp;exceptions.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(use&nbsp;DEFECT_FATAL&nbsp;for&nbsp;a&nbsp;typical&nbsp;application,&nbsp;DEFECT_INCORRECT&nbsp;for&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;security-oriented&nbsp;application,&nbsp;see&nbsp;source&nbsp;code&nbsp;for&nbsp;details)<br>
+&nbsp;<br>
+:param&nbsp;write_mode:&nbsp;bool,&nbsp;if&nbsp;True&nbsp;the&nbsp;file&nbsp;is&nbsp;opened&nbsp;in&nbsp;read/write&nbsp;mode&nbsp;instead<br>
+&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;read-only&nbsp;by&nbsp;default.<br>
+&nbsp;<br>
+:param&nbsp;debug:&nbsp;bool,&nbsp;set&nbsp;debug&nbsp;mode<br>
+&nbsp;<br>
+:param&nbsp;path_encoding:&nbsp;None&nbsp;or&nbsp;str,&nbsp;name&nbsp;of&nbsp;the&nbsp;codec&nbsp;to&nbsp;use&nbsp;for&nbsp;path<br>
+&nbsp;&nbsp;&nbsp;&nbsp;names&nbsp;(streams&nbsp;and&nbsp;storages),&nbsp;or&nbsp;None&nbsp;for&nbsp;Unicode.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Unicode&nbsp;by&nbsp;default&nbsp;on&nbsp;Python&nbsp;3+,&nbsp;UTF-8&nbsp;on&nbsp;Python&nbsp;2.x.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(new&nbsp;in&nbsp;olefile&nbsp;0.42,&nbsp;was&nbsp;hardcoded&nbsp;to&nbsp;Latin-1&nbsp;until&nbsp;olefile&nbsp;v0.41)</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-close"><strong>close</strong></a>(self)</dt><dd><tt>close&nbsp;the&nbsp;OLE&nbsp;file,&nbsp;to&nbsp;release&nbsp;the&nbsp;file&nbsp;object</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-dumpdirectory"><strong>dumpdirectory</strong></a>(self)</dt><dd><tt>Dump&nbsp;directory&nbsp;(for&nbsp;debugging&nbsp;only)</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-dumpfat"><strong>dumpfat</strong></a>(self, fat, firstindex<font color="#909090">=0</font>)</dt><dd><tt>Displays&nbsp;a&nbsp;part&nbsp;of&nbsp;FAT&nbsp;in&nbsp;human-readable&nbsp;form&nbsp;for&nbsp;debugging&nbsp;purpose</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-dumpsect"><strong>dumpsect</strong></a>(self, sector, firstindex<font color="#909090">=0</font>)</dt><dd><tt>Displays&nbsp;a&nbsp;sector&nbsp;in&nbsp;a&nbsp;human-readable&nbsp;form,&nbsp;for&nbsp;debugging&nbsp;purpose.</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-exists"><strong>exists</strong></a>(self, filename)</dt><dd><tt>Test&nbsp;if&nbsp;given&nbsp;filename&nbsp;exists&nbsp;as&nbsp;a&nbsp;stream&nbsp;or&nbsp;a&nbsp;storage&nbsp;in&nbsp;the&nbsp;OLE<br>
+container.<br>
+Note:&nbsp;filename&nbsp;is&nbsp;case-insensitive.<br>
+&nbsp;<br>
+:param&nbsp;filename:&nbsp;path&nbsp;of&nbsp;stream&nbsp;in&nbsp;storage&nbsp;tree.&nbsp;(see&nbsp;openstream&nbsp;for&nbsp;syntax)<br>
+:returns:&nbsp;True&nbsp;if&nbsp;object&nbsp;exist,&nbsp;else&nbsp;False.</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-get_metadata"><strong>get_metadata</strong></a>(self)</dt><dd><tt>Parse&nbsp;standard&nbsp;properties&nbsp;streams,&nbsp;return&nbsp;an&nbsp;<a href="#OleMetadata">OleMetadata</a>&nbsp;object<br>
+containing&nbsp;all&nbsp;the&nbsp;available&nbsp;metadata.<br>
+(also&nbsp;stored&nbsp;in&nbsp;the&nbsp;metadata&nbsp;attribute&nbsp;of&nbsp;the&nbsp;<a href="#OleFileIO">OleFileIO</a>&nbsp;object)<br>
+&nbsp;<br>
+new&nbsp;in&nbsp;version&nbsp;0.25</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-get_rootentry_name"><strong>get_rootentry_name</strong></a>(self)</dt><dd><tt>Return&nbsp;root&nbsp;entry&nbsp;name.&nbsp;Should&nbsp;usually&nbsp;be&nbsp;'Root&nbsp;Entry'&nbsp;or&nbsp;'R'&nbsp;in&nbsp;most<br>
+implementations.</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-get_size"><strong>get_size</strong></a>(self, filename)</dt><dd><tt>Return&nbsp;size&nbsp;of&nbsp;a&nbsp;stream&nbsp;in&nbsp;the&nbsp;OLE&nbsp;container,&nbsp;in&nbsp;bytes.<br>
+&nbsp;<br>
+:param&nbsp;filename:&nbsp;path&nbsp;of&nbsp;stream&nbsp;in&nbsp;storage&nbsp;tree&nbsp;(see&nbsp;openstream&nbsp;for&nbsp;syntax)<br>
+:returns:&nbsp;size&nbsp;in&nbsp;bytes&nbsp;(long&nbsp;integer)<br>
+:exception&nbsp;IOError:&nbsp;if&nbsp;file&nbsp;not&nbsp;found<br>
+:exception&nbsp;TypeError:&nbsp;if&nbsp;this&nbsp;is&nbsp;not&nbsp;a&nbsp;stream.</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-get_type"><strong>get_type</strong></a>(self, filename)</dt><dd><tt>Test&nbsp;if&nbsp;given&nbsp;filename&nbsp;exists&nbsp;as&nbsp;a&nbsp;stream&nbsp;or&nbsp;a&nbsp;storage&nbsp;in&nbsp;the&nbsp;OLE<br>
+container,&nbsp;and&nbsp;return&nbsp;its&nbsp;type.<br>
+&nbsp;<br>
+:param&nbsp;filename:&nbsp;path&nbsp;of&nbsp;stream&nbsp;in&nbsp;storage&nbsp;tree.&nbsp;(see&nbsp;openstream&nbsp;for&nbsp;syntax)<br>
+:returns:&nbsp;False&nbsp;if&nbsp;object&nbsp;does&nbsp;not&nbsp;exist,&nbsp;its&nbsp;entry&nbsp;type&nbsp;(&gt;0)&nbsp;otherwise:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;STGTY_STREAM:&nbsp;a&nbsp;stream<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;STGTY_STORAGE:&nbsp;a&nbsp;storage<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;STGTY_ROOT:&nbsp;the&nbsp;root&nbsp;entry</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-getctime"><strong>getctime</strong></a>(self, filename)</dt><dd><tt>Return&nbsp;creation&nbsp;time&nbsp;of&nbsp;a&nbsp;stream/storage.<br>
+&nbsp;<br>
+:param&nbsp;filename:&nbsp;path&nbsp;of&nbsp;stream/storage&nbsp;in&nbsp;storage&nbsp;tree.&nbsp;(see&nbsp;openstream&nbsp;for<br>
+&nbsp;&nbsp;&nbsp;&nbsp;syntax)<br>
+:returns:&nbsp;None&nbsp;if&nbsp;creation&nbsp;time&nbsp;is&nbsp;null,&nbsp;a&nbsp;python&nbsp;datetime&nbsp;object<br>
+&nbsp;&nbsp;&nbsp;&nbsp;otherwise&nbsp;(UTC&nbsp;timezone)<br>
+&nbsp;<br>
+new&nbsp;in&nbsp;version&nbsp;0.26</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-getmtime"><strong>getmtime</strong></a>(self, filename)</dt><dd><tt>Return&nbsp;modification&nbsp;time&nbsp;of&nbsp;a&nbsp;stream/storage.<br>
+&nbsp;<br>
+:param&nbsp;filename:&nbsp;path&nbsp;of&nbsp;stream/storage&nbsp;in&nbsp;storage&nbsp;tree.&nbsp;(see&nbsp;openstream&nbsp;for<br>
+&nbsp;&nbsp;&nbsp;&nbsp;syntax)<br>
+:returns:&nbsp;None&nbsp;if&nbsp;modification&nbsp;time&nbsp;is&nbsp;null,&nbsp;a&nbsp;python&nbsp;datetime&nbsp;object<br>
+&nbsp;&nbsp;&nbsp;&nbsp;otherwise&nbsp;(UTC&nbsp;timezone)<br>
+&nbsp;<br>
+new&nbsp;in&nbsp;version&nbsp;0.26</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-getproperties"><strong>getproperties</strong></a>(self, filename, convert_time<font color="#909090">=False</font>, no_conversion<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;properties&nbsp;described&nbsp;in&nbsp;substream.<br>
+&nbsp;<br>
+:param&nbsp;filename:&nbsp;path&nbsp;of&nbsp;stream&nbsp;in&nbsp;storage&nbsp;tree&nbsp;(see&nbsp;openstream&nbsp;for&nbsp;syntax)<br>
+:param&nbsp;convert_time:&nbsp;bool,&nbsp;if&nbsp;True&nbsp;timestamps&nbsp;will&nbsp;be&nbsp;converted&nbsp;to&nbsp;Python&nbsp;datetime<br>
+:param&nbsp;no_conversion:&nbsp;None&nbsp;or&nbsp;list&nbsp;of&nbsp;int,&nbsp;timestamps&nbsp;not&nbsp;to&nbsp;be&nbsp;converted<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(for&nbsp;example&nbsp;total&nbsp;editing&nbsp;time&nbsp;is&nbsp;not&nbsp;a&nbsp;real&nbsp;timestamp)<br>
+&nbsp;<br>
+:returns:&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;values&nbsp;indexed&nbsp;by&nbsp;id&nbsp;(integer)</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-getsect"><strong>getsect</strong></a>(self, sect)</dt><dd><tt>Read&nbsp;given&nbsp;sector&nbsp;from&nbsp;file&nbsp;on&nbsp;disk.<br>
+&nbsp;<br>
+:param&nbsp;sect:&nbsp;int,&nbsp;sector&nbsp;index<br>
+:returns:&nbsp;a&nbsp;string&nbsp;containing&nbsp;the&nbsp;sector&nbsp;data.</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-listdir"><strong>listdir</strong></a>(self, streams<font color="#909090">=True</font>, storages<font color="#909090">=False</font>)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;streams&nbsp;and/or&nbsp;storages&nbsp;stored&nbsp;in&nbsp;this&nbsp;file<br>
+&nbsp;<br>
+:param&nbsp;streams:&nbsp;bool,&nbsp;include&nbsp;streams&nbsp;if&nbsp;True&nbsp;(True&nbsp;by&nbsp;default)&nbsp;-&nbsp;new&nbsp;in&nbsp;v0.26<br>
+:param&nbsp;storages:&nbsp;bool,&nbsp;include&nbsp;storages&nbsp;if&nbsp;True&nbsp;(False&nbsp;by&nbsp;default)&nbsp;-&nbsp;new&nbsp;in&nbsp;v0.26<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(note:&nbsp;the&nbsp;root&nbsp;storage&nbsp;is&nbsp;never&nbsp;included)<br>
+:returns:&nbsp;list&nbsp;of&nbsp;stream&nbsp;and/or&nbsp;storage&nbsp;paths</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-loaddirectory"><strong>loaddirectory</strong></a>(self, sect)</dt><dd><tt>Load&nbsp;the&nbsp;directory.<br>
+&nbsp;<br>
+:param&nbsp;sect:&nbsp;sector&nbsp;index&nbsp;of&nbsp;directory&nbsp;stream.</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-loadfat"><strong>loadfat</strong></a>(self, header)</dt><dd><tt>Load&nbsp;the&nbsp;FAT&nbsp;table.</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-loadfat_sect"><strong>loadfat_sect</strong></a>(self, sect)</dt><dd><tt>Adds&nbsp;the&nbsp;indexes&nbsp;of&nbsp;the&nbsp;given&nbsp;sector&nbsp;to&nbsp;the&nbsp;FAT<br>
+&nbsp;<br>
+:param&nbsp;sect:&nbsp;string&nbsp;containing&nbsp;the&nbsp;first&nbsp;FAT&nbsp;sector,&nbsp;or&nbsp;array&nbsp;of&nbsp;long&nbsp;integers<br>
+:returns:&nbsp;index&nbsp;of&nbsp;last&nbsp;FAT&nbsp;sector.</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-loadminifat"><strong>loadminifat</strong></a>(self)</dt><dd><tt>Load&nbsp;the&nbsp;MiniFAT&nbsp;table.</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-open"><strong>open</strong></a>(self, filename, write_mode<font color="#909090">=False</font>)</dt><dd><tt>Open&nbsp;an&nbsp;OLE2&nbsp;file&nbsp;in&nbsp;read-only&nbsp;or&nbsp;read/write&nbsp;mode.<br>
+Read&nbsp;and&nbsp;parse&nbsp;the&nbsp;header,&nbsp;FAT&nbsp;and&nbsp;directory.<br>
+&nbsp;<br>
+:param&nbsp;filename:&nbsp;string-like&nbsp;or&nbsp;file-like&nbsp;object,&nbsp;OLE&nbsp;file&nbsp;to&nbsp;parse<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;if&nbsp;filename&nbsp;is&nbsp;a&nbsp;string&nbsp;smaller&nbsp;than&nbsp;1536&nbsp;bytes,&nbsp;it&nbsp;is&nbsp;the&nbsp;path<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;file&nbsp;to&nbsp;open.&nbsp;(bytes&nbsp;or&nbsp;unicode&nbsp;string)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;if&nbsp;filename&nbsp;is&nbsp;a&nbsp;string&nbsp;longer&nbsp;than&nbsp;1535&nbsp;bytes,&nbsp;it&nbsp;is&nbsp;parsed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;the&nbsp;content&nbsp;of&nbsp;an&nbsp;OLE&nbsp;file&nbsp;in&nbsp;memory.&nbsp;(bytes&nbsp;type&nbsp;only)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;if&nbsp;filename&nbsp;is&nbsp;a&nbsp;file-like&nbsp;object&nbsp;(with&nbsp;read,&nbsp;seek&nbsp;and&nbsp;tell&nbsp;methods),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;it&nbsp;is&nbsp;parsed&nbsp;as-is.<br>
+&nbsp;<br>
+:param&nbsp;write_mode:&nbsp;bool,&nbsp;if&nbsp;True&nbsp;the&nbsp;file&nbsp;is&nbsp;opened&nbsp;in&nbsp;read/write&nbsp;mode&nbsp;instead<br>
+&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;read-only&nbsp;by&nbsp;default.&nbsp;(ignored&nbsp;if&nbsp;filename&nbsp;is&nbsp;not&nbsp;a&nbsp;path)</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-openstream"><strong>openstream</strong></a>(self, filename)</dt><dd><tt>Open&nbsp;a&nbsp;stream&nbsp;as&nbsp;a&nbsp;read-only&nbsp;file&nbsp;object&nbsp;(BytesIO).<br>
+Note:&nbsp;filename&nbsp;is&nbsp;case-insensitive.<br>
+&nbsp;<br>
+:param&nbsp;filename:&nbsp;path&nbsp;of&nbsp;stream&nbsp;in&nbsp;storage&nbsp;tree&nbsp;(except&nbsp;root&nbsp;entry),&nbsp;either:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;a&nbsp;string&nbsp;using&nbsp;Unix&nbsp;path&nbsp;syntax,&nbsp;for&nbsp;example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'storage_1/storage_1.2/stream'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;storage&nbsp;filenames,&nbsp;path&nbsp;to&nbsp;the&nbsp;desired&nbsp;stream/storage.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Example:&nbsp;['storage_1',&nbsp;'storage_1.2',&nbsp;'stream']<br>
+&nbsp;<br>
+:returns:&nbsp;file&nbsp;object&nbsp;(read-only)<br>
+:exception&nbsp;IOError:&nbsp;if&nbsp;filename&nbsp;not&nbsp;found,&nbsp;or&nbsp;if&nbsp;this&nbsp;is&nbsp;not&nbsp;a&nbsp;stream.</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-sect2array"><strong>sect2array</strong></a>(self, sect)</dt><dd><tt>convert&nbsp;a&nbsp;sector&nbsp;to&nbsp;an&nbsp;array&nbsp;of&nbsp;32&nbsp;bits&nbsp;unsigned&nbsp;integers,<br>
+swapping&nbsp;bytes&nbsp;on&nbsp;big&nbsp;endian&nbsp;CPUs&nbsp;such&nbsp;as&nbsp;PowerPC&nbsp;(old&nbsp;Macs)</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-write_sect"><strong>write_sect</strong></a>(self, sect, data, padding<font color="#909090">='<font color="#c040c0">\x00</font>'</font>)</dt><dd><tt>Write&nbsp;given&nbsp;sector&nbsp;to&nbsp;file&nbsp;on&nbsp;disk.<br>
+&nbsp;<br>
+:param&nbsp;sect:&nbsp;int,&nbsp;sector&nbsp;index<br>
+:param&nbsp;data:&nbsp;bytes,&nbsp;sector&nbsp;data<br>
+:param&nbsp;padding:&nbsp;single&nbsp;byte,&nbsp;padding&nbsp;character&nbsp;if&nbsp;data&nbsp;&lt;&nbsp;sector&nbsp;size</tt></dd></dl>
+
+<dl><dt><a name="OleFileIO-write_stream"><strong>write_stream</strong></a>(self, stream_name, data)</dt><dd><tt>Write&nbsp;a&nbsp;stream&nbsp;to&nbsp;disk.&nbsp;For&nbsp;now,&nbsp;it&nbsp;is&nbsp;only&nbsp;possible&nbsp;to&nbsp;replace&nbsp;an<br>
+existing&nbsp;stream&nbsp;by&nbsp;data&nbsp;of&nbsp;the&nbsp;same&nbsp;size.<br>
+&nbsp;<br>
+:param&nbsp;stream_name:&nbsp;path&nbsp;of&nbsp;stream&nbsp;in&nbsp;storage&nbsp;tree&nbsp;(except&nbsp;root&nbsp;entry),&nbsp;either:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;a&nbsp;string&nbsp;using&nbsp;Unix&nbsp;path&nbsp;syntax,&nbsp;for&nbsp;example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'storage_1/storage_1.2/stream'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;storage&nbsp;filenames,&nbsp;path&nbsp;to&nbsp;the&nbsp;desired&nbsp;stream/storage.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Example:&nbsp;['storage_1',&nbsp;'storage_1.2',&nbsp;'stream']<br>
+&nbsp;<br>
+:param&nbsp;data:&nbsp;bytes,&nbsp;data&nbsp;to&nbsp;be&nbsp;written,&nbsp;must&nbsp;be&nbsp;the&nbsp;same&nbsp;size&nbsp;as&nbsp;the&nbsp;original<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stream.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="OleMetadata">class <strong>OleMetadata</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>class&nbsp;to&nbsp;parse&nbsp;and&nbsp;store&nbsp;metadata&nbsp;from&nbsp;standard&nbsp;properties&nbsp;of&nbsp;OLE&nbsp;files.<br>
+&nbsp;<br>
+Available&nbsp;attributes:<br>
+codepage,&nbsp;title,&nbsp;subject,&nbsp;author,&nbsp;keywords,&nbsp;comments,&nbsp;template,<br>
+last_saved_by,&nbsp;revision_number,&nbsp;total_edit_time,&nbsp;last_printed,&nbsp;create_time,<br>
+last_saved_time,&nbsp;num_pages,&nbsp;num_words,&nbsp;num_chars,&nbsp;thumbnail,<br>
+creating_application,&nbsp;security,&nbsp;codepage_doc,&nbsp;category,&nbsp;presentation_target,<br>
+bytes,&nbsp;lines,&nbsp;paragraphs,&nbsp;slides,&nbsp;notes,&nbsp;hidden_slides,&nbsp;mm_clips,<br>
+scale_crop,&nbsp;heading_pairs,&nbsp;titles_of_parts,&nbsp;manager,&nbsp;company,&nbsp;links_dirty,<br>
+chars_with_spaces,&nbsp;unused,&nbsp;shared_doc,&nbsp;link_base,&nbsp;hlinks,&nbsp;hlinks_changed,<br>
+version,&nbsp;dig_sig,&nbsp;content_type,&nbsp;content_status,&nbsp;language,&nbsp;doc_version<br>
+&nbsp;<br>
+Note:&nbsp;an&nbsp;attribute&nbsp;is&nbsp;set&nbsp;to&nbsp;None&nbsp;when&nbsp;not&nbsp;present&nbsp;in&nbsp;the&nbsp;properties&nbsp;of&nbsp;the<br>
+OLE&nbsp;file.<br>
+&nbsp;<br>
+References&nbsp;for&nbsp;SummaryInformation&nbsp;stream:<br>
+-&nbsp;<a href="http://msdn.microsoft.com/en-us/library/dd942545.aspx">http://msdn.microsoft.com/en-us/library/dd942545.aspx</a><br>
+-&nbsp;<a href="http://msdn.microsoft.com/en-us/library/dd925819%28v=office.12%29.aspx">http://msdn.microsoft.com/en-us/library/dd925819%28v=office.12%29.aspx</a><br>
+-&nbsp;<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/aa380376%28v=vs.85%29.aspx">http://msdn.microsoft.com/en-us/library/windows/desktop/aa380376%28v=vs.85%29.aspx</a><br>
+-&nbsp;<a href="http://msdn.microsoft.com/en-us/library/aa372045.aspx">http://msdn.microsoft.com/en-us/library/aa372045.aspx</a><br>
+-&nbsp;<a href="http://sedna-soft.de/summary-information-stream/">http://sedna-soft.de/summary-information-stream/</a><br>
+-&nbsp;<a href="http://poi.apache.org/apidocs/org/apache/poi/hpsf/SummaryInformation.html">http://poi.apache.org/apidocs/org/apache/poi/hpsf/SummaryInformation.html</a><br>
+&nbsp;<br>
+References&nbsp;for&nbsp;DocumentSummaryInformation&nbsp;stream:<br>
+-&nbsp;<a href="http://msdn.microsoft.com/en-us/library/dd945671%28v=office.12%29.aspx">http://msdn.microsoft.com/en-us/library/dd945671%28v=office.12%29.aspx</a><br>
+-&nbsp;<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/aa380374%28v=vs.85%29.aspx">http://msdn.microsoft.com/en-us/library/windows/desktop/aa380374%28v=vs.85%29.aspx</a><br>
+-&nbsp;<a href="http://poi.apache.org/apidocs/org/apache/poi/hpsf/DocumentSummaryInformation.html">http://poi.apache.org/apidocs/org/apache/poi/hpsf/DocumentSummaryInformation.html</a><br>
+&nbsp;<br>
+new&nbsp;in&nbsp;version&nbsp;0.25<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="OleMetadata-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Constructor&nbsp;for&nbsp;<a href="#OleMetadata">OleMetadata</a><br>
+All&nbsp;attributes&nbsp;are&nbsp;set&nbsp;to&nbsp;None&nbsp;by&nbsp;default</tt></dd></dl>
+
+<dl><dt><a name="OleMetadata-dump"><strong>dump</strong></a>(self)</dt><dd><tt>Dump&nbsp;all&nbsp;metadata,&nbsp;for&nbsp;debugging&nbsp;purposes.</tt></dd></dl>
+
+<dl><dt><a name="OleMetadata-parse_properties"><strong>parse_properties</strong></a>(self, olefile)</dt><dd><tt>Parse&nbsp;standard&nbsp;properties&nbsp;of&nbsp;an&nbsp;OLE&nbsp;file,&nbsp;from&nbsp;the&nbsp;streams<br>
+"SummaryInformation"&nbsp;and&nbsp;"DocumentSummaryInformation",<br>
+if&nbsp;present.<br>
+Properties&nbsp;are&nbsp;converted&nbsp;to&nbsp;strings,&nbsp;integers&nbsp;or&nbsp;python&nbsp;datetime&nbsp;objects.<br>
+If&nbsp;a&nbsp;property&nbsp;is&nbsp;not&nbsp;present,&nbsp;its&nbsp;value&nbsp;is&nbsp;set&nbsp;to&nbsp;None.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>DOCSUM_ATTRIBS</strong> = ['codepage_doc', 'category', 'presentation_target', 'bytes', 'lines', 'paragraphs', 'slides', 'notes', 'hidden_slides', 'mm_clips', 'scale_crop', 'heading_pairs', 'titles_of_parts', 'manager', 'company', 'links_dirty', 'chars_with_spaces', 'unused', 'shared_doc', 'link_base', ...]</dl>
+
+<dl><dt><strong>SUMMARY_ATTRIBS</strong> = ['codepage', 'title', 'subject', 'author', 'keywords', 'comments', 'template', 'last_saved_by', 'revision_number', 'total_edit_time', 'last_printed', 'create_time', 'last_saved_time', 'num_pages', 'num_words', 'num_chars', 'thumbnail', 'creating_application', 'security']</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-debug"><strong>debug</strong></a> = debug_pass(msg)</dt></dl>
+ <dl><dt><a name="-debug_pass"><strong>debug_pass</strong></a>(msg)</dt></dl>
+ <dl><dt><a name="-debug_print"><strong>debug_print</strong></a>(msg)</dt></dl>
+ <dl><dt><a name="-filetime2datetime"><strong>filetime2datetime</strong></a>(filetime)</dt><dd><tt>convert&nbsp;FILETIME&nbsp;(64&nbsp;bits&nbsp;int)&nbsp;to&nbsp;Python&nbsp;datetime.datetime</tt></dd></dl>
+ <dl><dt><a name="-i16"><strong>i16</strong></a>(c, o<font color="#909090">=0</font>)</dt><dd><tt>Converts&nbsp;a&nbsp;2-bytes&nbsp;(16&nbsp;bits)&nbsp;string&nbsp;to&nbsp;an&nbsp;integer.<br>
+&nbsp;<br>
+:param&nbsp;c:&nbsp;string&nbsp;containing&nbsp;bytes&nbsp;to&nbsp;convert<br>
+:param&nbsp;o:&nbsp;offset&nbsp;of&nbsp;bytes&nbsp;to&nbsp;convert&nbsp;in&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-i32"><strong>i32</strong></a>(c, o<font color="#909090">=0</font>)</dt><dd><tt>Converts&nbsp;a&nbsp;4-bytes&nbsp;(32&nbsp;bits)&nbsp;string&nbsp;to&nbsp;an&nbsp;integer.<br>
+&nbsp;<br>
+:param&nbsp;c:&nbsp;string&nbsp;containing&nbsp;bytes&nbsp;to&nbsp;convert<br>
+:param&nbsp;o:&nbsp;offset&nbsp;of&nbsp;bytes&nbsp;to&nbsp;convert&nbsp;in&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-i8"><strong>i8</strong></a>(c)</dt><dd><tt>#&nbsp;version&nbsp;for&nbsp;Python&nbsp;2.x</tt></dd></dl>
+ <dl><dt><a name="-isOleFile"><strong>isOleFile</strong></a>(filename)</dt><dd><tt>Test&nbsp;if&nbsp;a&nbsp;file&nbsp;is&nbsp;an&nbsp;OLE&nbsp;container&nbsp;(according&nbsp;to&nbsp;the&nbsp;magic&nbsp;bytes&nbsp;in&nbsp;its&nbsp;header).<br>
+&nbsp;<br>
+:param&nbsp;filename:&nbsp;string-like&nbsp;or&nbsp;file-like&nbsp;object,&nbsp;OLE&nbsp;file&nbsp;to&nbsp;parse<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;if&nbsp;filename&nbsp;is&nbsp;a&nbsp;string&nbsp;smaller&nbsp;than&nbsp;1536&nbsp;bytes,&nbsp;it&nbsp;is&nbsp;the&nbsp;path<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;file&nbsp;to&nbsp;open.&nbsp;(bytes&nbsp;or&nbsp;unicode&nbsp;string)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;if&nbsp;filename&nbsp;is&nbsp;a&nbsp;string&nbsp;longer&nbsp;than&nbsp;1535&nbsp;bytes,&nbsp;it&nbsp;is&nbsp;parsed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;the&nbsp;content&nbsp;of&nbsp;an&nbsp;OLE&nbsp;file&nbsp;in&nbsp;memory.&nbsp;(bytes&nbsp;type&nbsp;only)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;if&nbsp;filename&nbsp;is&nbsp;a&nbsp;file-like&nbsp;object&nbsp;(with&nbsp;read&nbsp;and&nbsp;seek&nbsp;methods),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;it&nbsp;is&nbsp;parsed&nbsp;as-is.<br>
+&nbsp;<br>
+:returns:&nbsp;True&nbsp;if&nbsp;OLE,&nbsp;False&nbsp;otherwise.</tt></dd></dl>
+ <dl><dt><a name="-set_debug_mode"><strong>set_debug_mode</strong></a>(debug_mode)</dt><dd><tt>Set&nbsp;debug&nbsp;mode&nbsp;on&nbsp;or&nbsp;off,&nbsp;to&nbsp;control&nbsp;display&nbsp;of&nbsp;debugging&nbsp;messages.<br>
+:param&nbsp;mode:&nbsp;True&nbsp;or&nbsp;False</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>DEBUG_MODE</strong> = False<br>
+<strong>DEFAULT_PATH_ENCODING</strong> = 'utf-8'<br>
+<strong>DEFECT_FATAL</strong> = 40<br>
+<strong>DEFECT_INCORRECT</strong> = 30<br>
+<strong>DEFECT_POTENTIAL</strong> = 20<br>
+<strong>DEFECT_UNSURE</strong> = 10<br>
+<strong>DIFSECT</strong> = 4294967292L<br>
+<strong>ENDOFCHAIN</strong> = 4294967294L<br>
+<strong>FATSECT</strong> = 4294967293L<br>
+<strong>FREESECT</strong> = 4294967295L<br>
+<strong>KEEP_UNICODE_NAMES</strong> = True<br>
+<strong>MAGIC</strong> = '<font color="#c040c0">\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1</font>'<br>
+<strong>MAXREGSECT</strong> = 4294967290L<br>
+<strong>MAXREGSID</strong> = 4294967290L<br>
+<strong>MINIMAL_OLEFILE_SIZE</strong> = 1536<br>
+<strong>NOSTREAM</strong> = 4294967295L<br>
+<strong>STGTY_EMPTY</strong> = 0<br>
+<strong>STGTY_LOCKBYTES</strong> = 3<br>
+<strong>STGTY_PROPERTY</strong> = 4<br>
+<strong>STGTY_ROOT</strong> = 5<br>
+<strong>STGTY_STORAGE</strong> = 1<br>
+<strong>STGTY_STREAM</strong> = 2<br>
+<strong>UINT32</strong> = 'L'<br>
+<strong>VT</strong> = {0: 'VT_EMPTY', 1: 'VT_NULL', 2: 'VT_I2', 3: 'VT_I4', 4: 'VT_R4', 5: 'VT_R8', 6: 'VT_CY', 7: 'VT_DATE', 8: 'VT_BSTR', 9: 'VT_DISPATCH', ...}<br>
+<strong>VT_BLOB</strong> = 65<br>
+<strong>VT_BLOB_OBJECT</strong> = 70<br>
+<strong>VT_BOOL</strong> = 11<br>
+<strong>VT_BSTR</strong> = 8<br>
+<strong>VT_CARRAY</strong> = 28<br>
+<strong>VT_CF</strong> = 71<br>
+<strong>VT_CLSID</strong> = 72<br>
+<strong>VT_CY</strong> = 6<br>
+<strong>VT_DATE</strong> = 7<br>
+<strong>VT_DECIMAL</strong> = 14<br>
+<strong>VT_DISPATCH</strong> = 9<br>
+<strong>VT_EMPTY</strong> = 0<br>
+<strong>VT_ERROR</strong> = 10<br>
+<strong>VT_FILETIME</strong> = 64<br>
+<strong>VT_HRESULT</strong> = 25<br>
+<strong>VT_I1</strong> = 16<br>
+<strong>VT_I2</strong> = 2<br>
+<strong>VT_I4</strong> = 3<br>
+<strong>VT_I8</strong> = 20<br>
+<strong>VT_INT</strong> = 22<br>
+<strong>VT_LPSTR</strong> = 30<br>
+<strong>VT_LPWSTR</strong> = 31<br>
+<strong>VT_NULL</strong> = 1<br>
+<strong>VT_PTR</strong> = 26<br>
+<strong>VT_R4</strong> = 4<br>
+<strong>VT_R8</strong> = 5<br>
+<strong>VT_SAFEARRAY</strong> = 27<br>
+<strong>VT_STORAGE</strong> = 67<br>
+<strong>VT_STORED_OBJECT</strong> = 69<br>
+<strong>VT_STREAM</strong> = 66<br>
+<strong>VT_STREAMED_OBJECT</strong> = 68<br>
+<strong>VT_UI1</strong> = 17<br>
+<strong>VT_UI2</strong> = 18<br>
+<strong>VT_UI4</strong> = 19<br>
+<strong>VT_UI8</strong> = 21<br>
+<strong>VT_UINT</strong> = 23<br>
+<strong>VT_UNKNOWN</strong> = 13<br>
+<strong>VT_USERDEFINED</strong> = 29<br>
+<strong>VT_VARIANT</strong> = 12<br>
+<strong>VT_VECTOR</strong> = 4096<br>
+<strong>VT_VOID</strong> = 24<br>
+<strong>WORD_CLSID</strong> = '00020900-0000-0000-C000-000000000046'<br>
+<strong>__author__</strong> = 'Philippe Lagadec'<br>
+<strong>__date__</strong> = '2015-01-24'<br>
+<strong>__version__</strong> = '0.42'<br>
+<strong>keyword</strong> = 'VT_UNKNOWN'<br>
+<strong>print_function</strong> = _Feature((2, 6, 0, 'alpha', 2), (3, 0, 0, 'alpha', 0), 65536)<br>
+<strong>var</strong> = 13</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Philippe&nbsp;Lagadec</td></tr></table>
+</body></html>

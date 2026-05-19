@@ -1,3 +1,8 @@
+Unreleased
+----------
+
+-  feat: :doc:`/scripts/csvclean` adds a :code:`--remove-empty-columns` option, to remove columns that are empty in all data rows.
+
 2.2.0 - December 15, 2025
 -------------------------
 

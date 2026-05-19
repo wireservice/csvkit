@@ -46,6 +46,7 @@ class RowChecker:
         separator='\n',
         fill_short_rows=False,
         fillvalue=None,
+        remove_empty_columns=False,
         # Other
         zero_based=False,
         omit_error_rows=False,
@@ -59,6 +60,7 @@ class RowChecker:
         self.separator = separator
         self.fill_short_rows = fill_short_rows
         self.fillvalue = fillvalue
+        self.remove_empty_columns = remove_empty_columns
         # Other
         self.zero_based = zero_based
         self.omit_error_rows = omit_error_rows
@@ -81,6 +83,7 @@ class RowChecker:
 
         row_count = 0
         empty_counts = [0 for _ in range(len_column_names)]
+        buffered_rows = []
 
         # Row-level checks and fixes.
         for row in self.reader:
@@ -133,7 +136,7 @@ class RowChecker:
                     self.errors.append(length_error)
 
             # Increment the number of empty cells for each column.
-            if self.empty_columns:
+            if self.empty_columns or self.remove_empty_columns:
                 for i in range(len_column_names):
                     if i >= len(row) or row[i] == '':
                         empty_counts[i] += 1
@@ -141,18 +144,31 @@ class RowChecker:
             # Standard output
 
             if not self.omit_error_rows or len(row) == len_column_names:
-                yield row
+                if self.remove_empty_columns:
+                    buffered_rows.append(row)
+                else:
+                    yield row
 
         # File-level checks and fixes.
 
         if row_count:  # Don't report all columns as empty if there are no data rows.
             if empty_columns := [i for i, count in enumerate(empty_counts) if count == row_count]:
                 offset = 0 if self.zero_based else 1
-                self.errors.append(
-                    Error(
-                        1,
-                        ["" for _ in range(len_column_names)],
-                        f"Empty columns named {', '.join(repr(self.column_names[i]) for i in empty_columns)}! "
-                        f"Try: csvcut -C {','.join(str(i + offset) for i in empty_columns)}",
+                if self.empty_columns:
+                    self.errors.append(
+                        Error(
+                            1,
+                            ["" for _ in range(len_column_names)],
+                            f"Empty columns named {', '.join(repr(self.column_names[i]) for i in empty_columns)}! "
+                            f"Try: csvcut -C {','.join(str(i + offset) for i in empty_columns)}",
+                        )
                     )
-                )
+                if self.remove_empty_columns:
+                    kept = [i for i in range(len_column_names) if i not in set(empty_columns)]
+                    self.column_names = [self.column_names[i] for i in kept]
+                    for row in buffered_rows:
+                        yield [row[i] if i < len(row) else '' for i in kept]
+                    buffered_rows = []
+
+        if self.remove_empty_columns:
+            yield from buffered_rows

@@ -1,0 +1,16 @@
+pytimeparse-1.1.8.dist-info/DESCRIPTION.rst,sha256=IdtV_SYTSuMfltlzYcpbhYB5S6Adiu78yVLmQhOpndg,2542
+pytimeparse-1.1.8.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+pytimeparse-1.1.8.dist-info/METADATA,sha256=3Z2XjIYVvIkikmPPII5CQhM7bUpQP-rdnsSC2mkNu6Y,3445
+pytimeparse-1.1.8.dist-info/RECORD,,
+pytimeparse-1.1.8.dist-info/WHEEL,sha256=o2k-Qa-RMNIJmUdIc7KU6VWR_ErNRbWNlxDIpl7lm34,110
+pytimeparse-1.1.8.dist-info/metadata.json,sha256=iV1DPCAZStQMoRmTF4l1LohTz5D-ItbySYmgGQS2Ick,1045
+pytimeparse-1.1.8.dist-info/top_level.txt,sha256=sLy9SEpQEMQM2tLEmnMDEuezeERWTQ1KcCAwZZHFWWo,12
+pytimeparse/VERSION,sha256=Mz2JqgaMernrf-e6VTh-ArJvr9z6BrYtLkXj0KQ8O5o,6
+pytimeparse/__init__.py,sha256=I1NTYzQgz7EaNi7dIDTZ-Yr4aSdK9sjxoVDqJhAxhOo,730
+pytimeparse/__pycache__/__init__.cpython-312.pyc,,
+pytimeparse/__pycache__/timeparse.cpython-312.pyc,,
+pytimeparse/tests/__init__.py,sha256=IevtKUcZS0ff1oigFDw83bHHtEz-Z5UgEC7gsxiHkhg,129
+pytimeparse/tests/__pycache__/__init__.cpython-312.pyc,,
+pytimeparse/tests/__pycache__/testtimeparse.cpython-312.pyc,,
+pytimeparse/tests/testtimeparse.py,sha256=w_o7gaPORpRXT_2utEv665FlxYlvJ6rX3TNRNoyc7iQ,16386
+pytimeparse/timeparse.py,sha256=vqCQSSAZmmflYgnAu2jUmMauRgtEA_JrIcRq7TU9JpI,6654

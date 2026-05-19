@@ -1,0 +1,77 @@
+Metadata-Version: 2.4
+Name: agate
+Version: 1.14.2
+Summary: A data analysis library that is optimized for humans instead of machines.
+Author-email: Christopher Groskopf <chrisgroskopf@gmail.com>
+License: MIT
+Project-URL: Homepage, https://agate.readthedocs.org/
+Project-URL: Source, https://github.com/wireservice/agate
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Framework :: IPython
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Description-Content-Type: text/x-rst
+License-File: COPYING
+License-File: AUTHORS.rst
+Requires-Dist: Babel>=2.0
+Requires-Dist: isodate>=0.5.4
+Requires-Dist: leather>=0.3.2
+Requires-Dist: parsedatetime!=2.5,>=2.1
+Requires-Dist: python-slugify>=1.2.1
+Requires-Dist: pytimeparse>=1.1.5
+Requires-Dist: tzdata>=2023.3; platform_system == "Windows"
+Provides-Extra: test
+Requires-Dist: coverage>=3.7.1; extra == "test"
+Requires-Dist: cssselect>=0.9.1; extra == "test"
+Requires-Dist: lxml>=3.6.0; extra == "test"
+Requires-Dist: PyICU>=2.4.2; sys_platform == "linux" and extra == "test"
+Requires-Dist: pytest; extra == "test"
+Requires-Dist: pytest-cov; extra == "test"
+Dynamic: license-file
+
+.. image:: https://github.com/wireservice/agate/workflows/CI/badge.svg
+    :target: https://github.com/wireservice/agate/actions
+    :alt: Build status
+
+.. image:: https://codecov.io/github/wireservice/agate/graph/badge.svg
+    :target: https://codecov.io/github/wireservice/agate
+    :alt: Coverage status
+
+.. image:: https://img.shields.io/pypi/dm/agate.svg
+    :target: https://pypi.python.org/pypi/agate
+    :alt: PyPI downloads
+
+.. image:: https://img.shields.io/pypi/v/agate.svg
+    :target: https://pypi.python.org/pypi/agate
+    :alt: Version
+
+.. image:: https://img.shields.io/pypi/l/agate.svg
+    :target: https://pypi.python.org/pypi/agate
+    :alt: License
+
+.. image:: https://img.shields.io/pypi/pyversions/agate.svg
+    :target: https://pypi.python.org/pypi/agate
+    :alt: Support Python versions
+
+agate is a Python data analysis library that is optimized for humans instead of machines. It is an alternative to numpy and pandas that solves real-world problems with readable code.
+
+agate was previously known as journalism.
+
+Important links:
+
+* Documentation:    https://agate.rtfd.org
+* Repository:       https://github.com/wireservice/agate
+* Issues:           https://github.com/wireservice/agate/issues

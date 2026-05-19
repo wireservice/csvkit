@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+</head>
+<body>
+<h1 id="olefile-v0.42-documentation">olefile v0.42 documentation</h1>
+<p>This is the home page of the documentation for olefile. The latest version can be found <a href="https://bitbucket.org/decalage/olefileio_pl/wiki">online</a>, otherwise a copy is provided in the doc subfolder of the package.</p>
+<p><a href="http://www.decalage.info/olefile">olefile</a> is a Python package to parse, read and write <a href="http://en.wikipedia.org/wiki/Compound_File_Binary_Format">Microsoft OLE2 files</a> (also called Structured Storage, Compound File Binary Format or Compound Document File Format), such as Microsoft Office 97-2003 documents, Image Composer and FlashPix files, Outlook messages, StickyNotes, several Microscopy file formats, McAfee antivirus quarantine files, etc.</p>
+<p><strong>Quick links:</strong> <a href="http://www.decalage.info/olefile">Home page</a> - <a href="https://bitbucket.org/decalage/olefileio_pl/wiki/Install">Download/Install</a> - <a href="https://bitbucket.org/decalage/olefileio_pl/wiki">Documentation</a> - <a href="https://bitbucket.org/decalage/olefileio_pl/issues?status=new&amp;status=open">Report Issues/Suggestions/Questions</a> - <a href="http://decalage.info/contact">Contact the author</a> - <a href="https://bitbucket.org/decalage/olefileio_pl">Repository</a> - <a href="https://twitter.com/decalage2">Updates on Twitter</a></p>
+<h2 id="documentation-pages">Documentation pages</h2>
+<ul>
+<li><a href="License.html">License</a></li>
+<li><a href="Install.html">Install</a></li>
+<li><a href="Contribute.html">Contribute</a>, Suggest Improvements or Report Issues</li>
+<li><a href="OLE_Overview.html">OLE_Overview</a></li>
+<li><a href="API.html">API</a> and Usage</li>
+</ul>
+<h2 id="features">Features</h2>
+<ul>
+<li>Parse, read and write any OLE file such as Microsoft Office 97-2003 legacy document formats (Word .doc, Excel .xls, PowerPoint .ppt, Visio .vsd, Project .mpp), Image Composer and FlashPix files, Outlook messages, StickyNotes, Zeiss AxioVision ZVI files, Olympus FluoView OIB files, etc</li>
+<li>List all the streams and storages contained in an OLE file</li>
+<li>Open streams as files</li>
+<li>Parse and read property streams, containing metadata of the file</li>
+<li>Portable, pure Python module, no dependency</li>
+</ul>
+<p>olefile can be used as an independent module or with PIL/Pillow.</p>
+<p>olefile is mostly meant for developers. If you are looking for tools to analyze OLE files or to extract data (especially for security purposes such as malware analysis and forensics), then please also check my <a href="http://www.decalage.info/python/oletools">python-oletools</a>, which are built upon olefile and provide a higher-level interface.</p>
+<h2 id="history">History</h2>
+<p>olefile is based on the OleFileIO module from <a href="http://www.pythonware.com/products/pil/index.htm">PIL</a>, the excellent Python Imaging Library, created and maintained by Fredrik Lundh. The olefile API is still compatible with PIL, but since 2005 I have improved the internal implementation significantly, with new features, bugfixes and a more robust design. From 2005 to 2014 the project was called OleFileIO_PL, and in 2014 I changed its name to olefile to celebrate its 9 years and its new write features.</p>
+<p>As far as I know, this module is the most complete and robust Python implementation to read MS OLE2 files, portable on several operating systems. (please tell me if you know other similar Python modules)</p>
+<p>Since 2014 olefile/OleFileIO_PL has been integrated into <a href="http://python-imaging.github.io/">Pillow</a>, the friendly fork of PIL. olefile will continue to be improved as a separate project, and new versions will be merged into Pillow regularly.</p>
+<h2 id="main-improvements-over-the-original-version-of-olefileio-in-pil">Main improvements over the original version of OleFileIO in PIL:</h2>
+<ul>
+<li>Compatible with Python 3.x and 2.6+</li>
+<li>Many bug fixes</li>
+<li>Support for files larger than 6.8MB</li>
+<li>Support for 64 bits platforms and big-endian CPUs</li>
+<li>Robust: many checks to detect malformed files</li>
+<li>Runtime option to choose if malformed files should be parsed or raise exceptions</li>
+<li>Improved API</li>
+<li>Metadata extraction, stream/storage timestamps (e.g. for document forensics)</li>
+<li>Can open file-like objects</li>
+<li>Added setup.py and install.bat to ease installation</li>
+<li>More convenient slash-based syntax for stream paths</li>
+<li>Write features</li>
+</ul>
+<hr />
+<h2 id="olefile-documentation">olefile documentation</h2>
+<ul>
+<li><a href="Home.html">Home</a></li>
+<li><a href="License.html">License</a></li>
+<li><a href="Install.html">Install</a></li>
+<li><a href="Contribute.html">Contribute</a>, Suggest Improvements or Report Issues</li>
+<li><a href="OLE_Overview.html">OLE_Overview</a></li>
+<li><a href="API.html">API</a> and Usage</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,80 @@
+Metadata-Version: 2.4
+Name: leather
+Version: 0.4.1
+Summary: Python charting for 80% of humans.
+Home-page: https://leather.readthedocs.io/
+Author: Christopher Groskopf
+Author-email: chrisgroskopf@gmail.com
+License: MIT
+Classifier: Development Status :: 3 - Alpha
+Classifier: Framework :: IPython
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Multimedia :: Graphics
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Scientific/Engineering :: Visualization
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Description-Content-Type: text/x-rst
+License-File: COPYING
+Provides-Extra: test
+Requires-Dist: pytest; extra == "test"
+Requires-Dist: pytest-cov; extra == "test"
+Requires-Dist: lxml>=3.6.0; extra == "test"
+Requires-Dist: cssselect>=0.9.1; extra == "test"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: summary
+
+.. image:: https://github.com/wireservice/leather/workflows/CI/badge.svg
+    :target: https://github.com/wireservice/leather/actions
+    :alt: Build status
+
+.. image:: https://coveralls.io/repos/wireservice/leather/badge.svg?branch=master
+    :target: https://coveralls.io/r/wireservice/leather
+    :alt: Coverage status
+
+.. image:: https://img.shields.io/pypi/dw/leather.svg
+    :target: https://pypi.python.org/pypi/leather
+    :alt: PyPI downloads
+
+.. image:: https://img.shields.io/pypi/v/leather.svg
+    :target: https://pypi.python.org/pypi/leather
+    :alt: Version
+
+.. image:: https://img.shields.io/pypi/l/leather.svg
+    :target: https://pypi.python.org/pypi/leather
+    :alt: License
+
+.. image:: https://img.shields.io/pypi/pyversions/leather.svg
+    :target: https://pypi.python.org/pypi/leather
+    :alt: Support Python versions
+
+Leather is the Python charting library for those who need charts *now* and don't care if they're perfect.
+
+Leather isn't picky. It's rough. It gets dirty. It looks sexy just hanging on the back of a chair. Leather doesn't need your accessories. Leather is how Snake Plissken would make charts.
+
+Get it?
+
+Important links:
+
+* Documentation:    https://leather.rtfd.io
+* Repository:       https://github.com/wireservice/leather
+* Issues:           https://github.com/wireservice/leather/issues
