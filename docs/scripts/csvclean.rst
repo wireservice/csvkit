@@ -76,7 +76,21 @@ Fixes
       1,Alice,US
       2,Bob,CA
 
--  If a CSV has columns that are empty in every data row, use :code:`--remove-empty-columns` to drop them from standard output.
+-  If a CSV has columns that are empty in every data row, like:
+
+   .. code-block:: none
+
+      id,name,extra
+      1,Alice,
+      2,Bob,
+
+   You can drop them with :code:`--remove-empty-columns`:
+
+   .. code-block:: none
+
+      id,name
+      1,Alice
+      2,Bob
 
 .. seealso::
 
@@ -143,7 +157,7 @@ Usage
                            The value with which to fill short rows. Defaults to
                            none.
      --remove-empty-columns
-                           Remove columns that are empty in all data rows from
+                           Remove columns that are empty in all data rows, from
                            standard output.
 
 

@@ -47,7 +47,7 @@ class CSVClean(CSVKitUtility):
             help='The value with which to fill short rows. Defaults to none.')
         self.argparser.add_argument(
             '--remove-empty-columns', dest='remove_empty_columns', action='store_true',
-            help='Remove columns that are empty in all data rows from standard output.')
+            help='Remove columns that are empty in all data rows, from standard output.')
 
     def main(self):
         if self.additional_input_expected():
@@ -100,10 +100,11 @@ class CSVClean(CSVKitUtility):
         output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
         if self.args.remove_empty_columns:
             rows = list(checker.checked_rows())
-            keep = [i for i, name in enumerate(checker.column_names) if i not in checker.empty_column_indices]
+            empty = set(checker.empty_column_indices)
+            keep = [i for i in range(len(checker.column_names)) if i not in empty]
             output_writer.writerow([checker.column_names[i] for i in keep])
             for row in rows:
-                output_writer.writerow([row[i] if i < len(row) else '' for i in keep])
+                output_writer.writerow([row[i] for i in keep if i < len(row)])
         else:
             output_writer.writerow(checker.column_names)
             for row in checker.checked_rows():

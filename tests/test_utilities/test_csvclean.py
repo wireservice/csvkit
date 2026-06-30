@@ -182,6 +182,17 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             ['1', '2', '3'],
         ])
 
+    def test_remove_empty_columns_short_row(self):
+        # A short row stays short: removing empty columns does not pad it out.
+        input_file = io.BytesIO(b'a,b,c\n1,,3\nx\n')
+
+        with stdin_as_string(input_file):
+            self.assertCleaned(['--remove-empty-columns'], [
+                ['a', 'c'],
+                ['1', '3'],
+                ['x'],
+            ])
+
     def test_enable_all_checks(self):
         self.assertCleaned(['-a', 'examples/test_empty_columns.csv'], [
             ['a', 'b', 'c', '', ''],
