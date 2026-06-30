@@ -76,7 +76,7 @@ Fixes
       1,Alice,US
       2,Bob,CA
 
--  If a CSV has columns that are empty in every data row, like:
+-  If a CSV has empty columns, like:
 
    .. code-block:: none
 
@@ -157,8 +157,7 @@ Usage
                            The value with which to fill short rows. Defaults to
                            none.
      --remove-empty-columns
-                           Remove columns that are empty in all data rows, from
-                           standard output.
+                           Remove empty columns from standard output.
 
 
 See also: :doc:`../common_arguments`.

@@ -47,7 +47,7 @@ class CSVClean(CSVKitUtility):
             help='The value with which to fill short rows. Defaults to none.')
         self.argparser.add_argument(
             '--remove-empty-columns', dest='remove_empty_columns', action='store_true',
-            help='Remove columns that are empty in all data rows, from standard output.')
+            help='Remove empty columns from standard output.')
 
     def main(self):
         if self.additional_input_expected():
