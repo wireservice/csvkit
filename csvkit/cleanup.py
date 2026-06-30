@@ -46,10 +46,10 @@ class RowChecker:
         separator='\n',
         fill_short_rows=False,
         fillvalue=None,
+        remove_empty_columns=False,
         # Other
         zero_based=False,
         omit_error_rows=False,
-        remove_empty_columns=False,
     ):
         self.reader = reader
         # Checks
@@ -60,10 +60,10 @@ class RowChecker:
         self.separator = separator
         self.fill_short_rows = fill_short_rows
         self.fillvalue = fillvalue
+        self.remove_empty_columns = remove_empty_columns
         # Other
         self.zero_based = zero_based
         self.omit_error_rows = omit_error_rows
-        self.remove_empty_columns = remove_empty_columns
 
         try:
             self.column_names = next(reader)
@@ -71,13 +71,14 @@ class RowChecker:
                 self.column_names = [' '.join(column_name.split()) for column_name in self.column_names]
         except StopIteration:
             self.column_names = []
+        """All column names, from the header row. Always the full set of columns, so that errors can reference any
+        column, even when empty columns are removed from standard output."""
 
-        # The column names to write to standard output. These match column_names unless empty columns are removed, in
-        # which case checked_rows() narrows them. column_names is left intact, so errors still reference all columns.
         self.output_column_names = self.column_names
+        """The column names to write to standard output. Identical to ``column_names``, unless ``remove_empty_columns``
+        is set, in which case ``checked_rows()`` narrows it to the non-empty columns once every row has been read."""
 
         self.errors = []
-        self.empty_column_indices = []
 
     def checked_rows(self):
         """
@@ -143,7 +144,7 @@ class RowChecker:
                     self.errors.append(length_error)
 
             # Increment the number of empty cells for each column.
-            if self.empty_columns or self.remove_empty_columns:
+            if self.empty_columns:
                 for i in range(len_column_names):
                     if i >= len(row) or row[i] == '':
                         empty_counts[i] += 1
@@ -160,22 +161,23 @@ class RowChecker:
 
         if row_count:  # Don't report all columns as empty if there are no data rows.
             if empty_columns := [i for i, count in enumerate(empty_counts) if count == row_count]:
-                self.empty_column_indices = empty_columns
-                if self.empty_columns:
-                    offset = 0 if self.zero_based else 1
-                    self.errors.append(
-                        Error(
-                            1,
-                            ["" for _ in range(len_column_names)],
-                            f"Empty columns named {', '.join(repr(self.column_names[i]) for i in empty_columns)}! "
-                            f"Try: csvcut -C {','.join(str(i + offset) for i in empty_columns)}",
-                        )
+                offset = 0 if self.zero_based else 1
+                self.errors.append(
+                    Error(
+                        1,
+                        ["" for _ in range(len_column_names)],
+                        f"Empty columns named {', '.join(repr(self.column_names[i]) for i in empty_columns)}! "
+                        f"Try: csvcut -C {','.join(str(i + offset) for i in empty_columns)}",
                     )
+                )
 
-        # Narrow the buffered rows and the output header to the non-empty columns.
+        # Narrow the buffered rows and the output header to the columns with a value in at least one row.
         if self.remove_empty_columns:
-            empty = set(self.empty_column_indices)
-            keep = [i for i in range(len_column_names) if i not in empty]
+            if output_rows:
+                non_empty = {i for row in output_rows for i in range(min(len(row), len_column_names)) if row[i] != ''}
+                keep = [i for i in range(len_column_names) if i in non_empty]
+            else:  # Keep all columns if there are no data rows, like the empty-columns check.
+                keep = list(range(len_column_names))
             self.output_column_names = [self.column_names[i] for i in keep]
             for row in output_rows:
                 yield [row[i] for i in keep if i < len(row)]

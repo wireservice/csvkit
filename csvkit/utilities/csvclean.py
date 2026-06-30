@@ -99,7 +99,9 @@ class CSVClean(CSVKitUtility):
 
         output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
         rows = checker.checked_rows()
-        # Removing empty columns narrows output_column_names, but only after every row is read.
+        # checked_rows() finalizes output_column_names (dropping empty columns) only once every row has been read, so
+        # the rows must be consumed before the header is written. Without --remove-empty-columns, the header is fixed
+        # and rows can stream.
         if self.args.remove_empty_columns:
             rows = list(rows)
         output_writer.writerow(checker.output_column_names)
