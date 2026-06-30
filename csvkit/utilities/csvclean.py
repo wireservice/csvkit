@@ -88,6 +88,7 @@ class CSVClean(CSVKitUtility):
             zero_based=self.args.zero_based,
             omit_error_rows=self.args.omit_error_rows,
             report_empty_columns=default or self.args.empty_columns,
+            remove_empty_columns=self.args.remove_empty_columns,
         )
 
         label = self.args.label
@@ -98,17 +99,13 @@ class CSVClean(CSVKitUtility):
                 label = self.input_file.name
 
         output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
+        rows = checker.checked_rows()
+        # Removing empty columns narrows output_column_names, but only after every row is read.
         if self.args.remove_empty_columns:
-            rows = list(checker.checked_rows())
-            empty = set(checker.empty_column_indices)
-            keep = [i for i in range(len(checker.column_names)) if i not in empty]
-            output_writer.writerow([checker.column_names[i] for i in keep])
-            for row in rows:
-                output_writer.writerow([row[i] for i in keep if i < len(row)])
-        else:
-            output_writer.writerow(checker.column_names)
-            for row in checker.checked_rows():
-                output_writer.writerow(row)
+            rows = list(rows)
+        output_writer.writerow(checker.output_column_names)
+        for row in rows:
+            output_writer.writerow(row)
 
         if checker.errors:
             error_writer = agate.csv.writer(self.error_file, **self.writer_kwargs)

@@ -50,6 +50,7 @@ class RowChecker:
         zero_based=False,
         omit_error_rows=False,
         report_empty_columns=True,
+        remove_empty_columns=False,
     ):
         self.reader = reader
         # Checks
@@ -64,6 +65,7 @@ class RowChecker:
         self.zero_based = zero_based
         self.omit_error_rows = omit_error_rows
         self.report_empty_columns = report_empty_columns
+        self.remove_empty_columns = remove_empty_columns
 
         try:
             self.column_names = next(reader)
@@ -71,6 +73,10 @@ class RowChecker:
                 self.column_names = [' '.join(column_name.split()) for column_name in self.column_names]
         except StopIteration:
             self.column_names = []
+
+        # The column names to write to standard output. These match column_names unless empty columns are removed, in
+        # which case checked_rows() narrows them. column_names is left intact, so errors still reference all columns.
+        self.output_column_names = self.column_names
 
         self.errors = []
         self.empty_column_indices = []
@@ -84,6 +90,9 @@ class RowChecker:
 
         row_count = 0
         empty_counts = [0 for _ in range(len_column_names)]
+
+        # Empty columns can only be removed once every data row has been read, so buffer rows instead of yielding them.
+        output_rows = [] if self.remove_empty_columns else None
 
         # Row-level checks and fixes.
         for row in self.reader:
@@ -144,7 +153,10 @@ class RowChecker:
             # Standard output
 
             if not self.omit_error_rows or len(row) == len_column_names:
-                yield row
+                if self.remove_empty_columns:
+                    output_rows.append(row)
+                else:
+                    yield row
 
         # File-level checks and fixes.
 
@@ -161,3 +173,11 @@ class RowChecker:
                             f"Try: csvcut -C {','.join(str(i + offset) for i in empty_columns)}",
                         )
                     )
+
+        # Narrow the buffered rows and the output header to the non-empty columns.
+        if self.remove_empty_columns:
+            empty = set(self.empty_column_indices)
+            keep = [i for i in range(len_column_names) if i not in empty]
+            self.output_column_names = [self.column_names[i] for i in keep]
+            for row in output_rows:
+                yield [row[i] for i in keep if i < len(row)]
