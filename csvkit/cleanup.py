@@ -49,7 +49,6 @@ class RowChecker:
         # Other
         zero_based=False,
         omit_error_rows=False,
-        report_empty_columns=True,
         remove_empty_columns=False,
     ):
         self.reader = reader
@@ -64,7 +63,6 @@ class RowChecker:
         # Other
         self.zero_based = zero_based
         self.omit_error_rows = omit_error_rows
-        self.report_empty_columns = report_empty_columns
         self.remove_empty_columns = remove_empty_columns
 
         try:
@@ -145,7 +143,7 @@ class RowChecker:
                     self.errors.append(length_error)
 
             # Increment the number of empty cells for each column.
-            if self.empty_columns:
+            if self.empty_columns or self.remove_empty_columns:
                 for i in range(len_column_names):
                     if i >= len(row) or row[i] == '':
                         empty_counts[i] += 1
@@ -163,7 +161,7 @@ class RowChecker:
         if row_count:  # Don't report all columns as empty if there are no data rows.
             if empty_columns := [i for i, count in enumerate(empty_counts) if count == row_count]:
                 self.empty_column_indices = empty_columns
-                if self.report_empty_columns:
+                if self.empty_columns:
                     offset = 0 if self.zero_based else 1
                     self.errors.append(
                         Error(

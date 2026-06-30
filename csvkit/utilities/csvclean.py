@@ -77,7 +77,7 @@ class CSVClean(CSVKitUtility):
             reader,
             # Checks
             length_mismatch=default or self.args.length_mismatch,
-            empty_columns=default or self.args.empty_columns or self.args.remove_empty_columns,
+            empty_columns=default or self.args.empty_columns,
             # Fixes
             header_normalize_space=self.args.header_normalize_space,
             join_short_rows=self.args.join_short_rows,
@@ -87,7 +87,6 @@ class CSVClean(CSVKitUtility):
             # Other
             zero_based=self.args.zero_based,
             omit_error_rows=self.args.omit_error_rows,
-            report_empty_columns=default or self.args.empty_columns,
             remove_empty_columns=self.args.remove_empty_columns,
         )
 
