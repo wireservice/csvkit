@@ -47,7 +47,7 @@ class CSVClean(CSVKitUtility):
             help='The value with which to fill short rows. Defaults to none.')
         self.argparser.add_argument(
             '--remove-empty-columns', dest='remove_empty_columns', action='store_true',
-            help='Remove columns that are empty in all data rows from standard output.')
+            help='Remove empty columns from standard output.')
 
     def main(self):
         if self.additional_input_expected():
@@ -77,17 +77,17 @@ class CSVClean(CSVKitUtility):
             reader,
             # Checks
             length_mismatch=default or self.args.length_mismatch,
-            empty_columns=default or self.args.empty_columns or self.args.remove_empty_columns,
+            empty_columns=default or self.args.empty_columns,
             # Fixes
             header_normalize_space=self.args.header_normalize_space,
             join_short_rows=self.args.join_short_rows,
             separator=self.args.separator,
             fill_short_rows=self.args.fill_short_rows,
             fillvalue=self.args.fillvalue,
+            remove_empty_columns=self.args.remove_empty_columns,
             # Other
             zero_based=self.args.zero_based,
             omit_error_rows=self.args.omit_error_rows,
-            report_empty_columns=default or self.args.empty_columns,
         )
 
         label = self.args.label
@@ -98,16 +98,13 @@ class CSVClean(CSVKitUtility):
                 label = self.input_file.name
 
         output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
+        rows = checker.checked_rows()
+        # checked_rows() is a generator. We need to consume it to get the output_column_names, without empty columns.
         if self.args.remove_empty_columns:
-            rows = list(checker.checked_rows())
-            keep = [i for i, name in enumerate(checker.column_names) if i not in checker.empty_column_indices]
-            output_writer.writerow([checker.column_names[i] for i in keep])
-            for row in rows:
-                output_writer.writerow([row[i] if i < len(row) else '' for i in keep])
-        else:
-            output_writer.writerow(checker.column_names)
-            for row in checker.checked_rows():
-                output_writer.writerow(row)
+            rows = list(rows)
+        output_writer.writerow(checker.output_column_names)
+        for row in rows:
+            output_writer.writerow(row)
 
         if checker.errors:
             error_writer = agate.csv.writer(self.error_file, **self.writer_kwargs)
