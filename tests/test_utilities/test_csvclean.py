@@ -193,6 +193,18 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
                 ['x'],
             ])
 
+    def test_remove_empty_columns_counts_omitted_rows(self):
+        # 'c' has a value only in the omitted (long) row, so it is not empty in every data row and must be kept,
+        # even though it is empty in every row written to output.
+        input_file = io.BytesIO(b'a,b,c\n1,2,\n3,4,\n5,6,7,extra\n')
+
+        with stdin_as_string(input_file):
+            self.assertCleaned(['--omit-error-rows', '--remove-empty-columns'], [
+                ['a', 'b', 'c'],
+                ['1', '2', ''],
+                ['3', '4', ''],
+            ])
+
     def test_enable_all_checks(self):
         self.assertCleaned(['-a', 'examples/test_empty_columns.csv'], [
             ['a', 'b', 'c', '', ''],
