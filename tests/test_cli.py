@@ -1,6 +1,6 @@
 import unittest
 
-from csvkit.cli import match_column_identifier, parse_column_identifiers
+from csvkit.cli import ColumnIdentifierError, match_column_identifier, parse_column_identifiers
 
 
 class TestCli(unittest.TestCase):
@@ -53,6 +53,14 @@ class TestCli(unittest.TestCase):
             [],
             parse_column_identifiers('nope,missing', self.headers, ignore_unknown_columns=True),
         )
+        # An unknown identifier containing '-' or ':' is skipped too, not parsed as a range.
+        self.assertEqual(
+            [0, 2],
+            parse_column_identifiers('id,no-pe,i_work_here', self.headers, ignore_unknown_columns=True),
+        )
+        # Without the flag, the same input still raises.
+        with self.assertRaises(ColumnIdentifierError):
+            parse_column_identifiers('id,no-pe,i_work_here', self.headers)
 
     def test_range_notation_open_ended(self):
         self.assertEqual([0, 1, 2], parse_column_identifiers(':3', self.headers))

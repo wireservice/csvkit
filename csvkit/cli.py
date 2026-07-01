@@ -546,8 +546,10 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                     a = int(a) if a else 1
                     b = int(b) + 1 if b else len(column_names) + 1
                 except ValueError:
+                    if ignore_unknown_columns:
+                        continue
                     raise ColumnIdentifierError(
-                        "Invalid range %s. Ranges must be two integers separated by a - or : character.")
+                        "Invalid range %s. Ranges must be two integers separated by a - or : character." % c)
 
                 for x in range(a, b):
                     try:
@@ -579,7 +581,7 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
                     b = int(b) + 1 if b else len(column_names)
                 except ValueError:
                     raise ColumnIdentifierError(
-                        "Invalid range %s. Ranges must be two integers separated by a - or : character.")
+                        "Invalid range %s. Ranges must be two integers separated by a - or : character." % c)
 
                 for x in range(a, b):
                     excludes.append(match_column_identifier(column_names, x, column_offset))
