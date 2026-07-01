@@ -144,7 +144,7 @@ class RowChecker:
                     self.errors.append(length_error)
 
             # Increment the number of empty cells for each column.
-            if self.empty_columns:
+            if self.empty_columns or self.remove_empty_columns:
                 for i in range(len_column_names):
                     if i >= len(row) or row[i] == '':
                         empty_counts[i] += 1
@@ -159,8 +159,11 @@ class RowChecker:
 
         # File-level checks and fixes.
 
+        empty_columns = []
         if row_count:  # Don't report all columns as empty if there are no data rows.
-            if empty_columns := [i for i, count in enumerate(empty_counts) if count == row_count]:
+            empty_columns = [i for i, count in enumerate(empty_counts) if count == row_count]
+
+            if empty_columns and self.empty_columns:
                 offset = 0 if self.zero_based else 1
                 self.errors.append(
                     Error(
@@ -171,13 +174,10 @@ class RowChecker:
                     )
                 )
 
-        # Narrow the buffered rows and the output header to the columns with a value in at least one row.
+        # Narrow the buffered rows and the output header to the same columns the empty-columns check reports.
         if self.remove_empty_columns:
-            if output_rows:
-                non_empty = {i for row in output_rows for i in range(min(len(row), len_column_names)) if row[i] != ''}
-                keep = [i for i in range(len_column_names) if i in non_empty]
-            else:  # Keep all columns if there are no data rows, like the empty-columns check.
-                keep = list(range(len_column_names))
+            empty = set(empty_columns)
+            keep = [i for i in range(len_column_names) if i not in empty]
             self.output_column_names = [self.column_names[i] for i in keep]
             for row in output_rows:
                 yield [row[i] for i in keep if i < len(row)]
