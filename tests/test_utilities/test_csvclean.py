@@ -168,6 +168,43 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             ['1', "Empty columns named 'b', '', ''! Try: csvcut -C 1,3,4", '', '', '', '', ''],
         ])
 
+    def test_remove_empty_columns(self):
+        self.assertCleaned(['--remove-empty-columns', 'examples/test_empty_columns.csv'], [
+            ['a', 'c'],
+            ['a', ''],
+            ['', 'c'],
+            ['', ''],
+        ])
+
+    def test_remove_empty_columns_no_empty(self):
+        self.assertCleaned(['--remove-empty-columns', 'examples/dummy.csv'], [
+            ['a', 'b', 'c'],
+            ['1', '2', '3'],
+        ])
+
+    def test_remove_empty_columns_short_row(self):
+        # A short row stays short: removing empty columns does not pad it out.
+        input_file = io.BytesIO(b'a,b,c\n1,,3\nx\n')
+
+        with stdin_as_string(input_file):
+            self.assertCleaned(['--remove-empty-columns'], [
+                ['a', 'c'],
+                ['1', '3'],
+                ['x'],
+            ])
+
+    def test_remove_empty_columns_counts_omitted_rows(self):
+        # 'c' has a value only in the omitted (long) row, so it is not empty in every data row and must be kept,
+        # even though it is empty in every row written to output.
+        input_file = io.BytesIO(b'a,b,c\n1,2,\n3,4,\n5,6,7,extra\n')
+
+        with stdin_as_string(input_file):
+            self.assertCleaned(['--omit-error-rows', '--remove-empty-columns'], [
+                ['a', 'b', 'c'],
+                ['1', '2', ''],
+                ['3', '4', ''],
+            ])
+
     def test_enable_all_checks(self):
         self.assertCleaned(['-a', 'examples/test_empty_columns.csv'], [
             ['a', 'b', 'c', '', ''],

@@ -45,6 +45,9 @@ class CSVClean(CSVKitUtility):
         self.argparser.add_argument(
             '--fillvalue', dest='fillvalue',
             help='The value with which to fill short rows. Defaults to none.')
+        self.argparser.add_argument(
+            '--remove-empty-columns', dest='remove_empty_columns', action='store_true',
+            help='Remove empty columns from standard output.')
 
     def main(self):
         if self.additional_input_expected():
@@ -59,6 +62,7 @@ class CSVClean(CSVKitUtility):
             and not self.args.header_normalize_space
             and not self.args.join_short_rows
             and not self.args.fill_short_rows
+            and not self.args.remove_empty_columns
         ):
             self.argparser.error('No checks or fixes were enabled. See available options with: csvclean --help')
 
@@ -80,6 +84,7 @@ class CSVClean(CSVKitUtility):
             separator=self.args.separator,
             fill_short_rows=self.args.fill_short_rows,
             fillvalue=self.args.fillvalue,
+            remove_empty_columns=self.args.remove_empty_columns,
             # Other
             zero_based=self.args.zero_based,
             omit_error_rows=self.args.omit_error_rows,
@@ -93,8 +98,12 @@ class CSVClean(CSVKitUtility):
                 label = self.input_file.name
 
         output_writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
-        output_writer.writerow(checker.column_names)
-        for row in checker.checked_rows():
+        rows = checker.checked_rows()
+        # checked_rows() is a generator. We need to consume it to get the output_column_names, without empty columns.
+        if self.args.remove_empty_columns:
+            rows = list(rows)
+        output_writer.writerow(checker.output_column_names)
+        for row in rows:
             output_writer.writerow(row)
 
         if checker.errors:

@@ -114,3 +114,4 @@ The following individuals have contributed code to csvkit:
 * Wes Dean
 * Álvaro Osvaldo
 * lamdevhs
+* Sai Asish Y

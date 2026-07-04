@@ -76,6 +76,22 @@ Fixes
       1,Alice,US
       2,Bob,CA
 
+-  If a CSV has empty columns, like:
+
+   .. code-block:: none
+
+      id,name,extra
+      1,Alice,
+      2,Bob,
+
+   You can drop them with :code:`--remove-empty-columns`:
+
+   .. code-block:: none
+
+      id,name
+      1,Alice
+      2,Bob
+
 .. seealso::
 
    :code:`--header-normalize-space` under :ref:`csvclean-usage`.
@@ -140,6 +156,8 @@ Usage
      --fillvalue FILLVALUE
                            The value with which to fill short rows. Defaults to
                            none.
+     --remove-empty-columns
+                           Remove empty columns from standard output.
 
 
 See also: :doc:`../common_arguments`.
