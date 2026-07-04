@@ -513,6 +513,46 @@ def match_column_identifier(column_names, c, column_offset=1):
     return c
 
 
+def _resolve_column_identifier(identifier, column_names, column_offset, ignore_unknown_columns, ignore_invalid_range):
+    """
+    Resolve a single column identifier (a name, a 1-based index, or an integer range) to a list of indices.
+
+    An unmatched name or index is skipped if ``ignore_unknown_columns`` is set, and raises otherwise. A
+    malformed range, or a range that references a nonexistent column, is skipped if ``ignore_invalid_range``
+    is set, and raises otherwise.
+    """
+    try:
+        return [match_column_identifier(column_names, identifier, column_offset)]
+    except ColumnIdentifierError:
+        if ':' in identifier:
+            a, b = identifier.split(':', 1)
+        elif '-' in identifier:
+            a, b = identifier.split('-', 1)
+        elif ignore_unknown_columns:
+            return []
+        else:
+            raise
+
+        try:
+            a = int(a) if a else 1
+            b = int(b) + 1 if b else len(column_names) + 1
+        except ValueError:
+            if ignore_invalid_range:
+                return []
+            raise ColumnIdentifierError(
+                "Invalid range %s. Ranges must be two integers separated by a - or : character." % identifier)
+
+        indices = []
+        for index in range(a, b):
+            try:
+                indices.append(match_column_identifier(column_names, index, column_offset))
+            except ColumnIdentifierError:
+                if ignore_invalid_range:
+                    continue
+                raise
+        return indices
+
+
 def parse_column_identifiers(ids, column_names, column_offset=1, excluded_columns=None, ignore_unknown_columns=False):
     """
     Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
@@ -528,65 +568,34 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
 
     if ids:
         columns = []
-
-        for c in ids.split(','):
-            try:
-                columns.append(match_column_identifier(column_names, c, column_offset))
-            except ColumnIdentifierError:
-                if ':' in c:
-                    a, b = c.split(':', 1)
-                elif '-' in c:
-                    a, b = c.split('-', 1)
-                else:
-                    if ignore_unknown_columns:
-                        continue
-                    raise
-
-                try:
-                    a = int(a) if a else 1
-                    b = int(b) + 1 if b else len(column_names) + 1
-                except ValueError:
-                    if ignore_unknown_columns:
-                        continue
-                    raise ColumnIdentifierError(
-                        "Invalid range %s. Ranges must be two integers separated by a - or : character." % c)
-
-                for x in range(a, b):
-                    try:
-                        columns.append(match_column_identifier(column_names, x, column_offset))
-                    except ColumnIdentifierError:
-                        if ignore_unknown_columns:
-                            continue
-                        raise
+        for identifier in ids.split(','):
+            columns.extend(
+                _resolve_column_identifier(
+                    column_names=column_names,
+                    identifier=identifier,
+                    column_offset=column_offset,
+                    ignore_unknown_columns=ignore_unknown_columns,
+                    ignore_invalid_range=ignore_unknown_columns,
+                )
+            )
     else:
         columns = range(len(column_names))
 
     excludes = []
-
     if excluded_columns:
-        for c in excluded_columns.split(','):
-            try:
-                excludes.append(match_column_identifier(column_names, c, column_offset))
-            except ColumnIdentifierError:
-                if ':' in c:
-                    a, b = c.split(':', 1)
-                elif '-' in c:
-                    a, b = c.split('-', 1)
-                else:
-                    # Ignore unknown columns.
-                    continue
+        for identifier in excluded_columns.split(','):
+            # -C is always tolerant of unknown column names, but a malformed range is still a user error.
+            excludes.extend(
+                _resolve_column_identifier(
+                    column_names=column_names,
+                    identifier=identifier,
+                    column_offset=column_offset,
+                    ignore_unknown_columns=True,
+                    ignore_invalid_range=False,
+                )
+            )
 
-                try:
-                    a = int(a) if a else 1
-                    b = int(b) + 1 if b else len(column_names)
-                except ValueError:
-                    raise ColumnIdentifierError(
-                        "Invalid range %s. Ranges must be two integers separated by a - or : character." % c)
-
-                for x in range(a, b):
-                    excludes.append(match_column_identifier(column_names, x, column_offset))
-
-    return [c for c in columns if c not in excludes]
+    return [index for index in columns if index not in excludes]
 
 
 def parse_list(pairs):

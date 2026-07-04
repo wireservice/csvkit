@@ -3,6 +3,7 @@ Unreleased
 
 -  feat: :doc:`/scripts/csvcut` adds an :code:`--ignore-unknown-columns` option to skip identifiers in :code:`-c/--columns` that do not match a column in the input.
 -  feat: :doc:`/scripts/csvclean` adds a :code:`--remove-empty-columns` option to remove empty columns from standard output.
+-  fix: :code:`-C/--not-columns` now excludes the last column of an open-ended range (e.g. :code:`2-`).
 
 2.2.0 - December 15, 2025
 -------------------------

@@ -62,6 +62,26 @@ class TestCli(unittest.TestCase):
         with self.assertRaises(ColumnIdentifierError):
             parse_column_identifiers('id,no-pe,i_work_here', self.headers)
 
+    def test_exclude_open_ended_range(self):
+        # An open-ended exclusion range reaches the last column.
+        self.assertEqual(
+            [0, 1, 2, 3, 4],
+            parse_column_identifiers(None, self.headers, excluded_columns='6-'),
+        )
+
+    def test_exclude_ignores_unknown_names_but_reports_invalid_ranges(self):
+        # An unknown bare name is skipped (long-standing -C tolerance)...
+        self.assertEqual(
+            [0, 1, 2, 3, 4, 5, 6],
+            parse_column_identifiers(None, self.headers, excluded_columns='nope'),
+        )
+        # ...but a malformed range is a user error, even for -C.
+        with self.assertRaises(ColumnIdentifierError):
+            parse_column_identifiers(None, self.headers, excluded_columns='no-pe')
+        # ...as is a range that references a nonexistent column.
+        with self.assertRaises(ColumnIdentifierError):
+            parse_column_identifiers(None, self.headers, excluded_columns='6-99')
+
     def test_range_notation_open_ended(self):
         self.assertEqual([0, 1, 2], parse_column_identifiers(':3', self.headers))
 
