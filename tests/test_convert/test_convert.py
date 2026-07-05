@@ -26,5 +26,8 @@ class TestConvert(unittest.TestCase):
     def test_guess_json(self):
         self.assertEqual('json', convert.guess_format('testdata.json'))
 
+    def test_guess_ndjson(self):
+        self.assertEqual('ndjson', convert.guess_format('testdata.ndjson'))
+
     def test_guess_invalid(self):
         self.assertEqual(None, convert.guess_format('testdata.invalid'))
