@@ -64,7 +64,7 @@ def geojson2csv(f, key=None, **kwargs):
 
         for field in property_fields:
             value = properties.get(field)
-            if isinstance(value, OrderedDict):
+            if isinstance(value, (OrderedDict, list)):
                 value = json.dumps(value)
             row.append(value)
 
