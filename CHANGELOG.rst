@@ -1,6 +1,7 @@
 Unreleased
 ----------
 
+-  feat: Suggest :code:`--snifflimit 0` when standard input is not seekable.
 -  feat: :doc:`/scripts/csvcut` adds an :code:`--ignore-unknown-columns` option to skip identifiers in :code:`-c/--columns` that do not match a column in the input.
 -  feat: :doc:`/scripts/csvclean` adds a :code:`--remove-empty-columns` option to remove empty columns from standard output.
 -  feat: :doc:`/scripts/in2csv` guesses the ``ndjson`` format for files with :code:`.ndjson`, :code:`.jsonl` and :code:`.jl` extensions.
