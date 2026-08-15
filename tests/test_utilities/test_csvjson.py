@@ -126,6 +126,21 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
             self.assertIsInstance(geometry['coordinates'][0], float)
             self.assertIsInstance(geometry['coordinates'][1], float)
 
+    def test_geojson_missing_coordinates(self):
+        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude',
+                             'examples/test_geo_null.csv']))
+
+        self.assertEqual(geojson['bbox'], [-95.28174, 32.33396, -95.28174, 32.33396])
+        self.assertEqual(len(geojson['features']), 2)
+        self.assertIsNone(geojson['features'][1]['geometry'])
+
+    def test_geojson_no_coordinates_at_all(self):
+        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude',
+                             'examples/test_geo_no_coordinates.csv']))
+
+        # every row has a null geometry, so there is no bbox to report
+        self.assertNotIn('bbox', geojson)
+
     def test_geojson_shape(self):
         geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude',
                              '--type', 'type', '--geometry', 'geojson', 'examples/test_geojson.csv']))
