@@ -364,7 +364,11 @@ class CSVStat(CSVKitUtility):
 
 
 def format_decimal(d, f='%.3f', no_grouping_separator=False):
-    return locale.format_string(f, d, grouping=not no_grouping_separator).rstrip('0').rstrip('.')
+    formatted = locale.format_string(f, d, grouping=not no_grouping_separator)
+    decimal_point = locale.localeconv()['decimal_point']
+    if decimal_point and decimal_point in formatted:
+        formatted = formatted.rstrip('0').rstrip(decimal_point)
+    return formatted
 
 
 # These are accessed via: globals().get(f'get_{op_name}')
