@@ -5,6 +5,7 @@ Unreleased
 -  feat: :doc:`/scripts/csvclean` adds a :code:`--remove-empty-columns` option to remove empty columns from standard output.
 -  feat: :doc:`/scripts/in2csv` guesses the ``ndjson`` format for files with :code:`.ndjson`, :code:`.jsonl` and :code:`.jl` extensions.
 -  fix: :code:`-C/--not-columns` now excludes the last column of an open-ended range (e.g. :code:`2-`).
+-  fix: An open-ended range (e.g. :code:`0:` or :code:`:1`) now respects the :code:`--zero` option.
 
 2.2.0 - December 15, 2025
 -------------------------
