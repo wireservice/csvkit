@@ -85,6 +85,45 @@ class TestCSVGrep(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             ['ILLINOIS', 'IL', '17', '15,659', '2,491', '2,025', '1,770', '19', '21,964', ''],
         ])
 
+    def test_match_ignore_case(self):
+        self.assertRows(['-c', '1', '-m', 'illinois', '--ignore-case',
+                         'examples/realdata/FY09_EDU_Recipients_by_State.csv'], [
+            ['State Name', 'State Abbreviate', 'Code', 'Montgomery GI Bill-Active Duty',
+                'Montgomery GI Bill- Selective Reserve', 'Dependents\' Educational Assistance',
+                'Reserve Educational Assistance Program', 'Post-Vietnam Era Veteran\'s Educational Assistance Program',
+                'TOTAL', ''],
+            ['ILLINOIS', 'IL', '17', '15,659', '2,491', '2,025', '1,770', '19', '21,964', ''],
+        ])
+
+    def test_match_case_sensitive_by_default(self):
+        self.assertRows(['-c', '1', '-m', 'illinois',
+                         'examples/realdata/FY09_EDU_Recipients_by_State.csv'], [
+            ['State Name', 'State Abbreviate', 'Code', 'Montgomery GI Bill-Active Duty',
+                'Montgomery GI Bill- Selective Reserve', 'Dependents\' Educational Assistance',
+                'Reserve Educational Assistance Program', 'Post-Vietnam Era Veteran\'s Educational Assistance Program',
+                'TOTAL', ''],
+        ])
+
+    def test_re_match_ignore_case(self):
+        self.assertRows(['-c', '1', '-r', '^illinois$', '--ignore-case',
+                         'examples/realdata/FY09_EDU_Recipients_by_State.csv'], [
+            ['State Name', 'State Abbreviate', 'Code', 'Montgomery GI Bill-Active Duty',
+                'Montgomery GI Bill- Selective Reserve', 'Dependents\' Educational Assistance',
+                'Reserve Educational Assistance Program', 'Post-Vietnam Era Veteran\'s Educational Assistance Program',
+                'TOTAL', ''],
+            ['ILLINOIS', 'IL', '17', '15,659', '2,491', '2,025', '1,770', '19', '21,964', ''],
+        ])
+
+    def test_file_match_ignore_case(self):
+        self.assertRows(['-c', '1', '-f', 'examples/test_ignore_case_matchfile.txt', '--ignore-case',
+                         'examples/realdata/FY09_EDU_Recipients_by_State.csv'], [
+            ['State Name', 'State Abbreviate', 'Code', 'Montgomery GI Bill-Active Duty',
+                'Montgomery GI Bill- Selective Reserve', 'Dependents\' Educational Assistance',
+                'Reserve Educational Assistance Program', 'Post-Vietnam Era Veteran\'s Educational Assistance Program',
+                'TOTAL', ''],
+            ['ILLINOIS', 'IL', '17', '15,659', '2,491', '2,025', '1,770', '19', '21,964', ''],
+        ])
+
     def test_match_with_line_numbers(self):
         self.assertRows(['-c', '1', '-m', 'ILLINOIS', '--linenumbers',
                          'examples/realdata/FY09_EDU_Recipients_by_State.csv'], [
