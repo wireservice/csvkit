@@ -249,7 +249,7 @@ class CSVJSON(CSVKitUtility):
                     lon = None
                     lat = None
 
-            if lon and lat:
+            if lon is not None and lat is not None:
                 return OrderedDict([
                     ('type', 'Point'),
                     ('coordinates', [lon, lat]),

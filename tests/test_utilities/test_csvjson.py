@@ -134,6 +134,17 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         self.assertEqual(len(geojson['features']), 2)
         self.assertIsNone(geojson['features'][1]['geometry'])
 
+    def test_geojson_zero_coordinates(self):
+        geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude',
+                             'examples/test_geo_zero.csv']))
+
+        # a zero coordinate is a real location (null island, Greenwich, the equator)
+        self.assertEqual(geojson['bbox'], [0.0, 0.0, 2.35, 51.48])
+        self.assertEqual(len(geojson['features']), 3)
+        self.assertEqual(geojson['features'][0]['geometry']['coordinates'], [0.0, 0.0])
+        self.assertEqual(geojson['features'][1]['geometry']['coordinates'], [0.0, 51.48])
+        self.assertEqual(geojson['features'][2]['geometry']['coordinates'], [2.35, 0.0])
+
     def test_geojson_no_coordinates_at_all(self):
         geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude',
                              'examples/test_geo_no_coordinates.csv']))
