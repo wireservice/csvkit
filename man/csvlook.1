@@ -43,7 +43,7 @@ usage: csvlook [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3}] [\-b]
                [\-S] [\-\-blanks] [\-\-null\-value NULL_VALUES [NULL_VALUES ...]]
                [\-\-date\-format DATE_FORMAT] [\-\-datetime\-format DATETIME_FORMAT]
                [\-H] [\-K SKIP_LINES] [\-v] [\-l] [\-\-zero] [\-V]
-               [\-\-max\-rows MAX_ROWS] [\-\-max\-columns MAX_COLUMNS]
+               [\-\-expanded] [\-\-max\-rows MAX_ROWS] [\-\-max\-columns MAX_COLUMNS]
                [\-\-max\-column\-width MAX_COLUMN_WIDTH]
                [\-\-max\-precision MAX_PRECISION] [\-\-no\-number\-ellipsis]
                [\-y SNIFF_LIMIT] [\-I]
@@ -57,6 +57,7 @@ positional arguments:
 
 optional arguments:
   \-h, \-\-help            show this help message and exit
+  \-\-expanded           Display each record vertically, with one field per line.
   \-\-max\-rows MAX_ROWS   The maximum number of rows to display before
                         truncating the data.
   \-\-max\-columns MAX_COLUMNS
@@ -93,6 +94,19 @@ See also: \fI\%Arguments common to all tools\fP\&.
 The fractional part of a decimal numberal is always truncated. To control this truncation, use \fB\-\-no\-inference\fP along with \fB\-\-max\-column\-width\fP\&.
 .UNINDENT
 .UNINDENT
+.sp
+Use \fB\-\-expanded\fP to display each record vertically, with field names
+on the left and values on the right. This is useful for wide tables.
+.sp
+\fB\-\-max\-rows\fP limits records. \fB\-\-max\-columns\fP limits fields
+and adds an ellipsis for omitted fields. \fB\-\-max\-column\-width\fP
+truncates names and values; the marker can exceed very small widths.
+Numeric precision follows \fB\-\-max\-precision\fP and
+\fB\-\-no\-number\-ellipsis\fP. Missing values are blank. Line breaks
+and tabs appear as ↵ and ⇥. Empty input, a header without
+data, or \fB\-\-max\-rows 0\fP produces no expanded records.
+.sp
+Expanded output is for terminal reading, not a Markdown table or CSV.
 .SH EXAMPLES
 .sp
 Basic use:
