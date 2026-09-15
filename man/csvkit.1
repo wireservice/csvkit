@@ -1,0 +1,90 @@
+.\" Man page generated from reStructuredText
+.\" by the Docutils 0.22.4 manpage writer.
+.
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.TH "CSVKIT" "1" "Sep 15, 2026" "2.2.0" "csvkit"
+.SH NAME
+csvkit \- csvkit Documentation
+.SH DESCRIPTION
+.sp
+Display the installed csvkit version and available command\-line tools:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+usage: csvkit [\-h] [\-V]
+
+options:
+  \-h, \-\-help     show this help message and exit
+  \-V, \-\-version  show program\(aqs version number and exit
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+With no arguments, \fBcsvkit\fP displays the same overview as \fB\-\-help\fP\&.
+The version and tool names come from the installed csvkit package. The overview
+lists tools alphabetically and includes an example of getting help for a tool.
+.SH EXAMPLES
+.sp
+List the available tools:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+csvkit
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+Print only the installed version:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+csvkit \-\-version
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+Run tools directly, for example:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+csvcut \-\-help
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+The overview command does not accept CSV input or dispatch subcommands.
+.SH Author
+Christopher Groskopf and contributors
+.SH Copyright
+2016, Christopher Groskopf and James McKinney
+.\" End of generated man page.
