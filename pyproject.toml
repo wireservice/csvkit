@@ -53,6 +53,7 @@ test = [
 ]
 
 [project.scripts]
+csvkit = "csvkit.utilities.csvkit:launch_new_instance"
 csvclean = "csvkit.utilities.csvclean:launch_new_instance"
 csvcut = "csvkit.utilities.csvcut:launch_new_instance"
 csvformat = "csvkit.utilities.csvformat:launch_new_instance"
