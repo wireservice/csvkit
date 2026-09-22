@@ -1,6 +1,8 @@
 Unreleased
 ----------
 
+-  fix: :doc:`/scripts/csvformat` accepts empty input with :code:`--skip-header` and :code:`--no-header-row`, including when :code:`--skip-lines` consumes the entire input.
+
 -  feat: :doc:`/scripts/csvcut` adds an :code:`--ignore-unknown-columns` option to skip identifiers in :code:`-c/--columns` that do not match a column in the input.
 -  feat: :doc:`/scripts/csvclean` adds a :code:`--remove-empty-columns` option to remove empty columns from standard output.
 -  feat: :doc:`/scripts/in2csv` guesses the ``ndjson`` format for files with :code:`.ndjson`, :code:`.jsonl` and :code:`.jl` extensions.
