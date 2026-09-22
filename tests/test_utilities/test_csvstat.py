@@ -1,4 +1,5 @@
 import json
+import locale
 import sys
 from unittest.mock import patch
 
@@ -154,18 +155,30 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         self.assertEqual(row[-2], 16.0)
 
     def test_decimal_format(self):
+        # csvstat calls locale.setlocale(locale.LC_ALL, '') on import, so the separators are environment-dependent.
+        conv = locale.localeconv()
+        point = conv['decimal_point']
+        sep = conv['thousands_sep']
+
         output = self.get_output(['-c', 'TOTAL', '--mean', 'examples/realdata/FY09_EDU_Recipients_by_State.csv'])
 
-        self.assertEqual(output, '9,748.346\n')
+        self.assertEqual(output, f'9{sep}748{point}346\n')
 
         output = self.get_output([
             '-c', 'TOTAL', '--mean', '--no-grouping-separator', 'examples/realdata/FY09_EDU_Recipients_by_State.csv',
         ])
 
-        self.assertEqual(output, '9748.346\n')
+        self.assertEqual(output, f'9748{point}346\n')
 
         output = self.get_output([
             '-c', 'TOTAL', '--mean', '--decimal-format', '%.2f', 'examples/realdata/FY09_EDU_Recipients_by_State.csv',
         ])
 
-        self.assertEqual(output, '9,748.35\n')
+        self.assertEqual(output, f'9{sep}748{point}35\n')
+
+        # A format without decimal places must not lose trailing zeroes.
+        output = self.get_output([
+            '-c', '7', '--min', '--decimal-format', '%.0f', 'examples/realdata/FY09_EDU_Recipients_by_State.csv',
+        ])
+
+        self.assertEqual(output, '60\n')
