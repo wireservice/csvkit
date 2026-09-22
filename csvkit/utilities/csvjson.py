@@ -201,7 +201,8 @@ class CSVJSON(CSVKitUtility):
                 ('features', features),
             ]
 
-            if not self.args.no_bbox:
+            # a bbox of nulls is not valid GeoJSON, and bbox is optional
+            if not self.args.no_bbox and bounds.is_set():
                 items.insert(1, ('bbox', bounds.bbox()))
 
             if self.args.crs:
@@ -244,11 +245,11 @@ class CSVJSON(CSVKitUtility):
                 try:
                     lon = float(row[self.lon_column])
                     lat = float(row[self.lat_column])
-                except ValueError:
+                except (TypeError, ValueError):
                     lon = None
                     lat = None
 
-            if lon and lat:
+            if lon is not None and lat is not None:
                 return OrderedDict([
                     ('type', 'Point'),
                     ('coordinates', [lon, lat]),
@@ -261,11 +262,14 @@ class CSVJSON(CSVKitUtility):
                 self.max_lon = None
                 self.max_lat = None
 
+            def is_set(self):
+                return self.min_lon is not None and self.min_lat is not None
+
             def bbox(self):
                 return [self.min_lon, self.min_lat, self.max_lon, self.max_lat]
 
             def add_feature(self, feature):
-                if 'geometry' in feature and 'coordinates' in feature['geometry']:
+                if feature.get('geometry') and 'coordinates' in feature['geometry']:
                     self.update_coordinates(feature['geometry']['coordinates'])
 
             def update_lat(self, lat):

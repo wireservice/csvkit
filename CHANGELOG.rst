@@ -5,6 +5,8 @@ Unreleased
 -  feat: :doc:`/scripts/csvclean` adds a :code:`--remove-empty-columns` option to remove empty columns from standard output.
 -  feat: :doc:`/scripts/in2csv` guesses the ``ndjson`` format for files with :code:`.ndjson`, :code:`.jsonl` and :code:`.jl` extensions.
 -  fix: :code:`-C/--not-columns` now excludes the last column of an open-ended range (e.g. :code:`2-`).
+-  fix: :doc:`/scripts/csvjson` no longer errors on a row with a blank or unparseable :code:`--lat`/:code:`--lon` value, and instead writes a :code:`null` geometry for that feature. The :code:`bbox` member is omitted if no row has coordinates.
+-  fix: :doc:`/scripts/csvjson` no longer discards a :code:`--lat`/:code:`--lon` coordinate of :code:`0`, such as the equator or the prime meridian.
 
 2.2.0 - December 15, 2025
 -------------------------
