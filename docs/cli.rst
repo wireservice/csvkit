@@ -4,6 +4,14 @@ Reference
 
 csvkit is composed of command-line tools that can be divided into three major categories: Input, Processing, and Output. Documentation and examples for each tool are described on the following pages.
 
+Overview
+========
+
+.. toctree::
+    :maxdepth: 1
+
+    scripts/csvkit
+
 Input
 =====
 
