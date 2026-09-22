@@ -1,12 +1,60 @@
+import io
+import sys
 import unittest
+from types import SimpleNamespace
+from unittest import mock
 
-from csvkit.cli import ColumnIdentifierError, match_column_identifier, parse_column_identifiers
+from csvkit.cli import ColumnIdentifierError, CSVKitUtility, match_column_identifier, parse_column_identifiers
 
 
 class TestCli(unittest.TestCase):
 
     def setUp(self):
         self.headers = ['id', 'name', 'i_work_here', '1', 'more-header-values', 'stuff', 'blueberry']
+
+    def install_exception_handler(self, verbose=False):
+        original = sys.excepthook
+        self.addCleanup(setattr, sys, 'excepthook', original)
+        utility = object.__new__(CSVKitUtility)
+        utility.args = SimpleNamespace(verbose=verbose, encoding='utf-8')
+        utility._install_exception_handler()
+        return sys.excepthook
+
+    def test_exception_handler_suggests_snifflimit_for_non_seekable_stream(self):
+        handler = self.install_exception_handler()
+        with mock.patch('sys.stderr', new_callable=io.StringIO) as stderr:
+            handler(io.UnsupportedOperation, io.UnsupportedOperation('underlying stream is not seekable'), None)
+
+        self.assertIn('UnsupportedOperation: underlying stream is not seekable', stderr.getvalue())
+        self.assertIn('--snifflimit 0', stderr.getvalue())
+
+    def test_exception_handler_does_not_suggest_snifflimit_for_other_unsupported_operation(self):
+        handler = self.install_exception_handler()
+        with mock.patch('sys.stderr', new_callable=io.StringIO) as stderr:
+            handler(io.UnsupportedOperation, io.UnsupportedOperation('other operation'), None)
+
+        self.assertEqual('UnsupportedOperation: other operation\n', stderr.getvalue())
+
+    def test_exception_handler_verbose_uses_default_hook(self):
+        handler = self.install_exception_handler(verbose=True)
+        traceback = object()
+        error = io.UnsupportedOperation('underlying stream is not seekable')
+        with mock.patch.object(sys, '__excepthook__') as default_hook:
+            handler(io.UnsupportedOperation, error, traceback)
+
+        default_hook.assert_called_once_with(io.UnsupportedOperation, error, traceback)
+
+    def test_exception_handler_preserves_unicode_decode_message(self):
+        handler = self.install_exception_handler()
+        error = UnicodeDecodeError('utf-8', b'\xff', 0, 1, 'invalid start byte')
+        with mock.patch('sys.stderr', new_callable=io.StringIO) as stderr:
+            handler(UnicodeDecodeError, error, None)
+
+        self.assertEqual(
+            'Your file is not "utf-8" encoded. Please specify the correct encoding with the --encoding flag.'
+            ' Use the -v flag to see the complete error.\n',
+            stderr.getvalue(),
+        )
 
     def test_match_column_identifier_string(self):
         self.assertEqual(2, match_column_identifier(self.headers, 'i_work_here'))

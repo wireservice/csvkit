@@ -6,6 +6,7 @@ import csv
 import datetime
 import decimal
 import gzip
+import io
 import itertools
 import lzma
 import os
@@ -346,6 +347,8 @@ class CSVKitUtility:
                     )
                 else:
                     sys.stderr.write(f'{t.__name__}: {str(value)}\n')
+                    if t == io.UnsupportedOperation and str(value) == 'underlying stream is not seekable':
+                        sys.stderr.write('Try setting --snifflimit 0.\n')
 
         sys.excepthook = handler
 
