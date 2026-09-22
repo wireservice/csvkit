@@ -47,7 +47,7 @@ man_pages = []
 for filename in os.listdir('scripts'):
     name = os.path.splitext(filename)[0]
     man_pages.append((
-        os.path.join('scripts', name),
+        f'scripts/{name}',
         name,
         f'{name} Documentation',
         ['Christopher Groskopf and contributors'],
