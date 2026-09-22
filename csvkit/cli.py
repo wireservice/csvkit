@@ -534,8 +534,10 @@ def _resolve_column_identifier(identifier, column_names, column_offset, ignore_u
             raise
 
         try:
-            a = int(a) if a else 1
-            b = int(b) + 1 if b else len(column_names) + 1
+            # The bounds are in identifier space, so the implicit ends of an open-ended range
+            # depend on whether identifiers are 1-based (the default) or 0-based (--zero).
+            a = int(a) if a else column_offset
+            b = int(b) + 1 if b else len(column_names) + column_offset
         except ValueError:
             if ignore_invalid_range:
                 return []
