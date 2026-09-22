@@ -37,6 +37,9 @@ class CSVGrep(CSVKitUtility):
         self.argparser.add_argument(
             '-a', '--any-match', dest='any_match', action='store_true',
             help='Select rows in which any column matches, instead of all columns.')
+        self.argparser.add_argument(
+            '--ignore-case', dest='ignore_case', action='store_true',
+            help='Ignore case when matching, for the -m, -r and -f options.')
 
     def main(self):
         if self.args.names_only:
@@ -61,13 +64,24 @@ class CSVGrep(CSVKitUtility):
         rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids(**reader_kwargs)
 
         if self.args.regex:
-            pattern = re.compile(self.args.regex)
+            pattern = re.compile(self.args.regex, re.IGNORECASE if self.args.ignore_case else 0)
         elif self.args.matchfile:
             lines = {line.rstrip() for line in self.args.matchfile}
             self.args.matchfile.close()
 
+            if self.args.ignore_case:
+                lines = {line.lower() for line in lines}
+
+                def pattern(x):
+                    return x.lower() in lines
+            else:
+                def pattern(x):
+                    return x in lines
+        elif self.args.ignore_case:
+            needle = self.args.pattern.lower()
+
             def pattern(x):
-                return x in lines
+                return needle in x.lower()
         else:
             pattern = self.args.pattern
 
