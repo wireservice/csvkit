@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
+import math
+
 import agate
-from agate import config
+from agate import config, utils
+from babel.numbers import format_decimal
 
 from csvkit.cli import CSVKitUtility
 
@@ -10,6 +13,9 @@ class CSVLook(CSVKitUtility):
     description = 'Render a CSV file in the console as a Markdown-compatible, fixed-width table.'
 
     def add_arguments(self):
+        self.argparser.add_argument(
+            '--expanded', action='store_true',
+            help='Display each record vertically, with one field per line.')
         self.argparser.add_argument(
             '--max-rows', dest='max_rows', type=int,
             help='The maximum number of rows to display before truncating the data.')
@@ -57,6 +63,10 @@ class CSVLook(CSVKitUtility):
             **self.reader_kwargs,
         )
 
+        if self.args.expanded:
+            self.print_expanded(table, **kwargs)
+            return
+
         table.print_table(
             output=self.output_file,
             max_rows=self.args.max_rows,
@@ -64,6 +74,50 @@ class CSVLook(CSVKitUtility):
             max_column_width=self.args.max_column_width,
             **kwargs,
         )
+
+    def print_expanded(self, table, max_precision=3):
+        """Display records vertically, retaining csvlook's numeric formatting."""
+        columns = table.columns[:self.args.max_columns]
+        ellipsis = config.get_option('ellipsis_chars')
+        truncation = config.get_option('text_truncation_chars')
+        separator = config.get_option('vertical_line_char')
+        locale = config.get_option('default_locale')
+
+        def format_text(value):
+            text = str(value).replace('\r\n', '\n').replace('\r', '\n').replace('\n', '↵').replace('\t', '⇥')
+            width = self.args.max_column_width
+            if width is not None and len(text) > width:
+                text = text[:max(0, width - len(truncation))] + truncation
+            return text
+
+        names = [format_text(column.name) for column in columns]
+        columns_truncated = len(columns) < len(table.columns)
+        if columns_truncated:
+            names.append(ellipsis)
+        name_width = max((len(name) for name in names), default=0)
+
+        # Determine precision per source column, just as print_table does.
+        formatters = []
+        for column in columns:
+            if isinstance(column.data_type, agate.Number):
+                places = utils.max_precision(column)
+                formatters.append(utils.make_number_formatter(min(places, max_precision), places > max_precision))
+            else:
+                formatters.append(None)
+
+        for record_number, row in enumerate(table.rows, 1):
+            self.output_file.write(f'-[ RECORD {record_number} ]-\n')
+            for index, (name, formatter) in enumerate(zip(names, formatters)):
+                value = row[index]
+                if value is None:
+                    text = ''
+                elif formatter is not None and not math.isinf(value):
+                    text = format_text(format_decimal(value, format=formatter, locale=locale))
+                else:
+                    text = format_text(value)
+                self.output_file.write(f'{name.ljust(name_width)} {separator} {text}\n')
+            if columns_truncated:
+                self.output_file.write(f'{ellipsis.ljust(name_width)} {separator} {ellipsis}\n')
 
 
 def launch_new_instance():

@@ -14,7 +14,7 @@ Renders a CSV to the command line in a Markdown-compatible, fixed-width format:
                   [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
                   [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
                   [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V]
-                  [--max-rows MAX_ROWS] [--max-columns MAX_COLUMNS]
+                  [--expanded] [--max-rows MAX_ROWS] [--max-columns MAX_COLUMNS]
                   [--max-column-width MAX_COLUMN_WIDTH]
                   [--max-precision MAX_PRECISION] [--no-number-ellipsis]
                   [-y SNIFF_LIMIT] [-I]
@@ -28,6 +28,7 @@ Renders a CSV to the command line in a Markdown-compatible, fixed-width format:
 
    optional arguments:
      -h, --help            show this help message and exit
+     --expanded           Display each record vertically, with one field per line.
      --max-rows MAX_ROWS   The maximum number of rows to display before
                            truncating the data.
      --max-columns MAX_COLUMNS
@@ -48,7 +49,7 @@ Renders a CSV to the command line in a Markdown-compatible, fixed-width format:
                            --datetime-format, --no-leading-zeroes) when parsing
                            the input.
 
-If a table is too wide to display properly try piping the output to ``less -S`` or truncating it using :doc:`csvcut`.
+If a table is too wide to display properly, try ``--expanded`` to display each record vertically, piping the output to ``less -S``, or truncating it using :doc:`csvcut`.
 
 If the table is too long, try filtering it down with grep or piping the output to ``less``.
 
@@ -66,6 +67,27 @@ Basic use:
 .. code-block:: bash
 
    csvlook examples/testfixed_converted.csv
+
+Display records vertically, with the column names on the left and values on the right:
+
+.. code-block:: bash
+
+   csvlook --expanded --no-inference examples/dummy3.csv
+
+.. code-block:: none
+
+   -[ RECORD 1 ]-
+   a | 1
+   b | 2
+   c | 3
+   -[ RECORD 2 ]-
+   a | 1
+   b | 4
+   c | 5
+
+The expanded view supports the existing input and display options. ``--max-rows`` limits the number of records, and ``--max-columns`` limits the fields within each record, adding ``...`` for omitted fields. ``--max-column-width`` truncates field names and values; the truncation marker can exceed very small widths. Numeric precision follows ``--max-precision`` and ``--no-number-ellipsis``. Missing values are blank. Line breaks and tabs in names and values appear as ``↵`` and ``⇥``. Empty input, a header without data, or ``--max-rows 0`` produces no expanded records.
+
+Expanded output is intended for reading in the terminal, rather than as a Markdown table or machine-readable CSV.
 
 This tool is especially useful as a final operation when piping through other tools:
 
