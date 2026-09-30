@@ -1,12 +1,16 @@
 import unittest
 
-from csvkit.cli import ColumnIdentifierError, match_column_identifier, parse_column_identifiers
+from csvkit.cli import ColumnIdentifierError, _expand_args, match_column_identifier, parse_column_identifiers
 
 
 class TestCli(unittest.TestCase):
 
     def setUp(self):
         self.headers = ['id', 'name', 'i_work_here', '1', 'more-header-values', 'stuff', 'blueberry']
+
+    def test_expand_args_literal_options(self):
+        args = ['-c', '~priority', '--columns=~value', '-c~name', 'examples/dummy.csv']
+        self.assertEqual(args, _expand_args(args, literal_options=('-c', '--columns')))
 
     def test_match_column_identifier_string(self):
         self.assertEqual(2, match_column_identifier(self.headers, 'i_work_here'))
