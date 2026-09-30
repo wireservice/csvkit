@@ -5,8 +5,9 @@ from dataclasses import dataclass
 @dataclass
 class Error:
     line_number: int
-    row: int
+    row: list[str]
     msg: str
+    column_indices: list[int] | None = None
 
 
 def join_rows(rows, separator):
@@ -163,12 +164,14 @@ class RowChecker:
 
             if empty_columns and self.empty_columns:
                 offset = 0 if self.zero_based else 1
+                column_indices = [i + offset for i in empty_columns]
                 self.errors.append(
                     Error(
                         1,
                         ["" for _ in range(len_column_names)],
                         f"Empty columns named {', '.join(repr(self.column_names[i]) for i in empty_columns)}! "
-                        f"Try: csvcut -C {','.join(str(i + offset) for i in empty_columns)}",
+                        f"Try: csvcut -C {','.join(str(i) for i in column_indices)}",
+                        column_indices,
                     )
                 )
 

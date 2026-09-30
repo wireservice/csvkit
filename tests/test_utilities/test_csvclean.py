@@ -168,6 +168,30 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             ['1', "Empty columns named 'b', '', ''! Try: csvcut -C 1,3,4", '', '', '', '', ''],
         ])
 
+    def test_empty_column_indices(self):
+        self.assertCleaned(['--empty-column-indices', 'examples/test_empty_columns.csv'], [
+            ['a', 'b', 'c', '', ''],
+            ['a', '', '', '', ''],
+            ['', '', 'c', ''],
+            ['', '', '', '', ''],
+        ], [
+            ['line_number', 'msg', 'empty_column_indices', 'a', 'b', 'c', '', ''],
+            ['1', "Empty columns named 'b', '', ''! Try: csvcut -C 2,4,5", '2,4,5', '', '', '', '', ''],
+        ])
+
+    def test_empty_column_indices_with_other_errors(self):
+        self.assertCleaned(['-a', '--empty-column-indices', '--zero', '--label', 'source',
+                            'examples/test_empty_columns.csv'], [
+            ['a', 'b', 'c', '', ''],
+            ['a', '', '', '', ''],
+            ['', '', 'c', ''],
+            ['', '', '', '', ''],
+        ], [
+            ['label', 'line_number', 'msg', 'empty_column_indices', 'a', 'b', 'c', '', ''],
+            ['source', '2', 'Expected 5 columns, found 4 columns', '', '', '', 'c', ''],
+            ['source', '1', "Empty columns named 'b', '', ''! Try: csvcut -C 1,3,4", '1,3,4', '', '', '', '', ''],
+        ])
+
     def test_remove_empty_columns(self):
         self.assertCleaned(['--remove-empty-columns', 'examples/test_empty_columns.csv'], [
             ['a', 'c'],
