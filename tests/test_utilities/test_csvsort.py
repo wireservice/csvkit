@@ -41,6 +41,74 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         new_order = [str(r[0]) for r in reader]
         self.assertEqual(test_order, new_order)
 
+    def test_mixed_sort_directions(self):
+        data = b'group,value,label\nB,1,first\nA,2,second\nA,10,third\nB,3,fourth\nA,10,fifth\n'
+
+        with stdin_as_string(io.BytesIO(data)):
+            self.assertRows(['-c', 'group,~value'], [
+                ['group', 'value', 'label'],
+                ['A', '10', 'third'],
+                ['A', '10', 'fifth'],
+                ['A', '2', 'second'],
+                ['B', '3', 'fourth'],
+                ['B', '1', 'first'],
+            ])
+
+        with stdin_as_string(io.BytesIO(data)):
+            self.assertRows(['-c', '0,~1', '--zero', '-r'], [
+                ['group', 'value', 'label'],
+                ['B', '1', 'first'],
+                ['B', '3', 'fourth'],
+                ['A', '2', 'second'],
+                ['A', '10', 'third'],
+                ['A', '10', 'fifth'],
+            ])
+
+        for args in (['-c', '~2,1'], ['--columns=~2,1'], ['-c~2,1']):
+            with self.subTest(args=args), stdin_as_string(io.BytesIO(data)):
+                self.assertRows(args, [
+                    ['group', 'value', 'label'],
+                    ['A', '10', 'third'],
+                    ['A', '10', 'fifth'],
+                    ['B', '3', 'fourth'],
+                    ['A', '2', 'second'],
+                    ['B', '1', 'first'],
+                ])
+
+    def test_mixed_sort_directions_with_nulls_and_ignore_case(self):
+        data = b'group,value\nb,apple\nA,banana\na,Apple\nA,\n'
+
+        with stdin_as_string(io.BytesIO(data)):
+            self.assertRows(['-i', '-c', '1,~2'], [
+                ['group', 'value'],
+                ['A', ''],
+                ['A', 'banana'],
+                ['a', 'Apple'],
+                ['b', 'apple'],
+            ])
+
+    def test_mixed_sort_directions_with_range(self):
+        data = b'group,value,label\nA,2,b\nA,2,a\nA,10,c\nB,1,z\n'
+
+        with stdin_as_string(io.BytesIO(data)):
+            self.assertRows(['-c', '1,~2-3'], [
+                ['group', 'value', 'label'],
+                ['A', '10', 'c'],
+                ['A', '2', 'b'],
+                ['A', '2', 'a'],
+                ['B', '1', 'z'],
+            ])
+
+    def test_column_name_starting_with_tilde(self):
+        data = b'~priority,value\n2,second\n1,first\n'
+
+        with stdin_as_string(io.BytesIO(data)):
+            self.assertRows(['-c', '~priority'], [
+                ['~priority', 'value'],
+                ['1', 'first'],
+                ['2', 'second'],
+            ])
+
     def test_ignore_case(self):
         self.assertRows(['-i', 'examples/test_ignore_case.csv'], [
             ['a', 'b', 'c'],

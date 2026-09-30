@@ -58,9 +58,10 @@ optional arguments:
                         and exit.
   \-c COLUMNS, \-\-columns COLUMNS
                         A comma\-separated list of column indices, names or
-                        ranges to sort by, e.g. \(dq1,id,3\-5\(dq. Defaults to all
-                        columns.
-  \-r, \-\-reverse         Sort in descending order.
+                        ranges to sort by, e.g. \(dq1,id,3\-5\(dq. Prefix a column
+                        with \(dq~\(dq to sort it in descending order. Defaults to
+                        all columns.
+  \-r, \-\-reverse         Reverse the sort direction of every column.
   \-i, \-\-ignore\-case     Perform case\-independent sorting.
   \-y SNIFF_LIMIT, \-\-snifflimit SNIFF_LIMIT
                         Limit CSV dialect sniffing to the specified number of
@@ -107,6 +108,21 @@ csvcut \-c 1,9 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsort \-r 
 .fi
 .UNINDENT
 .UNINDENT
+.sp
+Sort by state ascending, then by total descending within each state:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+csvsort \-c \(aqstate,~total\(aq data.csv
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Prefix a range, such as \fB~2\-4\fP, to sort each column in that range in descending order.
+Use \fB\-\-reverse\fP to flip every specified direction.
 .SH AUTHOR
 Christopher Groskopf and contributors
 .SH COPYRIGHT
