@@ -113,6 +113,7 @@ Output
 
 -  If the :code:`--omit-error-rows` option is set, **only** rows that pass the selected checks are written to standard output. If not, **all** rows are written to standard output.
 -  If any checks are enabled, **error** rows along with line numbers and descriptions are written to standard error. If there are error rows, the exit code is 1.
+-  :code:`--empty-column-indices` enables the empty-column check and adds an :code:`empty_column_indices` field to each error row on standard error. For empty-column errors, it contains comma-separated column numbers suitable for :code:`csvcut -C`; it is blank for other errors. Numbers are 1-based unless :code:`--zero` is set. Without this option, the error CSV format is unchanged.
 
 .. _csvclean-usage:
 
@@ -137,6 +138,9 @@ Usage
      --length-mismatch     Report data rows that are shorter or longer than the
                            header row.
      --empty-columns       Report empty columns as errors.
+     --empty-column-indices
+                           Report empty columns and add their indices as a column
+                           to standard error.
      -a, --enable-all-checks
                            Enable all error reporting.
      --omit-error-rows     Omit data rows that contain errors, from standard
@@ -210,6 +214,15 @@ Then, use :doc:`csvcut` to exclude the empty columns:
    a,
    ,c
    ,
+
+For automation, use :code:`--empty-column-indices` to read the column numbers without parsing the message:
+
+.. code-block:: console
+
+   $ csvclean --empty-column-indices examples/test_empty_columns.csv 2> errors.csv
+   $ csvcut -c empty_column_indices errors.csv
+   empty_column_indices
+   "2,4,5"
 
 Check whether any errors found:
 

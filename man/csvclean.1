@@ -179,6 +179,8 @@ Changes the character encoding to UTF\-8, if the input encoding is set with the 
 If the \fB\-\-omit\-error\-rows\fP option is set, \fBonly\fP rows that pass the selected checks are written to standard output. If not, \fBall\fP rows are written to standard output.
 .IP \(bu 2
 If any checks are enabled, \fBerror\fP rows along with line numbers and descriptions are written to standard error. If there are error rows, the exit code is 1.
+.IP \(bu 2
+\fB\-\-empty\-column\-indices\fP enables the empty\-column check and adds an \fBempty_column_indices\fP field to each error row on standard error. It contains comma\-separated column numbers for empty\-column errors and is blank for other errors. Numbers are 1\-based unless \fB\-\-zero\fP is set. Without this option, the error CSV format is unchanged.
 .UNINDENT
 .SS Usage
 .INDENT 0.0
@@ -202,6 +204,9 @@ optional arguments:
   \-\-length\-mismatch     Report data rows that are shorter or longer than the
                         header row.
   \-\-empty\-columns       Report empty columns as errors.
+  \-\-empty\-column\-indices
+                        Report empty columns and add their indices as a column
+                        to standard error.
   \-a, \-\-enable\-all\-checks
                         Enable all error reporting.
   \-\-omit\-error\-rows     Omit data rows that contain errors, from standard
@@ -284,6 +289,21 @@ a,c
 a,
 ,c
 ,
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+For automation, use \fB\-\-empty\-column\-indices\fP to read column numbers without parsing the message:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ csvclean \-\-empty\-column\-indices examples/test_empty_columns.csv 2> errors.csv
+$ csvcut \-c empty_column_indices errors.csv
+empty_column_indices
+\(dq2,4,5\(dq
 .ft P
 .fi
 .UNINDENT

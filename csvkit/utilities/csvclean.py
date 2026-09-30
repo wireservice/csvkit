@@ -20,6 +20,9 @@ class CSVClean(CSVKitUtility):
             '--empty-columns', dest='empty_columns', action='store_true',
             help='Report empty columns as errors.')
         self.argparser.add_argument(
+            '--empty-column-indices', dest='empty_column_indices', action='store_true',
+            help='Report empty columns and add their indices as a column to standard error.')
+        self.argparser.add_argument(
             '-a', '--enable-all-checks', dest='enable_all_checks', action='store_true',
             help='Enable all error reporting.')
         self.argparser.add_argument(
@@ -57,6 +60,7 @@ class CSVClean(CSVKitUtility):
             # Checks
             not self.args.length_mismatch
             and not self.args.empty_columns
+            and not self.args.empty_column_indices
             and not self.args.enable_all_checks
             # Fixes
             and not self.args.header_normalize_space
@@ -77,7 +81,7 @@ class CSVClean(CSVKitUtility):
             reader,
             # Checks
             length_mismatch=default or self.args.length_mismatch,
-            empty_columns=default or self.args.empty_columns,
+            empty_columns=default or self.args.empty_columns or self.args.empty_column_indices,
             # Fixes
             header_normalize_space=self.args.header_normalize_space,
             join_short_rows=self.args.join_short_rows,
@@ -110,12 +114,17 @@ class CSVClean(CSVKitUtility):
             error_writer = agate.csv.writer(self.error_file, **self.writer_kwargs)
 
             fieldnames = ['line_number', 'msg'] + checker.column_names
+            if self.args.empty_column_indices:
+                fieldnames.insert(2, 'empty_column_indices')
             if self.args.label:
                 fieldnames.insert(0, 'label')
             error_writer.writerow(fieldnames)
 
             for error in checker.errors:
-                row = [error.line_number, error.msg] + error.row
+                row = [error.line_number, error.msg]
+                if self.args.empty_column_indices:
+                    row.append(','.join(str(i) for i in error.column_indices or []))
+                row.extend(error.row)
                 if self.args.label:
                     row.insert(0, label)
                 error_writer.writerow(row)
