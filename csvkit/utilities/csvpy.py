@@ -10,7 +10,7 @@ from csvkit.cli import CSVKitUtility
 
 class CSVPy(CSVKitUtility):
     description = 'Load a CSV file into a CSV reader and then drop into a Python shell.'
-    override_flags = ['l', 'zero', 'add-bom']
+    override_flags = ['l', 'add-bom']
 
     def add_arguments(self):
         self.argparser.add_argument(
@@ -26,10 +26,7 @@ class CSVPy(CSVKitUtility):
             '-y', '--snifflimit', dest='sniff_limit', type=int, default=1024,
             help='Limit CSV dialect sniffing to the specified number of bytes. '
                  'Specify "0" to disable sniffing entirely, or "-1" to sniff the entire file.')
-        self.argparser.add_argument(
-            '-I', '--no-inference', dest='no_inference', action='store_true',
-            help='Disable type inference (and --locale, --date-format, --datetime-format, --no-leading-zeroes) '
-                 'when parsing the input.')
+        self.add_type_inference_arguments()
 
     def main(self):
         if self.input_file == sys.stdin:

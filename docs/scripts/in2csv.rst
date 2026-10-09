@@ -28,7 +28,7 @@ The header line is required though the columns may be in any order:
                  [-f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}] [-s SCHEMA]
                  [-k KEY] [-n] [--sheet SHEET] [--write-sheets WRITE_SHEETS]
                  [--use-sheet-names] [--reset-dimensions]
-                 [--encoding-xls ENCODING_XLS] [-y SNIFF_LIMIT] [-I]
+                 [--encoding-xls ENCODING_XLS] [-y SNIFF_LIMIT] [-I | --no-inference-columns COLUMNS]
                  [FILE]
 
    Convert common, but less awesome, tabular data formats to CSV.
@@ -64,10 +64,15 @@ The header line is required though the columns may be in any order:
      -I, --no-inference    Disable type inference (and --locale, --date-format,
                            --datetime-format, --no-leading-zeroes) when parsing
                            CSV input.
+     --no-inference-columns COLUMNS
+                           Disable type inference only for these column indices,
+                           names or ranges, e.g. "1,id,3-5".
 
     Some command-line flags only pertain to specific input formats.
 
 See also: :doc:`../common_arguments`.
+
+Type inference options do not apply to DBF input, which uses its embedded field types. For Excel input, selecting a column preserves text cells as text; it cannot recover leading zeroes that were not stored in a numeric cell.
 
 .. note::
 

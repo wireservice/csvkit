@@ -14,7 +14,7 @@ Merges two or more CSV tables together using a method analogous to SQL JOIN oper
                   [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
                   [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
                   [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-c COLUMNS]
-                  [--outer] [--left] [--right] [-y SNIFF_LIMIT] [-I]
+                  [--outer] [--left] [--right] [-y SNIFF_LIMIT] [-I | --no-inference-columns COLUMNS]
                   [FILE [FILE ...]]
 
    Execute a SQL-like join to merge CSV files on a specified column or columns.
@@ -48,11 +48,16 @@ Merges two or more CSV tables together using a method analogous to SQL JOIN oper
      -I, --no-inference    Disable type inference (and --locale, --date-format,
                            --datetime-format, --no-leading-zeroes) when parsing
                            the input.
+     --no-inference-columns COLUMNS
+                           Disable type inference only for these column indices,
+                           names or ranges, e.g. "1,id,3-5".
 
    Note that the join operation requires reading all files into memory. Don't try
    this on very large files.
 
 See also: :doc:`../common_arguments`.
+
+The :code:`--no-inference-columns` selector is resolved separately against each input file. Use column names when column positions differ between files.
 
 Examples
 ========
