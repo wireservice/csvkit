@@ -14,7 +14,7 @@ Sort CSV files. Like the Unix "sort" command, but for tabular data:
                   [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
                   [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
                   [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS]
-                  [-r] [-i] [-y SNIFF_LIMIT] [-I]
+                  [-r] [-i] [-y SNIFF_LIMIT] [-I | --no-inference-columns COLUMNS]
                   [FILE]
 
    Sort CSV files. Like the Unix "sort" command, but for tabular data.
@@ -40,6 +40,9 @@ Sort CSV files. Like the Unix "sort" command, but for tabular data:
      -I, --no-inference    Disable type inference (and --locale, --date-format,
                            --datetime-format, --no-leading-zeroes) when parsing
                            the input.
+     --no-inference-columns COLUMNS
+                           Disable type inference only for these column indices,
+                           names or ranges, e.g. "1,id,3-5".
 
 See also: :doc:`../common_arguments`.
 

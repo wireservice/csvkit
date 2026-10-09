@@ -1,6 +1,8 @@
 Unreleased
 ----------
 
+-  feat: Tools that support type inference add :code:`--no-inference-columns` to preserve selected columns as text while inferring the remaining columns.
+
 -  feat: :doc:`/scripts/csvcut` adds an :code:`--ignore-unknown-columns` option to skip identifiers in :code:`-c/--columns` that do not match a column in the input.
 -  feat: :doc:`/scripts/csvclean` adds a :code:`--remove-empty-columns` option to remove empty columns from standard output.
 -  feat: :doc:`/scripts/in2csv` guesses the ``ndjson`` format for files with :code:`.ndjson`, :code:`.jsonl` and :code:`.jl` extensions.
