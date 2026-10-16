@@ -63,7 +63,7 @@ class CSVGrep(CSVKitUtility):
         if self.args.regex:
             pattern = re.compile(self.args.regex)
         elif self.args.matchfile:
-            lines = {line.rstrip() for line in self.args.matchfile}
+            lines = {line.rstrip('\r\n') for line in self.args.matchfile}
             self.args.matchfile.close()
 
             def pattern(x):
