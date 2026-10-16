@@ -1,4 +1,7 @@
+import csv
 import sys
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from csvkit.utilities.csvgrep import CSVGrep, launch_new_instance
@@ -74,6 +77,60 @@ class TestCSVGrep(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             ['foo', 'bar', 'baz'],
             ['4', '5', 'ʤ'],
         ])
+
+    def assertMatchfileRows(self, text, rows, expected, extra_args=(), columns='1'):
+        with TemporaryDirectory() as directory:
+            matchfile = Path(directory) / 'matches.txt'
+            matchfile.write_text(text, encoding='utf-8', newline='')
+            input_file = Path(directory) / 'input.csv'
+            with input_file.open('w', encoding='utf-8', newline='') as stream:
+                writer = csv.writer(stream, quoting=csv.QUOTE_ALL)
+                writer.writerows(rows)
+            self.assertRows([
+                '-c', columns, '-f', str(matchfile), *extra_args, str(input_file),
+            ], expected)
+
+    def test_file_match_preserves_whitespace(self):
+        for value in ('value ', 'value\t', 'value\u00a0', 'value\u2003', ' \t'):
+            for ending in ('\n', '\r\n', '\r', ''):
+                with self.subTest(value=value, ending=ending):
+                    self.assertMatchfileRows(value + ending, [
+                        ['key', 'label'],
+                        [value.rstrip(), 'trimmed'],
+                        [value, 'exact'],
+                        ['other', 'unrelated'],
+                    ], [
+                        ['key', 'label'],
+                        [value, 'exact'],
+                    ])
+
+    def test_file_match_line_endings(self):
+        for ending in ('\n', '\r\n', '\r', ''):
+            with self.subTest(ending=ending):
+                self.assertMatchfileRows('one' + ending, [
+                    ['key'], ['one'], ['two'],
+                ], [['key'], ['one']])
+
+    def test_file_match_multiple_patterns(self):
+        self.assertMatchfileRows('one \ntwo\t\r\nthree\u00a0', [
+            ['key'], ['one'], ['one '], ['two'], ['two\t'], ['three'], ['three\u00a0'],
+        ], [['key'], ['one '], ['two\t'], ['three\u00a0']])
+
+    def test_file_match_inverted_whitespace(self):
+        self.assertMatchfileRows('value \n', [
+            ['key'], ['value'], ['value '], ['other'],
+        ], [['key'], ['value'], ['other']], extra_args=('--invert-match',))
+
+    def test_file_match_column_modes(self):
+        rows = [
+            ['first', 'second'], ['keep ', 'keep\t'], ['keep ', 'no'], ['no', 'keep\t'], ['keep', 'keep'],
+        ]
+        for extra_args, expected in (
+            ((), [rows[0], rows[1]]),
+            (('--any-match',), [rows[0], rows[1], rows[2], rows[3]]),
+        ):
+            with self.subTest(extra_args=extra_args):
+                self.assertMatchfileRows('keep \nkeep\t\n', rows, expected, extra_args, '1,2')
 
     def test_string_match(self):
         self.assertRows(['-c', '1', '-m', 'ILLINOIS',
