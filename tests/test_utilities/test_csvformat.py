@@ -13,6 +13,62 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
 
+    def test_describe(self):
+        with stdin_as_string(io.BytesIO(b'a;b\n1;2\n')):
+            self.assertLines(['--describe'], [
+                "Delimiter: ';'",
+                'Quote character: \'"\'',
+                'Escape character: None',
+                'Double quote: True',
+                'Quoting: 0',
+                'Skip initial space: False',
+            ])
+
+    def test_describe_input_overrides(self):
+        with stdin_as_string(io.BytesIO(b'a;b\n1;2\n')):
+            output = self.get_output(['--describe', '-t', '-d', '|', '-q', "'", '-p', '\\', '-u', '3', '-S'])
+        self.assertIn("Delimiter: '\\t'\n", output)
+        self.assertIn('Quote character: "\'"\n', output)
+        self.assertIn("Escape character: '\\\\'\n", output)
+        self.assertIn('Quoting: 3\n', output)
+        self.assertIn('Skip initial space: True\n', output)
+
+    def test_describe_skip_lines(self):
+        with stdin_as_string(io.BytesIO(b'comment\ncomment\na;b\n1;2\n')):
+            self.assertIn("Delimiter: ';'\n", self.get_output(['--describe', '-K', '2']))
+
+    def test_describe_without_sniffing(self):
+        with stdin_as_string(io.BytesIO(b'a;b\n1;2\n')):
+            self.assertIn("Delimiter: ','\n", self.get_output(['--describe', '-y', '0']))
+
+    def test_describe_missing_file_without_sniffing(self):
+        with self.assertRaises(FileNotFoundError):
+            self.get_output(['--describe', '-y', '0', 'examples/missing-describe.csv'])
+
+    def test_describe_sniff_limit(self):
+        with stdin_as_string(io.BytesIO(b'a;b\n1;2\n3,4\n')):
+            self.assertIn("Delimiter: ';'\n", self.get_output(['--describe', '-y', '8']))
+
+    def test_describe_entire_file(self):
+        with stdin_as_string(io.BytesIO(b'a;b\n1;2\n3,4\n')), self.assertWarns(RuntimeWarning):
+            self.assertIn("Delimiter: ','\n", self.get_output(['--describe', '-y', '-1']))
+
+    def test_describe_invalid_sniff_limit(self):
+        self.assertError(launch_new_instance, ['--describe', '-y', '-2'], '--snifflimit must be -1 or greater.')
+
+    def test_describe_empty(self):
+        with self.assertWarns(RuntimeWarning):
+            self.assertIn("Delimiter: ','\n", self.get_output(['--describe', 'examples/empty.csv']))
+
+    def test_describe_without_parsing_rows(self):
+        with stdin_as_string(io.BytesIO(b'a;b\n1;2;3\n')):
+            self.assertIn("Delimiter: ';'\n", self.get_output(['--describe', '-y', '4', '-U', '2']))
+
+    def test_describe_ignores_output_format(self):
+        output = self.get_output(['--describe', '-D', '|', '-Q', '#', '-U', '2', 'examples/dummy.csv'])
+        self.assertIn("Delimiter: ','\n", output)
+        self.assertIn('Quote character: \'"\'\n', output)
+
     def test_skip_lines(self):
         self.assertLines(['--skip-lines', '3', '-D', '|', 'examples/test_skip_lines.csv'], [
             'a|b|c',
