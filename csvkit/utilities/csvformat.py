@@ -13,6 +13,13 @@ class CSVFormat(CSVKitUtility):
 
     def add_arguments(self):
         self.argparser.add_argument(
+            '--describe', action='store_true',
+            help='Describe the input CSV dialect instead of converting the file.')
+        self.argparser.add_argument(
+            '-y', '--snifflimit', dest='sniff_limit', type=int, default=1024,
+            help='For --describe, limit dialect sniffing to this many characters (default: 1024). '
+                 'Use 0 to disable sniffing or -1 to sniff the entire file.')
+        self.argparser.add_argument(
             '-E', '--skip-header', dest='skip_header', action='store_true',
             help='Do not output a header row.')
         self.argparser.add_argument(
@@ -71,6 +78,26 @@ class CSVFormat(CSVKitUtility):
     def main(self):
         if self.additional_input_expected():
             sys.stderr.write('No input file or piped data provided. Waiting for standard input:\n')
+
+        if self.args.describe:
+            if self.args.sniff_limit < -1:
+                self.argparser.error('--snifflimit must be -1 or greater.')
+            kwargs = self.reader_kwargs.copy()
+            limit = self.args.sniff_limit if self.args.sniff_limit != -1 else None
+            sample = self.skip_lines().read(limit)
+            if self.args.sniff_limit != 0:
+                kwargs['dialect'] = agate.csv.Sniffer().sniff(sample)
+            dialect = agate.csv.reader([], **kwargs).dialect
+            for label, attribute in (
+                ('Delimiter', 'delimiter'),
+                ('Quote character', 'quotechar'),
+                ('Escape character', 'escapechar'),
+                ('Double quote', 'doublequote'),
+                ('Quoting', 'quoting'),
+                ('Skip initial space', 'skipinitialspace'),
+            ):
+                self.output_file.write(f'{label}: {getattr(dialect, attribute)!r}\n')
+            return
 
         writer = agate.csv.writer(self.output_file, **self.writer_kwargs)
 

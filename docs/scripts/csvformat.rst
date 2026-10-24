@@ -12,7 +12,7 @@ Convert a CSV file to a custom output format.:
    usage: csvformat [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                     [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING]
                     [-L LOCALE] [-S] [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V]
-                    [-E] [-D OUT_DELIMITER] [-T] [-A] [-Q OUT_QUOTECHAR]
+                    [--describe] [-y SNIFF_LIMIT] [-E] [-D OUT_DELIMITER] [-T] [-A] [-Q OUT_QUOTECHAR]
                     [-U {0,1,2,3}] [-B] [-P OUT_ESCAPECHAR]
                     [-M OUT_LINETERMINATOR]
                     [FILE]
@@ -25,6 +25,12 @@ Convert a CSV file to a custom output format.:
 
    optional arguments:
      -h, --help            show this help message and exit
+     --describe            Describe the input CSV dialect instead of converting
+                           the file.
+     -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
+                           For --describe, limit dialect sniffing to this many
+                           characters (default: 1024). Use 0 to disable sniffing
+                           or -1 to sniff the entire file.
      -E, --skip-header     Do not output a header row.
      -D OUT_DELIMITER, --out-delimiter OUT_DELIMITER
                            Delimiting character of the output file.
@@ -54,6 +60,21 @@ See also: :doc:`../common_arguments`.
 
 Examples
 ========
+
+Inspect the input dialect, including the detected delimiter:
+
+.. code-block:: bash
+
+   csvformat --describe data.csv
+   csvformat --describe -y -1 data.csv
+
+:code:`--describe` uses agate's dialect sniffer and applies explicit input options
+such as :code:`-d`, :code:`-t` and :code:`-q` after sniffing. It reports the effective
+reader settings and does not parse data rows or convert the input. Output-format
+options do not affect the report. Sniffing can fail or guess incorrectly; if it
+fails, agate warns and the reader uses its defaults and any explicit input options.
+Line terminators are not reported because the sniffer does not detect them.
+:code:`-y` only affects :code:`--describe`; normal conversion does not sniff.
 
 Convert a comma-separated file to a pipe-delimited file:
 
