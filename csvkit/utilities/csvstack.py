@@ -2,6 +2,7 @@
 
 import os.path
 import sys
+from itertools import chain
 
 import agate
 
@@ -66,12 +67,15 @@ class CSVStack(CSVKitUtility):
         headers = []
         stdin_fieldnames = []
         stdin_first_row = []
+        stdin_read = False
 
         for path in self.args.input_paths:
             f = self._open_input_file(path)
             file_is_stdin = path == '-'
 
             _skip_lines(f, self.args)
+            if file_is_stdin:
+                stdin_read = True
             rows = Reader(f, **self.reader_kwargs)
 
             if use_fieldnames:
@@ -118,8 +122,8 @@ class CSVStack(CSVKitUtility):
                 else:
                     group = os.path.basename(f.name)
 
-            # If the file is standard input, we've already skipped any lines above, to find its header row.
-            if not file_is_stdin:
+            # Headerless input only inspects the first file above, which might not be stdin.
+            if not file_is_stdin or not stdin_read:
                 _skip_lines(f, self.args)
 
             # If the file is standard input, we've already read the header row, so we need to provide it here.
@@ -131,7 +135,7 @@ class CSVStack(CSVKitUtility):
 
             # If the file is standard input, we need to add back the row we used to calculate the number of columns.
             if file_is_stdin and stdin_first_row:
-                output.writerow(stdin_first_row)
+                rows = chain([stdin_first_row], rows)
 
             for row in rows:
                 if has_groups:

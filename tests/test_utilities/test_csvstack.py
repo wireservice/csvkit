@@ -1,3 +1,4 @@
+import io
 import os
 import sys
 import unittest
@@ -113,6 +114,35 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
 
 
 class TestNoHeaderRow(TestCSVStack):
+
+    def test_grouped_stdin_first_row(self):
+        with stdin_as_string(io.BytesIO(b'1,2,3\n4,5,6\n')):
+            self.assertRows(['-H', '-g', 'stdin,file', '-n', 'source', '-', 'examples/no_header_row.csv'], [
+                ['source', 'a', 'b', 'c'],
+                ['stdin', '1', '2', '3'],
+                ['stdin', '4', '5', '6'],
+                ['file', '1', '2', '3'],
+            ])
+
+    def test_filenames_grouped_stdin_first_row(self):
+        with open('examples/no_header_row.csv', 'rb') as f, stdin_as_string(f):
+            self.assertRows(['-H', '--filenames', '-', 'examples/no_header_row2.csv'], [
+                ['group', 'a', 'b', 'c'],
+                ['no_header_row.csv', '1', '2', '3'],
+                ['no_header_row2.csv', '4', '5', '6'],
+            ])
+
+    def test_skip_lines_stdin_in_either_position(self):
+        for paths in (['-', 'examples/test_skip_lines.csv'], ['examples/test_skip_lines.csv', '-']):
+            with self.subTest(paths=paths):
+                with open('examples/test_skip_lines.csv', 'rb') as f, stdin_as_string(f):
+                    self.assertRows(['-H', '--skip-lines', '3', '-g', 'first,second', *paths], [
+                        ['group', 'a', 'b', 'c'],
+                        ['first', 'a', 'b', 'c'],
+                        ['first', '1', '2', '3'],
+                        ['second', 'a', 'b', 'c'],
+                        ['second', '1', '2', '3'],
+                    ])
 
     def test_no_header_row_basic(self):
         self.assertRows(['--no-header-row', 'examples/no_header_row.csv', 'examples/no_header_row2.csv'], [
