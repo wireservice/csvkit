@@ -114,6 +114,18 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
 
 class TestNoHeaderRow(TestCSVStack):
 
+    def test_skip_lines_stdin_in_either_position(self):
+        for paths in (['-', 'examples/test_skip_lines.csv'], ['examples/test_skip_lines.csv', '-']):
+            with self.subTest(paths=paths):
+                with open('examples/test_skip_lines.csv', 'rb') as f, stdin_as_string(f):
+                    self.assertRows(['-H', '--skip-lines', '3', *paths], [
+                        ['a', 'b', 'c'],
+                        ['a', 'b', 'c'],
+                        ['1', '2', '3'],
+                        ['a', 'b', 'c'],
+                        ['1', '2', '3'],
+                    ])
+
     def test_no_header_row_basic(self):
         self.assertRows(['--no-header-row', 'examples/no_header_row.csv', 'examples/no_header_row2.csv'], [
             ['a', 'b', 'c'],
