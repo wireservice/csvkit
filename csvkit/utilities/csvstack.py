@@ -2,6 +2,7 @@
 
 import os.path
 import sys
+from itertools import chain
 
 import agate
 
@@ -131,7 +132,7 @@ class CSVStack(CSVKitUtility):
 
             # If the file is standard input, we need to add back the row we used to calculate the number of columns.
             if file_is_stdin and stdin_first_row:
-                output.writerow(stdin_first_row)
+                rows = chain([stdin_first_row], rows)
 
             for row in rows:
                 if has_groups:

@@ -136,6 +136,24 @@ class TestNoHeaderRow(TestCSVStack):
                 ['1', '2', '3'],
             ])
 
+    def test_grouped_manual_and_named_column_stdin(self):
+        with open('examples/no_header_row.csv', 'rb') as f, stdin_as_string(f):
+            self.assertRows([
+                '--no-header-row', '--groups', 'foo,bar', '-n', 'origin', '-', 'examples/no_header_row2.csv',
+            ], [
+                ['origin', 'a', 'b', 'c'],
+                ['foo', '1', '2', '3'],
+                ['bar', '4', '5', '6'],
+            ])
+
+    def test_grouped_filenames_stdin(self):
+        with open('examples/no_header_row.csv', 'rb') as f, stdin_as_string(f):
+            self.assertRows(['--no-header-row', '--filenames', '-', 'examples/no_header_row2.csv'], [
+                ['group', 'a', 'b', 'c'],
+                ['no_header_row.csv', '1', '2', '3'],
+                ['no_header_row2.csv', '4', '5', '6'],
+            ])
+
     def test_grouped_manual_and_named_column(self):
         self.assertRows(
             [
