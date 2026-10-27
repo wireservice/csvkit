@@ -60,7 +60,7 @@ class CSVGrep(CSVKitUtility):
 
         rows, column_names, column_ids = self.get_rows_and_column_names_and_column_ids(**reader_kwargs)
 
-        if self.args.regex:
+        if self.args.regex is not None:
             pattern = re.compile(self.args.regex)
         elif self.args.matchfile:
             lines = {line.rstrip() for line in self.args.matchfile}
