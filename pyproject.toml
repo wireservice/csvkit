@@ -53,6 +53,7 @@ test = [
 ]
 
 [project.scripts]
+csvkit = "csvkit.utilities.csvkit:launch_new_instance"
 csvclean = "csvkit.utilities.csvclean:launch_new_instance"
 csvcut = "csvkit.utilities.csvcut:launch_new_instance"
 csvformat = "csvkit.utilities.csvformat:launch_new_instance"
@@ -73,6 +74,7 @@ exclude = ["tests", "tests.*"]
 
 [tool.setuptools.data-files]
 "share/man/man1" = [
+    "man/csvkit.1",
     "man/csvclean.1",
     "man/csvcut.1",
     "man/csvformat.1",

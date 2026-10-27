@@ -9,6 +9,11 @@ About
 
 First time? See :doc:`tutorial`.
 
+After installation, run :code:`csvkit` (or :code:`csvkit --help`) to display
+the installed version and available commands. Run each tool directly, for
+example :code:`csvcut --help`. Use :code:`csvkit --version` to print only
+the version.
+
 .. note::
 
    To change the field separator, line terminator, etc. of the **output**, you must use :doc:`/scripts/csvformat`.
