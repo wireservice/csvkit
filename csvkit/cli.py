@@ -73,6 +73,7 @@ class CSVKitUtility:
     description = ''
     epilog = ''
     override_flags = ''
+    literal_options = ()
 
     def __init__(self, args=None, output_file=None, error_file=None):
         """
@@ -81,7 +82,7 @@ class CSVKitUtility:
         if args is None:
             args = sys.argv[1:]
         if os.name == 'nt':
-            args = _expand_args(args)
+            args = _expand_args(args, literal_options=self.literal_options)
 
         self._init_common_parser()
         self.add_arguments()
@@ -610,10 +611,31 @@ def parse_list(pairs):
 
 
 # Adapted from https://github.com/pallets/click/blame/main/src/click/utils.py
-def _expand_args(args):
+def _expand_args(args, literal_options=()):
     out = []
+    literal_next = False
 
     for arg in args:
+        if literal_next:
+            out.append(arg)
+            literal_next = False
+            continue
+
+        if arg in literal_options:
+            out.append(arg)
+            literal_next = True
+            continue
+
+        # Some option values are column identifiers rather than paths.
+        if any(
+            arg.startswith(f'{option}=') or (
+                option.startswith('-') and not option.startswith('--') and arg.startswith(option)
+            )
+            for option in literal_options
+        ):
+            out.append(arg)
+            continue
+
         arg = os.path.expanduser(arg)
         arg = os.path.expandvars(arg)
 

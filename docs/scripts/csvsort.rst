@@ -29,9 +29,10 @@ Sort CSV files. Like the Unix "sort" command, but for tabular data:
                            and exit.
      -c COLUMNS, --columns COLUMNS
                            A comma-separated list of column indices, names or
-                           ranges to sort by, e.g. "1,id,3-5". Defaults to all
-                           columns.
-     -r, --reverse         Sort in descending order.
+                           ranges to sort by, e.g. "1,id,3-5". Prefix a column
+                           with "~" to sort it in descending order. Defaults to
+                           all columns.
+     -r, --reverse         Reverse the sort direction of every column.
      -i, --ignore-case     Perform case-independent sorting.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                            Limit CSV dialect sniffing to the specified number of
@@ -61,3 +62,12 @@ View the five states with the most individuals claiming veteran's education bene
 .. code-block:: bash
 
    csvcut -c 1,9 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsort -r -c 2 | head -n 5
+
+Sort by state ascending, then by total descending within each state:
+
+.. code-block:: bash
+
+   csvsort -c 'state,~total' data.csv
+
+Prefix a range, such as :code:`~2-4`, to sort each column in that range in descending order.
+Use :code:`--reverse` to flip every specified direction.

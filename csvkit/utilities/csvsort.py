@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+from functools import cmp_to_key
+
 import agate
 
-from csvkit.cli import CSVKitUtility, parse_column_identifiers
+from csvkit.cli import CSVKitUtility, match_column_identifier, parse_column_identifiers
 
 
 def ignore_case_sort(key):
@@ -16,8 +18,36 @@ def ignore_case_sort(key):
     return inner
 
 
+def mixed_direction_sort(columns, descending, ignore_case):
+
+    def compare_rows(left, right):
+        for column, is_descending in zip(columns, descending):
+            left_value = left[column]
+            right_value = right[column]
+
+            if ignore_case:
+                if isinstance(left_value, str):
+                    left_value = left_value.upper()
+                if isinstance(right_value, str):
+                    right_value = right_value.upper()
+
+            if left_value is None:
+                left_value = agate.NullOrder()
+            if right_value is None:
+                right_value = agate.NullOrder()
+
+            comparison = (left_value > right_value) - (left_value < right_value)
+            if comparison:
+                return -comparison if is_descending else comparison
+
+        return 0
+
+    return cmp_to_key(compare_rows)
+
+
 class CSVSort(CSVKitUtility):
     description = 'Sort CSV files. Like the Unix "sort" command, but for tabular data.'
+    literal_options = ('-c', '--columns')
 
     def add_arguments(self):
         self.argparser.add_argument(
@@ -26,10 +56,10 @@ class CSVSort(CSVKitUtility):
         self.argparser.add_argument(
             '-c', '--columns', dest='columns',
             help='A comma-separated list of column indices, names or ranges to sort by, e.g. "1,id,3-5". '
-                 'Defaults to all columns.')
+                 'Prefix a column with "~" to sort it in descending order. Defaults to all columns.')
         self.argparser.add_argument(
             '-r', '--reverse', dest='reverse', action='store_true',
-            help='Sort in descending order.')
+            help='Reverse the sort direction of every column.')
         self.argparser.add_argument(
             '-i', '--ignore-case', dest='ignore_case', action='store_true',
             help='Perform case-independent sorting.')
@@ -59,14 +89,36 @@ class CSVSort(CSVKitUtility):
             **self.reader_kwargs,
         )
 
-        key = parse_column_identifiers(
-            self.args.columns,
-            table.column_names,
-            self.get_column_offset(),
-        )
+        identifiers = self.args.columns.split(',') if self.args.columns else []
+        reverse_columns = [
+            identifier.startswith('~') and len(identifier) > 1 and identifier not in table.column_names
+            for identifier in identifiers
+        ]
 
-        if self.args.ignore_case:
-            key = ignore_case_sort(key)
+        if any(reverse_columns):
+            columns = []
+            descending = []
+            for identifier, is_descending in zip(identifiers, reverse_columns):
+                if not identifier:
+                    selected = [match_column_identifier(table.column_names, identifier, self.get_column_offset())]
+                else:
+                    selected = parse_column_identifiers(
+                        identifier[1:] if is_descending else identifier,
+                        table.column_names,
+                        self.get_column_offset(),
+                    )
+                columns.extend(selected)
+                descending.extend([is_descending] * len(selected))
+        else:
+            columns = parse_column_identifiers(self.args.columns, table.column_names, self.get_column_offset())
+            descending = []
+
+        if any(descending):
+            key = mixed_direction_sort(columns, descending, self.args.ignore_case)
+        elif self.args.ignore_case:
+            key = ignore_case_sort(columns)
+        else:
+            key = columns
 
         table = table.order_by(key, reverse=self.args.reverse)
         table.to_csv(self.output_file, **self.writer_kwargs)
