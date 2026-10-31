@@ -29,6 +29,31 @@ except ImportError:
 QUOTING_CHOICES = sorted(getattr(csv, name) for name in dir(csv) if name.startswith('QUOTE_'))
 
 
+def _non_empty_column_identifiers(value):
+    if not value.strip():
+        raise argparse.ArgumentTypeError('column selection must not be empty')
+    return value
+
+
+class _SelectiveTypeTester(agate.TypeTester):
+    """Resolve text-only columns against each table's actual headers."""
+
+    def __init__(self, types, text_type, columns, column_offset):
+        super().__init__(types=types)
+        self._types = types
+        self._text_type = text_type
+        self._columns = columns
+        self._column_offset = column_offset
+
+    def run(self, rows, column_names):
+        indices = parse_column_identifiers(self._columns, column_names, self._column_offset)
+        if not indices:
+            raise ColumnIdentifierError('No columns match the selection %r.' % self._columns)
+        force = {column_names[index]: self._text_type for index in indices}
+        # A fresh tester prevents forced names leaking between inputs with different headers.
+        return agate.TypeTester(types=self._types, force=force).run(rows, column_names)
+
+
 class LazyFile:
     """
     A proxy for a File object that delays opening it until
@@ -126,6 +151,18 @@ class CSVKitUtility:
         Should be overriden by individual utilities.
         """
         raise NotImplementedError('add_arguments must be provided by each subclass of CSVKitUtility.')
+
+    def add_type_inference_arguments(self):
+        """Register global and column-specific inference options consistently."""
+        group = self.argparser.add_mutually_exclusive_group()
+        group.add_argument(
+            '-I', '--no-inference', dest='no_inference', action='store_true',
+            help='Disable type inference (and --locale, --date-format, --datetime-format, --no-leading-zeroes) '
+                 'when parsing the input.')
+        group.add_argument(
+            '--no-inference-columns', dest='no_inference_columns', metavar='COLUMNS',
+            type=_non_empty_column_identifiers,
+            help='Disable type inference only for these column indices, names or ranges, e.g. "1,id,3-5".')
 
     def run(self):
         """
@@ -386,6 +423,9 @@ class CSVKitUtility:
                 else:
                     types.insert(1, number_type)
 
+        columns = getattr(self.args, 'no_inference_columns', None)
+        if columns is not None:
+            return _SelectiveTypeTester(types, text_type, columns, self.get_column_offset())
         return agate.TypeTester(types=types)
 
     def get_column_offset(self):

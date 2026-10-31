@@ -14,7 +14,7 @@ Loads a CSV file into a :class:`agate.csv.Reader` object and then drops into a P
                 [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
                 [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
                 [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [--dict] [--agate]
-                [--no-number-ellipsis] [-y SNIFF_LIMIT] [-I]
+                [--no-number-ellipsis] [-y SNIFF_LIMIT] [-I | --no-inference-columns COLUMNS]
                 [FILE]
 
    Load a CSV file into a CSV reader and then drop into a Python shell.
@@ -35,6 +35,11 @@ Loads a CSV file into a :class:`agate.csv.Reader` object and then drops into a P
      -I, --no-inference    Disable type inference (and --locale, --date-format,
                            --datetime-format, --no-leading-zeroes) when parsing
                            the input.
+     --no-inference-columns COLUMNS
+                           Disable type inference only for these column indices,
+                           names or ranges, e.g. "1,id,3-5".
+
+Type inference options apply when :code:`--agate` is set. The default CSV reader and :code:`--dict` reader already return text.
 
 This tool will automatically use the IPython shell if it is installed, otherwise it will use the running Python shell.
 

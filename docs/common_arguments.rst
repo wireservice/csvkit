@@ -64,6 +64,16 @@ For example, to disable CSV sniffing, set :code:`--snifflimit 0` and then, if ne
 
 To disable type inference, add the :code:`--no-inference` flag. To prevent text values from being converted to dates or datetimes, set the :code:`--date-format` and/or :code:`--datetime-format` options to a non-occurring value, like ``-``.
 
+To preserve only certain columns as text, use :code:`--no-inference-columns COLUMNS` with :doc:`/scripts/csvjoin`, :doc:`/scripts/csvjson`, :doc:`/scripts/csvlook`, :doc:`/scripts/csvpy` (with :code:`--agate`), :doc:`/scripts/csvsort`, :doc:`/scripts/csvsql`, :doc:`/scripts/csvstat` or :doc:`/scripts/in2csv`. Unselected columns retain normal type inference. For example, keep leading zeroes in an identifier and preserve date-looking codes while still parsing numeric amounts:
+
+.. code-block:: bash
+
+   csvjson --no-inference-columns id,date_code input.csv
+
+The selector accepts comma-separated column names, numeric column IDs and inclusive ranges, such as :code:`1,id,3-5`. IDs start at 1, or at 0 with :code:`--zero`. For headerless input, use the generated names (a, b, c, ...) or numeric IDs. Unknown or out-of-range columns produce an error. The same selector is resolved against each input file's headers. You cannot combine this option with :code:`-I/--no-inference`.
+
+Selected text columns still use the configured NULL conversion rules. Use :code:`--blanks` to preserve the default NULL spellings as text, or :code:`--null-value` to specify additional NULL values. Selective inference still buffers input to infer the unselected columns; it does not enable the all-text streaming shortcuts.
+
 The output of csvkit's tools is always formatted with "default" formatting options. This means that when executing multiple csvkit commands (either with a pipe or through intermediary files) it is only ever necessary to specify these arguments the first time (and doing so for subsequent commands will likely cause them to fail).
 
 See the documentation of :doc:`/scripts/csvclean` for a description of the default formatting options.

@@ -86,6 +86,8 @@ Currently, the following tools buffer:
 * :doc:`/scripts/csvstat`
 * :doc:`/scripts/in2csv` unless :code:`--format ndjson --no-inference` is set, or unless :code:`--format csv --no-inference --snifflimit 0` is set and :code:`--no-header-row` and :code:`--skip-lines` aren't set
 
+The :code:`--no-inference-columns` option keeps inference enabled for unselected columns, so it does not enable the all-text streaming shortcuts in :doc:`/scripts/csvjson` or :doc:`/scripts/in2csv`. Those shortcuts require global :code:`--no-inference`.
+
 Legalese
 ========
 

@@ -16,7 +16,7 @@ Converts a CSV file into JSON or GeoJSON (depending on flags):
                   [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-i INDENT]
                   [-k KEY] [--lat LAT] [--lon LON] [--type TYPE]
                   [--geometry GEOMETRY] [--crs CRS] [--no-bbox] [--stream]
-                  [-y SNIFF_LIMIT] [-I]
+                  [-y SNIFF_LIMIT] [-I | --no-inference-columns COLUMNS]
                   [FILE]
 
    Convert a CSV file into JSON (or GeoJSON).
@@ -56,6 +56,9 @@ Converts a CSV file into JSON or GeoJSON (depending on flags):
      -I, --no-inference    Disable type inference (and --locale, --date-format,
                            --datetime-format, --no-leading-zeroes) when parsing
                            the input.
+     --no-inference-columns COLUMNS
+                           Disable type inference only for these column indices,
+                           names or ranges, e.g. "1,id,3-5".
 
 See also: :doc:`../common_arguments`.
 

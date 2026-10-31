@@ -20,7 +20,7 @@ Generate SQL statements for a CSV file or execute those statements directly on a
                  [--after-insert AFTER_INSERT] [--tables TABLE_NAMES]
                  [--no-constraints] [--unique-constraint UNIQUE_CONSTRAINT]
                  [--no-create] [--create-if-not-exists] [--overwrite]
-                 [--db-schema DB_SCHEMA] [-y SNIFF_LIMIT] [-I]
+                 [--db-schema DB_SCHEMA] [-y SNIFF_LIMIT] [-I | --no-inference-columns COLUMNS]
                  [--chunk-size CHUNK_SIZE]
                  [FILE [FILE ...]]
 
@@ -84,6 +84,9 @@ Generate SQL statements for a CSV file or execute those statements directly on a
      -I, --no-inference    Disable type inference (and --locale, --date-format,
                            --datetime-format, --no-leading-zeroes) when parsing
                            the input.
+     --no-inference-columns COLUMNS
+                           Disable type inference only for these column indices,
+                           names or ranges, e.g. "1,id,3-5".
      --chunk-size CHUNK_SIZE
                            Chunk size for batch insert into the table. Requires
                            --insert.

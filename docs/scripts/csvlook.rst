@@ -17,7 +17,7 @@ Renders a CSV to the command line in a Markdown-compatible, fixed-width format:
                   [--max-rows MAX_ROWS] [--max-columns MAX_COLUMNS]
                   [--max-column-width MAX_COLUMN_WIDTH]
                   [--max-precision MAX_PRECISION] [--no-number-ellipsis]
-                  [-y SNIFF_LIMIT] [-I]
+                  [-y SNIFF_LIMIT] [-I | --no-inference-columns COLUMNS]
                   [FILE]
 
    Render a CSV file in the console as a Markdown-compatible, fixed-width table.
@@ -47,6 +47,9 @@ Renders a CSV to the command line in a Markdown-compatible, fixed-width format:
      -I, --no-inference    Disable type inference (and --locale, --date-format,
                            --datetime-format, --no-leading-zeroes) when parsing
                            the input.
+     --no-inference-columns COLUMNS
+                           Disable type inference only for these column indices,
+                           names or ranges, e.g. "1,id,3-5".
 
 If a table is too wide to display properly try piping the output to ``less -S`` or truncating it using :doc:`csvcut`.
 
