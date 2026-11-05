@@ -32,6 +32,32 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
             with self.subTest(option=option):
                 self.assertError(launch_new_instance, [f'--{option}', 'value'], message)
 
+    def test_integers(self):
+        js = json.loads(self.get_output(['--integers', 'examples/dummy.csv']))
+        self.assertDictEqual(js[0], {'a': True, 'c': 3, 'b': 2})
+
+    def test_integers_with_fractions(self):
+        import tempfile
+
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', encoding='utf-8') as csv_file:
+            csv_file.write("whole,fraction,negative" + chr(10) + "12,12.5,-3" + chr(10))
+            csv_file.flush()
+
+            output = self.get_output(['--integers', csv_file.name])
+
+        js = json.loads(output)
+        self.assertDictEqual(js[0], {
+            'whole': 12,
+            'fraction': 12.5,
+            'negative': -3,
+        })
+
+    def test_integers_with_no_inference(self):
+        js = json.loads(self.get_output([
+            '--integers', '--no-inference', 'examples/dummy.csv'
+        ]))
+        self.assertDictEqual(js[0], {'a': '1', 'c': '3', 'b': '2'})
+
     def test_simple(self):
         js = json.loads(self.get_output(['examples/dummy.csv']))
         self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})

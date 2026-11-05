@@ -9,10 +9,25 @@ import agate
 from csvkit.cli import CSVKitUtility, default_str_decimal, match_column_identifier
 
 
+class IntegerNumber(agate.Number):
+    """Serialize whole-number values as JSON integers."""
+
+    def jsonify(self, value):
+        if value is None:
+            return None
+        if value == value.to_integral_value():
+            return int(value)
+        return float(value)
+
+
 class CSVJSON(CSVKitUtility):
     description = 'Convert a CSV file into JSON (or GeoJSON).'
 
     def add_arguments(self):
+        self.argparser.add_argument(
+            '--integers', dest='integers', action='store_true',
+            help='Output whole-number values as integers instead of floats.')
+
         self.argparser.add_argument(
             '-i', '--indent', dest='indent', type=int,
             help='Indent the output JSON this many spaces. Disabled by default.')
@@ -111,13 +126,31 @@ class CSVJSON(CSVKitUtility):
     def is_geo(self):
         return self.args.lat and self.args.lon
 
+    def get_json_column_types(self):
+        type_tester = self.get_column_types()
+
+        if self.args.integers and not self.args.no_inference:
+            types = [
+                IntegerNumber(
+                    locale=column_type.locale,
+                    no_leading_zeroes=column_type.no_leading_zeroes,
+                    null_values=column_type.null_values,
+                )
+                if isinstance(column_type, agate.Number)
+                else column_type
+                for column_type in type_tester._possible_types
+            ]
+            return agate.TypeTester(types=types)
+
+        return type_tester
+
     def read_csv_to_table(self):
         sniff_limit = self.args.sniff_limit if self.args.sniff_limit != -1 else None
         return agate.Table.from_csv(
             self.input_file,
             skip_lines=self.args.skip_lines,
             sniff_limit=sniff_limit,
-            column_types=self.get_column_types(),
+            column_types=self.get_json_column_types(),
             **self.reader_kwargs,
         )
 

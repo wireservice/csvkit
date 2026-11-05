@@ -16,7 +16,7 @@ Converts a CSV file into JSON or GeoJSON (depending on flags):
                   [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-i INDENT]
                   [-k KEY] [--lat LAT] [--lon LON] [--type TYPE]
                   [--geometry GEOMETRY] [--crs CRS] [--no-bbox] [--stream]
-                  [-y SNIFF_LIMIT] [-I]
+                  [-y SNIFF_LIMIT] [-I] [--integers]
                   [FILE]
 
    Convert a CSV file into JSON (or GeoJSON).
@@ -49,6 +49,8 @@ Converts a CSV file into JSON or GeoJSON (depending on flags):
      --no-bbox             Disable the calculation of a bounding box.
      --stream              Output JSON as a stream of newline-separated objects,
                            rather than an as an array.
+     --integers            Output whole-number values as JSON integers instead
+                           of floating-point numbers.
      -y SNIFF_LIMIT, --snifflimit SNIFF_LIMIT
                            Limit CSV dialect sniffing to the specified number of
                            bytes. Specify "0" to disable sniffing entirely, or
