@@ -13,7 +13,7 @@ Filter tabular data to only those rows where certain columns contain a given val
                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
                   [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS]
                   [-m PATTERN] [-r REGEX] [-f MATCHFILE] [-i] [-a]
-                  [FILE]
+                  [--ignore-case] [FILE]
 
    Search CSV files. Like the Unix "grep" command, but for tabular data.
 
@@ -39,6 +39,8 @@ Filter tabular data to only those rows where certain columns contain a given val
      -i, --invert-match    Select non-matching rows, instead of matching rows.
      -a, --any-match       Select rows in which any column matches, instead of
                            all columns.
+     --ignore-case         Ignore case when matching, for the -m, -r and -f
+                           options.
 
 See also: :doc:`../common_arguments`.
 
@@ -66,6 +68,12 @@ Search for rows that do not contain an empty state cell:
    csvgrep -c 1 -r "^$" -i examples/realdata/FY09_EDU_Recipients_by_State.csv
 
 Perform a case-insensitive search:
+
+.. code-block:: bash
+
+   csvgrep -c 1 --ignore-case -m illinois examples/realdata/FY09_EDU_Recipients_by_State.csv
+
+The ``--ignore-case`` option applies to the ``-m``, ``-r`` and ``-f`` options. Alternatively, an inline flag can be used in a regular expression:
 
 .. code-block:: bash
 
