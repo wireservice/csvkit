@@ -1,10 +1,30 @@
 import os
+import shutil
+import subprocess
 import sys
 import unittest
 from unittest.mock import patch
 
 from csvkit.utilities.csvstack import CSVStack, launch_new_instance
 from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
+
+
+class TestProcessSubstitution(unittest.TestCase):
+    @unittest.skipUnless(os.path.isdir('/dev/fd') and shutil.which('bash'), 'Requires Bash process substitution')
+    def test_process_substitution_preserves_rows_and_aligns_headers(self):
+        result = subprocess.run([
+            'bash', '-c', 'exec "$@" <(printf "c,a,d\\n7,5,6\\n10,8,9\\n")', 'bash',
+            sys.executable, '-m', 'csvkit.utilities.csvstack', 'examples/dummy.csv',
+        ], check=True, capture_output=True, text=True, timeout=10)
+        self.assertEqual(result.stdout, 'a,b,c,d\n1,2,3,\n5,,7,6\n8,,10,9\n')
+
+    @unittest.skipUnless(os.path.isdir('/dev/fd') and shutil.which('bash'), 'Requires Bash process substitution')
+    def test_headerless_process_substitution_preserves_first_row_and_group(self):
+        result = subprocess.run([
+            'bash', '-c', 'exec "$@" <(printf "skip\\n5,6,7\\n8,9,10\\n") examples/dummy.csv', 'bash',
+            sys.executable, '-m', 'csvkit.utilities.csvstack', '-H', '--skip-lines', '1', '-g', 'pipe,file',
+        ], check=True, capture_output=True, text=True, timeout=10)
+        self.assertEqual(result.stdout, 'group,a,b,c\npipe,5,6,7\npipe,8,9,10\nfile,1,2,3\n')
 
 
 class TestCSVStack(CSVKitTestCase, EmptyFileTests):

@@ -2,6 +2,8 @@
 
 import os.path
 import sys
+from contextlib import ExitStack
+from itertools import chain
 
 import agate
 
@@ -55,6 +57,10 @@ class CSVStack(CSVKitUtility):
         else:
             groups = None
 
+        with ExitStack() as stack:
+            self._stack_inputs(has_groups, groups, stack)
+
+    def _stack_inputs(self, has_groups, groups, stack):
         group_name = self.args.group_name if self.args.group_name else 'group'
         use_fieldnames = not self.args.no_header_row
 
@@ -66,13 +72,18 @@ class CSVStack(CSVKitUtility):
         headers = []
         stdin_fieldnames = []
         stdin_first_row = []
+        streams = {}
 
-        for path in self.args.input_paths:
+        for i, path in enumerate(self.args.input_paths):
             f = self._open_input_file(path)
             file_is_stdin = path == '-'
 
             _skip_lines(f, self.args)
             rows = Reader(f, **self.reader_kwargs)
+            keep_open = not file_is_stdin and not f.seekable()
+            if keep_open:
+                # Reopening a pipe cannot replay data already buffered by this reader.
+                stack.callback(f.close)
 
             if use_fieldnames:
                 if rows.fieldnames:
@@ -83,15 +94,19 @@ class CSVStack(CSVKitUtility):
                 # If the file is standard input, store the fieldnames so that the rows can be read correctly later.
                 if file_is_stdin:
                     stdin_fieldnames = rows.fieldnames
+                elif keep_open:
+                    streams[i] = (f, rows)
                 else:
                     f.close()
             else:
-                row = next(rows, [])
-                headers = list(make_default_headers(len(row)))
+                row = next(rows, None)
+                headers = list(make_default_headers(len(row or [])))
 
                 # If the file is standard input, store the row that was used to calculate the number of columns.
                 if file_is_stdin:
                     stdin_first_row = row
+                elif keep_open:
+                    streams[i] = (f, chain([] if row is None else [row], rows))
                 else:
                     f.close()
 
@@ -109,25 +124,22 @@ class CSVStack(CSVKitUtility):
             output.writerow(headers)
 
         for i, path in enumerate(self.args.input_paths):
-            f = self._open_input_file(path, opened=True)
             file_is_stdin = path == '-'
+            if i in streams:
+                f, rows = streams.pop(i)
+            else:
+                f = self._open_input_file(path, opened=True)
+                # Stdin has already been inspected for its header in the first pass.
+                if not file_is_stdin:
+                    _skip_lines(f, self.args)
+                kwargs = {'fieldnames': stdin_fieldnames} if file_is_stdin and use_fieldnames else {}
+                rows = Reader(f, **self.reader_kwargs, **kwargs)
 
             if has_groups:
                 if groups:
                     group = groups[i]
                 else:
                     group = os.path.basename(f.name)
-
-            # If the file is standard input, we've already skipped any lines above, to find its header row.
-            if not file_is_stdin:
-                _skip_lines(f, self.args)
-
-            # If the file is standard input, we've already read the header row, so we need to provide it here.
-            kwargs = {}
-            if file_is_stdin and use_fieldnames:
-                kwargs['fieldnames'] = stdin_fieldnames
-
-            rows = Reader(f, **self.reader_kwargs, **kwargs)
 
             # If the file is standard input, we need to add back the row we used to calculate the number of columns.
             if file_is_stdin and stdin_first_row:
