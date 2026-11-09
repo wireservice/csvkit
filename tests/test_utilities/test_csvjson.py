@@ -126,7 +126,7 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
             self.assertIsInstance(geometry['coordinates'][0], float)
             self.assertIsInstance(geometry['coordinates'][1], float)
 
-    def test_geojson_no_coordinates_at_all(self):
+    def test_geojson_no_coordinates(self):
         geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude',
                              'examples/test_geo_no_coordinates.csv']))
 
