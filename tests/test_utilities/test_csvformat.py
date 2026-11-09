@@ -24,6 +24,13 @@ class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
             '1,2,3',
         ])
 
+    def test_empty_header_options(self):
+        with stdin_as_string(io.BytesIO(b'')):
+            self.assertLines(['--skip-header'], [])
+        with stdin_as_string(io.BytesIO(b'')):
+            self.assertLines(['--no-header-row'], [])
+        self.assertLines(['--no-header-row', '--skip-lines', '2', 'examples/dummy.csv'], [])
+
     def test_skip_header_no_header_row(self):
         self.assertLines(['--no-header-row', '--skip-header', 'examples/no_header_row.csv'], [
             '1,2,3',

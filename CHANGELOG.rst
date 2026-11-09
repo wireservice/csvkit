@@ -13,6 +13,7 @@ Unreleased
 -  fix: :doc:`/scripts/csvstack` reads all rows from inputs that can't be reopened, like process substitution (e.g. :code:`<(cmd)`) and named pipes. Previously, these rows were dropped.
 -  fix: :doc:`/scripts/csvstack` applies :code:`--skip-lines` to standard input (:code:`-`) if it isn't the first input, when using :code:`--no-header-row`.
 -  docs: The man pages build on Windows.
+-  fix: :doc:`/scripts/csvformat` no longer raises an error on empty input with :code:`--skip-header` or :code:`--no-header-row` (including input that :code:`--skip-lines` empties).
 
 2.2.0 - December 15, 2025
 -------------------------

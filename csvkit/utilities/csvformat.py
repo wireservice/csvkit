@@ -91,12 +91,14 @@ class CSVFormat(CSVKitUtility):
             reader = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
             if self.args.no_header_row:
                 # Peek at a row to get the number of columns.
-                _row = next(reader)
+                _row = next(reader, None)
+                if _row is None:
+                    return
                 headers = make_default_headers(len(_row))
                 reader = itertools.chain([headers, _row], reader)
 
             if self.args.skip_header:
-                next(reader)
+                next(reader, None)
 
             writer.writerows(reader)
 
