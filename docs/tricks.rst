@@ -123,6 +123,8 @@ These may be symptoms of csvkit's type inference being too aggressive for your d
 
 For some data, type inference can be error prone. If necessary you can disable it with the :code:`--no-inference` option. This will force all columns to be treated as regular text.
 
+To keep identifiers or date-looking codes as text while inferring other columns, use :code:`--no-inference-columns`, for example :code:`csvsort --no-inference-columns id -c amount input.csv`. This preserves leading zeroes in :code:`id` and sorts :code:`amount` numerically. See :doc:`common_arguments` for column selectors and NULL handling.
+
 To prevent values from being converted to dates or datetimes, set the :code:`--date-format` and/or :code:`--datetime-format` options to a non-occurring value, like ``-``.
 
 Slow performance

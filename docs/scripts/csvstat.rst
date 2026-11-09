@@ -18,7 +18,7 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
                   [--unique] [--min] [--max] [--sum] [--mean] [--median]
                   [--stdev] [--len] [--max-precision] [--freq]
                   [--freq-count FREQ_COUNT] [--count]
-                  [--decimal-format DECIMAL_FORMAT] [-G] [-y SNIFF_LIMIT] [-I]
+                  [--decimal-format DECIMAL_FORMAT] [-G] [-y SNIFF_LIMIT] [-I | --no-inference-columns COLUMNS]
                   [FILE]
 
    Print descriptive statistics for each column in a CSV file.
@@ -68,6 +68,9 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
      -I, --no-inference    Disable type inference (and --locale, --date-format,
                            --datetime-format, --no-leading-zeroes) when parsing
                            the input.
+     --no-inference-columns COLUMNS
+                           Disable type inference only for these column indices,
+                           names or ranges, e.g. "1,id,3-5".
 
 See also: :doc:`../common_arguments`.
 
