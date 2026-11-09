@@ -215,14 +215,14 @@ Check whether any errors found:
 
 .. code-block:: console
 
-   $ if [ csvclean -a examples/bad.csv ]; then echo "my message"; fi
+   $ if ! csvclean -a examples/bad.csv >/dev/null 2>&1; then echo "my message"; fi
    my message
 
 Or:
 
 .. code-block:: console
 
-   $ [ csvclean -a examples/bad.csv ] && echo "my message"
+   $ csvclean -a examples/bad.csv >/dev/null 2>&1 || echo "my message"
    my message
 
 Or:

@@ -116,3 +116,5 @@ The following individuals have contributed code to csvkit:
 * lamdevhs
 * Sai Asish Y
 * Peng-Yu Chen
+* Andrew Chen
+* Bogden
