@@ -15,6 +15,8 @@ Unreleased
 -  docs: The man pages build on Windows.
 -  fix: :doc:`/scripts/csvformat` no longer raises an error on empty input with :code:`--skip-header` or :code:`--no-header-row` (including input that :code:`--skip-lines` empties).
 -  fix: :doc:`/scripts/csvjson` with :code:`--lat` and :code:`--lon` no longer raises an error on rows with blank or invalid coordinates, or with a latitude or longitude of 0 (e.g. on the equator). Rows with blank or invalid coordinates have a :code:`null` geometry.
+-  fix: :doc:`/scripts/csvstat`, when using :code:`--decimal-format` without decimal places (e.g. :code:`%.0f`), no longer strips trailing zeros (e.g. 100 was output as 1).
+-  fix: :doc:`/scripts/csvstat`, in locales that use a decimal comma (e.g. :code:`de_DE`), no longer appends a decimal separator to whole numbers.
 
 2.2.0 - December 15, 2025
 -------------------------
