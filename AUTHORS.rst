@@ -122,3 +122,4 @@ The following individuals have contributed code to csvkit:
 * Agentrix
 * Vincent
 * Shoaib Shah
+* Wang Xizhang
