@@ -10,7 +10,7 @@ jobs:
         python-version: ['3.10', '3.11', '3.12', '3.13', '3.14', pypy-3.11]
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
@@ -52,6 +52,6 @@ jobs:
           printf 'a,b,c\n1,2,3' | csvstat
           printf 'a,b,c\n1,2,3' | in2csv -f csv
           printf 'SELECT 1 AS a' | sql2csv
-      - uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+      - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           fail_ci_if_error: true

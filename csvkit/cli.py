@@ -154,7 +154,7 @@ class CSVKitUtility:
 
         Should be overriden by individual utilities and explicitly called by the executing script.
         """
-        raise NotImplementedError(' must be provided by each subclass of CSVKitUtility.')
+        raise NotImplementedError('main must be provided by each subclass of CSVKitUtility.')
 
     def _init_common_parser(self):
         """
