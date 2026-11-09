@@ -118,3 +118,4 @@ The following individuals have contributed code to csvkit:
 * Peng-Yu Chen
 * Andrew Chen
 * Bogden
+* Rupayon Haldar

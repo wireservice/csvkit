@@ -6,6 +6,7 @@ Unreleased
 -  feat: :doc:`/scripts/in2csv` guesses the ``ndjson`` format for files with :code:`.ndjson`, :code:`.jsonl` and :code:`.jl` extensions.
 -  fix: :code:`-C/--not-columns` now excludes the last column of an open-ended range (e.g. :code:`2-`).
 -  fix: :doc:`/scripts/in2csv` writes array-valued properties in GeoJSON as JSON (like object-valued properties), instead of as Python literals that JSON parsers can't read.
+-  fix: :doc:`/scripts/csvstack` adds the group value to the first row of standard input, when using :code:`--no-header-row` with :code:`--groups` or :code:`--filenames`.
 
 2.2.0 - December 15, 2025
 -------------------------
