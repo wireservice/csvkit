@@ -2,7 +2,6 @@ Unreleased
 ----------
 
 -  fix: :doc:`/scripts/csvgrep` treats an empty :code:`--regex` or :code:`--match` pattern as matching every value. Previously, with an empty pattern, :code:`--any-match` matched no rows, and :code:`--any-match --invert-match` matched every row.
--  docs: The man pages can be built on Windows. Previously, the build couldn't find the tools' documentation pages.
 -  feat: :doc:`/scripts/csvcut` adds an :code:`--ignore-unknown-columns` option to skip identifiers in :code:`-c/--columns` that do not match a column in the input.
 -  feat: :doc:`/scripts/csvclean` adds a :code:`--remove-empty-columns` option to remove empty columns from standard output.
 -  feat: :doc:`/scripts/in2csv` guesses the ``ndjson`` format for files with :code:`.ndjson`, :code:`.jsonl` and :code:`.jl` extensions.
@@ -13,6 +12,7 @@ Unreleased
 -  fix: Open-ended ranges (e.g. :code:`0-`) respect :code:`--zero`. Previously, with :code:`--zero`, ranges without a start began at the second column, and ranges without an end raised an error.
 -  fix: :doc:`/scripts/csvstack` reads all rows from inputs that can't be reopened, like process substitution (e.g. :code:`<(cmd)`) and named pipes. Previously, these rows were dropped.
 -  fix: :doc:`/scripts/csvstack` applies :code:`--skip-lines` to standard input (:code:`-`) if it isn't the first input, when using :code:`--no-header-row`.
+-  docs: The man pages build on Windows.
 
 2.2.0 - December 15, 2025
 -------------------------
