@@ -242,6 +242,19 @@ class TestIn2CSV(CSVKitTestCase, EmptyFileTests):
 
         input_file.close()
 
+    def test_geojson_non_ascii_property(self):
+        input_file = io.BytesIO(
+            '{"type": "FeatureCollection", "features": [{"geometry": null, "properties": '
+            '{"tags": ["café"], "obj": {"k": "café"}}}]}'.encode())
+
+        with stdin_as_string(input_file):
+            self.assertLines(['-f', 'geojson'], [
+                'id,tags,obj,geojson,type,longitude,latitude',
+                ',"[""café""]","{""k"": ""café""}",null,,,',
+            ])
+
+        input_file.close()
+
     def test_json_no_inference(self):
         input_file = io.BytesIO(b'[{"a": 1, "b": 2, "c": 3}]')
 
