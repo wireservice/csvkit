@@ -14,6 +14,7 @@ Unreleased
 -  fix: :doc:`/scripts/csvstack` applies :code:`--skip-lines` to standard input (:code:`-`) if it isn't the first input, when using :code:`--no-header-row`.
 -  docs: The man pages build on Windows.
 -  fix: :doc:`/scripts/csvformat` no longer raises an error on empty input with :code:`--skip-header` or :code:`--no-header-row` (including input that :code:`--skip-lines` empties).
+-  fix: :doc:`/scripts/csvjson` with :code:`--lat` and :code:`--lon` no longer raises an error on rows with blank or invalid coordinates, or with a latitude or longitude of 0 (e.g. on the equator). Rows with blank or invalid coordinates have a :code:`null` geometry.
 
 2.2.0 - December 15, 2025
 -------------------------
