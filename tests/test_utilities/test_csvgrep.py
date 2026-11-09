@@ -93,6 +93,12 @@ class TestCSVGrep(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             ['4', '5', 'ʤ'],
         ])
 
+    def test_file_match(self):
+        self.assertRows(['-c', 'a', '-f', 'examples/test_file_match.txt', 'examples/test_file_match.csv'], [
+            ['a', 'b'],
+            ['value ', '2'],
+        ])
+
     def test_string_match(self):
         self.assertRows(['-c', '1', '-m', 'ILLINOIS',
                          'examples/realdata/FY09_EDU_Recipients_by_State.csv'], [

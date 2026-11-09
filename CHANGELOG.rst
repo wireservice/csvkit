@@ -17,6 +17,7 @@ Unreleased
 -  fix: :doc:`/scripts/csvjson` with :code:`--lat` and :code:`--lon` no longer raises an error on rows with blank or invalid coordinates, or with a latitude or longitude of 0 (e.g. on the equator). Rows with blank or invalid coordinates have a :code:`null` geometry.
 -  fix: :doc:`/scripts/csvstat`, when using :code:`--decimal-format` without decimal places (e.g. :code:`%.0f`), no longer strips trailing zeros (e.g. 100 was output as 1).
 -  fix: :doc:`/scripts/csvstat`, in locales that use a decimal comma (e.g. :code:`de_DE`), no longer appends a decimal separator to whole numbers.
+-  fix: :doc:`/scripts/csvgrep` :code:`-f/--file` strips only line separators from each line of the file, as documented, not trailing whitespace.
 
 2.2.0 - December 15, 2025
 -------------------------

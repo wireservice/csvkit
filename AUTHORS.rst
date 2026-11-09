@@ -124,3 +124,4 @@ The following individuals have contributed code to csvkit:
 * Shoaib Shah
 * Wang Xizhang
 * umd0730
+* sakura168899-debug
