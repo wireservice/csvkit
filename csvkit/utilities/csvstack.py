@@ -65,12 +65,11 @@ class CSVStack(CSVKitUtility):
             Reader = agate.csv.reader
 
         headers = []
-        stdin_fieldnames = []
-        stdin_first_row = []
+        # Inputs that can't be reopened (standard input and pipes), as (file, reader) after any header row.
+        kept = {}
 
-        for path in self.args.input_paths:
+        for i, path in enumerate(self.args.input_paths):
             f = self._open_input_file(path)
-            file_is_stdin = path == '-'
 
             _skip_lines(f, self.args)
             rows = Reader(f, **self.reader_kwargs)
@@ -80,23 +79,19 @@ class CSVStack(CSVKitUtility):
                     for field in rows.fieldnames:
                         if field not in headers:
                             headers.append(field)
-
-                # If the file is standard input, store the fieldnames so that the rows can be read correctly later.
-                if file_is_stdin:
-                    stdin_fieldnames = rows.fieldnames
-                else:
-                    f.close()
             else:
                 row = next(rows, [])
                 headers = list(make_default_headers(len(row)))
+                if row:
+                    rows = chain([row], rows)
 
-                # If the file is standard input, store the row that was used to calculate the number of columns.
-                if file_is_stdin:
-                    stdin_first_row = row
-                else:
-                    f.close()
+            if path == '-' or not os.path.isfile(path):
+                kept[i] = (f, rows)
+            else:
+                f.close()
 
-                # If we aren't using header rows, we only look at the first file and stack columns in the same order.
+            # If we aren't using header rows, we only look at the first file and stack columns in the same order.
+            if not use_fieldnames:
                 break
 
         if has_groups:
@@ -110,29 +105,18 @@ class CSVStack(CSVKitUtility):
             output.writerow(headers)
 
         for i, path in enumerate(self.args.input_paths):
-            f = self._open_input_file(path, opened=True)
-            file_is_stdin = path == '-'
+            if i in kept:
+                f, rows = kept[i]
+            else:
+                f = self._open_input_file(path)
+                _skip_lines(f, self.args)
+                rows = Reader(f, **self.reader_kwargs)
 
             if has_groups:
                 if groups:
                     group = groups[i]
                 else:
                     group = os.path.basename(f.name)
-
-            # If the file is standard input, we've already skipped any lines above, to find its header row.
-            if not file_is_stdin:
-                _skip_lines(f, self.args)
-
-            # If the file is standard input, we've already read the header row, so we need to provide it here.
-            kwargs = {}
-            if file_is_stdin and use_fieldnames:
-                kwargs['fieldnames'] = stdin_fieldnames
-
-            rows = Reader(f, **self.reader_kwargs, **kwargs)
-
-            # If the file is standard input, we need to add back the row we used to calculate the number of columns.
-            if file_is_stdin and stdin_first_row:
-                rows = chain([stdin_first_row], rows)
 
             for row in rows:
                 if has_groups:

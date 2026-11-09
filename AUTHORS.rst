@@ -121,3 +121,4 @@ The following individuals have contributed code to csvkit:
 * Rupayon Haldar
 * Agentrix
 * Vincent
+* Shoaib Shah

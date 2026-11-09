@@ -10,6 +10,8 @@ Unreleased
 -  fix: :doc:`/scripts/csvstack` adds the group value to the first row of standard input, when using :code:`--no-header-row` with :code:`--groups` or :code:`--filenames`.
 -  fix: :doc:`/scripts/in2csv` writes non-ASCII characters in array-valued and object-valued GeoJSON properties as-is, instead of as :code:`\u` escapes.
 -  fix: Open-ended ranges (e.g. :code:`0-`) respect :code:`--zero`. Previously, with :code:`--zero`, ranges without a start began at the second column, and ranges without an end raised an error.
+-  fix: :doc:`/scripts/csvstack` reads all rows from inputs that can't be reopened, like process substitution (e.g. :code:`<(cmd)`) and named pipes. Previously, these rows were dropped.
+-  fix: :doc:`/scripts/csvstack` applies :code:`--skip-lines` to standard input (:code:`-`) if it isn't the first input, when using :code:`--no-header-row`.
 
 2.2.0 - December 15, 2025
 -------------------------
