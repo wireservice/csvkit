@@ -120,3 +120,4 @@ The following individuals have contributed code to csvkit:
 * Bogden
 * Rupayon Haldar
 * Agentrix
+* Vincent
