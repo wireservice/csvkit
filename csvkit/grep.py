@@ -89,7 +89,7 @@ def standardize_patterns(column_names, patterns):
     """
     try:
         # Dictionary of patterns
-        patterns = {k: pattern_as_function(v) for k, v in patterns.items() if v}
+        patterns = {k: pattern_as_function(v) for k, v in patterns.items() if v is not None}
         if not column_names:
             return patterns
         p2 = {}

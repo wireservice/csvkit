@@ -70,18 +70,22 @@ class TestCSVGrep(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         ])
 
     def test_empty_regex(self):
-        for any_match in (False, True):
-            for inverse in (False, True):
-                with self.subTest(any_match=any_match, inverse=inverse):
-                    args = ['-c', '1,2', '-r', '', 'examples/dummy.csv']
-                    if any_match:
-                        args.append('--any-match')
-                    if inverse:
-                        args.append('--invert-match')
-                    expected = [['a', 'b', 'c']]
-                    if not inverse:
-                        expected.append(['1', '2', '3'])
-                    self.assertRows(args, expected)
+        self.assertRows(['-c', '1,2', '-a', '-r', '', 'examples/dummy.csv'], [
+            ['a', 'b', 'c'],
+            ['1', '2', '3'],
+        ])
+        self.assertRows(['-c', '1,2', '-a', '-i', '-r', '', 'examples/dummy.csv'], [
+            ['a', 'b', 'c'],
+        ])
+
+    def test_empty_match(self):
+        self.assertRows(['-c', '1,2', '-a', '-m', '', 'examples/dummy.csv'], [
+            ['a', 'b', 'c'],
+            ['1', '2', '3'],
+        ])
+        self.assertRows(['-c', '1,2', '-a', '-i', '-m', '', 'examples/dummy.csv'], [
+            ['a', 'b', 'c'],
+        ])
 
     def test_re_match_utf8(self):
         self.assertRows(['-c', '3', '-r', 'ʤ', 'examples/test_utf8.csv'], [
