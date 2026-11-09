@@ -211,19 +211,19 @@ Then, use :doc:`csvcut` to exclude the empty columns:
    ,c
    ,
 
-Check whether ``csvclean`` reported errors or failed:
+Check whether any errors found:
 
 .. code-block:: console
 
-   $ if ! csvclean -a examples/bad.csv >/dev/null 2>&1; then echo "csvclean reported errors or failed"; fi
-   csvclean reported errors or failed
+   $ if ! csvclean -a examples/bad.csv >/dev/null 2>&1; then echo "my message"; fi
+   my message
 
 Or:
 
 .. code-block:: console
 
-   $ csvclean -a examples/bad.csv >/dev/null 2>&1 || echo "csvclean reported errors or failed"
-   csvclean reported errors or failed
+   $ csvclean -a examples/bad.csv >/dev/null 2>&1 || echo "my message"
+   my message
 
 Or:
 
