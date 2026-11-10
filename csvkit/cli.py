@@ -597,11 +597,15 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
 
 
 def parse_list(pairs):
+    """
+    Parse a list of key-value pairs (e.g. --engine-option values) into a dict, evaluating values as Python
+    literals where possible, and keeping them as strings otherwise.
+    """
     options = {}
     for key, value in pairs:
         try:
             value = ast.literal_eval(value)
-        except ValueError:
+        except (ValueError, SyntaxError):
             pass
         options[key] = value
     return options

@@ -1,6 +1,6 @@
 import unittest
 
-from csvkit.cli import ColumnIdentifierError, match_column_identifier, parse_column_identifiers
+from csvkit.cli import ColumnIdentifierError, match_column_identifier, parse_column_identifiers, parse_list
 
 
 class TestCli(unittest.TestCase):
@@ -82,7 +82,12 @@ class TestCli(unittest.TestCase):
         with self.assertRaises(ColumnIdentifierError):
             parse_column_identifiers(None, self.headers, excluded_columns='6-99')
 
-    def test_range_notation_open_ended(self):
+def test_parse_list(self):
+        self.assertEqual({'a': 1, 'b': 'foo'}, parse_list([('a', '1'), ('b', 'foo')]))
+        # Values that are not valid Python literals are kept as strings, not errors.
+    self.assertEqual({'a': '', 'b': 'foo bar'}, parse_list([('a', ''), ('b', 'foo bar')]))
+
+def test_range_notation_open_ended(self):
         self.assertEqual([0, 1, 2], parse_column_identifiers(':3', self.headers))
 
         target = list(range(3, len(self.headers)))  # protect against devs adding to self.headers
