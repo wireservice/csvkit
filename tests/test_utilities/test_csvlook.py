@@ -163,3 +163,65 @@ class TestCSVLook(CSVKitTestCase, EmptyFileTests):
             ])
 
         input_file.close()
+
+
+class TestNonSeekableInput(CSVKitTestCase):
+    Utility = CSVLook
+
+    def _run_on_fifo(self, options):
+        import os
+        import subprocess
+        import sys
+        import tempfile
+        import time
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            fifo = os.path.join(tmpdir, 'pipe.csv')
+            os.mkfifo(fifo)
+
+            process = subprocess.Popen(
+                [sys.executable, '-m', 'csvkit.utilities.csvlook'] + options + [fifo],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+
+            # Open the write end only after the utility has opened the read
+            # end, as opening a FIFO blocks until the other end is open.
+            deadline = time.time() + 30
+            while True:
+                try:
+                    writer = os.open(fifo, os.O_WRONLY | os.O_NONBLOCK)
+                    break
+                except OSError:
+                    if time.time() > deadline or process.poll() is not None:
+                        process.kill()
+                        raise
+                    time.sleep(0.05)
+
+            os.write(writer, b'a,b\n1,2\n3,4\n')
+            os.close(writer)
+
+            return process.communicate(timeout=30)
+
+    def test_unseekable_input_suggests_snifflimit_zero(self):
+        import os
+        import unittest
+
+        if not hasattr(os, 'mkfifo'):
+            raise unittest.SkipTest('requires os.mkfifo')
+
+        _stdout, stderr = self._run_on_fifo([])
+
+        self.assertIn('--snifflimit 0', stderr.decode('utf-8'))
+
+    def test_snifflimit_zero_reads_unseekable_input(self):
+        import os
+        import unittest
+
+        if not hasattr(os, 'mkfifo'):
+            raise unittest.SkipTest('requires os.mkfifo')
+
+        stdout, _stderr = self._run_on_fifo(['--snifflimit', '0'])
+
+        self.assertIn('| a | b |', stdout.decode('utf-8'))
+        self.assertIn('| 1 | 2 |', stdout.decode('utf-8'))

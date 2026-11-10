@@ -6,6 +6,7 @@ import csv
 import datetime
 import decimal
 import gzip
+import io
 import itertools
 import lzma
 import os
@@ -341,6 +342,14 @@ class CSVKitUtility:
                     sys.stderr.write(
                         'Your file is not "%s" encoded. Please specify the correct encoding with the --encoding flag.'
                         ' Use the -v flag to see the complete error.\n' % self.args.encoding
+                    )
+                elif t == io.UnsupportedOperation and 'not seekable' in str(value):
+                    # Raised when the dialect of a non-seekable input (e.g. a
+                    # named pipe or a character device) cannot be sniffed.
+                    sys.stderr.write(
+                        'Your input is not seekable, so its dialect cannot be sniffed.'
+                        ' Please specify --snifflimit 0 to skip sniffing.'
+                        ' Use the -v flag to see the complete error.\n'
                     )
                 else:
                     sys.stderr.write(f'{t.__name__}: {str(value)}\n')
