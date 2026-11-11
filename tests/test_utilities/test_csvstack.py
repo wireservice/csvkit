@@ -120,6 +120,19 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
                 ['2', '3', '1', ''],
             ])
 
+    def test_duplicate_column_names(self):
+        self.assertRows(['examples/test_duplicate_column_names.csv'], [
+            ['a', 'b', 'a', '', ''],
+            ['1', '2', '3', '4', '5'],
+        ])
+
+    def test_multiple_file_stack_duplicate_column_names(self):
+        self.assertRows(['examples/dummy.csv', 'examples/test_duplicate_column_names.csv'], [
+            ['a', 'b', 'c', 'a', '', ''],
+            ['1', '2', '3', '', '', ''],
+            ['1', '2', '', '3', '4', '5'],
+        ])
+
     def test_explicit_grouping(self):
         self.assertRows(['--groups', 'asd,sdf', '-n', 'foo', 'examples/dummy.csv', 'examples/dummy2.csv'], [
             ['foo', 'a', 'b', 'c'],
@@ -132,6 +145,12 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
             ['path', 'a', 'b', 'c'],
             ['dummy.csv', '1', '2', '3'],
             ['dummy2.csv', '1', '2', '3'],
+        ])
+
+    def test_grouping_column_name_in_input(self):
+        self.assertRows(['--groups', 'asd', '-n', 'a', 'examples/dummy.csv'], [
+            ['a', 'a', 'b', 'c'],
+            ['asd', '1', '2', '3'],
         ])
 
 
