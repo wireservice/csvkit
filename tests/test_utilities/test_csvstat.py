@@ -44,6 +44,23 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         output = self.get_output(['-c', '2', 'examples/testxls_converted.csv'])
         self.assertNotIn('1. "text"', output)
         self.assertIn('2. "date"', output)
+    def test_column_names_numeric_header(self):
+        output = self.get_output([
+            '--column-names',
+            '-c', '01',
+            '--sum',
+            'examples/numeric_headers.csv',
+        ])
+        self.assertEqual(output.strip(), '300')
+
+    def test_column_indexes_numeric_header(self):
+        output = self.get_output([
+            '--column-indexes',
+            '-c', '3',
+            '--sum',
+            'examples/numeric_headers.csv',
+        ])
+        self.assertEqual(output.strip(), '300')
 
     def test_linenumbers(self):
         output = self.get_output(['-c', '2', '--linenumbers', 'examples/dummy.csv'])

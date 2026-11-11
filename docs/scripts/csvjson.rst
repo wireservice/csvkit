@@ -17,6 +17,7 @@ Converts a CSV file into JSON or GeoJSON (depending on flags):
                   [-k KEY] [--lat LAT] [--lon LON] [--type TYPE]
                   [--geometry GEOMETRY] [--crs CRS] [--no-bbox] [--stream]
                   [-y SNIFF_LIMIT] [-I]
+                  [--column-names | --column-indexes]
                   [FILE]
 
    Convert a CSV file into JSON (or GeoJSON).
@@ -56,11 +57,31 @@ Converts a CSV file into JSON or GeoJSON (depending on flags):
      -I, --no-inference    Disable type inference (and --locale, --date-format,
                            --datetime-format, --no-leading-zeroes) when parsing
                            the input.
+     --column-names        Interpret column identifiers as literal column names,
+                           even if they look like integers or ranges.
+     --column-indexes      Interpret column identifiers as column indices or
+                           ranges, never as column names.
 
 See also: :doc:`../common_arguments`.
 
 Examples
 ========
+
+Convert CSV to JSON using a numeric-looking column name as the key:
+
+.. code-block:: bash
+
+   csvjson --column-names -k 01 examples/numeric_headers.csv
+
+Use the same column as the key by specifying its numeric position:
+
+.. code-block:: bash
+
+   csvjson --column-indexes -k 3 examples/numeric_headers.csv
+
+These options also apply to column identifiers used by the GeoJSON
+arguments. The options are mutually exclusive. Without either option,
+csvjson preserves its existing column-selection behavior.
 
 Convert veteran's education dataset to JSON keyed by state abbreviation:
 

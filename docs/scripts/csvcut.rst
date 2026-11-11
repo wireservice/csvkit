@@ -12,7 +12,7 @@ Filters and truncates CSV files. Like the Unix "cut" command, but for tabular da
    usage: csvcut [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
                  [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS]
-                 [-C NOT_COLUMNS] [-x]
+                 [-C NOT_COLUMNS] [-x] [--column-names | --column-indexes]
                  [FILE]
 
    Filter and truncate CSV files. Like the Unix "cut" command, but for tabular
@@ -39,6 +39,10 @@ Filters and truncates CSV files. Like the Unix "cut" command, but for tabular da
      --ignore-unknown-columns
                            Ignore identifiers in --columns (-c) that do not match
                            a column in the input, instead of erroring.
+     --column-names        Interpret column identifiers as literal column names,
+                           even if they look like integers or ranges.
+     --column-indexes      Interpret column identifiers as column indices or
+                           ranges, never as column names.
 
 See also: :doc:`../common_arguments`.
 
@@ -89,6 +93,31 @@ Print only the names of all columns, by removing the indices with the :code:`cut
 
 Extract columns
 ---------------
+
+Select columns by name or index
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, csvcut accepts column names and numeric indices. However,
+a header such as ``01`` is interpreted as column index 1 rather than
+the literal column name.
+
+Use :code:`--column-names` to select columns by their exact header names,
+including numeric names and names containing hyphens:
+
+.. code-block:: bash
+
+   csvcut --column-names -c 01 examples/numeric_headers.csv
+   csvcut --column-names -c pre-k examples/hyphen_headers.csv
+
+Use :code:`--column-indexes` to explicitly select columns by numeric
+position:
+
+.. code-block:: bash
+
+   csvcut --column-indexes -c 3 examples/numeric_headers.csv
+
+The two options are mutually exclusive. If neither is specified,
+csvcut preserves its existing column-selection behavior.
 
 Extract the first and third columns:
 

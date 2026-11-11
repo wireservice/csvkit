@@ -15,6 +15,7 @@ Merges two or more CSV tables together using a method analogous to SQL JOIN oper
                   [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
                   [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-c COLUMNS]
                   [--outer] [--left] [--right] [-y SNIFF_LIMIT] [-I]
+                  [--column-names | --column-indexes]
                   [FILE [FILE ...]]
 
    Execute a SQL-like join to merge CSV files on a specified column or columns.
@@ -48,6 +49,10 @@ Merges two or more CSV tables together using a method analogous to SQL JOIN oper
      -I, --no-inference    Disable type inference (and --locale, --date-format,
                            --datetime-format, --no-leading-zeroes) when parsing
                            the input.
+     --column-names        Interpret column identifiers as literal column names,
+                           even if they look like integers or ranges.
+     --column-indexes      Interpret column identifiers as column indices or
+                           ranges, never as column names.
 
    Note that the join operation requires reading all files into memory. Don't try
    this on very large files.
@@ -56,6 +61,21 @@ See also: :doc:`../common_arguments`.
 
 Examples
 ========
+
+Join files using a column whose name looks like a number:
+
+.. code-block:: bash
+
+   csvjoin --column-names -c 01 examples/numeric_headers.csv examples/numeric_headers.csv
+
+Join the same files using the column's numeric position:
+
+.. code-block:: bash
+
+   csvjoin --column-indexes -c 3 examples/numeric_headers.csv examples/numeric_headers.csv
+
+These options are mutually exclusive. Without either option, csvjoin
+preserves its existing column-selection behavior.
 
 .. code-block:: bash
 

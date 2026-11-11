@@ -13,6 +13,7 @@ Filter tabular data to only those rows where certain columns contain a given val
                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
                   [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS]
                   [-m PATTERN] [-r REGEX] [-f MATCHFILE] [-i] [-a]
+                  [--column-names | --column-indexes]
                   [FILE]
 
    Search CSV files. Like the Unix "grep" command, but for tabular data.
@@ -39,6 +40,10 @@ Filter tabular data to only those rows where certain columns contain a given val
      -i, --invert-match    Select non-matching rows, instead of matching rows.
      -a, --any-match       Select rows in which any column matches, instead of
                            all columns.
+     --column-names        Interpret column identifiers as literal column names,
+                           even if they look like integers or ranges.
+     --column-indexes      Interpret column identifiers as column indices or
+                           ranges, never as column names.
 
 See also: :doc:`../common_arguments`.
 
@@ -46,6 +51,21 @@ NOTE: Even though '-m', '-r', and '-f' are listed as "optional" arguments, you m
 
 Examples
 ========
+
+Select a column whose name looks like a number:
+
+.. code-block:: bash
+
+   csvgrep --column-names -c 01 -m 100 examples/numeric_headers.csv
+
+Select the same column by its position instead:
+
+.. code-block:: bash
+
+   csvgrep --column-indexes -c 3 -m 100 examples/numeric_headers.csv
+
+These options are mutually exclusive. Without either option, csvgrep
+preserves its existing column-selection behavior.
 
 Search for the row relating to Illinois:
 

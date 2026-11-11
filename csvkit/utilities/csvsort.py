@@ -2,7 +2,13 @@
 
 import agate
 
-from csvkit.cli import CSVKitUtility, parse_column_identifiers
+from csvkit.cli import (
+    CSVKitUtility,
+    parse_column_identifiers,
+    COLUMN_IDENTIFIER_NAMES,
+    COLUMN_IDENTIFIER_INDEXES,
+    COLUMN_IDENTIFIER_AUTO,
+)
 
 
 def ignore_case_sort(key):
@@ -27,6 +33,24 @@ class CSVSort(CSVKitUtility):
             '-c', '--columns', dest='columns',
             help='A comma-separated list of column indices, names or ranges to sort by, e.g. "1,id,3-5". '
                  'Defaults to all columns.')
+        group = self.argparser.add_mutually_exclusive_group()
+
+        group.add_argument(
+            '--column-names',
+            dest='column_identifier_mode',
+            action='store_const',
+            const=COLUMN_IDENTIFIER_NAMES,
+            default=COLUMN_IDENTIFIER_AUTO,
+            help='Interpret column identifiers as literal column names, even if they look like integers or ranges.',
+        )
+
+        group.add_argument(
+            '--column-indexes',
+            dest='column_identifier_mode',
+            action='store_const',
+            const=COLUMN_IDENTIFIER_INDEXES,
+            help='Interpret column identifiers as column indices or ranges, never as column names.',
+        )
         self.argparser.add_argument(
             '-r', '--reverse', dest='reverse', action='store_true',
             help='Sort in descending order.')
@@ -63,6 +87,7 @@ class CSVSort(CSVKitUtility):
             self.args.columns,
             table.column_names,
             self.get_column_offset(),
+            mode=getattr(self.args, 'column_identifier_mode', 'auto'),
         )
 
         if self.args.ignore_case:

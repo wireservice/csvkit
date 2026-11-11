@@ -15,6 +15,7 @@ Sort CSV files. Like the Unix "sort" command, but for tabular data:
                   [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
                   [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS]
                   [-r] [-i] [-y SNIFF_LIMIT] [-I]
+                  [--column-names | --column-indexes]
                   [FILE]
 
    Sort CSV files. Like the Unix "sort" command, but for tabular data.
@@ -40,6 +41,10 @@ Sort CSV files. Like the Unix "sort" command, but for tabular data:
      -I, --no-inference    Disable type inference (and --locale, --date-format,
                            --datetime-format, --no-leading-zeroes) when parsing
                            the input.
+     --column-names        Interpret column identifiers as literal column names,
+                           even if they look like integers or ranges.
+     --column-indexes      Interpret column identifiers as column indices or
+                           ranges, never as column names.
 
 See also: :doc:`../common_arguments`.
 
@@ -49,6 +54,21 @@ See also: :doc:`../common_arguments`.
 
 Examples
 ========
+
+Sort by a column whose name looks like a number:
+
+.. code-block:: bash
+
+   csvsort --column-names -c 01 examples/numeric_headers.csv
+
+Sort by the same column using its numeric position:
+
+.. code-block:: bash
+
+   csvsort --column-indexes -c 3 examples/numeric_headers.csv
+
+These options are mutually exclusive. Without either option, csvsort
+preserves its existing column-selection behavior.
 
 Sort the veteran's education benefits table by the "TOTAL" column:
 

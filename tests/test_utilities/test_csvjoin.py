@@ -78,6 +78,33 @@ class TestCSVJoin(CSVKitTestCase, EmptyFileTests):
             ['a', 'b', 'c'],
             ['1', '2', '3'],
         ])
+    def test_column_names_numeric_header(self):
+        self.assertRows(
+            [
+                '--column-names', '-c', '01',
+                'examples/numeric_headers.csv',
+                'examples/numeric_headers.csv',
+            ],
+            [
+                ['id', '03', '01', 'name', 'id2', '032', 'name2'],
+                ['A', '300', '100', 'Alpha', 'A', '300', 'Alpha'],
+                ['B', '600', '200', 'Beta', 'B', '600', 'Beta'],
+            ],
+        )
+
+    def test_column_indexes_numeric_header(self):
+        self.assertRows(
+            [
+                '--column-indexes', '-c', '3',
+                'examples/numeric_headers.csv',
+                'examples/numeric_headers.csv',
+            ],
+            [
+                ['id', '03', '01', 'name', 'id2', '032', 'name2'],
+                ['A', '300', '100', 'Alpha', 'A', '300', 'Alpha'],
+                ['B', '600', '200', 'Beta', 'B', '600', 'Beta'],
+            ],
+        )
 
     def test_no_blanks(self):
         self.assertRows(['examples/blanks.csv', 'examples/blanks.csv'], [

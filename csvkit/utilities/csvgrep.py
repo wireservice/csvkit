@@ -6,7 +6,12 @@ from argparse import FileType
 
 import agate
 
-from csvkit.cli import CSVKitUtility
+from csvkit.cli import (
+    CSVKitUtility,
+    COLUMN_IDENTIFIER_NAMES,
+    COLUMN_IDENTIFIER_INDEXES,
+    COLUMN_IDENTIFIER_AUTO,
+)
 from csvkit.grep import FilteringCSVReader
 
 
@@ -37,6 +42,25 @@ class CSVGrep(CSVKitUtility):
         self.argparser.add_argument(
             '-a', '--any-match', dest='any_match', action='store_true',
             help='Select rows in which any column matches, instead of all columns.')
+                # Control how column identifiers are interpreted.
+        group = self.argparser.add_mutually_exclusive_group()
+
+        group.add_argument(
+            '--column-names',
+            dest='column_identifier_mode',
+            action='store_const',
+            const=COLUMN_IDENTIFIER_NAMES,
+            default=COLUMN_IDENTIFIER_AUTO,
+            help='Interpret column identifiers as literal column names, even if they look like integers or ranges.',
+        )
+
+        group.add_argument(
+            '--column-indexes',
+            dest='column_identifier_mode',
+            action='store_const',
+            const=COLUMN_IDENTIFIER_INDEXES,
+            help='Interpret column identifiers as column indices or ranges, never as column names.',
+        )
 
     def main(self):
         if self.args.names_only:
