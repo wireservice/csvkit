@@ -33,6 +33,23 @@ class TestCSVGrep(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             ['a', 'b', 'c'],
             ['1', '2', '3'],
         ])
+    def test_column_names_numeric_header(self):
+        self.assertRows(
+            ['--column-names', '-c', '01', '-m', '100', 'examples/numeric_headers.csv'],
+            [
+                ['id', '03', '01', 'name'],
+                ['A', '300', '100', 'Alpha'],
+            ],
+        )
+
+    def test_column_indexes_numeric_header(self):
+        self.assertRows(
+            ['--column-indexes', '-c', '3', '-m', '100', 'examples/numeric_headers.csv'],
+            [
+                ['id', '03', '01', 'name'],
+                ['A', '300', '100', 'Alpha'],
+            ],
+        )
 
     def test_any_match(self):
         self.assertRows(['-c', '1,2,3', '-a', '-m', '1', 'examples/dummy.csv'], [

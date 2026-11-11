@@ -6,7 +6,14 @@ from collections import OrderedDict
 
 import agate
 
-from csvkit.cli import CSVKitUtility, default_str_decimal, match_column_identifier
+from csvkit.cli import (
+    CSVKitUtility,
+    default_str_decimal,
+    match_column_identifier,
+    COLUMN_IDENTIFIER_NAMES,
+    COLUMN_IDENTIFIER_INDEXES,
+    COLUMN_IDENTIFIER_AUTO,
+)
 
 
 class CSVJSON(CSVKitUtility):
@@ -20,6 +27,24 @@ class CSVJSON(CSVKitUtility):
             '-k', '--key', dest='key',
             help='Output JSON as an object keyed by a given column, KEY, rather than as an array. All column values '
                  'must be unique. If --lat and --lon are specified, this column is used as the GeoJSON Feature ID.')
+        group = self.argparser.add_mutually_exclusive_group()
+
+        group.add_argument(
+            '--column-names',
+            dest='column_identifier_mode',
+            action='store_const',
+            const=COLUMN_IDENTIFIER_NAMES,
+            default=COLUMN_IDENTIFIER_AUTO,
+            help='Interpret column identifiers as literal column names, even if they look like integers or ranges.',
+        )
+
+        group.add_argument(
+            '--column-indexes',
+            dest='column_identifier_mode',
+            action='store_const',
+            const=COLUMN_IDENTIFIER_INDEXES,
+            help='Interpret column identifiers as column indices or ranges, never as column names.',
+        )
         self.argparser.add_argument(
             '--lat', dest='lat',
             help='A column index or name containing a latitude. Output will be GeoJSON instead of JSON. '
@@ -122,9 +147,21 @@ class CSVJSON(CSVKitUtility):
         )
 
     def output_json(self):
-        self.read_csv_to_table().to_json(
+        table = self.read_csv_to_table()
+        key = self.args.key
+
+        if key is not None:
+            column_id = match_column_identifier(
+                table.column_names,
+                key,
+                self.get_column_offset(),
+                mode=self.args.column_identifier_mode,
+            )
+            key = table.column_names[column_id]
+
+        table.to_json(
             self.output_file,
-            key=self.args.key,
+            key=key,
             newline=self.args.streamOutput,
             indent=self.args.indent,
         )
@@ -165,22 +202,37 @@ class CSVJSON(CSVKitUtility):
             self.args = args
             self.column_names = column_names
 
-            self.lat_column = match_column_identifier(column_names, self.args.lat, self.args.zero_based)
+            self.lat_column = match_column_identifier(column_names,self.args.lat,0 if self.args.zero_based else 1,mode=self.args.column_identifier_mode,)
 
-            self.lon_column = match_column_identifier(column_names, self.args.lon, self.args.zero_based)
+            self.lon_column = match_column_identifier(column_names,self.args.lon,0 if self.args.zero_based else 1,mode=self.args.column_identifier_mode,)
 
             if self.args.type:
-                self.type_column = match_column_identifier(column_names, self.args.type, self.args.zero_based)
+                self.type_column = match_column_identifier(
+                    column_names,
+                    self.args.type,
+                    0 if self.args.zero_based else 1,
+                    mode=self.args.column_identifier_mode,
+                )
             else:
                 self.type_column = None
 
             if self.args.geometry:
-                self.geometry_column = match_column_identifier(column_names, self.args.geometry, self.args.zero_based)
+                self.geometry_column = match_column_identifier(
+                    column_names,
+                    self.args.geometry,
+                    0 if self.args.zero_based else 1,
+                    mode=self.args.column_identifier_mode,
+                )
             else:
                 self.geometry_column = None
 
             if self.args.key:
-                self.id_column = match_column_identifier(column_names, self.args.key, self.args.zero_based)
+                self.id_column = match_column_identifier(
+                    column_names,
+                    self.args.key,
+                    0 if self.args.zero_based else 1,
+                    mode=self.args.column_identifier_mode,
+                )
             else:
                 self.id_column = None
 

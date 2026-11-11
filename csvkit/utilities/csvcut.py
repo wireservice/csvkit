@@ -13,7 +13,12 @@ import sys
 
 import agate
 
-from csvkit.cli import CSVKitUtility
+from csvkit.cli import (
+    CSVKitUtility,
+    COLUMN_IDENTIFIER_NAMES,
+    COLUMN_IDENTIFIER_INDEXES,
+    COLUMN_IDENTIFIER_AUTO,
+)
 
 
 class CSVCut(CSVKitUtility):
@@ -39,6 +44,27 @@ class CSVCut(CSVKitUtility):
             '--ignore-unknown-columns', dest='ignore_unknown_columns', action='store_true',
             help='Ignore identifiers in --columns (-c) that do not match a column in the input, '
                  'instead of erroring.')
+
+        # New column identifier options
+        group = self.argparser.add_mutually_exclusive_group()
+
+        group.add_argument(
+            '--column-names',
+            dest='column_identifier_mode',
+            action='store_const',
+            const=COLUMN_IDENTIFIER_NAMES,
+            default=COLUMN_IDENTIFIER_AUTO,
+            help='Interpret column identifiers as literal column names, even if they look like integers or ranges.',
+        )
+
+        group.add_argument(
+            '--column-indexes',
+            dest='column_identifier_mode',
+            action='store_const',
+            const=COLUMN_IDENTIFIER_INDEXES,
+            help='Interpret column identifiers as column indices or ranges, never as column names.',
+        )
+
 
     def main(self):
         if self.args.names_only:

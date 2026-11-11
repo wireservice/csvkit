@@ -19,7 +19,43 @@ class TestCli(unittest.TestCase):
     def test_match_column_which_could_be_integer_name_is_treated_as_positional_id(self):
         self.assertEqual(0, match_column_identifier(self.headers, '1'))
         self.assertEqual(1, match_column_identifier(self.headers, '1', column_offset=0))
+    def test_numeric_header_can_be_selected_by_name(self):
+        headers = ['id', '03', '01', 'name']
+        self.assertEqual(
+            [2],
+            parse_column_identifiers('01', headers, mode='names'),
+        )
 
+    def test_numeric_header_can_be_excluded_by_name(self):
+        headers = ['id', '03', '01', 'name']
+        self.assertEqual(
+            [0, 1, 3],
+            parse_column_identifiers(
+                None,
+                headers,
+                excluded_columns='01',
+                mode='names',
+            ),
+        )
+    def test_numeric_header_can_be_selected_by_index(self):
+        headers = ['id', '03', '01', 'name']
+        self.assertEqual(
+            [0],
+            parse_column_identifiers('1', headers, mode='indexes'),
+        )
+        self.assertEqual(
+            [2],
+            parse_column_identifiers('3', headers, mode='indexes'),
+        )
+    def test_index_mode_rejects_column_names(self):
+        headers = ['id', '03', '01', 'name']
+
+        with self.assertRaises(ColumnIdentifierError):
+            parse_column_identifiers(
+                'name',
+                headers,
+                mode='indexes',
+            )
     def test_parse_column_identifiers(self):
         self.assertEqual([2, 0, 1], parse_column_identifiers('i_work_here,1,name', self.headers))
         self.assertEqual([2, 1, 1], parse_column_identifiers('i_work_here,1,name', self.headers, column_offset=0))

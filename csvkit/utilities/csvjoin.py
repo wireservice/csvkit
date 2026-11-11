@@ -4,7 +4,14 @@ import sys
 
 import agate
 
-from csvkit.cli import CSVKitUtility, isatty, match_column_identifier
+from csvkit.cli import (
+    CSVKitUtility,
+    isatty,
+    match_column_identifier,
+    COLUMN_IDENTIFIER_NAMES,
+    COLUMN_IDENTIFIER_INDEXES,
+    COLUMN_IDENTIFIER_AUTO,
+)
 
 
 class CSVJoin(CSVKitUtility):
@@ -22,6 +29,24 @@ class CSVJoin(CSVKitUtility):
             help='The column name(s) on which to join. Should be either one name (or index) or a comma-separated list '
                  'with one name (or index) per file, in the same order in which the files were specified. If not '
                  'specified, the two files will be joined sequentially without matching.')
+        group = self.argparser.add_mutually_exclusive_group()
+
+        group.add_argument(
+            '--column-names',
+            dest='column_identifier_mode',
+            action='store_const',
+            const=COLUMN_IDENTIFIER_NAMES,
+            default=COLUMN_IDENTIFIER_AUTO,
+            help='Interpret column identifiers as literal column names, even if they look like integers or ranges.',
+        )
+
+        group.add_argument(
+            '--column-indexes',
+            dest='column_identifier_mode',
+            action='store_const',
+            const=COLUMN_IDENTIFIER_INDEXES,
+            help='Interpret column identifiers as column indices or ranges, never as column names.',
+        )
         self.argparser.add_argument(
             '--outer', dest='outer_join', action='store_true',
             help='Perform a full outer join, rather than the default inner join.')
@@ -85,7 +110,13 @@ class CSVJoin(CSVKitUtility):
 
         if self.args.columns:
             for i, table in enumerate(tables):
-                join_column_ids.append(match_column_identifier(table.column_names, join_column_names[i]))
+                join_column_ids.append(
+                    match_column_identifier(
+                        table.column_names,
+                        join_column_names[i],
+                        mode=self.args.column_identifier_mode,
+                    )
+                )
 
         jointab = tables[0]
 

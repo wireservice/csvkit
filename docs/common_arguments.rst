@@ -56,7 +56,21 @@ csvkit's tools share a set of common command-line arguments. Not every argument 
    --zero                When interpreting or displaying column numbers, use
                          zero-based numbering instead of the default 1-based
                          numbering.
+   --column-names        Interpret column identifiers as exact header names,
+                         including names that look like numbers (e.g. "01").
+                         Available on tools that support column selection.
+   --column-indexes      Interpret column identifiers as numeric positions
+                         or ranges only. Column positions are 1-based by
+                         default, or 0-based with --zero.
    -V, --version         Display version information and exit.
+
+For tools that support column selection, :code:`--column-names` and
+:code:`--column-indexes` provide explicit control over how column identifiers
+are interpreted. For example, given headers ``id,03,01``,
+:code:`csvcut --column-names -c 01` selects the column named ``01``, while
+:code:`csvcut --column-indexes -c 3` selects the third column. These options
+cannot be used together. Without either option, the existing column-selection
+behavior is preserved.
 
 These arguments can be used to override csvkit's default "smart" parsing of CSV files. This may be necessary, for example, if the input file uses a particularly unusual quoting style or has an encoding that is incompatible with UTF-8.
 

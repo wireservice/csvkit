@@ -427,6 +427,7 @@ class CSVKitUtility:
             column_offset,
             getattr(self.args, 'not_columns', None),
             ignore_unknown_columns=getattr(self.args, 'ignore_unknown_columns', False),
+            mode=getattr(self.args, 'column_identifier_mode', 'auto'),
         )
 
         return rows, column_names, column_ids
@@ -482,82 +483,203 @@ def make_default_headers(n):
     """
     return tuple(agate.utils.letter_name(i) for i in range(n))
 
+# How column identifiers are interpreted.
+COLUMN_IDENTIFIER_AUTO = 'auto'
+COLUMN_IDENTIFIER_NAMES = 'names'
+COLUMN_IDENTIFIER_INDEXES = 'indexes'
+COLUMN_IDENTIFIER_MODES = (
+    COLUMN_IDENTIFIER_AUTO,
+    COLUMN_IDENTIFIER_NAMES,
+    COLUMN_IDENTIFIER_INDEXES,
+)
 
-def match_column_identifier(column_names, c, column_offset=1):
-    """
-    Determine what column a single column id (name or index) matches in a series of column names.
-    Note that integer values are *always* treated as positional identifiers. If you happen to have
-    column names which are also integers, you must specify them using a positional index.
-    """
-    if isinstance(c, str) and not c.isdigit() and c in column_names:
+
+def _check_column_identifier_mode(mode):
+    if mode not in COLUMN_IDENTIFIER_MODES:
+        raise ValueError(
+            'mode must be one of %s, not %r' %
+            (', '.join(map(repr, COLUMN_IDENTIFIER_MODES)), mode)
+        )
+
+
+def _is_index(value):
+    """Return whether value is a valid ASCII column index."""
+    if isinstance(value, int):
+        return True
+    return isinstance(value, str) and value.isascii() and value.isdigit()
+
+
+def _is_range(value):
+    """Return whether value is a valid numeric column range."""
+    if not isinstance(value, str):
+        return False
+
+    for separator in (':', '-'):
+        if separator in value:
+            parts = value.split(separator, 1)
+            return all(not part or _is_index(part) for part in parts)
+
+    return False
+
+
+def _match_column_name(column_names, c):
+    """Match an exact column name."""
+    if c in column_names:
         return column_names.index(c)
 
-    try:
-        c = int(c) - column_offset
-    # Fail out if neither a column name nor an integer
-    except ValueError:
-        raise ColumnIdentifierError("Column '%s' is invalid. It is neither an integer nor a column name. "
-                                    "Column names are: %s" % (c, repr(column_names)[1:-1]))
+    raise ColumnIdentifierError(
+        "Column '%s' is invalid. It is not a column name. Column names are: %s" %
+        (c, repr(column_names)[1:-1])
+    )
 
-    # Fail out if index is 0-based
+
+def _match_column_index(column_names, c, column_offset):
+    """Match a positional column index."""
+    c = int(c) - column_offset
+
     if c < 0:
-        raise ColumnIdentifierError("Column %i is invalid. Columns are 1-based." % (c + column_offset))
+        raise ColumnIdentifierError(
+            "Column %i is invalid. Columns are 1-based." %
+            (c + column_offset)
+        )
 
-    # Fail out if index is out of range
     if c >= len(column_names):
-        raise ColumnIdentifierError("Column %i is invalid. The last column is '%s' at index %i." % (
-            c + column_offset, column_names[-1], len(column_names) - 1 + column_offset))
+        raise ColumnIdentifierError(
+            "Column %i is invalid. The last column is '%s' at index %i." %
+            (c + column_offset, column_names[-1],
+             len(column_names) - 1 + column_offset)
+        )
 
     return c
 
 
-def _resolve_column_identifier(identifier, column_names, column_offset, ignore_unknown_columns, ignore_invalid_range):
-    """
-    Resolve a single column identifier (a name, a 1-based index, or an integer range) to a list of indices.
+def match_column_identifier(
+    column_names, c, column_offset=1, mode=COLUMN_IDENTIFIER_AUTO
+):
+    """Match a column identifier using the selected interpretation mode."""
+    _check_column_identifier_mode(mode)
 
-    An unmatched name or index is skipped if ``ignore_unknown_columns`` is set, and raises otherwise. A
-    malformed range, or a range that references a nonexistent column, is skipped if ``ignore_invalid_range``
-    is set, and raises otherwise.
-    """
+    if mode == COLUMN_IDENTIFIER_NAMES:
+        return _match_column_name(column_names, c)
+
+    if mode == COLUMN_IDENTIFIER_INDEXES:
+        if not _is_index(c):
+            raise ColumnIdentifierError(
+                "Column '%s' is invalid. --column-indexes accepts only "
+                "numeric column indexes. Use --column-names to select "
+                "columns by name." % c
+            )
+        return _match_column_index(column_names, c, column_offset)
+
+    if isinstance(c, str) and not c.isdigit() and c in column_names:
+        return column_names.index(c)
+
     try:
-        return [match_column_identifier(column_names, identifier, column_offset)]
-    except ColumnIdentifierError:
-        if ':' in identifier:
-            a, b = identifier.split(':', 1)
-        elif '-' in identifier:
-            a, b = identifier.split('-', 1)
-        elif ignore_unknown_columns:
-            return []
-        else:
+        return _match_column_index(column_names, c, column_offset)
+    except (ValueError, TypeError):
+        raise ColumnIdentifierError(
+            "Column '%s' is invalid. It is neither an integer nor a column "
+            "name. Column names are: %s" %
+            (c, repr(column_names)[1:-1])
+        )
+
+
+def _resolve_column_identifier(
+    identifier, column_names, column_offset,
+    ignore_unknown_columns, ignore_invalid_range,
+    mode=COLUMN_IDENTIFIER_AUTO
+):
+    """Resolve one identifier or a numeric range into column indices."""
+
+    if mode == COLUMN_IDENTIFIER_NAMES:
+        try:
+            return [_match_column_name(column_names, identifier)]
+        except ColumnIdentifierError:
+            if ignore_unknown_columns:
+                return []
             raise
 
-        try:
-            a = int(a) if a else column_offset
-            b = int(b) + 1 if b else len(column_names) + column_offset
-        except ValueError:
-            if ignore_invalid_range:
+    if mode == COLUMN_IDENTIFIER_INDEXES:
+        if _is_index(identifier):
+            return [
+                match_column_identifier(
+                    column_names, identifier, column_offset, mode
+                )
+            ]
+
+        if not _is_range(identifier):
+            if ignore_unknown_columns:
                 return []
             raise ColumnIdentifierError(
-                "Invalid range %s. Ranges must be two integers separated by a - or : character." % identifier)
+                "Column '%s' is invalid. --column-indexes accepts only "
+                "numeric indexes and ranges." % identifier
+            )
 
-        indices = []
-        for index in range(a, b):
-            try:
-                indices.append(match_column_identifier(column_names, index, column_offset))
-            except ColumnIdentifierError:
-                if ignore_invalid_range:
-                    continue
+    else:
+        try:
+            return [
+                match_column_identifier(
+                    column_names, identifier, column_offset, mode
+                )
+            ]
+        except ColumnIdentifierError:
+            if ':' in identifier:
+                pass
+            elif '-' in identifier:
+                pass
+            elif ignore_unknown_columns:
+                return []
+            else:
                 raise
-        return indices
+
+    separator = ':' if ':' in identifier else '-'
+    a, b = identifier.split(separator, 1)
+
+    if mode == COLUMN_IDENTIFIER_INDEXES and not _is_range(identifier):
+        raise ColumnIdentifierError(
+            "Invalid range %s. Ranges must contain numeric indexes." %
+            identifier
+        )
+
+    try:
+        a = int(a) if a else column_offset
+        b = int(b) + 1 if b else len(column_names) + column_offset
+    except ValueError:
+        if ignore_invalid_range:
+            return []
+        raise ColumnIdentifierError(
+            "Invalid range %s. Ranges must be two integers separated "
+            "by a - or : character." % identifier
+        )
+
+    indices = []
+
+    for index in range(a, b):
+        try:
+            indices.append(
+                _match_column_index(column_names, index, column_offset)
+            )
+        except ColumnIdentifierError:
+            if not ignore_invalid_range:
+                raise
+
+    return indices
 
 
-def parse_column_identifiers(ids, column_names, column_offset=1, excluded_columns=None, ignore_unknown_columns=False):
+def parse_column_identifiers(
+    ids, column_names, column_offset=1, excluded_columns=None,
+    ignore_unknown_columns=False, mode=COLUMN_IDENTIFIER_AUTO
+):
     """
-    Parse a comma-separated list of column indices AND/OR names into a list of integer indices.
-    Ranges of integers can be specified with two integers separated by a '-' or ':' character.
-    Ranges of non-integers (e.g. column names) are not supported.
-    Note: Column indices are 1-based.
+    Parse column names, indexes and ranges.
+
+    Modes:
+    auto: Preserve existing csvkit behavior.
+    names: Interpret identifiers as literal column names.
+    indexes: Interpret identifiers as numeric indexes or ranges.
     """
+    _check_column_identifier_mode(mode)
+
     if not column_names:
         return []
 
@@ -566,30 +688,35 @@ def parse_column_identifiers(ids, column_names, column_offset=1, excluded_column
 
     if ids:
         columns = []
+
         for identifier in ids.split(','):
             columns.extend(
                 _resolve_column_identifier(
-                    column_names=column_names,
                     identifier=identifier,
+                    column_names=column_names,
                     column_offset=column_offset,
                     ignore_unknown_columns=ignore_unknown_columns,
                     ignore_invalid_range=ignore_unknown_columns,
+                    mode=mode,
                 )
             )
     else:
         columns = range(len(column_names))
 
     excludes = []
+
     if excluded_columns:
         for identifier in excluded_columns.split(','):
-            # -C is always tolerant of unknown column names, but a malformed range is still a user error.
             excludes.extend(
                 _resolve_column_identifier(
-                    column_names=column_names,
                     identifier=identifier,
+                    column_names=column_names,
                     column_offset=column_offset,
-                    ignore_unknown_columns=True,
+                    ignore_unknown_columns=(
+                        mode != COLUMN_IDENTIFIER_INDEXES
+                    ),
                     ignore_invalid_range=False,
+                    mode=mode,
                 )
             )
 

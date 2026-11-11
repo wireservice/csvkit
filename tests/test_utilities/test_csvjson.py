@@ -74,6 +74,27 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
     def test_keying(self):
         js = json.loads(self.get_output(['-k', 'a', 'examples/dummy.csv']))
         self.assertDictEqual(js, {'True': {'a': True, 'c': 3.0, 'b': 2.0}})
+    def test_column_names_numeric_header(self):
+        js = json.loads(self.get_output([
+            '--column-names',
+            '-k', '01',
+            'examples/numeric_headers.csv',
+        ]))
+
+        self.assertEqual(len(js), 2)
+        self.assertEqual(js['1E+2']['id'], 'A')
+        self.assertEqual(js['2E+2']['id'], 'B')
+
+    def test_column_indexes_numeric_header(self):
+        js = json.loads(self.get_output([
+            '--column-indexes',
+            '-k', '3',
+            'examples/numeric_headers.csv',
+        ]))
+
+        self.assertEqual(len(js), 2)
+        self.assertEqual(js['1E+2']['id'], 'A')
+        self.assertEqual(js['2E+2']['id'], 'B')
 
     def test_duplicate_keys(self):
         output_file = io.StringIO()

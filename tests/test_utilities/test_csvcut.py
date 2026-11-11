@@ -23,6 +23,34 @@ class TestCSVCut(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             ['a', 'c'],
             ['1', '3'],
         ])
+    def test_column_names_numeric_header(self):
+        self.assertRows(
+            ['--column-names', '-c', '01', 'examples/numeric_headers.csv'],
+            [
+                ['01'],
+                ['100'],
+                ['200'],
+            ],
+        )
+    def test_column_names_hyphen_header(self):
+        self.assertRows(
+            ['--column-names', '-c', 'pre-k', 'examples/hyphen_headers.csv'],
+            [
+                ['pre-k'],
+                ['100'],
+                ['200'],
+            ],
+        )
+
+    def test_column_indexes_numeric_header(self):
+        self.assertRows(
+            ['--column-indexes', '-c', '3', 'examples/numeric_headers.csv'],
+            [
+                ['01'],
+                ['100'],
+                ['200'],
+            ],
+        )
 
     def test_linenumbers(self):
         self.assertRows(['-c', '1,3', '-l', 'examples/dummy.csv'], [

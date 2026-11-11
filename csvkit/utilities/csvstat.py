@@ -8,7 +8,14 @@ from decimal import Decimal
 
 import agate
 
-from csvkit.cli import CSVKitUtility, default_float_decimal, parse_column_identifiers
+from csvkit.cli import (
+    CSVKitUtility,
+    default_float_decimal,
+    parse_column_identifiers,
+    COLUMN_IDENTIFIER_NAMES,
+    COLUMN_IDENTIFIER_INDEXES,
+    COLUMN_IDENTIFIER_AUTO,
+)
 
 locale.setlocale(locale.LC_ALL, '')
 OPERATIONS = OrderedDict([
@@ -87,6 +94,24 @@ class CSVStat(CSVKitUtility):
             '-c', '--columns', dest='columns',
             help='A comma-separated list of column indices, names or ranges to be examined, e.g. "1,id,3-5". '
                  'Defaults to all columns.')
+        group = self.argparser.add_mutually_exclusive_group()
+
+        group.add_argument(
+            '--column-names',
+            dest='column_identifier_mode',
+            action='store_const',
+            const=COLUMN_IDENTIFIER_NAMES,
+            default=COLUMN_IDENTIFIER_AUTO,
+            help='Interpret column identifiers as literal column names, even if they look like integers or ranges.',
+        )
+
+        group.add_argument(
+            '--column-indexes',
+            dest='column_identifier_mode',
+            action='store_const',
+            const=COLUMN_IDENTIFIER_INDEXES,
+            help='Interpret column identifiers as column indices or ranges, never as column names.',
+        )
         self.argparser.add_argument(
             '--type', dest='type_only', action='store_true',
             help='Only output data type.')
@@ -194,6 +219,7 @@ class CSVStat(CSVKitUtility):
             self.args.columns,
             table.column_names,
             self.get_column_offset(),
+            mode=self.args.column_identifier_mode,
         )
 
         kwargs = {}

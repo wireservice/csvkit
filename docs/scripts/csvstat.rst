@@ -19,6 +19,7 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
                   [--stdev] [--len] [--max-precision] [--freq]
                   [--freq-count FREQ_COUNT] [--count]
                   [--decimal-format DECIMAL_FORMAT] [-G] [-y SNIFF_LIMIT] [-I]
+                  [--column-names | --column-indexes]
                   [FILE]
 
    Print descriptive statistics for each column in a CSV file.
@@ -68,11 +69,30 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
      -I, --no-inference    Disable type inference (and --locale, --date-format,
                            --datetime-format, --no-leading-zeroes) when parsing
                            the input.
+     --column-names        Interpret column identifiers as literal column names,
+                           even if they look like integers or ranges.
+     --column-indexes      Interpret column identifiers as column indices or
+                           ranges, never as column names.
 
 See also: :doc:`../common_arguments`.
 
 Examples
 ========
+
+Calculate statistics for a column whose name looks like a number:
+
+.. code-block:: bash
+
+   csvstat --column-names -c 01 --mean examples/numeric_headers.csv
+
+Calculate the same statistic using the column's numeric position:
+
+.. code-block:: bash
+
+   csvstat --column-indexes -c 3 --mean examples/numeric_headers.csv
+
+These options are mutually exclusive. Without either option, csvstat
+preserves its existing column-selection behavior.
 
 Basic use:
 

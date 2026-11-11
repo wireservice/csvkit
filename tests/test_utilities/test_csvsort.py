@@ -19,6 +19,25 @@ class TestCSVSort(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
             ['1', '2', '3'],
             ['4', '5', 'ʤ'],
         ])
+    def test_column_names_numeric_header(self):
+        self.assertRows(
+            ['--column-names', '-c', '01', '-r', 'examples/numeric_headers.csv'],
+            [
+                ['id', '03', '01', 'name'],
+                ['B', '600', '200', 'Beta'],
+                ['A', '300', '100', 'Alpha'],
+            ],
+        )
+
+    def test_column_indexes_numeric_header(self):
+        self.assertRows(
+            ['--column-indexes', '-c', '3', '-r', 'examples/numeric_headers.csv'],
+            [
+                ['id', '03', '01', 'name'],
+                ['B', '600', '200', 'Beta'],
+                ['A', '300', '100', 'Alpha'],
+            ],
+        )
 
     def test_encoding(self):
         self.assertRows(['-e', 'latin1', 'examples/test_latin1.csv'], [
