@@ -21,6 +21,17 @@ def _skip_lines(f, args):
     return skip_lines
 
 
+def _number_fieldnames(rows):
+    # Key each column by its name and occurrence, so that columns with the same name (or no name) aren't merged.
+    if rows.fieldnames:
+        counts = {}
+        fieldnames = []
+        for name in rows.fieldnames:
+            counts[name] = counts.get(name, 0) + 1
+            fieldnames.append((name, counts[name]))
+        rows.fieldnames = fieldnames
+
+
 class CSVStack(CSVKitUtility):
     description = 'Stack up the rows from multiple CSV files, optionally adding a grouping value.'
     # Override 'f' because the utility accepts multiple files.
@@ -75,6 +86,7 @@ class CSVStack(CSVKitUtility):
             rows = Reader(f, **self.reader_kwargs)
 
             if use_fieldnames:
+                _number_fieldnames(rows)
                 if rows.fieldnames:
                     for field in rows.fieldnames:
                         if field not in headers:
@@ -99,7 +111,8 @@ class CSVStack(CSVKitUtility):
 
         if use_fieldnames:
             output = agate.csv.DictWriter(self.output_file, fieldnames=headers, **self.writer_kwargs)
-            output.writeheader()
+            # Write the column names, not the (name, occurrence) keys.
+            output.writerow({key: key[0] if isinstance(key, tuple) else key for key in headers})
         else:
             output = agate.csv.writer(self.output_file, **self.writer_kwargs)
             output.writerow(headers)
@@ -111,6 +124,8 @@ class CSVStack(CSVKitUtility):
                 f = self._open_input_file(path)
                 _skip_lines(f, self.args)
                 rows = Reader(f, **self.reader_kwargs)
+                if use_fieldnames:
+                    _number_fieldnames(rows)
 
             if has_groups:
                 if groups:

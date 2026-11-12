@@ -18,6 +18,7 @@ Unreleased
 -  fix: :doc:`/scripts/csvstat`, when using :code:`--decimal-format` without decimal places (e.g. :code:`%.0f`), no longer strips trailing zeros (e.g. 100 was output as 1).
 -  fix: :doc:`/scripts/csvstat`, in locales that use a decimal comma (e.g. :code:`de_DE`), no longer appends a decimal separator to whole numbers.
 -  fix: :doc:`/scripts/csvgrep` :code:`-f/--file` strips only line separators from each line of the file, as documented, not trailing whitespace.
+-  fix: :doc:`/scripts/csvstack` no longer loses the values of columns that have the same name (or no name) as another column, or the same name as the grouping column.
 
 2.2.0 - December 15, 2025
 -------------------------
