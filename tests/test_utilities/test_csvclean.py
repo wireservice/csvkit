@@ -112,6 +112,13 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             ],
         )
 
+    def test_join_short_rows_with_empty_rows(self):
+        self.assertCleaned(['--omit-error-rows', '--join-short-rows', 'examples/test_join_short_rows_empty.csv'], [
+            ['a', 'b', 'c'],
+            ['\n1', 'cat\ndog', 'c'],
+            ['3', 'b', 'c'],
+        ])
+
     def test_fill_short_rows(self):
         self.assertCleaned(['--fill-short-rows', 'examples/test_join_short_rows.csv'], [
             ['a', 'b', 'c'],

@@ -19,6 +19,9 @@ def join_rows(rows, separator):
     rows = list(rows)
     fixed_row = rows[0][:]
 
+    if len(fixed_row) == 0:
+        fixed_row = ['']
+
     for row in rows[1:]:
         if len(row) == 0:
             row = ['']
