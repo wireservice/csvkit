@@ -1,6 +1,7 @@
 Unreleased
 ----------
 
+-  fix: :doc:`/scripts/csvclean` no longer raises an :code:`IndexError` if the first of the short rows to join, when using :code:`--join-short-rows`, is empty (e.g. an empty line). Empty rows are treated as rows with a single empty cell, like the other rows.
 -  fix: :doc:`/scripts/csvgrep` treats an empty :code:`--regex` or :code:`--match` pattern as matching every value. Previously, with an empty pattern, :code:`--any-match` matched no rows, and :code:`--any-match --invert-match` matched every row.
 -  feat: :doc:`/scripts/csvcut` adds an :code:`--ignore-unknown-columns` option to skip identifiers in :code:`-c/--columns` that do not match a column in the input.
 -  feat: :doc:`/scripts/csvclean` adds a :code:`--remove-empty-columns` option to remove empty columns from standard output.

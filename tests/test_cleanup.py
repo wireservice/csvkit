@@ -34,3 +34,14 @@ class TestCleanup(unittest.TestCase):
         expected5 = " ".join([start[1][1], start[2][0]])
         self.assertEqual(expected5, fixed[5])
         self.assertEqual(start[2][1], fixed[6])
+
+    def test_fix_rows_starting_with_empty_row(self):
+        """An empty first row is treated as a row with a single empty cell, like the other rows."""
+        start = [[],
+                 ['1', '2', '3'],
+                 ]
+        fixed = join_rows(start, ' ')
+        self.assertEqual(3, len(fixed))
+        self.assertEqual(' 1', fixed[0])
+        self.assertEqual('2', fixed[1])
+        self.assertEqual('3', fixed[2])
