@@ -1,9 +1,12 @@
+import io
 import os
+import tempfile
 import sys
 import unittest
 from contextlib import contextmanager
 from unittest.mock import patch
 
+from csvkit.exceptions import RaggedRowError
 from csvkit.utilities.csvstack import CSVStack, launch_new_instance
 from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 
@@ -34,6 +37,21 @@ class TestCSVStack(CSVKitTestCase, EmptyFileTests):
             ['-g', '1,2'],
             'The number of grouping values must be equal to the number of CSV files being stacked.',
         )
+
+    def test_row_with_extra_values_raises(self):
+        with tempfile.NamedTemporaryFile('w+', suffix='.csv', delete=False) as f:
+            f.write('a,b,c\n1,2,3\n4,5,6,7\n')
+            path = f.name
+        try:
+            with self.assertRaises(RaggedRowError) as cm:
+                self.get_output_as_list([path])
+
+            self.assertEqual(
+                str(cm.exception),
+                'Row 2 in %s has 4 values, but the file only has 3 header column(s).' % path
+            )
+        finally:
+            os.remove(path)
 
     @unittest.skipIf(os.name != 'nt', 'Windows only')
     def test_glob(self):

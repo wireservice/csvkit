@@ -7,6 +7,7 @@ from itertools import chain
 import agate
 
 from csvkit.cli import CSVKitUtility, isatty, make_default_headers
+from csvkit.exceptions import RaggedRowError
 
 
 def _skip_lines(f, args):
@@ -118,7 +119,14 @@ class CSVStack(CSVKitUtility):
                 else:
                     group = os.path.basename(f.name)
 
-            for row in rows:
+            for row_number, row in enumerate(rows, start=1):
+                if use_fieldnames and None in row:
+                    num_columns = len(rows.fieldnames)
+                    raise RaggedRowError(
+                        'Row %i in %s has %i values, but the file only has %i header column(s).'
+                        % (row_number, path, num_columns + len(row[None]), num_columns)
+                    )
+
                 if has_groups:
                     if use_fieldnames:
                         row[group_name] = group
