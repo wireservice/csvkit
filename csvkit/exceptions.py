@@ -41,3 +41,10 @@ class RequiredHeaderError(CustomException):
     Exception raised when an operation requires a CSV file to have a header row.
     """
     pass
+
+
+class RaggedRowError(CustomException):
+    """
+    Exception raised when a row has more values than the file has header columns.
+    """
+    pass
