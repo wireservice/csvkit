@@ -31,7 +31,7 @@ def geojson2csv(f, key=None, **kwargs):
     property_fields = []
 
     for feature in features:
-        properties = feature.get('properties', {})
+        properties = feature.get('properties') or {}
 
         for prop in properties.keys():
             if prop not in property_fields:
