@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import agate
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 
 from csvkit.cli import CSVKitUtility, parse_list
 
@@ -32,6 +32,11 @@ class SQL2CSV(CSVKitUtility):
         self.argparser.add_argument(
             '--query',
             help="The SQL query to execute. Overrides FILE and STDIN.")
+        self.argparser.add_argument(
+            '-b', '--parameter', dest='parameters', metavar=('NAME', 'VALUE'), nargs=2,
+            action='append', default=[],
+            help='A named SQL bind parameter, as a space-separated name and string value. '
+                 'This option can be specified multiple times. For example: last_name Jones')
         self.argparser.add_argument(
             '-e', '--encoding', dest='encoding', default='utf-8',
             help='Specify the encoding of the input query file.')
@@ -80,7 +85,11 @@ class SQL2CSV(CSVKitUtility):
 
             self.input_file.close()
 
-        rows = connection.execution_options(**parse_list(self.args.execution_option)).exec_driver_sql(query)
+        execution_connection = connection.execution_options(**parse_list(self.args.execution_option))
+        if self.args.parameters:
+            rows = execution_connection.execute(text(query), dict(self.args.parameters))
+        else:
+            rows = execution_connection.exec_driver_sql(query)
         output = agate.csv.writer(self.output_file, **self.writer_kwargs)
 
         if rows.returns_rows:

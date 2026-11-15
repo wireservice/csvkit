@@ -1,6 +1,7 @@
 import io
 import os
 import sys
+import tempfile
 from unittest.mock import patch
 
 try:
@@ -57,6 +58,76 @@ class TestSQL2CSV(CSVKitTestCase, EmptyFileTests):
 
         self.assertTrue('question' in csv)
         self.assertTrue('54' in csv)
+
+    def test_bind_parameter_value(self):
+        self.assertRows(
+            ['--query', 'select :value as value', '--parameter', 'value', "O'Reilly"],
+            [['value'], ["O'Reilly"]],
+        )
+
+    def test_bind_parameters_multiple(self):
+        self.assertRows(
+            ['--query', 'select cast(:a as integer) + cast(:b as integer) as total',
+             '-b', 'a', '3', '-b', 'b', '5'],
+            [['total'], ['8']],
+        )
+
+    def test_bind_parameters_preserve_strings(self):
+        self.assertRows(
+            ['--query', 'select :code as code, :word as word',
+             '--parameter', 'code', '00123', '--parameter', 'word', 'None'],
+            [['code', 'word'], ['00123', 'None']],
+        )
+
+    def test_bind_parameters_are_not_sql(self):
+        self.assertRows(
+            ['--query', "with names(name) as (values ('alice'), ('bob')) "
+                        'select count(*) as matches from names where name = :name',
+             '--parameter', 'name', "alice' OR 1=1 --"],
+            [['matches'], ['0']],
+        )
+
+    def test_bind_parameters_in_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, 'query.sql')
+            with open(path, 'w', encoding='utf-8') as f:
+                f.write('select :value as value')
+            self.assertRows([path, '--parameter', 'value', 'from file'], [['value'], ['from file']])
+
+    def test_bind_parameters_in_stdin(self):
+        with stdin_as_string(io.BytesIO(b'select :value as value')):
+            self.assertRows(['--parameter', 'value', 'from stdin'], [['value'], ['from stdin']])
+
+    def test_bind_parameters_unicode_and_csv_quoting(self):
+        value = 'Привет, "CSV"\nnext line'
+        self.assertRows(
+            ['--query', 'select :value as value', '--parameter', 'value', value], [['value'], [value]],
+        )
+
+    def test_bind_parameters_repeated_name(self):
+        self.assertRows(
+            ['--query', 'select :value as value', '-b', 'value', 'first', '-b', 'value', 'last'],
+            [['value'], ['last']],
+        )
+
+    def test_bind_parameters_no_header_row(self):
+        self.assertRows(['--query', 'select :value as value', '--no-header-row', '-b', 'value', 'a'], [['a']])
+
+    def test_bind_parameters_filter_table(self):
+        self.csvsql('examples/dummy.csv')
+        self.assertRows(
+            ['--db', 'sqlite:///' + self.db_file, '--query', 'select a, b from foo where a = :value',
+             '--parameter', 'value', '1'],
+            [['a', 'b'], ['1', '2']],
+        )
+
+    def test_query_without_bind_parameters_keeps_driver_sql(self):
+        self.assertRows(['--query', "select ':not_a_parameter' as value, '100%' as percent"],
+                        [['value', 'percent'], [':not_a_parameter', '100%']])
+
+    def test_bind_parameter_missing_value(self):
+        self.assertError(launch_new_instance, ['--parameter', 'value'],
+                         'argument -b/--parameter: expected 2 arguments', args=[])
 
     def test_file(self):
         csv = self.get_output(['examples/test.sql'])
