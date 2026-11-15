@@ -10,7 +10,7 @@ Executes arbitrary commands against a SQL database and outputs the results as a 
 .. code-block:: none
 
    usage: sql2csv [-h] [-v] [-l] [-V] [--db CONNECTION_STRING] [--query QUERY]
-                  [-e ENCODING] [-H]
+                  [-b NAME VALUE] [-e ENCODING] [-H]
                   [FILE]
 
    Execute a SQL query on a database and output the result to a CSV file.
@@ -34,6 +34,10 @@ Executes arbitrary commands against a SQL database and outputs the results as a 
                            option can be specified multiple times. For example:
                            stream_results True
      --query QUERY         The SQL query to execute. Overrides FILE and STDIN.
+     -b NAME VALUE, --parameter NAME VALUE
+                           A named SQL bind parameter, as a space-separated name
+                           and string value. This option can be specified
+                           multiple times. For example: last_name Jones
      -e ENCODING, --encoding ENCODING
                            Specify the encoding of the input query file.
      -H, --no-header-row   Do not output column names.
@@ -47,6 +51,20 @@ Load sample data into a table using :doc:`csvsql` and then query it using `sql2c
 
    csvsql --db "sqlite:///dummy.db" --tables "test" --insert examples/dummy.csv
    sql2csv --db "sqlite:///dummy.db" --query "select * from test"
+
+Pass values separately from the SQL query using named placeholders and
+``--parameter`` (or ``-b``):
+
+.. code-block:: bash
+
+   sql2csv --db "sqlite:///contacts.db" --query "select * from contacts where last_name = :last_name" --parameter last_name "O'Reilly"
+
+The same placeholders work in a query file or a query read from standard input.
+Values are bound as strings, without adding SQL quotes or interpreting Python
+literals. For example, ``00123`` keeps its leading zeroes. Use a SQL ``CAST``
+when a query requires another type. Repeat the option for multiple parameters;
+if a name is repeated, the last value is used. Parameters bind values, not table
+or column names. Queries without ``--parameter`` keep their existing behavior.
 
 Load data about financial aid recipients into PostgreSQL. Then find the three states that received the most, while also filtering out empty rows:
 
