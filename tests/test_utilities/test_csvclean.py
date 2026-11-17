@@ -102,6 +102,16 @@ class TestCSVClean(CSVKitTestCase, EmptyFileTests):
             ['3', 'b', 'c'],
         ])
 
+    def test_join_short_rows_length_mismatch(self):
+        self.assertCleaned(
+            ['--length-mismatch', '--omit-error-rows', '--join-short-rows', 'examples/test_join_short_rows.csv'],
+            [
+                ['a', 'b', 'c'],
+                ['1', 'cat\ndog', 'c'],
+                ['3', 'b', 'c'],
+            ],
+        )
+
     def test_join_short_rows_separator(self):
         self.assertCleaned(
             ['--omit-error-rows', '--join-short-rows', '--separator', 'XYZ', 'examples/test_join_short_rows.csv'],

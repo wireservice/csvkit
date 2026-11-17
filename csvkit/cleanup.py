@@ -124,9 +124,9 @@ class RowChecker:
                             if len(fixed_row) == len_column_names:
                                 row = fixed_row
 
-                                # Remove the errors that are now fixed.
+                                # Remove the errors that are now fixed. The current row's error isn't reported yet.
                                 if self.length_mismatch:
-                                    for fixed in joinable_row_errors:
+                                    for fixed in joinable_row_errors[:-1]:
                                         self.errors.remove(fixed)
 
                                 joinable_row_errors = []
