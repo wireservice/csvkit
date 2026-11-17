@@ -1,0 +1,4 @@
+id,count,enabled,empty,latitude,longitude
+zero,0,false,,10,20
+positive,2,true,,11,21
+missing,,,,12,22

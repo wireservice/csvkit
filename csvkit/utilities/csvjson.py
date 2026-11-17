@@ -226,7 +226,7 @@ class CSVJSON(CSVKitUtility):
                     continue
                 if i == self.id_column:
                     feature['id'] = c
-                elif c:
+                elif c != '':
                     feature['properties'][self.column_names[i]] = c
 
             feature['geometry'] = self.geometry_for_row(row)
