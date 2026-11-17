@@ -126,6 +126,39 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
             self.assertIsInstance(geometry['coordinates'][0], float)
             self.assertIsInstance(geometry['coordinates'][1], float)
 
+    def test_geojson_zero_and_false_properties(self):
+        for options in ([], ['--stream']):
+            with self.subTest(options=options):
+                output = self.get_output(options + [
+                    '--lat', 'latitude', '--lon', 'longitude', 'examples/test_geo_properties.csv',
+                ])
+                if '--stream' in options:
+                    features = [json.loads(line) for line in output.splitlines()]
+                else:
+                    features = json.loads(output)['features']
+
+                self.assertEqual(features[0]['properties'], {'id': 'zero', 'count': '0', 'enabled': False})
+                self.assertIsInstance(features[0]['properties']['count'], str)
+                self.assertIs(features[0]['properties']['enabled'], False)
+                self.assertEqual(features[1]['properties'], {'id': 'positive', 'count': '2', 'enabled': True})
+                self.assertEqual(features[2]['properties'], {'id': 'missing'})
+                self.assertEqual(features[0]['geometry']['coordinates'], [20, 10])
+
+    def test_geojson_empty_properties(self):
+        for options in (['--blanks'], ['--no-inference'], ['--stream', '--no-inference', '--snifflimit', '0']):
+            with self.subTest(options=options):
+                output = self.get_output(options + [
+                    '--lat', 'latitude', '--lon', 'longitude', 'examples/test_geo_properties.csv',
+                ])
+                if '--stream' in options:
+                    features = [json.loads(line) for line in output.splitlines()]
+                else:
+                    features = json.loads(output)['features']
+
+                self.assertNotIn('empty', features[0]['properties'])
+                self.assertEqual(features[2]['properties'], {'id': 'missing'})
+                self.assertEqual(features[0]['properties'], {'id': 'zero', 'count': '0', 'enabled': 'false'})
+
     def test_geojson_no_coordinates(self):
         geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude',
                              'examples/test_geo_no_coordinates.csv']))
