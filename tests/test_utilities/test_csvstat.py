@@ -1,3 +1,4 @@
+import io
 import json
 import locale
 import sys
@@ -6,7 +7,7 @@ from unittest.mock import patch
 import agate
 
 from csvkit.utilities.csvstat import CSVStat, launch_new_instance
-from tests.utils import ColumnsTests, CSVKitTestCase, EmptyFileTests, NamesTests
+from tests.utils import ColumnsTests, CSVKitTestCase, EmptyFileTests, NamesTests, stdin_as_string
 
 
 class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
@@ -58,6 +59,15 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
     def test_count_only(self):
         output = self.get_output(['--count', 'examples/realdata/ks_1033_data.csv'])
         self.assertEqual(output, '1575\n')
+
+    def test_count_empty(self):
+        self.assertEqual(self.get_output(['--count', 'examples/empty.csv']), '0\n')
+
+    def test_count_multiline(self):
+        data = b'id,note\n1,"first\nsecond"\n'
+        for flags, expected in [([], '1\n'), (['-H'], '2\n')]:
+            with self.subTest(flags=flags), stdin_as_string(io.BytesIO(data)):
+                self.assertEqual(self.get_output(['--count', *flags]), expected)
 
     def test_unique(self):
         output = self.get_output(['-c', 'county', 'examples/realdata/ks_1033_data.csv'])
