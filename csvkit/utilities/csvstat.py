@@ -172,12 +172,12 @@ class CSVStat(CSVKitUtility):
                 'You may not specify --count and an operation (--mean, --median, etc) at the same time.')
 
         if self.args.count_only:
-            count = len(list(agate.csv.reader(self.skip_lines(), **self.reader_kwargs)))
+            rows = agate.csv.reader(self.skip_lines(), **self.reader_kwargs)
 
             if not self.args.no_header_row:
-                count -= 1
+                next(rows, None)
 
-            self.output_file.write('%i\n' % count)
+            self.output_file.write('%i\n' % sum(1 for _ in rows))
 
             return
 
