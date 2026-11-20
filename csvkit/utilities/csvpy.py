@@ -9,8 +9,10 @@ from csvkit.cli import CSVKitUtility
 
 
 class CSVPy(CSVKitUtility):
+    input_help = ('CSV file to load into the shell. Accepts plain CSV, gzip (.gz), bzip2 (.bz2), or xz (.xz). '
+                  'Zstandard (.zst) and stdin are not supported.')
     description = 'Load a CSV file into a CSV reader and then drop into a Python shell.'
-    override_flags = ['l', 'zero', 'add-bom']
+    override_flags = ['l', 'zero', 'add-bom', 'output-compression']
 
     def add_arguments(self):
         self.argparser.add_argument(

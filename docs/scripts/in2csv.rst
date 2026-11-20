@@ -20,31 +20,46 @@ The header line is required though the columns may be in any order:
 
 .. code-block:: none
 
-   usage: in2csv [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
+   usage: in2csv [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3,4,5}] [-b]
                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
                  [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
                  [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
-                 [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V]
-                 [-f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}] [-s SCHEMA]
-                 [-k KEY] [-n] [--sheet SHEET] [--write-sheets WRITE_SHEETS]
-                 [--use-sheet-names] [--reset-dimensions]
-                 [--encoding-xls ENCODING_XLS] [-y SNIFF_LIMIT] [-I]
+                 [--no-leading-zeroes] [-H] [-K SKIP_LINES] [-v]
+                 [--output-compression {gzip,bz2,zst}]
+                 [--compression-level {1,2,3,4,5,6,7,8,9}] [-l] [--add-bom]
+                 [--zero] [-V] [-f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}]
+                 [-s SCHEMA] [-k KEY] [-n] [--sheet SHEET]
+                 [--write-sheets WRITE_SHEETS] [--use-sheet-names]
+                 [--reset-dimensions] [--encoding-xls ENCODING_XLS]
+                 [-y SNIFF_LIMIT] [-I]
                  [FILE]
 
    Convert common, but less awesome, tabular data formats to CSV.
 
    positional arguments:
-     FILE                  The CSV file to operate on. If omitted, will accept
-                           input as piped data via STDIN.
+     FILE                  File to convert. For text formats: Named files are
+                           decompressed by extension: gzip (.gz), bzip2 (.bz2),
+                           xz (.xz), or Zstandard (.zst, requires the optional
+                           zstandard package). Specify the underlying format,
+                           e.g. -f csv data.csv.gz. For .csv.zst, also use
+                           --snifflimit 0. External compression is not supported
+                           for Excel or DBF.
+                           Omit FILE or use "-" to read from stdin without
+                           decompression.
 
    optional arguments:
      -h, --help            show this help message and exit
+     --output-compression {gzip,bz2,zst}
+                           Compress standard output using gzip, bzip2 or
+                           Zstandard (requires the zstandard package).
+     --compression-level {1,2,3,4,5,6,7,8,9}
+                           Set the compression level (default: 9 for gzip/bz2, 3
+                           for zst). Requires --output-compression.
      -f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}, --format {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}
                            The format of the input file. If not specified will be
                            inferred from the file type.
-     -s SCHEMA, --schema SCHEMA
-                           Specify a CSV-formatted schema file for converting
-                           fixed-width files. See web documentation.
+     -s, --schema SCHEMA   CSV schema for fixed-width input. Accepts the same
+                           compressed text files as FILE.
      -k KEY, --key KEY     Specify a top-level key to look within for a list of
                            objects to be converted when processing JSON.
      -n, --names           Display sheet names from the input Excel file.

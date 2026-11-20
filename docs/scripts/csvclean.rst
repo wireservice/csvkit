@@ -121,19 +121,36 @@ Usage
 
 .. code-block:: none
 
-   usage: csvclean [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                   [-K SKIP_LINES] [-v] [-l] [--zero] [-V]
+   usage: csvclean [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3,4,5}]
+                   [-b] [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S]
+                   [-H] [-K SKIP_LINES] [-v]
+                   [--output-compression {gzip,bz2,zst}]
+                   [--compression-level {1,2,3,4,5,6,7,8,9}] [-l] [--add-bom]
+                   [--zero] [-V] [--length-mismatch] [--empty-columns] [-a]
+                   [--omit-error-rows] [--label LABEL] [--header-normalize-space]
+                   [--join-short-rows] [--separator SEPARATOR]
+                   [--fill-short-rows] [--fillvalue FILLVALUE]
+                   [--remove-empty-columns]
                    [FILE]
 
    Fix common errors in a CSV file.
 
    positional arguments:
-     FILE                  The CSV file to operate on. If omitted, will accept
-                           input as piped data via STDIN.
+     FILE                  CSV file to read. Named files are decompressed by
+                           extension: gzip (.gz), bzip2 (.bz2), xz (.xz), or
+                           Zstandard (.zst, requires the optional zstandard
+                           package).
+                           Omit FILE or use "-" to read uncompressed CSV from
+                           stdin.
 
    optional arguments:
      -h, --help            show this help message and exit
+     --output-compression {gzip,bz2,zst}
+                           Compress standard output using gzip, bzip2 or
+                           Zstandard (requires the zstandard package).
+     --compression-level {1,2,3,4,5,6,7,8,9}
+                           Set the compression level (default: 9 for gzip/bz2, 3
+                           for zst). Requires --output-compression.
      --length-mismatch     Report data rows that are shorter or longer than the
                            header row.
      --empty-columns       Report empty columns as errors.
@@ -143,7 +160,8 @@ Usage
                            output.
      --label LABEL         Add a "label" column to standard error. Useful in
                            automated workflows. Use "-" to default to the input
-                           filename.
+                           filename. For .zst input, supply a label instead of
+                           "-".
      --header-normalize-space
                            Strip leading and trailing whitespace and replace
                            sequences of whitespace characters by a single space

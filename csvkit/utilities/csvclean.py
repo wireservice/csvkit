@@ -28,7 +28,7 @@ class CSVClean(CSVKitUtility):
         self.argparser.add_argument(
             '--label', dest='label',
             help='Add a "label" column to standard error. Useful in automated workflows. '
-                 'Use "-" to default to the input filename.')
+                 'Use "-" to default to the input filename. For .zst input, supply a label instead of "-".')
         self.argparser.add_argument(
             '--header-normalize-space', dest='header_normalize_space', action='store_true',
             help='Strip leading and trailing whitespace and replace sequences of whitespace characters by a single '

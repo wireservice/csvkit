@@ -2,7 +2,7 @@
 
 import agate
 
-from csvkit.cli import CSVKitUtility, parse_column_identifiers
+from csvkit.cli import CSV_INPUT_HELP, ZST_SNIFF_HELP, CSVKitUtility, parse_column_identifiers
 
 
 def ignore_case_sort(key):
@@ -17,6 +17,7 @@ def ignore_case_sort(key):
 
 
 class CSVSort(CSVKitUtility):
+    input_help = f'{CSV_INPUT_HELP} {ZST_SNIFF_HELP}'
     description = 'Sort CSV files. Like the Unix "sort" command, but for tabular data.'
 
     def add_arguments(self):

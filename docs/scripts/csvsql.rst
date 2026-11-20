@@ -9,30 +9,48 @@ Generate SQL statements for a CSV file or execute those statements directly on a
 
 .. code-block:: none
 
-   usage: csvsql [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
+   usage: csvsql [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3,4,5}] [-b]
                  [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
                  [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
                  [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
-                 [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V]
-                 [-i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase}]
-                 [--db CONNECTION_STRING] [--query QUERIES] [--insert]
-                 [--prefix PREFIX] [--before-insert BEFORE_INSERT]
-                 [--after-insert AFTER_INSERT] [--tables TABLE_NAMES]
-                 [--no-constraints] [--unique-constraint UNIQUE_CONSTRAINT]
-                 [--no-create] [--create-if-not-exists] [--overwrite]
-                 [--db-schema DB_SCHEMA] [-y SNIFF_LIMIT] [-I]
-                 [--chunk-size CHUNK_SIZE]
-                 [FILE [FILE ...]]
+                 [--no-leading-zeroes] [-H] [-K SKIP_LINES] [-v]
+                 [--output-compression {gzip,bz2,zst}]
+                 [--compression-level {1,2,3,4,5,6,7,8,9}] [-l] [--add-bom]
+                 [--zero] [-V] [-i {mssql,mysql,oracle,postgresql,sqlite}]
+                 [--db CONNECTION_STRING]
+                 [--engine-option ENGINE_OPTION ENGINE_OPTION] [--query QUERIES]
+                 [--insert] [--prefix PREFIX] [--before-insert BEFORE_INSERT]
+                 [--after-insert AFTER_INSERT] [--sql-delimiter SQL_DELIMITER]
+                 [--tables TABLE_NAMES] [--no-constraints]
+                 [--unique-constraint UNIQUE_CONSTRAINT] [--no-create]
+                 [--create-if-not-exists] [--overwrite] [--db-schema DB_SCHEMA]
+                 [-y SNIFF_LIMIT] [-I] [--chunk-size CHUNK_SIZE]
+                 [--min-col-len MIN_COL_LEN]
+                 [--col-len-multiplier COL_LEN_MULTIPLIER]
+                 [FILE ...]
 
    Generate SQL statements for one or more CSV files, or execute those statements
    directly on a database, and execute one or more SQL queries.
 
    positional arguments:
-     FILE                  The CSV file(s) to operate on. If omitted, will accept
-                           input as piped data via STDIN.
+     FILE                  CSV files to read. Input files can use different
+                           compression formats. Named files are decompressed by
+                           extension: gzip (.gz), bzip2 (.bz2), xz (.xz), or
+                           Zstandard (.zst, requires the optional zstandard
+                           package).
+                           Omit FILE or use "-" to read uncompressed CSV from
+                           stdin. For .zst input, use --snifflimit 0 and specify
+                           --tabs or --delimiter if needed. With .zst input, also
+                           supply a name for each input using --tables.
 
    optional arguments:
      -h, --help            show this help message and exit
+     --output-compression {gzip,bz2,zst}
+                           Compress standard output using gzip, bzip2 or
+                           Zstandard (requires the zstandard package).
+     --compression-level {1,2,3,4,5,6,7,8,9}
+                           Set the compression level (default: 9 for gzip/bz2, 3
+                           for zst). Requires --output-compression.
      -i {mssql,mysql,oracle,postgresql,sqlite,duckdb,crate,ingres}, --dialect {mssql,mysql,oracle,postgresql,sqlite,duckdb,crate,ingres}
                            Dialect of SQL to generate. Cannot be used with --db.
      --db CONNECTION_STRING

@@ -9,18 +9,32 @@ Executes arbitrary commands against a SQL database and outputs the results as a 
 
 .. code-block:: none
 
-   usage: sql2csv [-h] [-v] [-l] [-V] [--db CONNECTION_STRING] [--query QUERY]
-                  [-e ENCODING] [-H]
+   usage: sql2csv [-h] [-v] [--output-compression {gzip,bz2,zst}]
+                  [--compression-level {1,2,3,4,5,6,7,8,9}] [-l] [-V]
+                  [--db CONNECTION_STRING]
+                  [--engine-option ENGINE_OPTION ENGINE_OPTION]
+                  [--execution-option EXECUTION_OPTION EXECUTION_OPTION]
+                  [--query QUERY] [-e ENCODING] [-H]
                   [FILE]
 
    Execute a SQL query on a database and output the result to a CSV file.
 
    positional arguments:
-     FILE                  The file to use as the SQL query. If FILE and --query
-                           are omitted, the query is piped data via STDIN.
+     FILE                  SQL query file to read. Named files are decompressed
+                           by extension: gzip (.gz), bzip2 (.bz2), xz (.xz), or
+                           Zstandard (.zst, requires the optional zstandard
+                           package).
+                           Without FILE or --query, read uncompressed SQL from
+                           stdin.
 
    optional arguments:
      -h, --help            show this help message and exit
+     --output-compression {gzip,bz2,zst}
+                           Compress standard output using gzip, bzip2 or
+                           Zstandard (requires the zstandard package).
+     --compression-level {1,2,3,4,5,6,7,8,9}
+                           Set the compression level (default: 9 for gzip/bz2, 3
+                           for zst). Requires --output-compression.
      --db CONNECTION_STRING
                            A SQLAlchemy connection string to connect to a
                            database.

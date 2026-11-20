@@ -53,6 +53,12 @@ csvkit's tools share a set of common command-line arguments. Not every argument 
    -l, --linenumbers     Insert a column of line numbers at the front of the
                          output. Useful when piping to grep or as a simple
                          primary key.
+   --output-compression {gzip,bz2,zst}
+                         Compress standard output using gzip, bzip2 or
+                         Zstandard (requires the zstandard package).
+   --compression-level {1,2,3,4,5,6,7,8,9}
+                         Set the compression level (default: 9 for gzip/bz2,
+                         3 for zst). Requires --output-compression.
    --zero                When interpreting or displaying column numbers, use
                          zero-based numbering instead of the default 1-based
                          numbering.
@@ -67,6 +73,20 @@ To disable type inference, add the :code:`--no-inference` flag. To prevent text 
 The output of csvkit's tools is always formatted with "default" formatting options. This means that when executing multiple csvkit commands (either with a pipe or through intermediary files) it is only ever necessary to specify these arguments the first time (and doing so for subsequent commands will likely cause them to fail).
 
 See the documentation of :doc:`/scripts/csvclean` for a description of the default formatting options.
+
+All tools except the interactive :doc:`/scripts/csvpy` can compress their
+primary output, including reports. Redirecting output to a filename ending in
+``.gz``, ``.bz2`` or ``.zst`` does not enable compression. Install
+``csvkit[zstandard]`` to enable ``--output-compression zst``. Compression does not change
+the delimiter. For example, to read bzip2-compressed TSV and write gzip-compressed TSV:
+
+.. code-block:: bash
+
+   csvformat -t -T --output-compression gzip input.tsv.bz2 > result.tsv.gz
+
+After decompression, the output is identical to ordinary stdout, including a
+requested BOM. Help, version information, stderr, database writes and auxiliary
+files such as those created by ``in2csv --write-sheets`` are not compressed.
 
 .. seealso::
 

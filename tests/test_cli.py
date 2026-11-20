@@ -1,6 +1,81 @@
+import bz2
+import gzip
+import io
+import subprocess
+import sys
 import unittest
+from unittest.mock import patch
 
-from csvkit.cli import ColumnIdentifierError, match_column_identifier, parse_column_identifiers
+from csvkit.cli import ColumnIdentifierError, match_column_identifier, parse_column_identifiers, zstandard
+from csvkit.utilities.csvcut import CSVCut
+
+
+class TestOutputCompression(unittest.TestCase):
+    def run_cli(self, command, *args, data=b''):
+        return subprocess.run([sys.executable, '-m', 'csvkit.utilities.' + command, *args],
+                              input=data, capture_output=True)
+
+    def test_round_trip(self):
+        data = 'id,name\n1,"caf\u00e9\nau lait"\n'.encode()
+        for command, args, stdin, status in (
+            ('csvformat', ['--add-bom', '-T'], data, 0),
+            ('csvlook', [], data, 0),
+            ('csvstack', ['examples/dummy.csv.gz', 'examples/dummy.csv.bz2'], b'', 0),
+            ('csvclean', ['--length-mismatch'], data + b'2\n', 1),
+        ):
+            plain = self.run_cli(command, *args, data=stdin)
+            self.assertEqual(plain.returncode, status, plain.stderr)
+            for codec, decompress, level in (('gzip', gzip.decompress, []),
+                                             ('bz2', bz2.decompress, ['--compression-level', '1'])):
+                with self.subTest(command=command, codec=codec):
+                    result = self.run_cli(command, *args, '--output-compression', codec, *level, data=stdin)
+                    self.assertEqual(result.returncode, status, result.stderr)
+                    self.assertEqual(result.stderr, plain.stderr)
+                    self.assertEqual(decompress(result.stdout), plain.stdout)
+                    if codec == 'bz2':
+                        self.assertTrue(result.stdout.startswith(b'BZh1'))
+
+    def test_output_remains_open(self):
+        with io.TextIOWrapper(io.BytesIO(), encoding='utf-8') as output:
+            for codec in ('gzip', 'bz2'):
+                utility = CSVCut(['--output-compression', codec, 'examples/dummy.csv'], output)
+                utility.run()
+                self.assertIs(utility.output_file, output)
+                output.write('still open')
+
+    @unittest.skipIf(zstandard is None, 'requires zstandard')
+    def test_zstandard_output(self):
+        data = 'id,name\n1,"caf\u00e9\nau lait"\n'.encode()
+        plain = self.run_cli('csvcut', '--add-bom', data=data)
+        self.assertEqual(plain.returncode, 0, plain.stderr)
+        for options in ([], ['--compression-level', '9']):
+            with self.subTest(options=options):
+                result = self.run_cli('csvcut', '--add-bom', '--output-compression', 'zst', *options, data=data)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                decoder = zstandard.ZstdDecompressor().decompressobj()
+                self.assertEqual(decoder.decompress(result.stdout), plain.stdout)
+                self.assertTrue(decoder.eof)
+
+    def test_zstandard_unavailable(self):
+        with patch('csvkit.cli.zstandard', None), patch('sys.stderr', new_callable=io.StringIO) as stderr:
+            with self.assertRaises(SystemExit) as error:
+                CSVCut(['--output-compression', 'zst'])
+            self.assertEqual(error.exception.code, 2)
+            self.assertIn('requires the optional zstandard package', stderr.getvalue())
+
+    def test_invalid_options(self):
+        for command, args in (
+            ('csvcut', ['--compression-level', '5']),
+            ('csvcut', ['--output-compression', 'xz']),
+            ('csvcut', ['--output-compression', 'gzip', '--compression-level', '0']),
+            ('csvcut', ['--output-compression', 'bz2', '--compression-level', '10']),
+            ('csvpy', ['--output-compression', 'gzip']),
+        ):
+            with self.subTest(command=command, args=args):
+                result = self.run_cli(command, *args)
+                self.assertEqual(result.returncode, 2)
+                self.assertEqual(result.stdout, b'')
+                self.assertIn(b'error:', result.stderr)
 
 
 class TestCli(unittest.TestCase):

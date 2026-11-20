@@ -9,19 +9,20 @@ Loads a CSV file into a :class:`agate.csv.Reader` object and then drops into a P
 
 .. code-block:: none
 
-   usage: csvpy [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
+   usage: csvpy [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3,4,5}] [-b]
                 [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
                 [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
                 [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
-                [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [--dict] [--agate]
-                [--no-number-ellipsis] [-y SNIFF_LIMIT] [-I]
+                [--no-leading-zeroes] [-H] [-K SKIP_LINES] [-v] [-V] [--dict]
+                [--agate] [--no-number-ellipsis] [-y SNIFF_LIMIT] [-I]
                 [FILE]
 
    Load a CSV file into a CSV reader and then drop into a Python shell.
 
    positional arguments:
-     FILE                  The CSV file to operate on. If omitted, will accept
-                           input as piped data via STDIN.
+     FILE                  CSV file to load into the shell. Accepts plain CSV,
+                           gzip (.gz), bzip2 (.bz2), or xz (.xz). Zstandard
+                           (.zst) and stdin are not supported.
 
    optional arguments:
      -h, --help            show this help message and exit

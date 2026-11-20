@@ -6,7 +6,7 @@ import agate
 import agatesql  # noqa: F401
 from sqlalchemy import create_engine, dialects
 
-from csvkit.cli import CSVKitUtility, isatty, parse_list
+from csvkit.cli import CSV_INPUTS_HELP, ZST_SNIFF_HELP, CSVKitUtility, isatty, parse_list
 
 try:
     import importlib_metadata
@@ -25,7 +25,8 @@ class CSVSQL(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument(
             metavar='FILE', nargs='*', dest='input_paths', default=['-'],
-            help='The CSV file(s) to operate on. If omitted, will accept input as piped data via STDIN.')
+            help=f'CSV files to read. {CSV_INPUTS_HELP} {ZST_SNIFF_HELP} '
+                 'With .zst input, also supply a name for each input using --tables.')
         self.argparser.add_argument(
             '-i', '--dialect', dest='dialect', choices=DIALECTS,
             help='Dialect of SQL to generate. Cannot be used with --db.')

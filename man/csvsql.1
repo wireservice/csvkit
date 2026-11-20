@@ -1,4 +1,5 @@
-.\" Man page generated from reStructuredText.
+.\" Man page generated from reStructuredText
+.\" by the Docutils 0.23 manpage writer.
 .
 .
 .nr rst2man-indent-level 0
@@ -27,7 +28,7 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-.TH "CSVSQL" "1" "Aug 16, 2024" "2.2.0" "csvkit"
+.TH "CSVSQL" "1" "Nov 20, 2026" "2.2.0" "csvkit"
 .SH NAME
 csvsql \- csvsql Documentation
 .SH DESCRIPTION
@@ -36,32 +37,49 @@ Generate SQL statements for a CSV file or execute those statements directly on a
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
-usage: csvsql [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3}] [\-b]
+.EX
+usage: csvsql [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3,4,5}] [\-b]
               [\-p ESCAPECHAR] [\-z FIELD_SIZE_LIMIT] [\-e ENCODING] [\-L LOCALE]
               [\-S] [\-\-blanks] [\-\-null\-value NULL_VALUES [NULL_VALUES ...]]
               [\-\-date\-format DATE_FORMAT] [\-\-datetime\-format DATETIME_FORMAT]
-              [\-H] [\-K SKIP_LINES] [\-v] [\-l] [\-\-zero] [\-V]
-              [\-i {firebird,mssql,mysql,oracle,postgresql,sqlite,sybase}]
-              [\-\-db CONNECTION_STRING] [\-\-query QUERIES] [\-\-insert]
-              [\-\-prefix PREFIX] [\-\-before\-insert BEFORE_INSERT]
-              [\-\-after\-insert AFTER_INSERT] [\-\-tables TABLE_NAMES]
-              [\-\-no\-constraints] [\-\-unique\-constraint UNIQUE_CONSTRAINT]
-              [\-\-no\-create] [\-\-create\-if\-not\-exists] [\-\-overwrite]
-              [\-\-db\-schema DB_SCHEMA] [\-y SNIFF_LIMIT] [\-I]
-              [\-\-chunk\-size CHUNK_SIZE]
-              [FILE [FILE ...]]
+              [\-\-no\-leading\-zeroes] [\-H] [\-K SKIP_LINES] [\-v]
+              [\-\-output\-compression {gzip,bz2,zst}]
+              [\-\-compression\-level {1,2,3,4,5,6,7,8,9}] [\-l] [\-\-add\-bom]
+              [\-\-zero] [\-V] [\-i {mssql,mysql,oracle,postgresql,sqlite}]
+              [\-\-db CONNECTION_STRING]
+              [\-\-engine\-option ENGINE_OPTION ENGINE_OPTION] [\-\-query QUERIES]
+              [\-\-insert] [\-\-prefix PREFIX] [\-\-before\-insert BEFORE_INSERT]
+              [\-\-after\-insert AFTER_INSERT] [\-\-sql\-delimiter SQL_DELIMITER]
+              [\-\-tables TABLE_NAMES] [\-\-no\-constraints]
+              [\-\-unique\-constraint UNIQUE_CONSTRAINT] [\-\-no\-create]
+              [\-\-create\-if\-not\-exists] [\-\-overwrite] [\-\-db\-schema DB_SCHEMA]
+              [\-y SNIFF_LIMIT] [\-I] [\-\-chunk\-size CHUNK_SIZE]
+              [\-\-min\-col\-len MIN_COL_LEN]
+              [\-\-col\-len\-multiplier COL_LEN_MULTIPLIER]
+              [FILE ...]
 
 Generate SQL statements for one or more CSV files, or execute those statements
 directly on a database, and execute one or more SQL queries.
 
 positional arguments:
-  FILE                  The CSV file(s) to operate on. If omitted, will accept
-                        input as piped data via STDIN.
+  FILE                  CSV files to read. Input files can use different
+                        compression formats. Named files are decompressed by
+                        extension: gzip (.gz), bzip2 (.bz2), xz (.xz), or
+                        Zstandard (.zst, requires the optional zstandard
+                        package).
+                        Omit FILE or use \(dq\-\(dq to read uncompressed CSV from
+                        stdin. For .zst input, use \-\-snifflimit 0 and specify
+                        \-\-tabs or \-\-delimiter if needed. With .zst input, also
+                        supply a name for each input using \-\-tables.
 
 optional arguments:
   \-h, \-\-help            show this help message and exit
+  \-\-output\-compression {gzip,bz2,zst}
+                        Compress standard output using gzip, bzip2 or
+                        Zstandard (requires the zstandard package).
+  \-\-compression\-level {1,2,3,4,5,6,7,8,9}
+                        Set the compression level (default: 9 for gzip/bz2, 3
+                        for zst). Requires \-\-output\-compression.
   \-i {mssql,mysql,oracle,postgresql,sqlite,duckdb,crate,ingres}, \-\-dialect {mssql,mysql,oracle,postgresql,sqlite,duckdb,crate,ingres}
                         Dialect of SQL to generate. Cannot be used with \-\-db.
   \-\-db CONNECTION_STRING
@@ -121,45 +139,42 @@ optional arguments:
   \-\-col\-len\-multiplier COL_LEN_MULTIPLIER
                         Multiply the maximum column length by this multiplier
                         to accomodate larger values in later runs.
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
-See also: \fI\%Arguments common to all tools\fP\&.
+See also: Arguments common to all tools \%<>\&.
 .sp
-For information on connection strings and supported dialects refer to the \fI\%SQLAlchemy documentation\fP\&.
+For information on connection strings and supported dialects refer to the SQLAlchemy documentation \%<https://\:www\:.sqlalchemy\:.org/\:docs/\:dialects/>\&.
 .sp
-If you prefer not to enter your password in the connection string, store the password securely in a \fI\%PostgreSQL Password File\fP, a \fI\%MySQL Options File\fP or similar files for other systems.
+If you prefer not to enter your password in the connection string, store the password securely in a PostgreSQL Password File \%<https://\:www\:.postgresql\:.org/\:docs/\:9\:.1/\:static/\:libpq-pgpass\:.html>, a MySQL Options File \%<https://\:dev\:.mysql\:.com/\:doc/\:refman/\:5\:.7/\:en/\:option-files\:.html> or similar files for other systems.
 .sp
-\fBNOTE:\fP
+\fBNote:\fP
 .INDENT 0.0
 .INDENT 3.5
-Using the \fB\-\-query\fP option may cause rounding (in Python 2) or introduce \fI\%Python floating point issues\fP (in Python 3).
+Using the \fB\-\-query\fP option may cause rounding (in Python 2) or introduce Python floating point issues \%<https://\:docs\:.python\:.org/\:3/\:tutorial/\:floatingpoint\:.html> (in Python 3).
 .UNINDENT
 .UNINDENT
 .sp
-\fBNOTE:\fP
+\fBNote:\fP
 .INDENT 0.0
 .INDENT 3.5
-If the CSV file was created from a JSON file using \fI\%in2csv\fP, remember to quote SQL columns properly. For example:
+If the CSV file was created from a JSON file using in2csv \%<>, remember to quote SQL columns properly. For example:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 echo \(aq{\(dqa\(dq:{\(dqb\(dq:\(dqc\(dq},\(dqd\(dq:\(dqe\(dq}\(aq | in2csv \-f ndjson | csvsql \-\-query \(aqSELECT \(dqa/b\(dq FROM stdin\(aq
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .UNINDENT
 .UNINDENT
 .sp
-\fBNOTE:\fP
+\fBNote:\fP
 .INDENT 0.0
 .INDENT 3.5
-Alternatives to \fI\%csvsql\fP are \fI\%q\fP and \fI\%textql\fP\&.
+Alternatives to csvsql \%<> are q \%<https://\:github\:.com/\:harelba/q> and textql \%<https://\:github\:.com/\:dinedal/\:textql>\&.
 .UNINDENT
 .UNINDENT
 .SH EXAMPLES
@@ -169,11 +184,9 @@ Generate a statement in the PostgreSQL dialect:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 csvsql \-i postgresql examples/realdata/FY09_EDU_Recipients_by_State.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .SS Interact with a SQL database
@@ -182,12 +195,10 @@ Create a table and import data from the CSV directly into PostgreSQL:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 createdb test
 csvsql \-\-db postgresql:///test \-\-tables fy09 \-\-insert examples/realdata/FY09_EDU_Recipients_by_State.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -195,11 +206,9 @@ For large tables it may not be practical to process the entire table. One soluti
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 head \-n 20 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvsql \-\-no\-constraints \-\-tables fy09
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -207,25 +216,21 @@ Create tables for an entire directory of CSVs and import data from those files d
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 createdb test
 csvsql \-\-db postgresql:///test \-\-insert examples/*_converted.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
-If those CSVs have identical headers, you can import them into the same table by using \fI\%csvstack\fP first:
+If those CSVs have identical headers, you can import them into the same table by using csvstack \%<> first:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 createdb test
 csvstack examples/dummy?.csv | csvsql \-\-db postgresql:///test \-\-insert
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .SS Query and output CSV files using SQL
@@ -234,11 +239,9 @@ You can use csvsql to \(dqdirectly\(dq query one or more CSV files. Please note 
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 csvsql \-\-query  \(dqSELECT m.usda_id, avg(i.sepal_length) AS mean_sepal_length FROM iris AS i JOIN irismeta AS m ON (i.species = m.species) GROUP BY m.species\(dq examples/iris.csv examples/irismeta.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -246,11 +249,9 @@ Group rows by one column:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 csvsql \-\-query \(dqSELECT * FROM \(aqdummy3\(aq GROUP BY a\(dq examples/dummy3.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -258,11 +259,9 @@ Concatenate two columns:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 csvsql \-\-query \(dqSELECT a || b FROM \(aqdummy3\(aq\(dq \-\-no\-inference examples/dummy3.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -270,11 +269,9 @@ If a column contains null values, you must \fBCOALESCE\fP the column:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 csvsql \-\-query \(dqSELECT a || COALESCE(b, \(aq\(aq) FROM \(aqsort_ints_nulls\(aq\(dq \-\-no\-inference examples/sort_ints_nulls.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -282,16 +279,13 @@ The \fBUPDATE\fP SQL statement produces no output. Remember to \fBSELECT\fP the 
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 csvsql \-\-query \(dqUPDATE \(aqdummy3\(aq SET a = \(aqfoo\(aq; SELECT * FROM \(aqdummy3\(aq\(dq examples/dummy3.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
-.SH AUTHOR
+.SH Author
 Christopher Groskopf and contributors
-.SH COPYRIGHT
+.SH Copyright
 2016, Christopher Groskopf and James McKinney
-.\" Generated by docutils manpage writer.
-.
+.\" End of generated man page.

@@ -12,7 +12,7 @@ import openpyxl
 import xlrd
 
 from csvkit import convert
-from csvkit.cli import CSVKitUtility
+from csvkit.cli import COMPRESSED_INPUT_HELP, CSVKitUtility
 from csvkit.convert.fixed import fixed2csv
 from csvkit.convert.geojs import geojson2csv
 
@@ -28,13 +28,16 @@ class In2CSV(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument(
             metavar='FILE', nargs='?', dest='input_path',
-            help='The CSV file to operate on. If omitted, will accept input as piped data via STDIN.')
+            help=f'File to convert. For text formats: {COMPRESSED_INPUT_HELP} '
+                 'Specify the underlying format, e.g. -f csv data.csv.gz. For .csv.zst, also use --snifflimit 0. '
+                 'External compression is not supported for Excel or DBF.\nOmit FILE or use "-" to read from stdin '
+                 'without decompression.')
         self.argparser.add_argument(
             '-f', '--format', dest='filetype', choices=SUPPORTED_FORMATS,
             help='The format of the input file. If not specified will be inferred from the file type.')
         self.argparser.add_argument(
             '-s', '--schema', dest='schema',
-            help='Specify a CSV-formatted schema file for converting fixed-width files. See web documentation.')
+            help='CSV schema for fixed-width input. Accepts the same compressed text files as FILE.')
         self.argparser.add_argument(
             '-k', '--key', dest='key',
             help='Specify a top-level key to look within for a list of objects to be converted when processing JSON.')

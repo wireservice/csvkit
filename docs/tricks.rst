@@ -8,15 +8,22 @@ Tips
 Reading compressed CSVs
 -----------------------
 
-csvkit has builtin support for reading ``gzip``, ``bz2`` and ``xz`` (LZMA) compressed input files. This is automatically detected based on the file extension. For example:
+Named CSV inputs are decompressed by filename extension: gzip (``.gz``), bzip2
+(``.bz2``), xz (``.xz``), or Zstandard (``.zst``, with the optional
+``zstandard`` package). Input files can use different compression formats in
+the same command. Stdin is not decompressed. For example:
 
 .. code-block:: bash
 
    csvstat examples/dummy.csv.gz
    csvstat examples/dummy.csv.bz2
    csvstat examples/dummy.csv.xz
+   csvstat --snifflimit 0 data.csv.zst
 
-Please note, the files are decompressed in memory, so this is a convenience, not an optimization.
+For Zstandard input, check the command's ``--help``: tools that detect CSV
+dialects may need ``--snifflimit 0``, and options that derive names from
+input files may need explicit names instead. The interactive ``csvpy`` shell
+does not support ``.zst`` input.
 
 Specifying STDIN as a file
 --------------------------

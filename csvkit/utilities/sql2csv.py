@@ -2,7 +2,7 @@
 import agate
 from sqlalchemy import create_engine
 
-from csvkit.cli import CSVKitUtility, parse_list
+from csvkit.cli import COMPRESSED_INPUT_HELP, CSVKitUtility, parse_list
 
 
 class SQL2CSV(CSVKitUtility):
@@ -28,7 +28,8 @@ class SQL2CSV(CSVKitUtility):
                  "This option can be specified multiple times. For example: stream_results True")
         self.argparser.add_argument(
             metavar='FILE', nargs='?', dest='input_path',
-            help='The file to use as SQL query. If FILE and --query are omitted, the query is piped data via STDIN.')
+            help=f'SQL query file to read. {COMPRESSED_INPUT_HELP}\n'
+                 'Without FILE or --query, read uncompressed SQL from stdin.')
         self.argparser.add_argument(
             '--query',
             help="The SQL query to execute. Overrides FILE and STDIN.")

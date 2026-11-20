@@ -1,4 +1,5 @@
-.\" Man page generated from reStructuredText.
+.\" Man page generated from reStructuredText
+.\" by the Docutils 0.23 manpage writer.
 .
 .
 .nr rst2man-indent-level 0
@@ -27,7 +28,7 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-.TH "CSVSTAT" "1" "Aug 16, 2024" "2.2.0" "csvkit"
+.TH "CSVSTAT" "1" "Nov 20, 2026" "2.2.0" "csvkit"
 .SH NAME
 csvstat \- csvstat Documentation
 .SH DESCRIPTION
@@ -36,28 +37,40 @@ Prints descriptive statistics for all columns in a CSV file. Will intelligently 
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
-usage: csvstat [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3}] [\-b]
+.EX
+usage: csvstat [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3,4,5}] [\-b]
                [\-p ESCAPECHAR] [\-z FIELD_SIZE_LIMIT] [\-e ENCODING] [\-L LOCALE]
                [\-S] [\-\-blanks] [\-\-null\-value NULL_VALUES [NULL_VALUES ...]]
                [\-\-date\-format DATE_FORMAT] [\-\-datetime\-format DATETIME_FORMAT]
-               [\-H] [\-K SKIP_LINES] [\-v] [\-l] [\-\-zero] [\-V] [\-\-csv] [\-\-json]
-               [\-i INDENT] [\-n] [\-c COLUMNS] [\-\-type] [\-\-nulls] [\-\-non\-nulls]
-               [\-\-unique] [\-\-min] [\-\-max] [\-\-sum] [\-\-mean] [\-\-median]
-               [\-\-stdev] [\-\-len] [\-\-max\-precision] [\-\-freq]
-               [\-\-freq\-count FREQ_COUNT] [\-\-count]
+               [\-\-no\-leading\-zeroes] [\-H] [\-K SKIP_LINES] [\-v]
+               [\-\-output\-compression {gzip,bz2,zst}]
+               [\-\-compression\-level {1,2,3,4,5,6,7,8,9}] [\-l] [\-\-add\-bom]
+               [\-\-zero] [\-V] [\-\-csv] [\-\-json] [\-i INDENT] [\-n] [\-c COLUMNS]
+               [\-\-type] [\-\-nulls] [\-\-non\-nulls] [\-\-unique] [\-\-min] [\-\-max]
+               [\-\-sum] [\-\-mean] [\-\-median] [\-\-stdev] [\-\-len] [\-\-max\-precision]
+               [\-\-freq] [\-\-freq\-count FREQ_COUNT] [\-\-count]
                [\-\-decimal\-format DECIMAL_FORMAT] [\-G] [\-y SNIFF_LIMIT] [\-I]
                [FILE]
 
 Print descriptive statistics for each column in a CSV file.
 
 positional arguments:
-  FILE                  The CSV file to operate on. If omitted, will accept
-                        input as piped data via STDIN.
+  FILE                  CSV file to read. Named files are decompressed by
+                        extension: gzip (.gz), bzip2 (.bz2), xz (.xz), or
+                        Zstandard (.zst, requires the optional zstandard
+                        package).
+                        Omit FILE or use \(dq\-\(dq to read uncompressed CSV from
+                        stdin. For .zst input, use \-\-snifflimit 0 and specify
+                        \-\-tabs or \-\-delimiter if needed.
 
 optional arguments:
   \-h, \-\-help            show this help message and exit
+  \-\-output\-compression {gzip,bz2,zst}
+                        Compress standard output using gzip, bzip2 or
+                        Zstandard (requires the zstandard package).
+  \-\-compression\-level {1,2,3,4,5,6,7,8,9}
+                        Set the compression level (default: 9 for gzip/bz2, 3
+                        for zst). Requires \-\-output\-compression.
   \-\-csv                 Output results as a CSV table, rather than plain text.
   \-\-json                Output results as JSON text, rather than plain text.
   \-i INDENT, \-\-indent INDENT
@@ -97,23 +110,20 @@ optional arguments:
   \-I, \-\-no\-inference    Disable type inference (and \-\-locale, \-\-date\-format,
                         \-\-datetime\-format, \-\-no\-leading\-zeroes) when parsing
                         the input.
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
-See also: \fI\%Arguments common to all tools\fP\&.
+See also: Arguments common to all tools \%<>\&.
 .SH EXAMPLES
 .sp
 Basic use:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 csvstat examples/realdata/FY09_EDU_Recipients_by_State.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -121,8 +131,7 @@ When an statistic name is passed, only that stat will be printed:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 $ csvstat \-\-min examples/realdata/FY09_EDU_Recipients_by_State.csv
   1. State Name: None
   2. State Abbreviate: None
@@ -134,8 +143,7 @@ $ csvstat \-\-min examples/realdata/FY09_EDU_Recipients_by_State.csv
   8. Post\-Vietnam Era Veteran\(aqs Educational Assistance Program: 1
   9. TOTAL: 768
  10. j: None
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -143,17 +151,14 @@ If a single stat \fIand\fP a single column are requested, only a value will be r
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 $ csvstat \-c 4 \-\-mean examples/realdata/FY09_EDU_Recipients_by_State.csv
 6,263.904
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
-.SH AUTHOR
+.SH Author
 Christopher Groskopf and contributors
-.SH COPYRIGHT
+.SH Copyright
 2016, Christopher Groskopf and James McKinney
-.\" Generated by docutils manpage writer.
-.
+.\" End of generated man page.
