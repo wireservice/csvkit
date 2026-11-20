@@ -9,22 +9,34 @@ Convert a CSV file to a custom output format.:
 
 .. code-block:: none
 
-   usage: csvformat [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
-                    [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING]
-                    [-L LOCALE] [-S] [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V]
-                    [-E] [-D OUT_DELIMITER] [-T] [-A] [-Q OUT_QUOTECHAR]
-                    [-U {0,1,2,3}] [-B] [-P OUT_ESCAPECHAR]
-                    [-M OUT_LINETERMINATOR]
+   usage: csvformat [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3,4,5}]
+                    [-b] [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING]
+                    [-L LOCALE] [-S] [-H] [-K SKIP_LINES] [-v]
+                    [--output-compression {gzip,bz2,zst}]
+                    [--compression-level {1,2,3,4,5,6,7,8,9}] [-l] [--add-bom]
+                    [--zero] [-V] [-E] [-D OUT_DELIMITER] [-T] [-A]
+                    [-Q OUT_QUOTECHAR] [-U {0,1,2,3,4,5}] [-B]
+                    [-P OUT_ESCAPECHAR] [-M OUT_LINETERMINATOR]
                     [FILE]
 
    Convert a CSV file to a custom output format.
 
    positional arguments:
-     FILE                  The CSV file to operate on. If omitted, will accept
-                           input as piped data via STDIN.
+     FILE                  CSV file to read. Named files are decompressed by
+                           extension: gzip (.gz), bzip2 (.bz2), xz (.xz), or
+                           Zstandard (.zst, requires the optional zstandard
+                           package).
+                           Omit FILE or use "-" to read uncompressed CSV from
+                           stdin.
 
    optional arguments:
      -h, --help            show this help message and exit
+     --output-compression {gzip,bz2,zst}
+                           Compress standard output using gzip, bzip2 or
+                           Zstandard (requires the zstandard package).
+     --compression-level {1,2,3,4,5,6,7,8,9}
+                           Set the compression level (default: 9 for gzip/bz2, 3
+                           for zst). Requires --output-compression.
      -E, --skip-header     Do not output a header row.
      -D OUT_DELIMITER, --out-delimiter OUT_DELIMITER
                            Delimiting character of the output file.

@@ -9,20 +9,32 @@ Filter tabular data to only those rows where certain columns contain a given val
 
 .. code-block:: none
 
-   usage: csvgrep [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
+   usage: csvgrep [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3,4,5}] [-b]
                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-S] [-H]
-                  [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-n] [-c COLUMNS]
-                  [-m PATTERN] [-r REGEX] [-f MATCHFILE] [-i] [-a]
+                  [-K SKIP_LINES] [-v] [--output-compression {gzip,bz2,zst}]
+                  [--compression-level {1,2,3,4,5,6,7,8,9}] [-l] [--add-bom]
+                  [--zero] [-V] [-n] [-c COLUMNS] [-m PATTERN] [-r REGEX]
+                  [-f MATCHFILE] [-i] [-a]
                   [FILE]
 
    Search CSV files. Like the Unix "grep" command, but for tabular data.
 
    positional arguments:
-     FILE                  The CSV file to operate on. If omitted, will accept
-                           input as piped data via STDIN.
+     FILE                  CSV file to read. Named files are decompressed by
+                           extension: gzip (.gz), bzip2 (.bz2), xz (.xz), or
+                           Zstandard (.zst, requires the optional zstandard
+                           package).
+                           Omit FILE or use "-" to read uncompressed CSV from
+                           stdin.
 
    optional arguments:
      -h, --help            show this help message and exit
+     --output-compression {gzip,bz2,zst}
+                           Compress standard output using gzip, bzip2 or
+                           Zstandard (requires the zstandard package).
+     --compression-level {1,2,3,4,5,6,7,8,9}
+                           Set the compression level (default: 9 for gzip/bz2, 3
+                           for zst). Requires --output-compression.
      -n, --names           Display column names and indices from the input CSV
                            and exit.
      -c COLUMNS, --columns COLUMNS
@@ -32,10 +44,9 @@ Filter tabular data to only those rows where certain columns contain a given val
                            A string to search for.
      -r REGEX, --regex REGEX
                            A regular expression to match.
-     -f MATCHFILE, --file MATCHFILE
-                           A path to a file. For each row, if any line in the
-                           file (stripped of line separators) is an exact match
-                           of the cell value, the row matches.
+     -f, --file MATCHFILE  A plain-text match file. A row matches if its cell
+                           value exactly matches any line in the file (excluding
+                           the line separator).
      -i, --invert-match    Select non-matching rows, instead of matching rows.
      -a, --any-match       Select rows in which any column matches, instead of
                            all columns.

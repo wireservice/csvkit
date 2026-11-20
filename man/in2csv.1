@@ -1,4 +1,5 @@
-.\" Man page generated from reStructuredText.
+.\" Man page generated from reStructuredText
+.\" by the Docutils 0.23 manpage writer.
 .
 .
 .nr rst2man-indent-level 0
@@ -27,7 +28,7 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-.TH "IN2CSV" "1" "Aug 16, 2024" "2.2.0" "csvkit"
+.TH "IN2CSV" "1" "Nov 20, 2026" "2.2.0" "csvkit"
 .SH NAME
 in2csv \- in2csv Documentation
 .SH DESCRIPTION
@@ -38,14 +39,12 @@ Converting fixed width requires that you provide a schema file with the \(dq\-s\
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 column,start,length
 name,0,30
 birthday,30,10
 age,40,3
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -53,33 +52,47 @@ The header line is required though the columns may be in any order:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
-usage: in2csv [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3}] [\-b]
+.EX
+usage: in2csv [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3,4,5}] [\-b]
               [\-p ESCAPECHAR] [\-z FIELD_SIZE_LIMIT] [\-e ENCODING] [\-L LOCALE]
               [\-S] [\-\-blanks] [\-\-null\-value NULL_VALUES [NULL_VALUES ...]]
               [\-\-date\-format DATE_FORMAT] [\-\-datetime\-format DATETIME_FORMAT]
-              [\-H] [\-K SKIP_LINES] [\-v] [\-l] [\-\-zero] [\-V]
-              [\-f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}] [\-s SCHEMA]
-              [\-k KEY] [\-n] [\-\-sheet SHEET] [\-\-write\-sheets WRITE_SHEETS]
-              [\-\-use\-sheet\-names] [\-\-reset\-dimensions]
-              [\-\-encoding\-xls ENCODING_XLS] [\-y SNIFF_LIMIT] [\-I]
+              [\-\-no\-leading\-zeroes] [\-H] [\-K SKIP_LINES] [\-v]
+              [\-\-output\-compression {gzip,bz2,zst}]
+              [\-\-compression\-level {1,2,3,4,5,6,7,8,9}] [\-l] [\-\-add\-bom]
+              [\-\-zero] [\-V] [\-f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}]
+              [\-s SCHEMA] [\-k KEY] [\-n] [\-\-sheet SHEET]
+              [\-\-write\-sheets WRITE_SHEETS] [\-\-use\-sheet\-names]
+              [\-\-reset\-dimensions] [\-\-encoding\-xls ENCODING_XLS]
+              [\-y SNIFF_LIMIT] [\-I]
               [FILE]
 
 Convert common, but less awesome, tabular data formats to CSV.
 
 positional arguments:
-  FILE                  The CSV file to operate on. If omitted, will accept
-                        input as piped data via STDIN.
+  FILE                  File to convert. For text formats: Named files are
+                        decompressed by extension: gzip (.gz), bzip2 (.bz2),
+                        xz (.xz), or Zstandard (.zst, requires the optional
+                        zstandard package). Specify the underlying format,
+                        e.g. \-f csv data.csv.gz. For .csv.zst, also use
+                        \-\-snifflimit 0. External compression is not supported
+                        for Excel or DBF.
+                        Omit FILE or use \(dq\-\(dq to read from stdin without
+                        decompression.
 
 optional arguments:
   \-h, \-\-help            show this help message and exit
+  \-\-output\-compression {gzip,bz2,zst}
+                        Compress standard output using gzip, bzip2 or
+                        Zstandard (requires the zstandard package).
+  \-\-compression\-level {1,2,3,4,5,6,7,8,9}
+                        Set the compression level (default: 9 for gzip/bz2, 3
+                        for zst). Requires \-\-output\-compression.
   \-f {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}, \-\-format {csv,dbf,fixed,geojson,json,ndjson,xls,xlsx}
                         The format of the input file. If not specified will be
                         inferred from the file type.
-  \-s SCHEMA, \-\-schema SCHEMA
-                        Specify a CSV\-formatted schema file for converting
-                        fixed\-width files. See web documentation.
+  \-s, \-\-schema SCHEMA   CSV schema for fixed\-width input. Accepts the same
+                        compressed text files as FILE.
   \-k KEY, \-\-key KEY     Specify a top\-level key to look within for a list of
                         objects to be converted when processing JSON.
   \-n, \-\-names           Display sheet names from the input Excel file.
@@ -101,31 +114,30 @@ optional arguments:
                         CSV input.
 
  Some command\-line flags only pertain to specific input formats.
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
-See also: \fI\%Arguments common to all tools\fP\&.
+See also: Arguments common to all tools \%<>\&.
 .sp
-\fBNOTE:\fP
+\fBNote:\fP
 .INDENT 0.0
 .INDENT 3.5
 The \(dqndjson\(dq format refers to \(dqnewline delimited JSON\(dq, as used by many streaming APIs.
 .UNINDENT
 .UNINDENT
 .sp
-\fBNOTE:\fP
+\fBNote:\fP
 .INDENT 0.0
 .INDENT 3.5
 If an XLS looks identical to an XLSX when viewed in Excel, they may not be identical as CSV. For example, XLSX has an integer type, but XLS doesn\(aqt. Numbers that look like integers from an XLS will have decimals in CSV, but those from an XLSX won\(aqt.
 .UNINDENT
 .UNINDENT
 .sp
-\fBNOTE:\fP
+\fBNote:\fP
 .INDENT 0.0
 .INDENT 3.5
-To convert from HTML, consider \fI\%messytables\fP\&.
+To convert from HTML, consider messytables \%<https://\:messytables\:.readthedocs\:.io/>\&.
 .UNINDENT
 .UNINDENT
 .SH EXAMPLES
@@ -134,20 +146,18 @@ Convert the 2000 census geo headers file from fixed\-width to CSV and from latin
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 in2csv \-e iso\-8859\-1 \-f fixed \-s examples/realdata/census_2000/census2000_geo_schema.csv examples/realdata/census_2000/usgeo_excerpt.upl
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
-\fBNOTE:\fP
+\fBNote:\fP
 .INDENT 0.0
 .INDENT 3.5
 A library of fixed\-width schemas is maintained in the \fBffs\fP project:
 .sp
-\fI\%https://github.com/wireservice/ffs\fP
+\%<https://\:github\:.com/\:wireservice/\:ffs>
 .UNINDENT
 .UNINDENT
 .sp
@@ -155,11 +165,9 @@ Convert an Excel .xls file:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 in2csv examples/test.xls
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -167,11 +175,9 @@ Standardize the formatting of a CSV file (quoting, line endings, etc.):
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 in2csv examples/realdata/FY09_EDU_Recipients_by_State.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -179,11 +185,9 @@ Fetch csvkit\(aqs open issues from the GitHub API, convert the JSON response int
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 curl https://api.github.com/repos/wireservice/csvkit/issues?state=open | in2csv \-f json \-v
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -191,11 +195,9 @@ Convert a DBase DBF file to an equivalent CSV:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 in2csv examples/testdbf.dbf
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -203,11 +205,9 @@ This tool names unnamed headers. To avoid that behavior, run:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 in2csv \-\-no\-header\-row examples/test.xlsx | tail \-n +2
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .SH TROUBLESHOOTING
@@ -216,11 +216,9 @@ If an error like the following occurs when providing an input file in CSV or Exc
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 ValueError: Row 0 has 11 values, but Table only has 1 columns.
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -228,18 +226,15 @@ Then the input file might have initial rows before the header and data rows. You
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 in2csv \-\-skip\-lines 3 examples/test_skip_lines.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
-If an XLSX file yields too few rows or too few columns, then the application that created the file might have \fI\%incorrectly set the worksheet\(aqs dimensions\fP\&. Try again with the \fB\-\-reset\-dimensions\fP option.
-.SH AUTHOR
+If an XLSX file yields too few rows or too few columns, then the application that created the file might have incorrectly set the worksheet\(aqs dimensions \%<https://\:openpyxl\:.readthedocs\:.io/\:en/\:stable/\:optimized\:.html#\:worksheet-dimensions>\&. Try again with the \fB\-\-reset\-dimensions\fP option.
+.SH Author
 Christopher Groskopf and contributors
-.SH COPYRIGHT
+.SH Copyright
 2016, Christopher Groskopf and James McKinney
-.\" Generated by docutils manpage writer.
-.
+.\" End of generated man page.

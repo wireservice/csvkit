@@ -1,4 +1,5 @@
-.\" Man page generated from reStructuredText.
+.\" Man page generated from reStructuredText
+.\" by the Docutils 0.23 manpage writer.
 .
 .
 .nr rst2man-indent-level 0
@@ -27,7 +28,7 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-.TH "CSVLOOK" "1" "Aug 16, 2024" "2.2.0" "csvkit"
+.TH "CSVLOOK" "1" "Nov 20, 2026" "2.2.0" "csvkit"
 .SH NAME
 csvlook \- csvlook Documentation
 .SH DESCRIPTION
@@ -36,14 +37,15 @@ Renders a CSV to the command line in a Markdown\-compatible, fixed\-width format
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
-usage: csvlook [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3}] [\-b]
+.EX
+usage: csvlook [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3,4,5}] [\-b]
                [\-p ESCAPECHAR] [\-z FIELD_SIZE_LIMIT] [\-e ENCODING] [\-L LOCALE]
                [\-S] [\-\-blanks] [\-\-null\-value NULL_VALUES [NULL_VALUES ...]]
                [\-\-date\-format DATE_FORMAT] [\-\-datetime\-format DATETIME_FORMAT]
-               [\-H] [\-K SKIP_LINES] [\-v] [\-l] [\-\-zero] [\-V]
-               [\-\-max\-rows MAX_ROWS] [\-\-max\-columns MAX_COLUMNS]
+               [\-\-no\-leading\-zeroes] [\-H] [\-K SKIP_LINES] [\-v]
+               [\-\-output\-compression {gzip,bz2,zst}]
+               [\-\-compression\-level {1,2,3,4,5,6,7,8,9}] [\-l] [\-\-add\-bom]
+               [\-\-zero] [\-V] [\-\-max\-rows MAX_ROWS] [\-\-max\-columns MAX_COLUMNS]
                [\-\-max\-column\-width MAX_COLUMN_WIDTH]
                [\-\-max\-precision MAX_PRECISION] [\-\-no\-number\-ellipsis]
                [\-y SNIFF_LIMIT] [\-I]
@@ -52,11 +54,22 @@ usage: csvlook [\-h] [\-d DELIMITER] [\-t] [\-q QUOTECHAR] [\-u {0,1,2,3}] [\-b]
 Render a CSV file in the console as a Markdown\-compatible, fixed\-width table.
 
 positional arguments:
-  FILE                  The CSV file to operate on. If omitted, will accept
-                        input as piped data via STDIN.
+  FILE                  CSV file to read. Named files are decompressed by
+                        extension: gzip (.gz), bzip2 (.bz2), xz (.xz), or
+                        Zstandard (.zst, requires the optional zstandard
+                        package).
+                        Omit FILE or use \(dq\-\(dq to read uncompressed CSV from
+                        stdin. For .zst input, use \-\-snifflimit 0 and specify
+                        \-\-tabs or \-\-delimiter if needed.
 
 optional arguments:
   \-h, \-\-help            show this help message and exit
+  \-\-output\-compression {gzip,bz2,zst}
+                        Compress standard output using gzip, bzip2 or
+                        Zstandard (requires the zstandard package).
+  \-\-compression\-level {1,2,3,4,5,6,7,8,9}
+                        Set the compression level (default: 9 for gzip/bz2, 3
+                        for zst). Requires \-\-output\-compression.
   \-\-max\-rows MAX_ROWS   The maximum number of rows to display before
                         truncating the data.
   \-\-max\-columns MAX_COLUMNS
@@ -76,18 +89,17 @@ optional arguments:
   \-I, \-\-no\-inference    Disable type inference (and \-\-locale, \-\-date\-format,
                         \-\-datetime\-format, \-\-no\-leading\-zeroes) when parsing
                         the input.
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
-If a table is too wide to display properly try piping the output to \fBless \-S\fP or truncating it using \fI\%csvcut\fP\&.
+If a table is too wide to display properly try piping the output to \fBless \-S\fP or truncating it using csvcut \%<>\&.
 .sp
 If the table is too long, try filtering it down with grep or piping the output to \fBless\fP\&.
 .sp
-See also: \fI\%Arguments common to all tools\fP\&.
+See also: Arguments common to all tools \%<>\&.
 .sp
-\fBNOTE:\fP
+\fBNote:\fP
 .INDENT 0.0
 .INDENT 3.5
 The fractional part of a decimal numberal is always truncated. To control this truncation, use \fB\-\-no\-inference\fP along with \fB\-\-max\-column\-width\fP\&.
@@ -99,11 +111,9 @@ Basic use:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 csvlook examples/testfixed_converted.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -111,25 +121,21 @@ This tool is especially useful as a final operation when piping through other to
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 csvcut \-c 9,1 examples/realdata/FY09_EDU_Recipients_by_State.csv | csvlook
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
-If a data row contains more cells than the header row, csvlook will error. Use \fI\%csvclean\fP to remove such rows.
+If a data row contains more cells than the header row, csvlook will error. Use csvclean \%<> to remove such rows.
 .sp
 To ignore the extra cells, instead:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 csvcut \-C \(dq\(dq examples/bad.csv | csvlook
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -137,18 +143,15 @@ If these rows are at the top of the file (for example, copyright notices), you c
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 csvlook \-\-skip\-lines 1 examples/bad.csv
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
 This error can also occur if csvlook incorrectly deduces (\(dqsniffs\(dq) the CSV format. To disable CSV sniffing, set \fB\-\-snifflimit 0\fP and then, if necessary, set the \fB\-\-delimiter\fP and \fB\-\-quotechar\fP options yourself. Or, set \fB\-\-snifflimit \-1\fP to use the entire file as the sample, instead of the first 1024 bytes.
-.SH AUTHOR
+.SH Author
 Christopher Groskopf and contributors
-.SH COPYRIGHT
+.SH Copyright
 2016, Christopher Groskopf and James McKinney
-.\" Generated by docutils manpage writer.
-.
+.\" End of generated man page.

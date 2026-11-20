@@ -4,7 +4,7 @@ import sys
 
 import agate
 
-from csvkit.cli import CSVKitUtility, isatty, match_column_identifier
+from csvkit.cli import CSV_INPUTS_HELP, ZST_SNIFF_HELP, CSVKitUtility, isatty, match_column_identifier
 
 
 class CSVJoin(CSVKitUtility):
@@ -16,7 +16,7 @@ class CSVJoin(CSVKitUtility):
     def add_arguments(self):
         self.argparser.add_argument(
             metavar='FILE', nargs='*', dest='input_paths', default=['-'],
-            help='The CSV files to operate on. If only one is specified, it will be copied to STDOUT.')
+            help=f'CSV files to join. A single input is copied to stdout. {CSV_INPUTS_HELP} {ZST_SNIFF_HELP}')
         self.argparser.add_argument(
             '-c', '--columns', dest='columns',
             help='The column name(s) on which to join. Should be either one name (or index) or a comma-separated list '

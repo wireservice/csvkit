@@ -6,10 +6,11 @@ from collections import OrderedDict
 
 import agate
 
-from csvkit.cli import CSVKitUtility, default_str_decimal, match_column_identifier
+from csvkit.cli import CSV_INPUT_HELP, ZST_SNIFF_HELP, CSVKitUtility, default_str_decimal, match_column_identifier
 
 
 class CSVJSON(CSVKitUtility):
+    input_help = f'{CSV_INPUT_HELP} {ZST_SNIFF_HELP}'
     description = 'Convert a CSV file into JSON (or GeoJSON).'
 
     def add_arguments(self):

@@ -29,8 +29,8 @@ class CSVGrep(CSVKitUtility):
             help='A regular expression to match.')
         self.argparser.add_argument(
             '-f', '--file', dest='matchfile', type=FileType('r'), action='store',
-            help='A path to a file. For each row, if any line in the file (stripped of line separators) is an exact '
-                 'match of the cell value, the row matches.')
+            help='A plain-text match file. A row matches if its cell value exactly matches any line in the file '
+                 '(excluding the line separator).')
         self.argparser.add_argument(
             '-i', '--invert-match', dest='inverse', action='store_true',
             help='Select non-matching rows, instead of matching rows.')

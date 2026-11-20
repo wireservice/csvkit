@@ -3,10 +3,11 @@
 import agate
 from agate import config
 
-from csvkit.cli import CSVKitUtility
+from csvkit.cli import CSV_INPUT_HELP, ZST_SNIFF_HELP, CSVKitUtility
 
 
 class CSVLook(CSVKitUtility):
+    input_help = f'{CSV_INPUT_HELP} {ZST_SNIFF_HELP}'
     description = 'Render a CSV file in the console as a Markdown-compatible, fixed-width table.'
 
     def add_arguments(self):

@@ -9,22 +9,37 @@ Merges two or more CSV tables together using a method analogous to SQL JOIN oper
 
 .. code-block:: none
 
-   usage: csvjoin [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3}] [-b]
+   usage: csvjoin [-h] [-d DELIMITER] [-t] [-q QUOTECHAR] [-u {0,1,2,3,4,5}] [-b]
                   [-p ESCAPECHAR] [-z FIELD_SIZE_LIMIT] [-e ENCODING] [-L LOCALE]
                   [-S] [--blanks] [--null-value NULL_VALUES [NULL_VALUES ...]]
                   [--date-format DATE_FORMAT] [--datetime-format DATETIME_FORMAT]
-                  [-H] [-K SKIP_LINES] [-v] [-l] [--zero] [-V] [-c COLUMNS]
-                  [--outer] [--left] [--right] [-y SNIFF_LIMIT] [-I]
-                  [FILE [FILE ...]]
+                  [--no-leading-zeroes] [-H] [-K SKIP_LINES] [-v]
+                  [--output-compression {gzip,bz2,zst}]
+                  [--compression-level {1,2,3,4,5,6,7,8,9}] [-l] [--add-bom]
+                  [--zero] [-V] [-c COLUMNS] [--outer] [--left] [--right]
+                  [-y SNIFF_LIMIT] [-I]
+                  [FILE ...]
 
    Execute a SQL-like join to merge CSV files on a specified column or columns.
 
    positional arguments:
-     FILE                  The CSV files to operate on. If only one is specified,
-                           it will be copied to STDOUT.
+     FILE                  CSV files to join. A single input is copied to stdout.
+                           Input files can use different compression formats.
+                           Named files are decompressed by extension: gzip (.gz),
+                           bzip2 (.bz2), xz (.xz), or Zstandard (.zst, requires
+                           the optional zstandard package).
+                           Omit FILE or use "-" to read uncompressed CSV from
+                           stdin. For .zst input, use --snifflimit 0 and specify
+                           --tabs or --delimiter if needed.
 
    optional arguments:
      -h, --help            show this help message and exit
+     --output-compression {gzip,bz2,zst}
+                           Compress standard output using gzip, bzip2 or
+                           Zstandard (requires the zstandard package).
+     --compression-level {1,2,3,4,5,6,7,8,9}
+                           Set the compression level (default: 9 for gzip/bz2, 3
+                           for zst). Requires --output-compression.
      -c COLUMNS, --columns COLUMNS
                            The column name(s) on which to join. Should be either
                            one name (or index) or a comma-separated list with one

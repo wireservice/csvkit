@@ -8,7 +8,7 @@ from decimal import Decimal
 
 import agate
 
-from csvkit.cli import CSVKitUtility, default_float_decimal, parse_column_identifiers
+from csvkit.cli import CSV_INPUT_HELP, ZST_SNIFF_HELP, CSVKitUtility, default_float_decimal, parse_column_identifiers
 
 locale.setlocale(locale.LC_ALL, '')
 OPERATIONS = OrderedDict([
@@ -68,6 +68,7 @@ OPERATIONS = OrderedDict([
 
 
 class CSVStat(CSVKitUtility):
+    input_help = f'{CSV_INPUT_HELP} {ZST_SNIFF_HELP}'
     description = 'Print descriptive statistics for each column in a CSV file.'
 
     def add_arguments(self):

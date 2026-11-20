@@ -13,6 +13,7 @@ import re
 import sys
 import warnings
 from codecs import BOM_UTF8
+from contextlib import contextmanager
 from glob import glob
 from os.path import splitext
 
@@ -27,6 +28,23 @@ except ImportError:
     zstandard = None
 
 QUOTING_CHOICES = sorted(getattr(csv, name) for name in dir(csv) if name.startswith('QUOTE_'))
+
+COMPRESSED_INPUT_HELP = (
+    'Named files are decompressed by extension: gzip (.gz), bzip2 (.bz2), xz (.xz), '
+    'or Zstandard (.zst, requires the optional zstandard package).'
+)
+CSV_STDIN_HELP = 'Omit FILE or use "-" to read uncompressed CSV from stdin.'
+CSV_INPUT_HELP = f'CSV file to read. {COMPRESSED_INPUT_HELP}\n{CSV_STDIN_HELP}'
+CSV_INPUTS_HELP = f'Input files can use different compression formats. {COMPRESSED_INPUT_HELP}\n{CSV_STDIN_HELP}'
+ZST_SNIFF_HELP = 'For .zst input, use --snifflimit 0 and specify --tabs or --delimiter if needed.'
+
+
+class HelpFormatter(argparse.HelpFormatter):
+    def _split_lines(self, text, width):
+        lines = []
+        for line in text.split('\n'):
+            lines.extend(super()._split_lines(line, width))
+        return lines
 
 
 class LazyFile:
@@ -73,6 +91,7 @@ class CSVKitUtility:
     description = ''
     epilog = ''
     override_flags = ''
+    input_help = CSV_INPUT_HELP
 
     def __init__(self, args=None, output_file=None, error_file=None):
         """
@@ -86,6 +105,10 @@ class CSVKitUtility:
         self._init_common_parser()
         self.add_arguments()
         self.args = self.argparser.parse_args(args)
+        if getattr(self.args, 'compression_level', None) is not None and not self.args.output_compression:
+            self.argparser.error('--compression-level requires --output-compression.')
+        if getattr(self.args, 'output_compression', None) == 'zst' and zstandard is None:
+            self.argparser.error('--output-compression zst requires the optional zstandard package.')
 
         # Output file is only set during testing.
         if output_file is None:
@@ -135,11 +158,11 @@ class CSVKitUtility:
         if 'f' not in self.override_flags:
             self.input_file = self._open_input_file(self.args.input_path)
 
-        if getattr(self.args, 'add_bom', False):
-            self.output_file.buffer.write(BOM_UTF8)
-
         try:
-            with warnings.catch_warnings():
+            with self._output_stream(), warnings.catch_warnings():
+                if getattr(self.args, 'add_bom', False):
+                    self.output_file.buffer.write(BOM_UTF8)
+
                 if getattr(self.args, 'no_header_row', None):
                     warnings.filterwarnings(action='ignore', message='Column names not specified', module='agate')
 
@@ -147,6 +170,28 @@ class CSVKitUtility:
         finally:
             if 'f' not in self.override_flags:
                 self.input_file.close()
+
+    @contextmanager
+    def _output_stream(self):
+        codec = getattr(self.args, 'output_compression', None)
+        if codec is None:
+            yield
+            return
+
+        output = self.output_file
+        output.flush()
+        if codec == 'zst':
+            opener = zstandard.open
+            options = {'cctx': zstandard.ZstdCompressor(level=self.args.compression_level or 3), 'closefd': False}
+        else:
+            opener = gzip.open if codec == 'gzip' else bz2.open
+            options = {'compresslevel': self.args.compression_level or 9}
+        with opener(output.buffer, 'wt', encoding=output.encoding, errors=output.errors, **options) as compressed:
+            self.output_file = compressed
+            try:
+                yield
+            finally:
+                self.output_file = output
 
     def main(self):
         """
@@ -164,14 +209,15 @@ class CSVKitUtility:
         file.
         """
         self.argparser = argparse.ArgumentParser(
-            prog=type(self).__name__.lower(), description=self.description, epilog=self.epilog
+            prog=type(self).__name__.lower(), description=self.description, epilog=self.epilog,
+            formatter_class=HelpFormatter,
         )
 
         # Input
         if 'f' not in self.override_flags:
             self.argparser.add_argument(
                 metavar='FILE', nargs='?', dest='input_path',
-                help='The CSV file to operate on. If omitted, will accept input as piped data via STDIN.')
+                help=self.input_help)
         if 'd' not in self.override_flags:
             self.argparser.add_argument(
                 '-d', '--delimiter', dest='delimiter',
@@ -245,6 +291,13 @@ class CSVKitUtility:
                 help='Print detailed tracebacks when errors occur.')
 
         # Output
+        if 'output-compression' not in self.override_flags:
+            self.argparser.add_argument(
+                '--output-compression', choices=('gzip', 'bz2', 'zst'),
+                help='Compress standard output using gzip, bzip2 or Zstandard (requires the zstandard package).')
+            self.argparser.add_argument(
+                '--compression-level', type=int, choices=range(1, 10),
+                help='Set the compression level (default: 9 for gzip/bz2, 3 for zst). Requires --output-compression.')
         if 'l' not in self.override_flags:
             self.argparser.add_argument(
                 '-l', '--linenumbers', dest='line_numbers', action='store_true',
