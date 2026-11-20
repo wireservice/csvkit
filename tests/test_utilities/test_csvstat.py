@@ -45,6 +45,22 @@ class TestCSVStat(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         self.assertNotIn('1. "text"', output)
         self.assertIn('2. "date"', output)
 
+    def test_zero_based_columns(self):
+        args = ['--zero', '-c', '2,0', 'examples/dummy.csv']
+        output = self.get_output(args)
+        self.assertIn('  2. "c"', output)
+        self.assertIn('  0. "a"', output)
+
+        self.assertLines(['--unique', *args], ['  2. c: 1', '  0. a: 1'])
+
+    def test_zero_based_column_ids(self):
+        args = ['--zero', '-c', '2,0', 'examples/dummy.csv']
+        rows = agate.csv.DictReader(self.get_output_as_io(['--csv', *args]))
+        self.assertEqual([(row['column_id'], row['column_name']) for row in rows], [('2', 'c'), ('0', 'a')])
+
+        rows = json.loads(self.get_output(['--json', *args]))
+        self.assertEqual([(row['column_id'], row['column_name']) for row in rows], [(2, 'c'), (0, 'a')])
+
     def test_linenumbers(self):
         output = self.get_output(['-c', '2', '--linenumbers', 'examples/dummy.csv'])
         self.assertNotIn('1. "a"', output)
