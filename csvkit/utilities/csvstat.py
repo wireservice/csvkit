@@ -258,7 +258,7 @@ class CSVStat(CSVKitUtility):
             stat = '{ %s }' % stat
 
         if label:
-            self.output_file.write('%3i. %s: %s\n' % (column_id + 1, column_name, stat))
+            self.output_file.write('%3i. %s: %s\n' % (column_id + self.get_column_offset(), column_name, stat))
         else:
             self.output_file.write(f'{stat}\n')
 
@@ -282,7 +282,7 @@ class CSVStat(CSVKitUtility):
             column = table.columns[column_id]
             column_stats = stats[column_id]
 
-            self.output_file.write('%3i. "%s"\n\n' % (column_id + 1, column_name))
+            self.output_file.write('%3i. "%s"\n\n' % (column_id + self.get_column_offset(), column_name))
 
             for op_name, op_data in OPERATIONS.items():
                 if column_stats[op_name] is None:
@@ -355,7 +355,7 @@ class CSVStat(CSVKitUtility):
             column_name = table.column_names[column_id]
             column_stats = stats[column_id]
 
-            output_row = {'column_id': column_id + 1, 'column_name': column_name}
+            output_row = {'column_id': column_id + self.get_column_offset(), 'column_name': column_name}
             for op_name, _op_data in OPERATIONS.items():
                 if column_stats[op_name] is not None:
                     output_row[op_name] = column_stats[op_name]
