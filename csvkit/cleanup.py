@@ -126,7 +126,8 @@ class RowChecker:
 
                                 # Remove the errors that are now fixed.
                                 if self.length_mismatch:
-                                    for fixed in joinable_row_errors:
+                                    # The current row's error has not been recorded yet.
+                                    for fixed in joinable_row_errors[:-1]:
                                         self.errors.remove(fixed)
 
                                 joinable_row_errors = []
