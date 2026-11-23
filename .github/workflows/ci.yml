@@ -18,7 +18,6 @@ jobs:
       - run: pip install --ignore-installed .[test]
       - env:
           LANG: en_US.UTF-8
-          PYTHONUTF8: 1
         run: pytest --cov csvkit
       # csvpy cannot accept input as piped data via STDIN.
       - name: Read from stdin

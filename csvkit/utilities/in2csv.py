@@ -202,7 +202,8 @@ class In2CSV(CSVKitUtility):
                     filename = '{}_{}.csv'.format(base, sheet_name)
                 else:
                     filename = '%s_%d.csv' % (base, i)
-                with open(filename, 'w') as f:
+                encoding = 'utf-8-sig' if self.args.add_bom else 'utf-8'
+                with open(filename, 'w', encoding=encoding, newline='') as f:
                     table.to_csv(f, **self.writer_kwargs)
 
         self.input_file.close()

@@ -1,6 +1,9 @@
 Unreleased
 ----------
 
+-  fix: When standard output or standard error is redirected or piped, csvkit writes UTF-8 (unless :code:`PYTHONIOENCODING` sets another encoding) and doesn't translate line endings. Previously, on Windows, it wrote the locale encoding (e.g. cp1252), so csvkit couldn't read its own output, :code:`--add-bom` put a UTF-8 BOM before non-UTF-8 text, characters outside the locale encoding raised an error, and line breaks in values were written as :code:`\r\n`.
+-  fix: :doc:`/scripts/in2csv` :code:`--write-sheets` writes UTF-8 files (with a BOM, if :code:`--add-bom` is set) and doesn't translate line endings.
+-  fix: :doc:`/scripts/csvgrep` :code:`-f/--file` and :doc:`/scripts/csvsql` :code:`--query` files are read with the input encoding (:code:`--encoding`), instead of the locale encoding.
 -  fix: :doc:`/scripts/csvgrep` treats an empty :code:`--regex` or :code:`--match` pattern as matching every value. Previously, with an empty pattern, :code:`--any-match` matched no rows, and :code:`--any-match --invert-match` matched every row.
 -  feat: :doc:`/scripts/csvcut` adds an :code:`--ignore-unknown-columns` option to skip identifiers in :code:`-c/--columns` that do not match a column in the input.
 -  feat: :doc:`/scripts/csvclean` adds a :code:`--remove-empty-columns` option to remove empty columns from standard output.

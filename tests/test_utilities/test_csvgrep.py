@@ -1,4 +1,6 @@
+import os
 import sys
+import tempfile
 from unittest.mock import patch
 
 from csvkit.utilities.csvgrep import CSVGrep, launch_new_instance
@@ -97,6 +99,24 @@ class TestCSVGrep(CSVKitTestCase, ColumnsTests, EmptyFileTests, NamesTests):
         self.assertRows(['-c', 'a', '-f', 'examples/test_file_match.txt', 'examples/test_file_match.csv'], [
             ['a', 'b'],
             ['value ', '2'],
+        ])
+
+    def match_file(self, content):
+        with tempfile.NamedTemporaryFile('wb', suffix='.txt', delete=False) as f:
+            f.write(content)
+        self.addCleanup(os.remove, f.name)
+        return f.name
+
+    def test_file_match_utf8(self):
+        self.assertRows(['-c', '3', '-f', self.match_file('ʤ\n'.encode()), 'examples/test_utf8.csv'], [
+            ['foo', 'bar', 'baz'],
+            ['4', '5', 'ʤ'],
+        ])
+
+    def test_file_match_encoding(self):
+        self.assertRows(['-c', 'c', '-e', 'latin1', '-f', self.match_file(b'\xa9\n'), 'examples/test_latin1.csv'], [
+            ['a', 'b', 'c'],
+            ['4', '5', '©'],
         ])
 
     def test_string_match(self):
