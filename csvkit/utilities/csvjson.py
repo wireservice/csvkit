@@ -3,10 +3,11 @@
 import json
 import sys
 from collections import OrderedDict
+from itertools import chain
 
 import agate
 
-from csvkit.cli import CSVKitUtility, default_str_decimal, match_column_identifier
+from csvkit.cli import CSVKitUtility, default_str_decimal, make_default_headers, match_column_identifier
 
 
 class CSVJSON(CSVKitUtility):
@@ -139,9 +140,15 @@ class CSVJSON(CSVKitUtility):
         else:
             self.dump_json(geojson_generator.generate_feature_collection(table))
 
-    def streaming_output_ndjson(self):
+    def streaming_rows_and_column_names(self):
         rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
-        column_names = next(rows)
+        first_row = next(rows)
+        if self.args.no_header_row:
+            return chain([first_row], rows), make_default_headers(len(first_row))
+        return rows, first_row
+
+    def streaming_output_ndjson(self):
+        rows, column_names = self.streaming_rows_and_column_names()
 
         for row in rows:
             data = OrderedDict()
@@ -153,8 +160,7 @@ class CSVJSON(CSVKitUtility):
             self.dump_json(data, newline=True)
 
     def streaming_output_ndgeojson(self):
-        rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
-        column_names = next(rows)
+        rows, column_names = self.streaming_rows_and_column_names()
         geojson_generator = self.GeoJsonGenerator(self.args, column_names)
 
         for row in rows:

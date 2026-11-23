@@ -4,7 +4,7 @@ import sys
 from unittest.mock import patch
 
 from csvkit.utilities.csvjson import CSVJSON, launch_new_instance
-from tests.utils import CSVKitTestCase, EmptyFileTests
+from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 
 
 class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
@@ -60,6 +60,28 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
     def test_no_header_row(self):
         js = json.loads(self.get_output(['--no-header-row', 'examples/no_header_row.csv']))
         self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})
+
+    def test_ndjson_streaming_no_header_row(self):
+        args = ['--stream', '--no-inference', '--snifflimit', '0', '--no-header-row']
+        for content, expected in (
+            ('Alice,001\n', [{'a': 'Alice', 'b': '001'}]),
+            ('"Alice, Jr.",001\nBob,002\n', [{'a': 'Alice, Jr.', 'b': '001'}, {'a': 'Bob', 'b': '002'}]),
+        ):
+            with self.subTest(content=content), stdin_as_string(io.BytesIO(content.encode('utf-8'))):
+                output = self.get_output(args)
+                self.assertEqual([json.loads(line) for line in output.splitlines()], expected)
+
+    def test_ndgeojson_streaming_no_header_row(self):
+        args = ['--stream', '--no-inference', '--snifflimit', '0', '--no-header-row',
+                '--lat', 'b', '--lon', 'c']
+        with stdin_as_string(io.BytesIO(b'Alice,22,114\nBob,23,115\n')):
+            output = self.get_output(args)
+        self.assertEqual([json.loads(line) for line in output.splitlines()], [
+            {'type': 'Feature', 'properties': {'a': 'Alice'},
+             'geometry': {'type': 'Point', 'coordinates': [114.0, 22.0]}},
+            {'type': 'Feature', 'properties': {'a': 'Bob'},
+             'geometry': {'type': 'Point', 'coordinates': [115.0, 23.0]}},
+        ])
 
     def test_no_inference(self):
         js = json.loads(self.get_output(['--no-inference', 'examples/dummy.csv']))
