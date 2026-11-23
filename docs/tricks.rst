@@ -161,7 +161,9 @@ If you see another error, you may be able to find a solution on StackOverflow.
 Python standard output encoding errors
 --------------------------------------
 
-If, when running a command like :code:`csvlook dummy.csv | less` you get an error like:
+csvkit writes UTF-8 when standard output is redirected to a file or piped to another command. In a terminal, it writes the terminal's encoding.
+
+If, when running a command like :code:`csvlook dummy.csv` in a terminal, you get an error like:
 
 .. code-block:: none
 
@@ -171,4 +173,10 @@ The simplest option is to set the encoding that Python uses for standard streams
 
 .. code-block:: bash
 
-   env PYTHONIOENCODING=utf8 csvlook dummy.csv | less
+   env PYTHONIOENCODING=utf8 csvlook dummy.csv
+
+:code:`PYTHONIOENCODING` also sets the encoding of redirected or piped output, for example, to write a file in another encoding:
+
+.. code-block:: bash
+
+   env PYTHONIOENCODING=cp1252 csvcut dummy.csv > output.csv

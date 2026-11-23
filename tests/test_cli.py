@@ -1,6 +1,66 @@
+import io
+import os
+import tempfile
 import unittest
+from codecs import BOM_UTF8
+from unittest.mock import patch
 
-from csvkit.cli import ColumnIdentifierError, match_column_identifier, parse_column_identifiers
+from csvkit.cli import (ColumnIdentifierError, match_column_identifier, parse_column_identifiers,
+                        reconfigure_output_stream)
+from csvkit.utilities.csvclean import CSVClean
+from csvkit.utilities.csvcut import CSVCut
+
+
+def windows_stream():
+    # A redirected standard stream, as on Windows: the locale encoding, and "\n" written as "\r\n".
+    return io.TextIOWrapper(io.BytesIO(), encoding='cp1252', newline='\r\n', write_through=True)
+
+
+class TestOutputStream(unittest.TestCase):
+
+    def setUp(self):
+        patcher = patch.dict(os.environ)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        os.environ.pop('PYTHONIOENCODING', None)
+
+    def test_writes_utf8_without_translating_newlines(self):
+        stream = windows_stream()
+        reconfigure_output_stream(stream)
+        stream.write('a,"ʤ\nb"\n')
+        self.assertEqual(stream.buffer.getvalue(), 'a,"ʤ\nb"\n'.encode())
+
+    def test_keeps_pythonioencoding(self):
+        os.environ['PYTHONIOENCODING'] = 'cp1252'
+        stream = windows_stream()
+        reconfigure_output_stream(stream)
+        stream.write('é\n')
+        self.assertEqual(stream.buffer.getvalue(), b'\xe9\n')
+
+    def test_leaves_console_as_is(self):
+        stream = windows_stream()
+        with patch.object(stream, 'isatty', return_value=True):
+            reconfigure_output_stream(stream)
+        stream.write('é\n')
+        self.assertEqual(stream.buffer.getvalue(), b'\xe9\r\n')
+
+    def test_add_bom_writes_utf8(self):
+        with patch('sys.stdout', windows_stream()) as stdout:
+            CSVCut(['--add-bom', 'examples/test_utf8.csv']).run()
+        self.assertEqual(stdout.buffer.getvalue(), BOM_UTF8 + 'foo,bar,baz\n1,2,3\n4,5,ʤ\n'.encode())
+
+    def test_error_rows_write_utf8(self):
+        with tempfile.NamedTemporaryFile('w', encoding='utf-8', suffix='.csv', delete=False) as f:
+            f.write('a,b\n1,ʤ,extra\n')
+        self.addCleanup(os.remove, f.name)
+        with patch('sys.stdout', windows_stream()) as stdout, patch('sys.stderr', windows_stream()) as stderr:
+            with self.assertRaises(SystemExit):
+                CSVClean(['--length-mismatch', f.name]).run()
+        self.assertEqual(stdout.buffer.getvalue(), 'a,b\n1,ʤ,extra\n'.encode())
+        self.assertEqual(
+            stderr.buffer.getvalue(),
+            'line_number,msg,a,b\n1,"Expected 2 columns, found 3 columns",1,ʤ,extra\n'.encode(),
+        )
 
 
 class TestCli(unittest.TestCase):

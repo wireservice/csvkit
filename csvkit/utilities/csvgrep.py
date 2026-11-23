@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import io
 import re
 import sys
 from argparse import FileType
@@ -28,7 +29,7 @@ class CSVGrep(CSVKitUtility):
             '-r', '--regex', dest='regex', action='store',
             help='A regular expression to match.')
         self.argparser.add_argument(
-            '-f', '--file', dest='matchfile', type=FileType('r'), action='store',
+            '-f', '--file', dest='matchfile', type=FileType('rb'), action='store',
             help='A path to a file. For each row, if any line in the file (stripped of line separators) is an exact '
                  'match of the cell value, the row matches.')
         self.argparser.add_argument(
@@ -63,8 +64,9 @@ class CSVGrep(CSVKitUtility):
         if self.args.regex is not None:
             pattern = re.compile(self.args.regex)
         elif self.args.matchfile:
-            lines = {line.rstrip('\r\n') for line in self.args.matchfile}
-            self.args.matchfile.close()
+            # Decode the file like the input, so that its lines can equal the cell values.
+            with io.TextIOWrapper(self.args.matchfile, encoding=self.args.encoding) as matchfile:
+                lines = {line.rstrip('\r\n') for line in matchfile}
 
             def pattern(x):
                 return x in lines

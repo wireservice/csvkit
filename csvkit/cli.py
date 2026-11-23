@@ -69,6 +69,25 @@ class LazyFile:
             self._is_lazy_opened = True
 
 
+def reconfigure_output_stream(stream):
+    """
+    Write UTF-8 to a redirected or piped standard stream, and don't translate line endings.
+
+    Otherwise, Python writes the locale encoding (e.g. cp1252 on Windows) and, on Windows, writes "\\n" as "\\r\\n",
+    even inside quoted values. csvkit then can't read its own output, --add-bom puts a UTF-8 BOM before non-UTF-8
+    text, and characters outside the locale encoding raise UnicodeEncodeError.
+
+    An encoding set by PYTHONIOENCODING is kept. An interactive console is left as-is: it already receives Unicode.
+    """
+    if not hasattr(stream, 'reconfigure') or stream.isatty():
+        return
+    kwargs = {'newline': ''}
+    if not os.getenv('PYTHONIOENCODING', '').partition(':')[0]:
+        kwargs['encoding'] = 'utf-8'
+        kwargs['errors'] = stream.errors
+    stream.reconfigure(**kwargs)
+
+
 class CSVKitUtility:
     description = ''
     epilog = ''
@@ -90,12 +109,15 @@ class CSVKitUtility:
         # Output file is only set during testing.
         if output_file is None:
             self.output_file = sys.stdout
+            reconfigure_output_stream(self.output_file)
         else:
             self.output_file = output_file
 
         # Error file is only set during testing.
         if error_file is None:
             self.error_file = sys.stderr
+            # csvclean writes error rows as CSV to standard error.
+            reconfigure_output_stream(self.error_file)
         else:
             self.error_file = error_file
 
