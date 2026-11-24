@@ -54,7 +54,7 @@ class CSVFormat(CSVKitUtility):
         elif self.args.out_tabs:
             kwargs['delimiter'] = '\t'
         elif self.args.out_delimiter:
-            kwargs['delimiter'] = self.args.out_delimiter
+            kwargs['delimiter'] = self._validate_single_character('out_delimiter', self.args.out_delimiter)
 
         if self.args.out_asv:
             kwargs['lineterminator'] = '\x1e'

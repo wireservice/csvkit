@@ -32,6 +32,15 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
             with self.subTest(option=option):
                 self.assertError(launch_new_instance, [f'--{option}', 'value'], message)
 
+    def test_single_character_options(self):
+        for option, message in (
+            ('-d', "--delimiter must be a single character, not '||'"),
+            ('-q', "--quotechar must be a single character, not 'xx'"),
+            ('-p', "--escapechar must be a single character, not 'xx'"),
+        ):
+            with self.subTest(option=option):
+                self.assertError(launch_new_instance, [option, '||' if option == '-d' else 'xx'], message)
+
     def test_simple(self):
         js = json.loads(self.get_output(['examples/dummy.csv']))
         self.assertDictEqual(js[0], {'a': True, 'c': 3.0, 'b': 2.0})

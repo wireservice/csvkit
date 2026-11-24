@@ -9,6 +9,13 @@ from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 class TestCSVFormat(CSVKitTestCase, EmptyFileTests):
     Utility = CSVFormat
 
+    def test_single_character_out_delimiter(self):
+        self.assertError(
+            launch_new_instance,
+            ['-D', '||'],
+            "--out-delimiter must be a single character, not '||'",
+        )
+
     def test_launch_new_instance(self):
         with patch.object(sys, 'argv', [self.Utility.__name__.lower(), 'examples/dummy.csv']):
             launch_new_instance()
