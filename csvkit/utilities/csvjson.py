@@ -191,8 +191,8 @@ class CSVJSON(CSVKitUtility):
             for row in table.rows:
                 feature = self.feature_for_row(row)
 
-                if not self.args.no_bbox:
-                    bounds.add_feature(feature)
+                if not self.args.no_bbox and feature['geometry']:
+                    bounds.add_geometry(feature['geometry'])
 
                 features.append(feature)
 
@@ -264,9 +264,12 @@ class CSVJSON(CSVKitUtility):
             def bbox(self):
                 return [self.min_lon, self.min_lat, self.max_lon, self.max_lat]
 
-            def add_feature(self, feature):
-                if feature.get('geometry') and 'coordinates' in feature['geometry']:
-                    self.update_coordinates(feature['geometry']['coordinates'])
+            def add_geometry(self, geometry):
+                if 'coordinates' in geometry:
+                    self.update_coordinates(geometry['coordinates'])
+                elif 'geometries' in geometry:
+                    for child in geometry['geometries']:
+                        self.add_geometry(child)
 
             def update_lat(self, lat):
                 if self.min_lat is None or lat < self.min_lat:
