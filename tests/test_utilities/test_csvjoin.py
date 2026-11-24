@@ -3,6 +3,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
+from csvkit.exceptions import ColumnIdentifierError
 from csvkit.utilities.csvjoin import CSVJoin, launch_new_instance
 from tests.utils import CSVKitTestCase, EmptyFileTests
 
@@ -63,6 +64,47 @@ class TestCSVJoin(CSVKitTestCase, EmptyFileTests):
     def test_right_indices(self):
         output = self.get_output_as_io(['-c', '1,4', '--right', 'examples/join_a.csv', 'examples/blanks.csv'])
         self.assertEqual(len(output.readlines()), 2)
+
+    def test_zero_based_first_column(self):
+        self.assertRows(['--zero', '-c', '0', '--no-inference',
+                         'examples/join_a.csv', 'examples/join_b.csv'], [
+            ['a', 'b', 'c', 'b2', 'c2'],
+            ['1', 'b', 'c', 'b', 'c'],
+            ['1', 'b', 'c', 'b', 'c'],
+        ])
+
+    def test_zero_based_nonfirst_column(self):
+        self.assertRows(['--zero', '-c', '1', '--no-inference',
+                         'examples/join_a.csv', 'examples/join_b.csv'], [
+            ['a', 'b', 'c', 'a2', 'c2'],
+            *[[str(left), 'b', 'c', str(right), 'c'] for left in (1, 2, 3) for right in (1, 1, 4)],
+        ])
+
+    def test_zero_based_per_file_columns(self):
+        self.assertRows(['--zero', '-c', '0,2,0', '--no-inference',
+                         'examples/dummy.csv', 'examples/dummy_col_shuffled.csv', 'examples/dummy2.csv'], [
+            ['a', 'b', 'c', 'b2', 'c2', 'b2_2', 'c2_2'],
+            ['1', '2', '3', '2', '3', '2', '3'],
+        ])
+
+    def test_zero_based_outer_joins(self):
+        paths = ['examples/join_a.csv', 'examples/join_b.csv']
+        for option in ('--left', '--right', '--outer'):
+            with self.subTest(option=option):
+                expected = self.get_output(['--no-inference', '-c', 'a', option] + paths)
+                self.assertEqual(self.get_output(['--no-inference', '--zero', '-c', '0', option] + paths), expected)
+
+    def test_zero_based_column_bounds(self):
+        with self.assertRaisesRegex(ColumnIdentifierError, "last column is 'c' at index 2"):
+            self.get_output(['--zero', '-c', '3', 'examples/join_a.csv', 'examples/join_b.csv'])
+
+    def test_default_and_named_join_columns(self):
+        for args in (['-c', '1'], ['-c', 'a'], ['--zero', '-c', 'a']):
+            self.assertRows(args + ['--no-inference', 'examples/join_a.csv', 'examples/join_b.csv'], [
+                ['a', 'b', 'c', 'b2', 'c2'],
+                ['1', 'b', 'c', 'b', 'c'],
+                ['1', 'b', 'c', 'b', 'c'],
+            ])
 
     def test_outer(self):
         output = self.get_output_as_io(['-c', 'a', '--outer', 'examples/join_a.csv', 'examples/join_b.csv'])
