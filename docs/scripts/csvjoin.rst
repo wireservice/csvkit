@@ -57,6 +57,12 @@ See also: :doc:`../common_arguments`.
 Examples
 ========
 
+Use :code:`--zero` to interpret join column indices starting at zero. For example, this joins on the first column of each file:
+
+.. code-block:: bash
+
+   csvjoin --zero -c 0 examples/join_a.csv examples/join_b.csv
+
 .. code-block:: bash
 
    csvjoin -c 1 examples/join_a.csv examples/join_b.csv

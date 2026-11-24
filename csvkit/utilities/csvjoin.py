@@ -84,8 +84,10 @@ class CSVJoin(CSVKitUtility):
         join_column_ids = []
 
         if self.args.columns:
+            column_offset = self.get_column_offset()
             for i, table in enumerate(tables):
-                join_column_ids.append(match_column_identifier(table.column_names, join_column_names[i]))
+                join_column_ids.append(match_column_identifier(
+                    table.column_names, join_column_names[i], column_offset))
 
         jointab = tables[0]
 
