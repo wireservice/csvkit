@@ -150,6 +150,13 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
         self.assertEqual(geojson['features'][1]['geometry']['coordinates'], [0.0, 51.48])
         self.assertEqual(geojson['features'][2]['geometry']['coordinates'], [2.35, 0.0])
 
+    def test_geojson_geometry_collection_bbox(self):
+        geojson = json.loads(self.get_output([
+            '--lat', 'lat', '--lon', 'lon', '--geometry', 'geometry',
+            'examples/test_geo_collection.csv',
+        ]))
+        self.assertEqual(geojson['bbox'], [-12, -5, 5, 30])
+
     def test_geojson_shape(self):
         geojson = json.loads(self.get_output(['--lat', 'latitude', '--lon', 'longitude',
                              '--type', 'type', '--geometry', 'geojson', 'examples/test_geojson.csv']))
