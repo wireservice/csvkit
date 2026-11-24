@@ -291,6 +291,15 @@ class CSVKitUtility:
 
         return f
 
+    def _validate_single_character(self, option, value):
+        """
+        Returns *value* if it is a single character, otherwise reports it as a usage error like the other option
+        mistakes in this class, instead of letting the csv module raise a TypeError while reading.
+        """
+        if len(value) != 1:
+            self.argparser.error(f'--{option.replace("_", "-")} must be a single character, not {value!r}')
+        return value
+
     def _extract_csv_reader_kwargs(self):
         """
         Extracts those from the command-line arguments those would should be passed through to the input CSV reader(s).
@@ -304,11 +313,13 @@ class CSVKitUtility:
         if self.args.tabs:
             kwargs['delimiter'] = '\t'
         elif self.args.delimiter:
-            kwargs['delimiter'] = self.args.delimiter
+            kwargs['delimiter'] = self._validate_single_character('delimiter', self.args.delimiter)
 
         for arg in ('quotechar', 'quoting', 'doublequote', 'escapechar', 'skipinitialspace'):
             value = getattr(self.args, arg)
             if value is not None:
+                if arg in ('quotechar', 'escapechar'):
+                    value = self._validate_single_character(arg, value)
                 kwargs[arg] = value
 
         if getattr(self.args, 'no_header_row', None):
