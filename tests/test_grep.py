@@ -2,7 +2,7 @@ import re
 import unittest
 
 from csvkit.exceptions import ColumnIdentifierError
-from csvkit.grep import FilteringCSVReader
+from csvkit.grep import FilteringCSVReader, pattern_as_function, regex_callable
 
 
 class TestGrep(unittest.TestCase):
@@ -141,3 +141,26 @@ class TestGrep(unittest.TestCase):
             self.fail("Should be no more rows left.")
         except StopIteration:
             pass
+
+    def test_pattern_as_function(self):
+        # A callable is returned unchanged.
+        def is_a(x):
+            return x == 'a'
+
+        self.assertIs(pattern_as_function(is_a), is_a)
+        
+        # A compiled regex is wrapped in a regex_callable.
+        wrapped = pattern_as_function(re.compile('a'))
+        self.assertIsInstance(wrapped, regex_callable)
+        self.assertTrue(wrapped('a'))
+        self.assertIsNone(wrapped('b'))
+
+        # A string becomes a substring test.
+        contains = pattern_as_function('foo')
+        self.assertTrue(contains('foobar'))
+        self.assertFalse(contains('bar'))
+
+    def test_regex_callable(self):
+        wrapped = regex_callable(re.compile('^a+$'))
+        self.assertTrue(wrapped('aaa'))
+        self.assertIsNone(wrapped('aab'))
