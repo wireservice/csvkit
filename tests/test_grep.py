@@ -148,6 +148,7 @@ class TestGrep(unittest.TestCase):
             return x == 'a'
 
         self.assertIs(pattern_as_function(is_a), is_a)
+        
         # A compiled regex is wrapped in a regex_callable.
         wrapped = pattern_as_function(re.compile('a'))
         self.assertIsInstance(wrapped, regex_callable)
