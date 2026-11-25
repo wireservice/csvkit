@@ -108,6 +108,13 @@ def standardize_patterns(column_names, patterns):
 
 
 def pattern_as_function(obj):
+    """
+    Convert a pattern into a function which tests a single value.
+
+A callable is returned unchanged. A compiled regular expression is
+wrapped in a regex_callable. A string becomes a function which
+returns True when the value contains it as a substring.
+"""
     # obj is function
     if callable(obj):
         return obj
@@ -121,6 +128,14 @@ def pattern_as_function(obj):
 
 
 class regex_callable:
+    """
+    Wrap a compiled regular expression so it can be used as a test
+    function.
+
+Calling the wrapper returns the match object for the value, or None
+when the value does not match; FilteringCSVReader treats the result
+as pass or fail.
+"""
 
     def __init__(self, pattern):
         self.pattern = pattern
