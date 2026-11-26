@@ -281,7 +281,7 @@ class CSVJSON(CSVKitUtility):
                     self.max_lon = lon
 
             def update_coordinates(self, coordinates):
-                if len(coordinates) <= 3 and isinstance(coordinates[0], (float, int)):
+                if coordinates and len(coordinates) <= 3 and isinstance(coordinates[0], (float, int)):
                     self.update_lon(coordinates[0])
                     self.update_lat(coordinates[1])
                 else:
