@@ -1,0 +1,3 @@
+lat,lon,shape
+,,"{""type"":""LineString"",""coordinates"":[]}"
+,,"{""type"":""Point"",""coordinates"":[12,34]}"
