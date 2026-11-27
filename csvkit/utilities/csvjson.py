@@ -141,7 +141,7 @@ class CSVJSON(CSVKitUtility):
 
     def streaming_output_ndjson(self):
         rows = agate.csv.reader(self.input_file, **self.reader_kwargs)
-        column_names = next(rows)
+        column_names = next(rows, [])
 
         for row in rows:
             data = OrderedDict()

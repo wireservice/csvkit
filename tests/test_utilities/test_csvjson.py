@@ -4,7 +4,7 @@ import sys
 from unittest.mock import patch
 
 from csvkit.utilities.csvjson import CSVJSON, launch_new_instance
-from tests.utils import CSVKitTestCase, EmptyFileTests
+from tests.utils import CSVKitTestCase, EmptyFileTests, stdin_as_string
 
 
 class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
@@ -209,6 +209,14 @@ class TestCSVJSON(CSVKitTestCase, EmptyFileTests):
             '{"text": "This row has blanks", "float": "", "datetime": "", "boolean": "", "time": "", "date": "", "integer": ""}',  # noqa: E501
             '{"text": "Unicode! Σ", "float": "", "datetime": "", "boolean": "", "time": "", "date": "", "integer": ""}',  # noqa: E501
         ])
+
+    def test_ndjson_streaming_empty_input(self):
+        for extra_args in ([], ['--no-header-row']):
+            args = ['--stream', '--no-inference', '--snifflimit', '0', *extra_args]
+            with self.subTest(extra_args=extra_args, source='file'):
+                self.assertEqual(self.get_output([*args, 'examples/empty.csv']), '')
+            with self.subTest(extra_args=extra_args, source='stdin'), stdin_as_string(io.BytesIO(b'')):
+                self.assertEqual(self.get_output(args), '')
 
     def test_ndgeojson(self):
         self.maxDiff = 5000
